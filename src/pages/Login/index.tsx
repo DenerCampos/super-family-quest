@@ -1,8 +1,35 @@
-// src/pages/Login/index.tsx
-import { Flex, Input, Button, Text } from '@chakra-ui/react';
+import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { Flex, Input, Button, Text, useToast } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const toast = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      await login(email, password);
+    } catch (error) {
+      console.log(error);
+      
+      toast({
+        title: 'Erro no login',
+        description: 'Credenciais inválidas',
+        status: 'error',
+        duration: 4000,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Flex
       minH="100vh"
@@ -11,6 +38,8 @@ const Login = () => {
       bgPosition="center"
       align="center"
       justify="center"
+      as="form"
+      onSubmit={handleSubmit}
     >
       <Flex
         direction="column"
@@ -33,21 +62,23 @@ const Login = () => {
         </Text>
 
         <Input
-          placeholder="Família"
-          variant="filled"
-          _placeholder={{ color: 'gray.400' }}
-          focusBorderColor="purple.400"
+          placeholder="Familia (e-mail)"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
         />
 
         <Input
           type="password"
           placeholder="Senha"
-          variant="filled"
-          _placeholder={{ color: 'gray.400' }}
-          focusBorderColor="purple.400"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         <Button
+          type="submit"
+          isLoading={isLoading}
+          loadingText="Entrando..."
           colorScheme="purple"
           mt={4}
           _hover={{ transform: 'translateY(-2px)' }}
@@ -68,7 +99,6 @@ const Login = () => {
       </Flex>
     </Flex>
   );
-}
-
+};
 
 export default Login;

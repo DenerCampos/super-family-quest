@@ -6,7 +6,7 @@ const NotFoundPage = () => {
   return (
     <Flex
       minH="100vh"
-      bgImage="url('/assets/images/login-bg.jpg')"
+      bgImage="url('/assets/images/notfound-bg.png')"
       bgSize="cover"
       bgPosition="center"
       align="center"
@@ -44,7 +44,7 @@ const NotFoundPage = () => {
 
         <Button
           as={RouterLink}
-          to="/"
+          to="/home"
           colorScheme="purple"
           mt={6}
           size="lg"
@@ -56,6 +56,6 @@ const NotFoundPage = () => {
       </Flex>
     </Flex>
   );
-}
+};
 
 export default NotFoundPage;

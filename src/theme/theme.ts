@@ -21,6 +21,13 @@ const theme = extendTheme({
         _hover: { transform: 'scale(1.02)' },
       },
     },
+    Card: {
+      baseStyle: {
+        container: {
+          borderRadius: 'lg',
+        },
+      },
+    },
   },
 });
 
