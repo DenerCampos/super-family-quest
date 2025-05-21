@@ -6,8 +6,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import { RequireAuth } from './components/RequireAuth';
 import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
-import NewResources from './pages/NewChallenge';
-import NewChallenge from './pages/NewResources';
+import NewChallenge from './pages/NewChallenge';
+import NewResources from './pages/NewResources';
 
 export default function App() {
   return (

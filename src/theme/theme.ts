@@ -3,7 +3,7 @@ import { extendTheme } from '@chakra-ui/react';
 const theme = extendTheme({
   fonts: {
     heading: '"Press Start 2P", cursive',
-    body: '"Pixelify Sans", sans-serif',
+    // body: '"Pixelify Sans", sans-serif',
   },
   colors: {
     retro: {

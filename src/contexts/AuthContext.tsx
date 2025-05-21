@@ -21,13 +21,11 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const navigate = useNavigate();
 
-  const loadProfile = async () => {
-    console.log('aqui');
-    
+  const loadProfile = async () => {   
     try {
       const profile = await api.profile();
       setUser((prev) => ({

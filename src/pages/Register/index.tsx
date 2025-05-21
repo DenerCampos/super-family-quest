@@ -26,7 +26,7 @@ const Register = () => {
           color="purple.300"
           textAlign="center"
           mb={4}
-          fontFamily="Press Start 2P"
+          fontFamily="Pixelify Sans"
         >
           Criar Novo Reino
         </Text>
