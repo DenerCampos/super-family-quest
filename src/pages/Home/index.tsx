@@ -10,12 +10,14 @@ import {
 } from '@chakra-ui/react';
 import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
-import { FiPlus } from 'react-icons/fi';
+import { FiCamera, FiPlus } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { CouponModal } from '../../components/modals/CouponModal';
 import { api } from '../../services';
-import type { Groups, Merchant, Payments } from '../../services/resources';
+import type { Coupom, Groups, Merchant, Payments } from '../../services/resources';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { convertQRData } from '../../utils/qrCode';
 
 const Home = () => {
   const { user, loadProfile } = useAuth();
@@ -23,6 +25,10 @@ const Home = () => {
   const [stores, setStores] = useState<Merchant[]>([]);
   const [payments, setPayments] = useState<Payments[]>([]);
   const [groups, setGroups] = useState<Groups[]>([]);
+  const location = useLocation();
+  const [scannedData, setScannedData] = useState<Coupom | null>(null);
+  const [scanError, setScanError] = useState('');
+  const navigate = useNavigate();
 
   // Carregar dados para o modal
   useEffect(() => {
@@ -39,6 +45,19 @@ const Home = () => {
 
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (location.state?.scanned && location.state.couponData) {
+      console.log('convertQRData', convertQRData(location.state.couponData));
+      
+      setScannedData(convertQRData(location.state.couponData));
+      onOpen();
+    }
+    if (location.state?.error) {
+      setScanError(location.state.error);
+    }
+  }, [location.state]);
+
 
   const handleSuccess = async () => {
     await loadProfile(); // Atualizar dados do usuário após cadastro
@@ -85,6 +104,17 @@ const Home = () => {
         >
           Adicionar Novo Cupom
         </Button>
+
+        <Button
+          colorScheme="teal"
+          size="lg"
+          leftIcon={<FiCamera />}
+          w="full"
+          boxShadow="md"
+          onClick={() => navigate('/scan')}
+        >
+          Ler QR Code
+        </Button>
       </Flex>
 
       {isOpen && (
@@ -95,6 +125,8 @@ const Home = () => {
           payments={payments}
           groups={groups}
           onSuccess={handleSuccess}
+          initialData={scannedData}
+          setScannedData={setScannedData}
         />
       )}
 

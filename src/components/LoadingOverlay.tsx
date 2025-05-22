@@ -7,7 +7,16 @@ const dotsAnimation = keyframes`
   60%, 100% { content: '...'; }
 `;
 
-export const LoadingOverlay = () => {
+const gifAnimation = {
+  save: '/assets/images/knigth-loading.gif',
+  read: '/assets/images/knigth-solare.gif',
+  open: '/assets/images/bonfire.gif',
+};
+
+export type LoadingState = 'save' | 'read' | 'open';
+
+export const LoadingOverlay = ({ typeLoading = 'save', text = 'Carregando' }: { typeLoading?: LoadingState, text?: string }) => {
+  const gifLoading =  gifAnimation[typeLoading];
   return (
     <Box
       position="fixed"
@@ -26,7 +35,7 @@ export const LoadingOverlay = () => {
         gap={4}
       >
         <Image
-          src="/assets/images/knigth-loading.gif"
+          src={gifLoading}
           boxSize="150px"
           alt="Carregando"
           ignoreFallback
@@ -43,7 +52,7 @@ export const LoadingOverlay = () => {
             textAlign: 'left',
           }}
         >
-          Salvando
+          { text }
         </Text>
       </AbsoluteCenter>
     </Box>

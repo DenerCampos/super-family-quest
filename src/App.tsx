@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
 import NewChallenge from './pages/NewChallenge';
 import NewResources from './pages/NewResources';
+import { QRScannerPage } from './components/QRScannerPage';
 
 export default function App() {
   return (
@@ -53,6 +54,14 @@ export default function App() {
         element={
           <RequireAuth>
             <Profile />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/scan"
+        element={
+          <RequireAuth>
+            <QRScannerPage />
           </RequireAuth>
         }
       />
