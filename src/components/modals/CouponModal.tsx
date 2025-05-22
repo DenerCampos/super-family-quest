@@ -8,7 +8,6 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Select,
   Grid,
   Button,
   Card,
@@ -35,6 +34,7 @@ import {
   formatCurrencyBRL,
   parseBRLCurrency,
 } from '../../utils/formatCurrency';
+import { AutocompleteInput } from '../AutocompleteInput';
 
 const inputStyle = {
   bgColor: 'purple.100',
@@ -85,6 +85,7 @@ export const CouponModal = ({
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isValid, isSubmitting },
     setValue,
   } = useForm<Coupom>({
@@ -240,32 +241,36 @@ export const CouponModal = ({
 
                 <FormControl isInvalid={!!errors.store}>
                   <FormLabel>Loja</FormLabel>
-                  <Select
-                    {...register('store', { required: 'Selecione uma loja' })}
-                    {...inputStyle}
-                  >
-                    {stores.map((store) => (
-                      <option key={store.id} value={store.name}>
-                        {store.name}
-                      </option>
-                    ))}
-                  </Select>
+                  <AutocompleteInput
+                    value={watch('store') || ''}
+                    options={stores.map((store) => store.name)}
+                    onChange={(value) =>
+                      setValue('store', value, { shouldValidate: true })
+                    }
+                    placeholder="Selecione ou digite uma loja"
+                  />
+                  {errors.store && (
+                    <Text color="red.300" fontSize="sm">
+                      {errors.store.message}
+                    </Text>
+                  )}
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.payment}>
                   <FormLabel>Pagamento</FormLabel>
-                  <Select
-                    {...register('payment', {
-                      required: 'Selecione um pagamento',
-                    })}
-                    {...inputStyle}
-                  >
-                    {payments.map((payment) => (
-                      <option key={payment.id} value={payment.name}>
-                        {payment.name}
-                      </option>
-                    ))}
-                  </Select>
+                  <AutocompleteInput
+                    value={watch('payment') || ''}
+                    options={payments.map((payment) => payment.name)}
+                    onChange={(value) =>
+                      setValue('payment', value, { shouldValidate: true })
+                    }
+                    placeholder="Selecione ou digite uma forma de pagamento"
+                  />
+                  {errors.payment && (
+                    <Text color="red.300" fontSize="sm">
+                      {errors.payment.message}
+                    </Text>
+                  )}
                 </FormControl>
               </Grid>
 
@@ -431,19 +436,21 @@ export const CouponModal = ({
                             isInvalid={!!errors.items?.[index]?.group}
                           >
                             <FormLabel>Grupo</FormLabel>
-                            <Select
-                              {...register(`items.${index}.group`, {
-                                required: 'Selecione um grupo',
-                              })}
-                              {...inputStyle}
-                              size="sm"
-                            >
-                              {groups.map((group) => (
-                                <option key={group.id} value={group.name}>
-                                  {group.name}
-                                </option>
-                              ))}
-                            </Select>
+                            <AutocompleteInput
+                              value={watch(`items.${index}.group`) || ''}
+                              options={groups.map((group) => group.name)}
+                              onChange={(value) =>
+                                setValue(`items.${index}.group`, value, {
+                                  shouldValidate: true,
+                                })
+                              }
+                              placeholder="Selecione ou digite um grupo"
+                            />
+                            {errors.items?.[index]?.group && (
+                              <Text color="red.300" fontSize="sm">
+                                {errors.items[index]?.group?.message}
+                              </Text>
+                            )}
                           </FormControl>
                         </Grid>
 

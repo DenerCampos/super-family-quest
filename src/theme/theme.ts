@@ -28,6 +28,13 @@ const theme = extendTheme({
         },
       },
     },
+    List: {
+      baseStyle: {
+        container: {
+          zIndex: 9999,
+        },
+      },
+    },
   },
 });
 

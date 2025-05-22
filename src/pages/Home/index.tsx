@@ -55,6 +55,8 @@ const Home = () => {
     }
     if (location.state?.error) {
       setScanError(location.state.error);
+      console.log(scanError);
+      
     }
   }, [location.state]);
 

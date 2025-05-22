@@ -3,8 +3,6 @@ import type { Coupom } from "../services/resources";
 import { formatCurrencyBRL } from "./formatCurrency";
 import { formatDateToYYYYMMDD } from "./formatDate";
 
-
-
 export const convertQRData = (qrData: CouponReader): Coupom | null => {
   try {
     const {uri, date, name, items} = qrData;
@@ -27,7 +25,7 @@ export const convertQRData = (qrData: CouponReader): Coupom | null => {
       url: uri,
       date: formatDateToYYYYMMDD(date),
       store: name,
-      payment: '',
+      payment: 'Cartão crédito',
       items: parsedItems,
     };
   } catch (error) {
