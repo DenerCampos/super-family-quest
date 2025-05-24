@@ -11,14 +11,14 @@ export const Header = () => {
       p={4}
       justify="space-between"
       align="center"
-      borderRadius="lg"
+      // borderRadius="lg"
       mb={6}
       boxShadow="md"
     >
       {/* Lado Esquerdo - Brasão e Nome */}
       <Flex align="center" gap={3}>
         <Image
-          src="/assets/images/coat_of_arms_family.png"
+          src="/assets/images/coat_of_arms_solare.png"
           boxSize="40px"
           objectFit="contain"
           alt="Brasão da Família"

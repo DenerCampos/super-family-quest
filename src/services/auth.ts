@@ -1,26 +1,20 @@
-export const AuthService = {
-//   async login(email: string, password: string) {
-//     const response = await api.post('/auth/login', {
-//       email,
-//       password,
-//     });
+  import api from "./api";
 
-//     return response.data;
-//   },
+  export const AuthService = {
+    login: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }): Promise<{ accessToken: string }> => {
+      const response = await api.post('/auth/login', {
+        email,
+        password,
+      });
 
-  login: async ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }): Promise<{ accessToken: string }> => {
-    console.log(email, password);
+      console.log('response', response);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    return {
-      accessToken: 'token123',
-    };
-  },
-};
+      return response.data;
+    },
+  };

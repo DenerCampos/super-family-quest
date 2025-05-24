@@ -1,10 +1,11 @@
 import { AuthService } from "./auth";
 import { couponReader } from "./couponReader";
-import { profile } from "./profile";
+import { ProfileService } from "./profile";
 import { resources } from "./resources";
 
 export const api = {
-  profile,
+  profile: ProfileService.profile,
+  completeProfile: ProfileService.completeProfile,
   login: AuthService.login,
   resources,
   couponReader,

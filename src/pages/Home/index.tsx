@@ -2,22 +2,19 @@ import { useState, useEffect } from 'react';
 import {
   Flex,
   Button,
-  Card,
-  CardBody,
-  Text,
-  Heading,
   useDisclosure,
 } from '@chakra-ui/react';
 import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
 import { FiCamera, FiPlus } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
-import { formatCurrency } from '../../utils/formatCurrency';
 import { CouponModal } from '../../components/modals/CouponModal';
 import { api } from '../../services';
 import type { Coupom, Groups, Merchant, Payments } from '../../services/resources';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { convertQRData } from '../../utils/qrCode';
+import { CompleteProfileModal } from '../../components/modals/CompleteProfileModal';
+import { SummaryCard } from '../../components/SummaryCard';
 
 const Home = () => {
   const { user, loadProfile } = useAuth();
@@ -28,6 +25,7 @@ const Home = () => {
   const location = useLocation();
   const [scannedData, setScannedData] = useState<Coupom | null>(null);
   const [scanError, setScanError] = useState('');
+  const [showCompleteProfile, setShowCompleteProfile] = useState(false);
   const navigate = useNavigate();
 
   // Carregar dados para o modal
@@ -60,6 +58,12 @@ const Home = () => {
     }
   }, [location.state]);
 
+  useEffect(() => {
+    if (user && user.isFirstAccess) {
+      setShowCompleteProfile(true);
+    }
+  }, [user]);
+
 
   const handleSuccess = async () => {
     await loadProfile(); // Atualizar dados do usuário após cadastro
@@ -72,28 +76,18 @@ const Home = () => {
       {/* Conteúdo Principal */}
       <Flex direction="column" p={4} gap={4}>
         {/* Cards de Resumo */}
-        <Card bg="green.100" borderLeft="4px solid" borderColor="green.500">
-          <CardBody>
-            <Text fontSize="sm" color="green.800">
-              Receitas do Mês
-            </Text>
-            <Heading size="lg" color="green.900">
-              {formatCurrency(user?.income ?? 0)}
-            </Heading>
-          </CardBody>
-        </Card>
-
-        <Card bg="red.100" borderLeft="4px solid" borderColor="red.500">
-          <CardBody>
-            <Text fontSize="sm" color="red.800">
-              Despesas do Mês
-            </Text>
-            <Heading size="lg" color="red.900">
-              {formatCurrency(user?.expenses ?? 0)}
-            </Heading>
-          </CardBody>
-        </Card>
-
+        <Flex direction="column" gap={4}>
+          <SummaryCard
+            title="Receitas do Mês"
+            value={user?.income || 0}
+            colorScheme="green"
+          />
+          <SummaryCard
+            title="Despesas do Mês"
+            value={user?.expenses || 0}
+            colorScheme="red"
+          />
+        </Flex>
         {/* Botão de Ação Principal */}
         <Button
           colorScheme="purple"
@@ -106,7 +100,6 @@ const Home = () => {
         >
           Adicionar Novo Cupom
         </Button>
-
         <Button
           colorScheme="teal"
           size="lg"
@@ -131,6 +124,18 @@ const Home = () => {
           setScannedData={setScannedData}
         />
       )}
+
+      <CompleteProfileModal
+        isOpen={showCompleteProfile}
+        user={{
+          email: user?.email || '',
+          name: user?.name || '',
+        }}
+        onComplete={() => {
+          setShowCompleteProfile(false);
+          loadProfile(); // Atualiza os dados do usuário
+        }}
+      />
 
       <NavigationBar />
     </Flex>

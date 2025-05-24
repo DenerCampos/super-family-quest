@@ -1,15 +1,25 @@
 import type { UserProfile } from "../contexts/AuthContext";
+import api from "./api";
 
-export const profile = async (): Promise<UserProfile> => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+export const ProfileService = {
+  profile: async (): Promise<UserProfile> => {
+    const response = await api.get('/user/profile');
 
-  return {
-    email: 'denerjcampos@gmail.com',
-    name: 'Dener Campos',
-    family: 'Campos',
-    income: 5000,
-    expenses: 2000,
-    coins: 30,
-    coatOfArms: '/assets/images/brasao.png',
-  };
+    console.log('response', response);
+
+    return response.data;
+  },
+
+  completeProfile: async ({
+    family,
+    income,
+  }: {
+    family: string;
+    income: number;
+  }): Promise<void> => {
+    await api.post('/user/complete-profile', {
+      family,
+      income,
+    });
+  },
 }

@@ -10,6 +10,7 @@ export type UserProfile = {
   expenses: number;
   coins: number;
   coatOfArms: string;
+  isFirstAccess: boolean;
 };
 
 type AuthContextType = {
@@ -41,9 +42,9 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const login = async (email: string, password: string) => {
     try {
       const { accessToken } = await api.login({ email, password });
-      await loadProfile();
-
       localStorage.setItem('accessToken', accessToken);
+      
+      await loadProfile();
 
       navigate('/home');
     } catch (error) {

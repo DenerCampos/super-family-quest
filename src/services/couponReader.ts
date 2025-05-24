@@ -73,6 +73,7 @@ export const couponReader = {
       uri: '31230913574594092961650010009531601631841167|2|1|1|A0A0CD054D84831FC050E31EE43ACB96CC935ACF',
       date: '2025-05-21T18:20:50.447Z',
       name: 'BK BRASIL OPERACAO E ASSESSORIA A RESTAURANTES S.A.',
+      // adicionar payment padrão que vem do back
     };
   },
 };
