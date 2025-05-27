@@ -1,26 +1,60 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BrowserQRCodeReader, type IScannerControls } from '@zxing/browser';
 import { Flex, Heading, Text, Box, Button } from '@chakra-ui/react';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 import { FiArrowLeft } from 'react-icons/fi';
 import { api } from '../services';
+import { parseNFCeQRCode } from '../utils/qrCode';
 
 export const QRScannerPage = () => {
   const [loading, setLoading] = useState(true);
   const [loadingRead, setLoadingRead] = useState(false);
   const [error, setError] = useState('');
-  const [isScanning, setIsScanning] = useState(true);
   const navigate = useNavigate();
+
+  // Usar useRef para manter referências estáveis
+  const controlsRef = useRef<IScannerControls | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const stopCamera = () => {
+    // Parar controles do scanner
+    if (controlsRef.current) {
+      controlsRef.current.stop();
+      controlsRef.current = null;
+    }
+
+    // Parar stream de mídia
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => {
+        track.stop();
+        streamRef.current?.removeTrack(track);
+      });
+      streamRef.current = null;
+    }
+
+    // Remover elemento de vídeo
+    if (videoRef.current) {
+      videoRef.current.remove();
+      videoRef.current = null;
+    }
+  };
+
+  const handleBack = () => {
+    stopCamera();
+    navigate('/home');
+  };
 
   useEffect(() => {
     const codeReader = new BrowserQRCodeReader();
-    let controls: IScannerControls | null;
-    let stream: MediaStream | null;
+    let isMounted = true;
 
     const startScanner = async () => {
       try {
         const devices = await BrowserQRCodeReader.listVideoInputDevices();
+
+        if (!isMounted) return;
 
         if (devices.length === 0) {
           setError('Nenhuma câmera encontrada');
@@ -40,11 +74,12 @@ export const QRScannerPage = () => {
         // Limpar container
         scannerContainer.innerHTML = '';
 
-        // Criar elemento de vídeo
+        // Criar novo elemento de vídeo
         const videoElem = document.createElement('video');
         videoElem.style.width = '100%';
         videoElem.style.height = '100%';
         scannerContainer.appendChild(videoElem);
+        videoRef.current = videoElem;
 
         // Iniciar stream
         const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -54,18 +89,21 @@ export const QRScannerPage = () => {
           },
         });
 
-        stream = mediaStream;
+        if (!isMounted) {
+          mediaStream.getTracks().forEach((track) => track.stop());
+          return;
+        }
+
+        streamRef.current = mediaStream;
         videoElem.srcObject = mediaStream;
         await videoElem.play();
 
         // Iniciar leitor
-        controls = await codeReader.decodeFromVideoDevice(
+        controlsRef.current = await codeReader.decodeFromVideoDevice(
           deviceId,
           videoElem,
           (result) => {
-            if (result && isScanning) {
-              // Verificar estado de scanning
-              setIsScanning(false);
+            if (result) {
               handleQRCodeScanned(result.getText());
             }
           },
@@ -74,29 +112,22 @@ export const QRScannerPage = () => {
         setLoading(false);
       } catch (err) {
         console.error('Erro:', err);
-        setError('Não foi possível acessar a câmera');
-        setLoading(false);
+        if (isMounted) {
+          setError('Não foi possível acessar a câmera');
+          setLoading(false);
+        }
       }
     };
 
     const handleQRCodeScanned = async (qrData: string) => {
       try {
         setLoadingRead(true);
-        // Parar scanner primeiro
-        if (controls) {
-          controls.stop();
-          controls = null;
-        }
+        stopCamera();
 
-        // Parar stream de mídia
-        if (stream) {
-          stream.getTracks().forEach((track) => track.stop());
-          stream = null;
-        }
-
-        console.log('QR Code lido:', qrData);
-        const data = await api.couponReader.read({ code: qrData });
-        console.log('data', data);
+        const qrCodeData = parseNFCeQRCode(qrData);
+        const data = await api.couponReader({
+          code: qrCodeData?.rawData || '',
+        });
 
         navigate('/home', {
           state: {
@@ -115,15 +146,10 @@ export const QRScannerPage = () => {
     startScanner();
 
     return () => {
-      if (controls) {
-        controls.stop();
-      }
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-      setIsScanning(false);
+      isMounted = false;
+      stopCamera();
     };
-  }, [navigate, isScanning]);
+  }, [navigate]);
 
   return (
     <Flex
@@ -135,15 +161,19 @@ export const QRScannerPage = () => {
       color="white"
       p={4}
     >
-      {loading && <LoadingOverlay text="Carregando camera" typeLoading="open" />}
+      {loading && (
+        <LoadingOverlay text="Carregando câmera" typeLoading="open" />
+      )}
 
-      {loadingRead && <LoadingOverlay text="Lendo cupom fiscal" typeLoading="read" />}
+      {loadingRead && (
+        <LoadingOverlay text="Lendo cupom fiscal" typeLoading="read" />
+      )}
 
       <Button
         position="absolute"
         top="4"
         left="4"
-        onClick={() => navigate('/home')}
+        onClick={handleBack}
         leftIcon={<FiArrowLeft />}
         variant="ghost"
         colorScheme="whiteAlpha"

@@ -58,9 +58,9 @@ export const SimpleResourceModal = ({
       };
 
       const mappingApiResources = {
-        store: api.resources.createStore(formattedData),
-        payment: api.resources.createPayment(formattedData),
-        group: api.resources.createGroup(formattedData),
+        store: api.createStore(formattedData),
+        payment: api.createPayment(formattedData),
+        group: api.createGroup(formattedData),
       };
 
       await mappingApiResources[resourceType];

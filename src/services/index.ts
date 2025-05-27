@@ -1,12 +1,18 @@
 import { AuthService } from "./auth";
-import { couponReader } from "./couponReader";
+import { couponReaderService } from './couponReader';
 import { ProfileService } from "./profile";
-import { resources } from "./resources";
+import { resourcesService } from './resources';
 
 export const api = {
   profile: ProfileService.profile,
   completeProfile: ProfileService.completeProfile,
   login: AuthService.login,
-  resources,
-  couponReader,
+  couponReader: couponReaderService.read,
+  getStores: resourcesService.getStores,
+  getPayments: resourcesService.getPayments,
+  getGroups: resourcesService.getGroups,
+  createStore: resourcesService.createStore,
+  createPayment: resourcesService.createPayment,
+  createGroup: resourcesService.createGroup,
+  createCoupon: resourcesService.createCoupon,
 };

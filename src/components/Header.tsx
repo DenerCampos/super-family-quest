@@ -1,6 +1,7 @@
-import { Flex, Image, Heading, IconButton, Text } from '@chakra-ui/react';
+import { Flex, Image, Heading, IconButton } from '@chakra-ui/react';
 import { FiLogOut } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
+import { CoinDisplay } from './CoinDisplay';
 
 export const Header = () => {
   const { logout, user } = useAuth();
@@ -11,7 +12,6 @@ export const Header = () => {
       p={4}
       justify="space-between"
       align="center"
-      // borderRadius="lg"
       mb={6}
       boxShadow="md"
     >
@@ -30,12 +30,7 @@ export const Header = () => {
 
       {/* Lado Direito - Moedas e Logout */}
       <Flex align="center" gap={4}>
-        <Flex align="center" bg="purple.700" px={3} py={1} borderRadius="md">
-          <Image src="/assets/images/gold-coin.gif" boxSize="25px" mr={2} />
-          <Text color="yellow.400" fontWeight="bold">
-            {user?.coins}
-          </Text>
-        </Flex>
+        <CoinDisplay coins={user?.coins || 0} />
 
         <IconButton
           icon={<FiLogOut />}

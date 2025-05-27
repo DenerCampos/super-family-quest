@@ -28,9 +28,9 @@
 
     const loadData = async () => {
       const [storesData, paymentsData, groupsData] = await Promise.all([
-        api.resources.getStores(),
-        api.resources.getPayments(),
-        api.resources.getGroups(),
+        api.getStores(),
+        api.getPayments(),
+        api.getGroups(),
       ]);
       setStores(storesData);
       setPayments(paymentsData);

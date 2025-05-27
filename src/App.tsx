@@ -18,6 +18,15 @@ export default function App() {
       <Route path="*" element={<NotFoundPage />} />
 
       <Route
+        path="/"
+        element={
+          <RequireAuth>
+            <Home />
+          </RequireAuth>
+        }
+      />
+
+      <Route
         path="/home"
         element={
           <RequireAuth>

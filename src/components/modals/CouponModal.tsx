@@ -35,6 +35,7 @@ import {
   parseBRLCurrency,
 } from '../../utils/formatCurrency';
 import { AutocompleteInput } from '../AutocompleteInput';
+import { useAuth } from '../../contexts/AuthContext';
 
 const inputStyle = {
   bgColor: 'purple.100',
@@ -53,7 +54,7 @@ type Props = {
   groups: Groups[];
   onSuccess: () => void;
   initialData?: Partial<Coupom> | null;
-  setScannedData: React.Dispatch<React.SetStateAction<Coupom | null>>;
+  setScannedData?: React.Dispatch<React.SetStateAction<Coupom | null>>;
 };
 
 export const CouponModal = ({
@@ -66,6 +67,7 @@ export const CouponModal = ({
   initialData,
   setScannedData,
 }: Props) => {
+  const { loadProfile } = useAuth();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen: isItemsCollapsed, onToggle: toggleItemsCollapsed } =
@@ -162,14 +164,26 @@ export const CouponModal = ({
     try {
       const formattedData = {
         ...data,
+        payment: {
+          name: data.payment,
+        },
+        store: {
+          name: data.store,
+        },
         items: data.items.map((item) => ({
           ...item,
           value: Number(parseBRLCurrency(item.value).toFixed(2)),
           quantity: Number(item.quantity),
+          group: {
+            name: item.group,
+          },
         })),
       };
 
-      await api.resources.createCoupon(formattedData);
+      await api.createCoupon(formattedData);
+
+      // Recarregar perfil após sucesso
+      await loadProfile();
 
       toast({
         title: 'Sucesso!',
@@ -180,7 +194,7 @@ export const CouponModal = ({
 
       onSuccess();
       reset();
-      setScannedData(null);
+      if (setScannedData) setScannedData(null);
       onClose();
     } catch (error) {
       console.log(error);
