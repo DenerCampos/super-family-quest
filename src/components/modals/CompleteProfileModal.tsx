@@ -15,7 +15,7 @@ import { useForm } from 'react-hook-form';
 import { api } from '../../services';
 import { useEffect } from 'react';
 import {
-  formatCurrencyBRL,
+  formatCurrencyInputBRL,
   parseBRLCurrency,
 } from '../../utils/formatCurrency';
 
@@ -127,7 +127,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                   },
                 })}
                 onChange={(e) => {
-                  const formatted = formatCurrencyBRL(e.target.value);
+                  const formatted = formatCurrencyInputBRL(e.target.value);
                   e.target.value = formatted;
                 }}
                 placeholder="R$ 0,00"
