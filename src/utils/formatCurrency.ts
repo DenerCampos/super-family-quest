@@ -5,15 +5,29 @@ export const formatCurrency = (value: number) => {
   }).format(value);
 };
 
-export function formatCurrencyBRL(value: string): string {
-  const cleanValue = value.toString().replace(/\D/g, '');
+export function formatCurrencyBRL(value: string | number): string {
+  const numericValue = typeof value === 'string' ? parseFloat(value) : value;
 
-  if (!cleanValue || cleanValue === '0') {
+  if (isNaN(numericValue)) {
     return '0,00';
   }
 
-  const numericValue = parseInt(cleanValue, 10) / 100;
+  return numericValue.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
 
+// Para input com máscara (digitação do usuário)
+export function formatCurrencyInputBRL(value: string): string {
+  const cleanValue = value.replace(/\D/g, '');
+  
+  if (!cleanValue) {
+    return '';
+  }
+  
+  const numericValue = parseInt(cleanValue, 10) / 100;
+  
   return numericValue.toLocaleString('pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,

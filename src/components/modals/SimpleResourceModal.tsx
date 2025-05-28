@@ -24,6 +24,10 @@ type Props = {
   onSuccess: () => void;
 };
 
+type ApiResources = {
+  [key in Props['resourceType']]: () => Promise<any>;
+};
+
 const resourceNames = {
   store: 'Nova Loja',
   payment: 'Nova Forma de Pagamento',
@@ -56,14 +60,14 @@ export const SimpleResourceModal = ({
       const formattedData = {
         name: formatName(data.name),
       };
-
-      const mappingApiResources = {
-        store: api.createStore(formattedData),
-        payment: api.createPayment(formattedData),
-        group: api.createGroup(formattedData),
+      
+      const mappingApiResources: ApiResources = {
+        store: () => api.createStore(formattedData),
+        payment: () => api.createPayment(formattedData),
+        group: () => api.createGroup(formattedData),
       };
 
-      await mappingApiResources[resourceType];
+      await mappingApiResources[resourceType]();
 
       toast({
         title: 'Sucesso!',

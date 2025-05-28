@@ -31,7 +31,7 @@ import type {
 } from '../../services/resources';
 import { LoadingOverlay } from '../LoadingOverlay';
 import {
-  formatCurrencyBRL,
+  formatCurrencyInputBRL,
   parseBRLCurrency,
 } from '../../utils/formatCurrency';
 import { AutocompleteInput } from '../AutocompleteInput';
@@ -90,6 +90,7 @@ export const CouponModal = ({
     watch,
     formState: { errors, isValid, isSubmitting },
     setValue,
+    trigger,
   } = useForm<Coupom>({
     mode: 'onChange',
     defaultValues: {
@@ -132,6 +133,10 @@ export const CouponModal = ({
             keepSubmitCount: false,
           });
         }
+
+        setTimeout(() => {
+          trigger(); // Força validação de todos os campos
+        }, 300);
       } catch (error) {
         console.log(error);
         toast({
@@ -146,7 +151,7 @@ export const CouponModal = ({
     };
 
     initializeForm();
-  }, [stores, payments, groups, initialData]);
+  }, [stores, payments, groups, initialData, trigger]);
 
   const handleAddItem = () => {
     append(
@@ -380,14 +385,26 @@ export const CouponModal = ({
                             <FormLabel>Quantidade</FormLabel>
                             <Input
                               type="number"
+                              step="0.001"
                               {...register(`items.${index}.quantity`, {
                                 required: 'Campo obrigatório',
-                                min: { value: 1, message: 'Mínimo 1' },
+                                validate: (value) => {
+                                  const numValue = Number(value);
+                                  if (isNaN(numValue)) return 'Valor inválido';
+                                  if (numValue <= 0)
+                                    return 'Quantidade deve ser maior que 0';
+                                  return true;
+                                },
                                 valueAsNumber: true,
                               })}
                               {...inputStyle}
                               size="sm"
                             />
+                            {errors.items?.[index]?.quantity && (
+                              <Text color="red.300" fontSize="sm">
+                                {errors.items[index]?.quantity?.message}
+                              </Text>
+                            )}
                           </FormControl>
 
                           <FormControl
@@ -427,7 +444,7 @@ export const CouponModal = ({
                                 },
                               })}
                               onChange={(e) => {
-                                const formatted = formatCurrencyBRL(
+                                const formatted = formatCurrencyInputBRL(
                                   e.target.value,
                                 );
                                 e.target.value = formatted;

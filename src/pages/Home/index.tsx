@@ -48,7 +48,7 @@ const Home = () => {
     if (location.state?.scanned && location.state.couponData) {
       console.log('convertQRData', convertQRData(location.state.couponData));
       
-      setScannedData(convertQRData(location.state.couponData));
+      setScannedData(convertQRData(location.state.couponData)); //verificar aqui, dinheiro vindo errado, exemplo 17.9 vindo 1,79
       onOpen();
     }
     if (location.state?.error) {
