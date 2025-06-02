@@ -13,8 +13,6 @@
         password,
       });
 
-      console.log('response', response);
-
       return response.data;
     },
   };

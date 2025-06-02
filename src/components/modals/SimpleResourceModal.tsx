@@ -80,7 +80,7 @@ export const SimpleResourceModal = ({
       reset();
       onClose();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       
       toast({
         title: 'Erro',

@@ -138,7 +138,7 @@ export const CouponModal = ({
           trigger(); // Força validação de todos os campos
         }, 300);
       } catch (error) {
-        console.log(error);
+        console.error(error);
         toast({
           title: 'Erro',
           status: 'error',
@@ -179,6 +179,11 @@ export const CouponModal = ({
           ...item,
           value: Number(parseBRLCurrency(item.value).toFixed(2)),
           quantity: Number(item.quantity),
+          total:
+            item.total === 0
+              ? Number(parseBRLCurrency(item.value).toFixed(2)) *
+                Number(item.quantity)
+              : item.total,
           group: {
             name: item.group,
           },
@@ -202,7 +207,7 @@ export const CouponModal = ({
       if (setScannedData) setScannedData(null);
       onClose();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast({
         title: 'Erro',
         status: 'error',
