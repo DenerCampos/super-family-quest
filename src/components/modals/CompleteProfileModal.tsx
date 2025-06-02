@@ -67,7 +67,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
 
       onComplete();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast({
         title: 'Erro',
         status: 'error',

@@ -5,8 +5,6 @@ export const ProfileService = {
   profile: async (): Promise<UserProfile> => {
     const response = await api.get('/user/profile');
 
-    console.log('response', response);
-
     return response.data;
   },
 

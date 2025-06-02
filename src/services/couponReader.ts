@@ -24,8 +24,6 @@ export const couponReaderService = {
   read: async ({ code }: { code: string }): Promise<CouponReader> => {
     const response = await api.get(`/coupon-reader/${code}`);
 
-    console.log('response', response);
-
     return response.data;
   },
 };

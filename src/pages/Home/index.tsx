@@ -45,15 +45,13 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (location.state?.scanned && location.state.couponData) {
-      console.log('convertQRData', convertQRData(location.state.couponData));
-      
-      setScannedData(convertQRData(location.state.couponData)); //verificar aqui, dinheiro vindo errado, exemplo 17.9 vindo 1,79
+    if (location.state?.scanned && location.state.couponData) {      
+      setScannedData(convertQRData(location.state.couponData));
       onOpen();
     }
     if (location.state?.error) {
       setScanError(location.state.error);
-      console.log(scanError);
+      console.error(scanError);
       
     }
   }, [location.state]);

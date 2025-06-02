@@ -17,7 +17,7 @@ const Login = () => {
     try {
       await login(email, password);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       
       toast({
         title: 'Erro no login',
