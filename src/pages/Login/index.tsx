@@ -64,6 +64,7 @@ const Login = () => {
         <Input
           placeholder="Familia (e-mail)"
           value={email}
+          variant="filled"
           onChange={(e) => setEmail(e.target.value)}
           type="email"
         />
@@ -71,6 +72,7 @@ const Login = () => {
         <Input
           type="password"
           placeholder="Senha"
+          variant="filled"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

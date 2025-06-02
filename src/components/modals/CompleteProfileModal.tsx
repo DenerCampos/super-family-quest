@@ -10,6 +10,11 @@ import {
   Button,
   Text,
   useToast,
+  Checkbox,
+  Tooltip,
+  Icon,
+  Box,
+  Flex,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { api } from '../../services';
@@ -18,6 +23,7 @@ import {
   formatCurrencyInputBRL,
   parseBRLCurrency,
 } from '../../utils/formatCurrency';
+import { FiInfo } from 'react-icons/fi';
 
 type Props = {
   isOpen: boolean;
@@ -31,6 +37,8 @@ type Props = {
 type FormData = {
   family: string;
   income: string;
+  incomeName: string;
+  repeatMonthly: boolean;
 };
 
 export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
@@ -40,7 +48,11 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    defaultValues: {
+      repeatMonthly: true,
+    },
+  });
 
   // Preencher automaticamente o sobrenome
   useEffect(() => {
@@ -56,6 +68,8 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
       await api.completeProfile({
         family: data.family,
         income: parseBRLCurrency(data.income),
+        incomeName: data.incomeName,
+        repeatMonthly: data.repeatMonthly,
       });
 
       toast({
@@ -116,7 +130,42 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
               )}
             </FormControl>
 
-            <FormControl isInvalid={!!errors.income} mb={6}>
+            {/* Novo campo: Nome da receita */}
+            <FormControl isInvalid={!!errors.incomeName} mb={4}>
+              <Flex align="center">
+                <FormLabel>Nome da Receita</FormLabel>
+                <Tooltip
+                  label="Nome da receita é sua fonte de renda principal"
+                  placement="top"
+                  hasArrow
+                  bg="purple.500"
+                  color="white"
+                >
+                  <Box ml={1}>
+                    <Icon as={FiInfo} color="purple.300" boxSize={4} />
+                  </Box>
+                </Tooltip>
+              </Flex>
+              <Input
+                {...register('incomeName', {
+                  required: 'Este campo é obrigatório',
+                })}
+                placeholder="Ex: Salário, Freelance, etc"
+                bg="purple.100"
+                color="purple.800"
+                _focus={{
+                  borderColor: 'purple.500',
+                  boxShadow: '0 0 0 1px purple.500',
+                }}
+              />
+              {errors.incomeName && (
+                <Text color="red.300" fontSize="sm">
+                  {errors.incomeName.message}
+                </Text>
+              )}
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.income} mb={4}>
               <FormLabel>Renda Mensal</FormLabel>
               <Input
                 {...register('income', {
@@ -143,6 +192,30 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                   {errors.income.message}
                 </Text>
               )}
+            </FormControl>
+
+            {/* Novo campo: Checkbox para repetir mensalmente */}
+            <FormControl mb={6}>
+              <Checkbox
+                {...register('repeatMonthly')}
+                defaultChecked
+                colorScheme="purple"
+              >
+                <Flex align="center">
+                  Repetir para todos os meses
+                  <Tooltip
+                    label="Marcando essa opção, todo mês o sistema irá adicionar esse valor. Pode ser alterado em Recursos -> receita"
+                    placement="top"
+                    hasArrow
+                    bg="purple.500"
+                    color="white"
+                  >
+                    <Box ml={1}>
+                      <Icon as={FiInfo} color="purple.300" boxSize={4} />
+                    </Box>
+                  </Tooltip>
+                </Flex>
+              </Checkbox>
             </FormControl>
 
             <Button

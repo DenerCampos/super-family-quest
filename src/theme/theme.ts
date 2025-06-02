@@ -35,6 +35,27 @@ const theme = extendTheme({
         },
       },
     },
+    Input: {
+      variants: {
+        filled: {
+          field: {
+            bg: 'gray.700', // Fundo mais escuro no estado normal
+            color: 'white', // Texto branco para melhor contraste
+            _hover: {
+              bg: 'gray.600', // Efeito hover sutil
+            },
+            _focus: {
+              bg: 'white', // Fundo branco quando em foco
+              color: 'black', // Texto preto quando em foco
+              borderColor: 'purple.500',
+            },
+            _placeholder: {
+              color: 'gray.400', // Placeholder visível
+            },
+          },
+        },
+      },
+    },
   },
 });
 
