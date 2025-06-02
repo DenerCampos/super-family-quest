@@ -1,6 +1,6 @@
 // src/pages/Cadastro/index.tsx
 import { useState } from 'react';
-import { Flex, Input, Button, Text, useToast, Spinner } from '@chakra-ui/react';
+import { Flex, Input, Button, Text, useToast } from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { api } from '../../services';
 
