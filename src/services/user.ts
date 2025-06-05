@@ -1,5 +1,14 @@
 import api from "./api";
 
+export type UserUpdate = {
+  id?: string;
+  name?: string;
+  email?: string;
+  password?: string;
+  family?: string;
+  coatOfArms?: string;
+};
+
 export const UserService = {
   register: async ({
     name,
@@ -14,7 +23,26 @@ export const UserService = {
       name,
       email,
       password,
-    });   
+    });
+
+    return response.data;
+  },
+
+  update: async ({
+    id,
+    name,
+    email,
+    password,
+    family,
+    coatOfArms,
+  }: UserUpdate): Promise<void> => {
+    const response = await api.patch(`/user/${id}`, {
+      name,
+      email,
+      password,
+      family,
+      coatOfArms,
+    });
 
     return response.data;
   },
