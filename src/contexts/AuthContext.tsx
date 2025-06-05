@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../services';
 
 export type UserProfile = {
+  id: string;
   email: string;
   name: string;
   family: string;

@@ -9,6 +9,7 @@ export const api = {
   completeProfile: ProfileService.completeProfile,
   login: AuthService.login,
   register: UserService.register,
+  updateUser: UserService.update,
   couponReader: couponReaderService.read,
   getStores: resourcesService.getStores,
   getPayments: resourcesService.getPayments,
