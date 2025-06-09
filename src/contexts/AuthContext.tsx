@@ -12,6 +12,7 @@ export type UserProfile = {
   coins: number;
   coatOfArms: string;
   isFirstAccess: boolean;
+  newMonth: boolean;
 };
 
 type AuthContextType = {

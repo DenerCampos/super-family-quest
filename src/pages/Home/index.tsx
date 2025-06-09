@@ -15,6 +15,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { convertQRData } from '../../utils/qrCode';
 import { CompleteProfileModal } from '../../components/modals/CompleteProfileModal';
 import { SummaryCard } from '../../components/SummaryCard';
+import { NewMonthIncomeModal } from '../../components/modals/NewMonthIncomeModal';
 
 const Home = () => {
   const { user, loadProfile } = useAuth();
@@ -26,6 +27,7 @@ const Home = () => {
   const [scannedData, setScannedData] = useState<Coupom | null>(null);
   const [scanError, setScanError] = useState('');
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
+  const [showNewMonthModal, setShowNewMonthModal] = useState(false);
   const navigate = useNavigate();
 
   // Carregar dados para o modal
@@ -60,11 +62,25 @@ const Home = () => {
     if (user && user.isFirstAccess) {
       setShowCompleteProfile(true);
     }
+
+    if (user && user.newMonth) {
+      setShowNewMonthModal(true);
+    }
   }, [user]);
 
 
   const handleSuccess = async () => {
-    await loadProfile(); // Atualizar dados do usuário após cadastro
+    await loadProfile();
+  };
+
+  const handleEditIncomes = () => {
+    setShowNewMonthModal(false);
+    navigate('/new-resources');
+  };
+
+  const handleConfirmNewMonth = async () => {
+    setShowNewMonthModal(false);
+    await loadProfile();
   };
 
   return (
@@ -133,6 +149,13 @@ const Home = () => {
           setShowCompleteProfile(false);
           loadProfile(); // Atualiza os dados do usuário
         }}
+      />
+
+      {/* Novo Modal para Receitas de Novo Mês */}
+      <NewMonthIncomeModal
+        isOpen={showNewMonthModal}
+        onClose={handleConfirmNewMonth}
+        onEdit={handleEditIncomes}
       />
 
       <NavigationBar />

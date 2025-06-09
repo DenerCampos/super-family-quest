@@ -1,7 +1,8 @@
 import { AuthService } from "./auth";
-import { couponReaderService } from './couponReader';
+import { CouponReaderService } from './couponReader';
 import { ProfileService } from "./profile";
-import { resourcesService } from './resources';
+import { ResourcesService } from './resources';
+import { RevenueService } from './revenue';
 import { UserService } from "./user";
 
 export const api = {
@@ -10,12 +11,14 @@ export const api = {
   login: AuthService.login,
   register: UserService.register,
   updateUser: UserService.update,
-  couponReader: couponReaderService.read,
-  getStores: resourcesService.getStores,
-  getPayments: resourcesService.getPayments,
-  getGroups: resourcesService.getGroups,
-  createStore: resourcesService.createStore,
-  createPayment: resourcesService.createPayment,
-  createGroup: resourcesService.createGroup,
-  createCoupon: resourcesService.createCoupon,
+  couponReader: CouponReaderService.read,
+  getStores: ResourcesService.getStores,
+  getPayments: ResourcesService.getPayments,
+  getGroups: ResourcesService.getGroups,
+  createStore: ResourcesService.createStore,
+  createPayment: ResourcesService.createPayment,
+  createGroup: ResourcesService.createGroup,
+  createCoupon: ResourcesService.createCoupon,
+  confirmNewMonthIncomes: RevenueService.confirmNewMonthIncomes,
+  getRepeatedIncomes: RevenueService.getRepeatedIncomes,
 };
