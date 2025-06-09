@@ -59,7 +59,7 @@ export type CoupomCreate = {
   items: Array<ItemsCreate>;
 };
 
-export const resourcesService = {
+export const ResourcesService = {
   getStores: async (): Promise<Merchant[]> => {
     const response = await api.get('/store');
 

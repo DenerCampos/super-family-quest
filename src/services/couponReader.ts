@@ -20,7 +20,7 @@ export type CouponReader = {
   items: Array<CouponReaderItems>;
 };
 
-export const couponReaderService = {
+export const CouponReaderService = {
   read: async ({ code }: { code: string }): Promise<CouponReader> => {
     const response = await api.get(`/coupon-reader/${code}`);
 
