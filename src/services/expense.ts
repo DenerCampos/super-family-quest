@@ -9,9 +9,9 @@ export type Expense = {
 }
 
 export const ExpenseService = {
-  // getLatest: async (limit = 5): Promise<Expense[] | []> => {
-  //   const response = await api.get(`/expense/latest/${limit}`);
+  getLatest: async (limit = 5): Promise<Expense[] | []> => {
+    const response = await api.get(`/expense/latest/${limit}`);
 
-  //   return response.data;
-  // },
+    return response.data;
+  },
 };

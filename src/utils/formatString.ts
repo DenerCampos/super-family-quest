@@ -3,8 +3,8 @@ export const capitalizeFirstLetter = (str: string): string => {
     .toLowerCase()
     .replace(
       /^(\**)(\w)/,
-      (match: string, asterisks: string, firstLetter: string) => {
-        return asterisks + firstLetter.toUpperCase();
+      (match: string) => {        
+        return match.toUpperCase();
       },
     );
 };

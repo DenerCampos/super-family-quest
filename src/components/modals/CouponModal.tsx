@@ -55,7 +55,7 @@ type Props = {
   onSuccess: () => void;
   initialData?: Partial<Coupom> | null;
   setScannedData?: React.Dispatch<React.SetStateAction<Coupom | null>>;
-  handleNewRegistration: () => void;
+  handleNewRegistration?: () => void;
 };
 
 export const CouponModal = ({
@@ -208,7 +208,7 @@ export const CouponModal = ({
       reset();
       if (setScannedData) setScannedData(null);
       onClose();
-      handleNewRegistration(); // Atualiza a lista de cupons
+      if (handleNewRegistration) handleNewRegistration(); // Atualiza a lista de cupons
     } catch (error) {
       console.error(error);
       toast({
