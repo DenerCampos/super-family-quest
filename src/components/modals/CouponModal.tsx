@@ -1,4 +1,9 @@
 import {
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -10,7 +15,6 @@ import {
   Input,
   Grid,
   Button,
-  Card,
   Flex,
   useToast,
   Text,
@@ -36,6 +40,7 @@ import {
 } from '../../utils/formatCurrency';
 import { AutocompleteInput } from '../AutocompleteInput';
 import { useAuth } from '../../contexts/AuthContext';
+import { formatGramsInput, parseGrams } from '../../utils/formatGrams';
 
 const inputStyle = {
   bgColor: 'purple.100',
@@ -72,12 +77,13 @@ export const CouponModal = ({
   const { loadProfile } = useAuth();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [expandedItemIndex, setExpandedItemIndex] = useState<number>(0);
   const { isOpen: isItemsCollapsed, onToggle: toggleItemsCollapsed } =
     useDisclosure({ defaultIsOpen: false });
   const defaultItem = {
     code: '1',
     name: '',
-    quantity: 1,
+    quantity: '1',
     unit: 'Unidade',
     value: '0,00',
     total: 0,
@@ -156,6 +162,8 @@ export const CouponModal = ({
   }, [stores, payments, groups, initialData, trigger]);
 
   const handleAddItem = () => {
+    const newIndex = fields.length;
+
     append(
       {
         ...defaultItem,
@@ -165,6 +173,10 @@ export const CouponModal = ({
         shouldFocus: false,
       },
     );
+
+    setTimeout(() => {
+      setExpandedItemIndex(newIndex);
+    }, 0);
   };
 
   const onSubmit = async (data: Coupom) => {
@@ -308,7 +320,7 @@ export const CouponModal = ({
 
               <FormControl mt={4} isInvalid={!!errors.items}>
                 <Flex justify="space-between" align="center" mb={2}>
-                  <FormLabel>🧾 Itens da despesa</FormLabel>
+                  <FormLabel>📋 Itens da despesa</FormLabel>
                   <Button
                     size="sm"
                     variant="ghost"
@@ -328,185 +340,239 @@ export const CouponModal = ({
                 </Flex>
 
                 <Collapse in={isItemsCollapsed} animateOpacity>
-                  {fields.map((field, index) => (
-                    <Card key={field.id} bg="purple.700" mb={4} p={4}>
-                      <Flex direction="column" gap={4}>
-                        <Grid
-                          templateColumns={{
-                            base: '1fr',
-                            md: 'repeat(2, 1fr)',
-                          }}
-                          gap={4}
+                  <Accordion
+                    allowToggle
+                    index={expandedItemIndex}
+                    onChange={(index) => setExpandedItemIndex(index as number)}
+                  >
+                    {fields.map((field, index) => (
+                      <AccordionItem
+                        key={field.id}
+                        border="1px"
+                        borderColor="purple.600"
+                        mb={2}
+                      >
+                        <AccordionButton
+                          bg="purple.700"
+                          _hover={{ bg: 'purple.600' }}
+                          _expanded={{ bg: 'purple.600' }}
+                          color="white"
                         >
-                          <FormControl
-                            isInvalid={!!errors.items?.[index]?.code}
-                          >
-                            <FormLabel>Código</FormLabel>
-                            <Input
-                              {...register(`items.${index}.code`, {
-                                required: 'Código obrigatório',
-                                pattern: {
-                                  value: /^[a-zA-Z0-9]+$/,
-                                  message: 'Apenas letras e números',
-                                },
-                              })}
-                              {...inputStyle}
-                              size="sm"
-                            />
-                            {errors.items?.[index]?.code && (
-                              <Text color="red.300" fontSize="sm">
-                                {errors.items[index]?.code?.message}
-                              </Text>
-                            )}
-                          </FormControl>
+                          <Box flex="1" textAlign="left">
+                            <Text fontWeight="semibold">
+                              Item {index + 1}:{' '}
+                              {watch(`items.${index}.name`) || 'Novo item'}
+                            </Text>
+                            <Text fontSize="sm" color="purple.200">
+                              {watch(`items.${index}.value`) || '0,00'} •{' '}
+                              {watch(`items.${index}.quantity`) || '1'}{' '}
+                              {watch(`items.${index}.unit`) || 'Unidade'}
+                            </Text>
+                          </Box>
+                          <AccordionIcon />
+                        </AccordionButton>
 
-                          <FormControl
-                            isInvalid={!!errors.items?.[index]?.name}
-                          >
-                            <FormLabel>Nome</FormLabel>
-                            <Input
-                              {...register(`items.${index}.name`, {
-                                required: 'Nome obrigatório',
-                                minLength: {
-                                  value: 3,
-                                  message: 'Mínimo 3 caracteres',
-                                },
-                              })}
-                              {...inputStyle}
-                              size="sm"
-                            />
-                            {errors.items?.[index]?.name && (
-                              <Text color="red.300" fontSize="sm">
-                                {errors.items[index]?.name?.message}
-                              </Text>
-                            )}
-                          </FormControl>
-                        </Grid>
-
-                        <Grid
-                          templateColumns={{
-                            base: '1fr',
-                            md: 'repeat(3, 1fr)',
-                          }}
-                          gap={4}
-                        >
-                          <FormControl
-                            isInvalid={!!errors.items?.[index]?.quantity}
-                          >
-                            <FormLabel>Quantidade</FormLabel>
-                            <Input
-                              type="number"
-                              step="0.001"
-                              {...register(`items.${index}.quantity`, {
-                                required: 'Campo obrigatório',
-                                validate: (value) => {
-                                  const numValue = Number(value);
-                                  if (isNaN(numValue)) return 'Valor inválido';
-                                  if (numValue <= 0)
-                                    return 'Quantidade deve ser maior que 0';
-                                  return true;
-                                },
-                                valueAsNumber: true,
-                              })}
-                              {...inputStyle}
-                              size="sm"
-                            />
-                            {errors.items?.[index]?.quantity && (
-                              <Text color="red.300" fontSize="sm">
-                                {errors.items[index]?.quantity?.message}
-                              </Text>
-                            )}
-                          </FormControl>
-
-                          <FormControl
-                            isInvalid={!!errors.items?.[index]?.unit}
-                          >
-                            <FormLabel>Unidade</FormLabel>
-                            <Input
-                              {...register(`items.${index}.unit`, {
-                                required: 'Campo obrigatório',
-                              })}
-                              {...inputStyle}
-                              size="sm"
-                            />
-                            {errors.items?.[index]?.unit && (
-                              <Text color="red.300" fontSize="sm">
-                                {errors.items[index]?.unit?.message}
-                              </Text>
-                            )}
-                          </FormControl>
-
-                          <FormControl
-                            isInvalid={!!errors.items?.[index]?.value}
-                          >
-                            <FormLabel>Valor Unitário</FormLabel>
-                            <Input
-                              type="text"
-                              {...register(`items.${index}.value`, {
-                                required: 'Campo obrigatório',
-                                validate: (value) => {
-                                  const numericValue = parseBRLCurrency(value);
-                                  if (isNaN(numericValue))
-                                    return 'Valor inválido';
-                                  return (
-                                    numericValue >= 0.01 ||
-                                    'Valor deve ser maior que 0,00'
-                                  );
-                                },
-                              })}
-                              onChange={(e) => {
-                                const formatted = formatCurrencyInputBRL(
-                                  e.target.value,
-                                );
-                                e.target.value = formatted;
-                                setValue(`items.${index}.value`, formatted, {
-                                  shouldValidate: true,
-                                  shouldDirty: true,
-                                });
+                        <AccordionPanel bg="purple.700" pb={4}>
+                          <Flex direction="column" gap={4}>
+                            <Grid
+                              templateColumns={{
+                                base: '1fr',
+                                md: 'repeat(2, 1fr)',
                               }}
-                              {...inputStyle}
+                              gap={4}
+                            >
+                              <FormControl
+                                isInvalid={!!errors.items?.[index]?.code}
+                              >
+                                <FormLabel>Código</FormLabel>
+                                <Input
+                                  {...register(`items.${index}.code`, {
+                                    required: 'Código obrigatório',
+                                    pattern: {
+                                      value: /^[a-zA-Z0-9]+$/,
+                                      message: 'Apenas letras e números',
+                                    },
+                                  })}
+                                  {...inputStyle}
+                                  size="sm"
+                                />
+                                {errors.items?.[index]?.code && (
+                                  <Text color="red.300" fontSize="sm">
+                                    {errors.items[index]?.code?.message}
+                                  </Text>
+                                )}
+                              </FormControl>
+
+                              <FormControl
+                                isInvalid={!!errors.items?.[index]?.name}
+                              >
+                                <FormLabel>Nome</FormLabel>
+                                <Input
+                                  {...register(`items.${index}.name`, {
+                                    required: 'Nome obrigatório',
+                                    minLength: {
+                                      value: 3,
+                                      message: 'Mínimo 3 caracteres',
+                                    },
+                                  })}
+                                  {...inputStyle}
+                                  size="sm"
+                                />
+                                {errors.items?.[index]?.name && (
+                                  <Text color="red.300" fontSize="sm">
+                                    {errors.items[index]?.name?.message}
+                                  </Text>
+                                )}
+                              </FormControl>
+                            </Grid>
+
+                            <Grid
+                              templateColumns={{
+                                base: '1fr',
+                                md: 'repeat(3, 1fr)',
+                              }}
+                              gap={4}
+                            >
+                              <FormControl
+                                isInvalid={!!errors.items?.[index]?.quantity}
+                              >
+                                <FormLabel>Quantidade</FormLabel>
+                                <Input
+                                  type="text"
+                                  step="0.001"
+                                  {...register(`items.${index}.quantity`, {
+                                    required: 'Campo obrigatório',
+                                    validate: (value) => {
+                                      const numValue = parseGrams(value);
+                                      if (isNaN(numValue))
+                                        return 'Valor inválido';
+                                      if (numValue <= 0.0)
+                                        return 'Quantidade deve ser maior que 0.001';
+                                      return true;
+                                    },
+                                    valueAsNumber: true,
+                                  })}
+                                  onChange={(e) => {
+                                    const formatted = formatGramsInput(
+                                      e.target.value,
+                                    );
+                                    e.target.value = formatted;
+                                    setValue(
+                                      `items.${index}.quantity`,
+                                      formatted,
+                                      {
+                                        shouldValidate: true,
+                                        shouldDirty: true,
+                                      },
+                                    );
+                                  }}
+                                  {...inputStyle}
+                                  size="sm"
+                                />
+                                {errors.items?.[index]?.quantity && (
+                                  <Text color="red.300" fontSize="sm">
+                                    {errors.items[index]?.quantity?.message}
+                                  </Text>
+                                )}
+                              </FormControl>
+
+                              <FormControl
+                                isInvalid={!!errors.items?.[index]?.unit}
+                              >
+                                <FormLabel>Unidade</FormLabel>
+                                <Input
+                                  {...register(`items.${index}.unit`, {
+                                    required: 'Campo obrigatório',
+                                  })}
+                                  {...inputStyle}
+                                  size="sm"
+                                />
+                                {errors.items?.[index]?.unit && (
+                                  <Text color="red.300" fontSize="sm">
+                                    {errors.items[index]?.unit?.message}
+                                  </Text>
+                                )}
+                              </FormControl>
+
+                              <FormControl
+                                isInvalid={!!errors.items?.[index]?.value}
+                              >
+                                <FormLabel>Valor Unitário</FormLabel>
+                                <Input
+                                  type="text"
+                                  {...register(`items.${index}.value`, {
+                                    required: 'Campo obrigatório',
+                                    validate: (value) => {
+                                      const numericValue =
+                                        parseBRLCurrency(value);
+                                      if (isNaN(numericValue))
+                                        return 'Valor inválido';
+                                      return (
+                                        numericValue >= 0.01 ||
+                                        'Valor deve ser maior que 0,00'
+                                      );
+                                    },
+                                  })}
+                                  onChange={(e) => {
+                                    const formatted = formatCurrencyInputBRL(
+                                      e.target.value,
+                                    );
+                                    e.target.value = formatted;
+                                    setValue(
+                                      `items.${index}.value`,
+                                      formatted,
+                                      {
+                                        shouldValidate: true,
+                                        shouldDirty: true,
+                                      },
+                                    );
+                                  }}
+                                  {...inputStyle}
+                                  size="sm"
+                                />
+                                {errors.items?.[index]?.value && (
+                                  <Text color="red.300" fontSize="sm">
+                                    {errors.items[index]?.value?.message}
+                                  </Text>
+                                )}
+                              </FormControl>
+
+                              <FormControl
+                                isInvalid={!!errors.items?.[index]?.group}
+                              >
+                                <FormLabel>Grupo</FormLabel>
+                                <AutocompleteInput
+                                  value={watch(`items.${index}.group`) || ''}
+                                  options={groups.map((group) => group.name)}
+                                  onChange={(value) =>
+                                    setValue(`items.${index}.group`, value, {
+                                      shouldValidate: true,
+                                    })
+                                  }
+                                  placeholder="Selecione ou digite um grupo"
+                                />
+                                {errors.items?.[index]?.group && (
+                                  <Text color="red.300" fontSize="sm">
+                                    {errors.items[index]?.group?.message}
+                                  </Text>
+                                )}
+                              </FormControl>
+                            </Grid>
+
+                            <Button
+                              onClick={() => remove(index)}
+                              colorScheme="red"
                               size="sm"
-                            />
-                            {errors.items?.[index]?.value && (
-                              <Text color="red.300" fontSize="sm">
-                                {errors.items[index]?.value?.message}
-                              </Text>
-                            )}
-                          </FormControl>
-
-                          <FormControl
-                            isInvalid={!!errors.items?.[index]?.group}
-                          >
-                            <FormLabel>Grupo</FormLabel>
-                            <AutocompleteInput
-                              value={watch(`items.${index}.group`) || ''}
-                              options={groups.map((group) => group.name)}
-                              onChange={(value) =>
-                                setValue(`items.${index}.group`, value, {
-                                  shouldValidate: true,
-                                })
-                              }
-                              placeholder="Selecione ou digite um grupo"
-                            />
-                            {errors.items?.[index]?.group && (
-                              <Text color="red.300" fontSize="sm">
-                                {errors.items[index]?.group?.message}
-                              </Text>
-                            )}
-                          </FormControl>
-                        </Grid>
-
-                        <Button
-                          onClick={() => remove(index)}
-                          colorScheme="red"
-                          size="sm"
-                          alignSelf="flex-end"
-                        >
-                          Remover Item
-                        </Button>
-                      </Flex>
-                    </Card>
-                  ))}
+                              alignSelf="flex-end"
+                              isDisabled={fields.length <= 1}
+                            >
+                              Remover Item
+                            </Button>
+                          </Flex>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
 
                   <Button
                     onClick={handleAddItem}
@@ -527,7 +593,7 @@ export const CouponModal = ({
                 isDisabled={!isValid || isSubmitting}
                 isLoading={isSubmitting}
               >
-                Salvar Cupom
+                Salvar Despesa
               </Button>
             </form>
           ) : (

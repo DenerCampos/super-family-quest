@@ -18,7 +18,7 @@ export type Groups = {
 export type Items = {
   code: string | null;
   name: string;
-  quantity: number;
+  quantity: number | string;
   unit: string;
   value: number | string;
   total: number;
