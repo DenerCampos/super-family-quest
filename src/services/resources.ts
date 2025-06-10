@@ -27,7 +27,7 @@ export type Items = {
 
 export type Coupom = {
   number: string;
-  url: string | null;
+  url?: string | null;
   date: string;
   payment: string;
   store: string;
@@ -48,7 +48,7 @@ export type ItemsCreate = {
 
 export type CoupomCreate = {
   number: string;
-  url: string | null;
+  url?: string | null;
   date: string;
   payment: {
     name: string;

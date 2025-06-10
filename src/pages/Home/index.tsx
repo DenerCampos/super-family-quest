@@ -16,6 +16,7 @@ import { convertQRData } from '../../utils/qrCode';
 import { CompleteProfileModal } from '../../components/modals/CompleteProfileModal';
 import { SummaryCard } from '../../components/SummaryCard';
 import { NewMonthIncomeModal } from '../../components/modals/NewMonthIncomeModal';
+import { LastRegistrationsList } from '../../components/LastRegistrationsList';
 
 const Home = () => {
   const { user, loadProfile } = useAuth();
@@ -28,6 +29,7 @@ const Home = () => {
   const [scanError, setScanError] = useState('');
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
   const [showNewMonthModal, setShowNewMonthModal] = useState(false);
+  const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
   const navigate = useNavigate();
 
   // Carregar dados para o modal
@@ -68,6 +70,9 @@ const Home = () => {
     }
   }, [user]);
 
+  const handleNewRegistration = () => {
+    setNewRegistrationAdded(true);
+  };
 
   const handleSuccess = async () => {
     await loadProfile();
@@ -112,7 +117,7 @@ const Home = () => {
           boxShadow="md"
           onClick={onOpen}
         >
-          Adicionar Novo Cupom
+          Adicionar Nova Despesa
         </Button>
         <Button
           colorScheme="teal"
@@ -122,8 +127,10 @@ const Home = () => {
           boxShadow="md"
           onClick={() => navigate('/scan')}
         >
-          Ler QR Code
+          Ler QR Code da Despesa
         </Button>
+
+        <LastRegistrationsList newRegistrationAdded={newRegistrationAdded} setNewRegistrationAdded={setNewRegistrationAdded} />
       </Flex>
 
       {isOpen && (
@@ -136,6 +143,7 @@ const Home = () => {
           onSuccess={handleSuccess}
           initialData={scannedData}
           setScannedData={setScannedData}
+          handleNewRegistration={handleNewRegistration}
         />
       )}
 
