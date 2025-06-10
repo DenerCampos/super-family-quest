@@ -9,6 +9,17 @@ export type UserUpdate = {
   coatOfArms?: string;
 };
 
+export type RegistrationType = 'expense' | 'revenue';
+
+export type Registration = {
+  id: string;
+  name: string;
+  value: number;
+  coins: number;
+  type: RegistrationType;
+  date: string;
+};
+
 export const UserService = {
   register: async ({
     name,
@@ -43,6 +54,12 @@ export const UserService = {
       family,
       coatOfArms,
     });
+
+    return response.data;
+  },
+
+  getLatestRegistrations: async (limit = 5): Promise<Registration[] | []> => {
+    const response = await api.get(`/user/latest-registrations?limit=${limit}`);
 
     return response.data;
   },

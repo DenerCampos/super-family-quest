@@ -21,4 +21,6 @@ export const api = {
   createCoupon: ResourcesService.createCoupon,
   confirmNewMonthIncomes: RevenueService.confirmNewMonthIncomes,
   getRepeatedIncomes: RevenueService.getRepeatedIncomes,
+  getLatestRegistrations: (limit?: number) =>
+    UserService.getLatestRegistrations(limit),
 };

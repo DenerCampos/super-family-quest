@@ -55,6 +55,7 @@ type Props = {
   onSuccess: () => void;
   initialData?: Partial<Coupom> | null;
   setScannedData?: React.Dispatch<React.SetStateAction<Coupom | null>>;
+  handleNewRegistration: () => void;
 };
 
 export const CouponModal = ({
@@ -66,6 +67,7 @@ export const CouponModal = ({
   onSuccess,
   initialData,
   setScannedData,
+  handleNewRegistration,
 }: Props) => {
   const { loadProfile } = useAuth();
   const toast = useToast();
@@ -96,9 +98,9 @@ export const CouponModal = ({
     defaultValues: {
       number: '1',
       date: new Date().toISOString().split('T')[0],
-      store: '', // Valor inicial vazio
-      payment: '', // Valor inicial vazio
-      items: [], // Array vazio inicial
+      store: '',
+      payment: '',
+      items: [],
     },
   });
 
@@ -206,12 +208,13 @@ export const CouponModal = ({
       reset();
       if (setScannedData) setScannedData(null);
       onClose();
+      handleNewRegistration(); // Atualiza a lista de cupons
     } catch (error) {
       console.error(error);
       toast({
         title: 'Erro',
         status: 'error',
-        description: 'Falha ao cadastrar cupom',
+        description: 'Falha ao cadastrar despesa',
         duration: 3000,
       });
     }
@@ -226,7 +229,7 @@ export const CouponModal = ({
             text={isLoading ? 'Carregando formulário' : 'Salvando'}
           />
         )}
-        <ModalHeader>Novo Cupom Fiscal</ModalHeader>
+        <ModalHeader>🧾 Nova Despesa</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={4}>
           {!isLoading ? (
@@ -305,10 +308,13 @@ export const CouponModal = ({
 
               <FormControl mt={4} isInvalid={!!errors.items}>
                 <Flex justify="space-between" align="center" mb={2}>
-                  <FormLabel>Itens (Mínimo 1)</FormLabel>
+                  <FormLabel>🧾 Itens da despesa</FormLabel>
                   <Button
                     size="sm"
                     variant="ghost"
+                    color="white"
+                    bg={'purple.500'}
+                    _hover={{ bg: 'purple.800' }}
                     onClick={toggleItemsCollapsed}
                     rightIcon={
                       <Icon

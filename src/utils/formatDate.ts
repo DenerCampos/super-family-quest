@@ -17,3 +17,14 @@ export const formatDateToYYYYMMDD = (dateString: string | Date): string => {
     return '';
   }
 };
+
+export const formatDateToBR = (dateString: string | Date): string => {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+  };
+  
+  return date.toLocaleDateString('pt-BR', options);
+};
