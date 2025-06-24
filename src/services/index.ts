@@ -8,19 +8,56 @@ import { UserService } from "./user";
 export const api = {
   profile: ProfileService.profile,
   completeProfile: ProfileService.completeProfile,
+  getLatestRegistrations: (limit?: number) =>
+    ProfileService.getLatestRegistrations(limit),
+
   login: AuthService.login,
   register: UserService.register,
   updateUser: UserService.update,
+
   couponReader: CouponReaderService.read,
-  getStores: ResourcesService.getStores,
-  getPayments: ResourcesService.getPayments,
-  getGroups: ResourcesService.getGroups,
+
+  getStores: ({
+    page,
+    limit,
+    search,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  } = {}) => ResourcesService.getStores({ page, limit, search }),
+  getPayments: ({
+    page,
+    limit,
+    search,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  } = {}) => ResourcesService.getPayments({ page, limit, search }),
+  getGroups: ({
+    page,
+    limit,
+    search,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  } = {}) => ResourcesService.getGroups({ page, limit, search }),
   createStore: ResourcesService.createStore,
   createPayment: ResourcesService.createPayment,
   createGroup: ResourcesService.createGroup,
-  createCoupon: ResourcesService.createCoupon,
+  createExpense: ResourcesService.createExpense,
+  getExpenses: ({
+    page,
+    limit,
+    search,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) => ResourcesService.getExpenses({ page, limit, search }),
+
   confirmNewMonthIncomes: RevenueService.confirmNewMonthIncomes,
   getRepeatedIncomes: RevenueService.getRepeatedIncomes,
-  getLatestRegistrations: (limit?: number) =>
-    UserService.getLatestRegistrations(limit),
 };

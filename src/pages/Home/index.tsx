@@ -19,7 +19,7 @@ import { NewMonthIncomeModal } from '../../components/modals/NewMonthIncomeModal
 import { LastRegistrationsList } from '../../components/LastRegistrationsList';
 
 const Home = () => {
-  const { user, loadProfile } = useAuth();
+  const { profile, loadProfile } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [stores, setStores] = useState<Merchant[]>([]);
   const [payments, setPayments] = useState<Payments[]>([]);
@@ -40,9 +40,9 @@ const Home = () => {
         api.getPayments(),
         api.getGroups(),
       ]);
-      setStores(storesData);
-      setPayments(paymentsData);
-      setGroups(groupsData);
+      setStores(storesData.data);
+      setPayments(paymentsData.data);
+      setGroups(groupsData.data);
     };
 
     loadData();
@@ -61,14 +61,14 @@ const Home = () => {
   }, [location.state]);
 
   useEffect(() => {
-    if (user && user.isFirstAccess) {
+    if (profile && profile.isFirstAccess) {
       setShowCompleteProfile(true);
     }
 
-    if (user && user.newMonth) {
+    if (profile && profile.newMonth) {
       setShowNewMonthModal(true);
     }
-  }, [user]);
+  }, [profile]);
 
   const handleNewRegistration = () => {
     setNewRegistrationAdded(true);
@@ -98,12 +98,12 @@ const Home = () => {
         <Flex direction="column" gap={4}>
           <SummaryCard
             title="Receitas do Mês"
-            value={user?.income || 0}
+            value={profile?.income || 0}
             colorScheme="green"
           />
           <SummaryCard
             title="Despesas do Mês"
-            value={user?.expenses || 0}
+            value={profile?.expenses || 0}
             colorScheme="red"
           />
         </Flex>
@@ -150,8 +150,8 @@ const Home = () => {
       <CompleteProfileModal
         isOpen={showCompleteProfile}
         user={{
-          email: user?.email || '',
-          name: user?.name || '',
+          email: profile?.user.email || '',
+          name: profile?.user.name || '',
         }}
         onComplete={() => {
           setShowCompleteProfile(false);

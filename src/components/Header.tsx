@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { CoinDisplay } from './CoinDisplay';
 
 export const Header = () => {
-  const { logout, user } = useAuth();
+  const { logout, profile } = useAuth();
 
   return (
     <Flex
@@ -24,13 +24,13 @@ export const Header = () => {
           alt="Brasão da Família"
         />
         <Heading size="md" color="white" fontFamily="Press Start 2P">
-          {user?.family}
+          {profile?.user.family}
         </Heading>
       </Flex>
 
       {/* Lado Direito - Moedas e Logout */}
       <Flex align="center" gap={4}>
-        <CoinDisplay coins={user?.coins || 0} />
+        <CoinDisplay coins={profile?.coins || 0} />
 
         <IconButton
           icon={<FiLogOut />}

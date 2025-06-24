@@ -1,5 +1,22 @@
 import api from "./api";
 
+export type PaginationResponse<T> = {
+  data: Array<T>;
+  meta: {
+    itemCount: number;
+    totalItems: number;
+    itemsPerPage: number;
+    totalPages: number;
+    currentPage: number;
+  };
+  links: {
+    first: string;
+    previous: string;
+    next: string;
+    last: string;
+  };
+};
+
 export type Merchant = {
   id: string;
   name: string;
@@ -22,15 +39,20 @@ export type Items = {
   unit: string;
   value: number | string;
   total: number;
-  group: string;
+  group: Groups;
 };
 
-export type Coupom = {
-  number: string;
-  url?: string | null;
-  date: string;
-  payment: string;
-  store: string;
+export type Expense = {
+  id: string;
+  name: string;
+  uri: string;
+  value: number;
+  repeat: boolean;
+  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  payment: Payments;
+  store: Merchant;
   items: Array<Items>;
 };
 
@@ -46,7 +68,7 @@ export type ItemsCreate = {
   };
 };
 
-export type CoupomCreate = {
+export type CoupomExpense = {
   number: string;
   url?: string | null;
   date: string;
@@ -60,20 +82,38 @@ export type CoupomCreate = {
 };
 
 export const ResourcesService = {
-  getStores: async (): Promise<Merchant[]> => {
-    const response = await api.get('/store');
+  getStores: async ({
+    page = 1,
+    limit = 5,
+    search = '',
+  }): Promise<PaginationResponse<Merchant>> => {
+    const response = await api.get(
+      `/store?page=${page}&limit=${limit}&search=${search}`,
+    );
 
     return response.data;
   },
 
-  getPayments: async (): Promise<Payments[]> => {
-    const response = await api.get('/payment');
+  getPayments: async ({
+    page = 1,
+    limit = 5,
+    search = '',
+  }): Promise<PaginationResponse<Payments>> => {
+    const response = await api.get(
+      `/payment?page=${page}&limit=${limit}&search=${search}`,
+    );
 
     return response.data;
   },
 
-  getGroups: async (): Promise<Groups[]> => {
-    const response = await api.get('/group');
+  getGroups: async ({
+    page = 1,
+    limit = 5,
+    search = '',
+  }): Promise<PaginationResponse<Groups>> => {
+    const response = await api.get(
+      `/group?page=${page}&limit=${limit}&search=${search}`,
+    );
 
     return response.data;
   },
@@ -102,8 +142,20 @@ export const ResourcesService = {
     return response.data;
   },
 
-  createCoupon: async (data: CoupomCreate): Promise<Coupom> => {
-    const response = await api.post('/coupon', data);
+  createExpense: async (data: CoupomExpense): Promise<Expense> => {
+    const response = await api.post('/expense', data);
+
+    return response.data;
+  },
+
+  getExpenses: async ({
+    page = 1,
+    limit = 5,
+    search = '',
+  }): Promise<PaginationResponse<Expense>> => {
+    const response = await api.get(
+      `/expense?page=${page}&limit=${limit}&search=${search}`,
+    );
 
     return response.data;
   },
