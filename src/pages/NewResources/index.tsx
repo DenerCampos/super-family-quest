@@ -385,7 +385,7 @@ const NewResources = () => {
                                   <MenuItem
                                     icon={<FiTrash2 />}
                                     onClick={() =>
-                                      handleDelete('store', store.id)
+                                      handleDelete('store', store.id as string)
                                     }
                                   >
                                     Excluir
@@ -495,7 +495,7 @@ const NewResources = () => {
                                   <MenuItem
                                     icon={<FiTrash2 />}
                                     onClick={() =>
-                                      handleDelete('payment', payment.id)
+                                      handleDelete('payment', payment.id as string)
                                     }
                                   >
                                     Excluir
@@ -611,7 +611,7 @@ const NewResources = () => {
                                   <MenuItem
                                     icon={<FiTrash2 />}
                                     onClick={() =>
-                                      handleDelete('group', group.id)
+                                      handleDelete('group', group.id as string)
                                     }
                                   >
                                     Excluir
@@ -743,7 +743,7 @@ const NewResources = () => {
                                   <MenuItem
                                     icon={<FiTrash2 />}
                                     onClick={() =>
-                                      handleDelete('expense', expense.id)
+                                      handleDelete('expense', expense.id as string)
                                     }
                                   >
                                     Excluir

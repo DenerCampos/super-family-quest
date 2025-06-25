@@ -15,7 +15,7 @@ import { api } from '../services';
 import { formatCurrencyBRL } from '../utils/formatCurrency';
 import { formatDateToBR } from '../utils/formatDate';
 import { capitalizeFirstLetter } from '../utils/formatString';
-import type { Registration } from '../services/user';
+import type { Registration } from '../services/profile';
 
 const MotionBox = motion(Box);
 

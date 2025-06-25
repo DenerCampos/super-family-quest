@@ -76,21 +76,24 @@ export const SimpleResourceModal = ({
 
       // Mapeamento para criação
       const mappingApiResources: ApiResources = {
-        store: () => api.createStore(formattedData),
-        payment: () => api.createPayment(formattedData),
-        group: () => api.createGroup(formattedData),
+        store: (data) => api.createStore(data),
+        payment: (data) => api.createPayment(data),
+        group: (data) => api.createGroup(data),
       };
 
       // Mapeamento para atualização
       const mappingUpdateResources: UpdateResources = {
-        store: (id) => api.updateStore({ id, name: formattedData.name }),
-        payment: (id) => api.updatePayment({ id, name: formattedData.name }),
-        group: (id) => api.updateGroup({ id, name: formattedData.name }),
+        store: (id, data) => api.updateStore({ id, name: data.name }),
+        payment: (id, data) => api.updatePayment({ id, name: data.name }),
+        group: (id, data) => api.updateGroup({ id, name: data.name }),
       };
 
       // Se tivermos initialData, estamos editando
       if (initialData && initialData.id) {
-        await mappingUpdateResources[resourceType](initialData.id);
+        await mappingUpdateResources[resourceType](
+          initialData.id,
+          formattedData,
+        );
         toast({
           title: 'Atualizado!',
           status: 'success',
@@ -99,7 +102,7 @@ export const SimpleResourceModal = ({
         });
       } else {
         // Caso contrário, estamos criando
-        await mappingApiResources[resourceType]();
+        await mappingApiResources[resourceType](formattedData);
         toast({
           title: 'Sucesso!',
           status: 'success',
