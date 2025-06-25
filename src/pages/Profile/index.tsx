@@ -38,11 +38,11 @@ const predefinedCoatOfArms = [
 ];
 
 const Profile = () => {
-  const { user, loadProfile } = useAuth();
+  const { profile, loadProfile } = useAuth();
   const toast = useToast();
-  const [name, setName] = useState(user?.name || '');
-  const [email, setEmail] = useState(user?.email || '');
-  const [family, setFamily] = useState(user?.family || '');
+  const [name, setName] = useState(profile?.user.name || '');
+  const [email, setEmail] = useState(profile?.user.email || '');
+  const [family, setFamily] = useState(profile?.user.family || '');
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isCoatChanged, setIsCoatChanged] = useState(false);
@@ -63,7 +63,7 @@ const Profile = () => {
   } = useDisclosure();
 
   const [selectedCoat, setSelectedCoat] = useState(
-    user?.coatOfArms || predefinedCoatOfArms[0],
+    profile?.user.coatOfArms || predefinedCoatOfArms[0],
   );
 
   // Validação de e-mail em tempo real
@@ -134,7 +134,7 @@ const Profile = () => {
     setIsLoading(true);
     try {
       const updatedData = {
-        id: user?.id,
+        id: profile?.user.id,
         ...(name && { name }),
         ...(email && { email }),
         ...(family && { family }),

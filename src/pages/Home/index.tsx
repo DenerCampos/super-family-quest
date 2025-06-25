@@ -8,9 +8,9 @@ import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
 import { FiCamera, FiPlus } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
-import { CouponModal } from '../../components/modals/CouponModal';
+import { ExpenseModal } from '../../components/modals/ExpenseModal';
 import { api } from '../../services';
-import type { Coupom, Groups, Merchant, Payments } from '../../services/resources';
+import type { Expense, Groups, Merchant, Payments } from '../../services/resources';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { convertQRData } from '../../utils/qrCode';
 import { CompleteProfileModal } from '../../components/modals/CompleteProfileModal';
@@ -19,13 +19,13 @@ import { NewMonthIncomeModal } from '../../components/modals/NewMonthIncomeModal
 import { LastRegistrationsList } from '../../components/LastRegistrationsList';
 
 const Home = () => {
-  const { user, loadProfile } = useAuth();
+  const { profile, loadProfile } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [stores, setStores] = useState<Merchant[]>([]);
   const [payments, setPayments] = useState<Payments[]>([]);
   const [groups, setGroups] = useState<Groups[]>([]);
   const location = useLocation();
-  const [scannedData, setScannedData] = useState<Coupom | null>(null);
+  const [scannedData, setScannedData] = useState<Expense | null>(null);
   const [scanError, setScanError] = useState('');
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
   const [showNewMonthModal, setShowNewMonthModal] = useState(false);
@@ -40,9 +40,9 @@ const Home = () => {
         api.getPayments(),
         api.getGroups(),
       ]);
-      setStores(storesData);
-      setPayments(paymentsData);
-      setGroups(groupsData);
+      setStores(storesData.data);
+      setPayments(paymentsData.data);
+      setGroups(groupsData.data);
     };
 
     loadData();
@@ -61,14 +61,14 @@ const Home = () => {
   }, [location.state]);
 
   useEffect(() => {
-    if (user && user.isFirstAccess) {
+    if (profile && profile.isFirstAccess) {
       setShowCompleteProfile(true);
     }
 
-    if (user && user.newMonth) {
+    if (profile && profile.newMonth) {
       setShowNewMonthModal(true);
     }
-  }, [user]);
+  }, [profile]);
 
   const handleNewRegistration = () => {
     setNewRegistrationAdded(true);
@@ -98,12 +98,12 @@ const Home = () => {
         <Flex direction="column" gap={4}>
           <SummaryCard
             title="Receitas do Mês"
-            value={user?.income || 0}
+            value={profile?.income || 0}
             colorScheme="green"
           />
           <SummaryCard
             title="Despesas do Mês"
-            value={user?.expenses || 0}
+            value={profile?.expenses || 0}
             colorScheme="red"
           />
         </Flex>
@@ -134,7 +134,7 @@ const Home = () => {
       </Flex>
 
       {isOpen && (
-        <CouponModal
+        <ExpenseModal
           isOpen={isOpen}
           onClose={onClose}
           stores={stores}
@@ -150,8 +150,8 @@ const Home = () => {
       <CompleteProfileModal
         isOpen={showCompleteProfile}
         user={{
-          email: user?.email || '',
-          name: user?.name || '',
+          email: profile?.user.email || '',
+          name: profile?.user.name || '',
         }}
         onComplete={() => {
           setShowCompleteProfile(false);

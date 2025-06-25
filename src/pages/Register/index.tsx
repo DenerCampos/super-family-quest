@@ -43,8 +43,9 @@ const Register = () => {
         password,
       });
 
-      console.log(response);
-      
+      if (!response) {
+        throw new Error('Erro ao criar reino');
+      }
 
       toast({
         title: 'Reino Fundado!',

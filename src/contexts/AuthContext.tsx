@@ -2,21 +2,24 @@ import { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services';
 
-export type UserProfile = {
+export type User = {
   id: string;
   email: string;
   name: string;
   family: string;
+  coatOfArms: string;
+}
+export type UserProfile = {
+  user: User;
   income: number;
   expenses: number;
   coins: number;
-  coatOfArms: string;
   isFirstAccess: boolean;
   newMonth: boolean;
 };
 
 type AuthContextType = {
-  user: UserProfile | null;
+  profile: UserProfile | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   loadProfile: () => Promise<void>;
@@ -25,13 +28,15 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const navigate = useNavigate();
 
   const loadProfile = async () => {   
     try {
       const profile = await api.profile();
-      setUser((prev) => ({
+      console.log('Profile:', profile);
+      
+      setProfile((prev) => ({
         ...prev,
         ...profile,
       }));
@@ -57,12 +62,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 
   const logout = () => {
     localStorage.removeItem('accessToken');
-    setUser(null);
+    setProfile(null);
     navigate('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loadProfile }}>
+    <AuthContext.Provider value={{ profile, login, logout, loadProfile }}>
       {children}
     </AuthContext.Provider>
   );
