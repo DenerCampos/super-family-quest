@@ -43,9 +43,6 @@ const Register = () => {
         password,
       });
 
-      console.log(response);
-      
-
       toast({
         title: 'Reino Fundado!',
         description: 'Seu reino foi criado com sucesso',

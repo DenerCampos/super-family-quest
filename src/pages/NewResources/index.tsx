@@ -33,7 +33,7 @@ import { FiSearch, FiEdit, FiTrash2, FiPlus } from 'react-icons/fi';
 import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
 import { SimpleResourceModal } from '../../components/modals/SimpleResourceModal';
-import { CouponModal } from '../../components/modals/CouponModal';
+import { ExpenseModal } from '../../components/modals/ExpenseModal';
 import { api } from '../../services';
 import type {
   Groups,
@@ -63,6 +63,11 @@ const NewResources = () => {
   const [groupPage, setGroupPage] = useState(1);
   const [expensePage, setExpensePage] = useState(1);
 
+  const [editingResource, setEditingResource] = useState<{
+    type: 'store' | 'payment' | 'group' | 'expense';
+    data: any;
+  } | null>(null);
+
   const [loading, setLoading] = useState({
     stores: true,
     payments: true,
@@ -83,7 +88,7 @@ const NewResources = () => {
   const [currentResource, setCurrentResource] = useState<
     'store' | 'payment' | 'group'
   >('store');
-  const [editingItem, setEditingItem] = useState<any>(null);
+  // const [editingItem, setEditingItem] = useState<any>(null);
   const toast = useToast();
 
   // Função para carregar dados com paginação
@@ -187,42 +192,50 @@ const NewResources = () => {
     resource: 'store' | 'payment' | 'group' | 'expense',
     itemToEdit?: any,
   ) => {
-    setEditingItem(itemToEdit || null);
+    // Fechar qualquer modal aberto antes de abrir um novo
+    onSimpleClose();
+    onCouponClose();
+
+    // Definir o recurso sendo editado antes de abrir o modal
+    if (itemToEdit) {
+      setEditingResource({
+        type: resource,
+        data: itemToEdit,
+      });
+    }
+
+    // Abrir o modal apropriado
     if (resource === 'expense') {
       onCouponOpen();
     } else {
       setCurrentResource(resource);
-      console.log(resource);
-      console.log(editingItem);
-      
-      
       onSimpleOpen();
     }
   };
 
   const handleDelete = async (
     type: 'store' | 'payment' | 'group' | 'expense',
-    id: number | string,
+    id: string,
   ) => {
     try {
-      // switch (type) {
-      //   case 'store':
-      //     await api.deleteStore(id);
-      //     loadStores(storePage, storeSearch);
-      //     break;
-      //   case 'payment':
-      //     await api.deletePayment(id);
-      //     loadPayments(paymentPage, paymentSearch);
-      //     break;
-      //   case 'group':
-      //     await api.deleteGroup(id);
-      //     loadGroups(groupPage, groupSearch);
-      //     break;
-      //   case 'expense':
-      //     await api.deleteCoupon(id);
-      //     loadExpenses(expensePage, expenseSearch);
-      //     break;
-      // }
+      switch (type) {
+        case 'store':
+          await api.deleteStore({ id });
+          loadStores(storePage, storeSearch);
+          break;
+        case 'payment':
+          await api.deletePayment({ id });
+          loadPayments(paymentPage, paymentSearch);
+          break;
+        case 'group':
+          await api.deleteGroup({ id });
+          loadGroups(groupPage, groupSearch);
+          break;
+        case 'expense':
+          await api.deleteExpense({ id });
+          loadExpenses(expensePage, expenseSearch);
+          break;
+      }
 
       toast({
         title: 'Item excluído com sucesso',
@@ -764,7 +777,9 @@ const NewResources = () => {
                             onClick={() =>
                               handleExpensePageChange(expensePage + 1)
                             }
-                            isDisabled={expensePage === expenses.meta.totalPages}
+                            isDisabled={
+                              expensePage === expenses.meta.totalPages
+                            }
                           >
                             Próxima
                           </Button>
@@ -801,7 +816,7 @@ const NewResources = () => {
           isOpen={isSimpleOpen}
           onClose={() => {
             onSimpleClose();
-            setEditingItem(null);
+            setEditingResource(null);
           }}
           resourceType={currentResource}
           onSuccess={() => {
@@ -817,23 +832,35 @@ const NewResources = () => {
                 loadGroups(groupPage, groupSearch);
                 break;
             }
+            setEditingResource(null);
           }}
-          initialData={editingItem}
+          // Passar dados de edição apenas se for o mesmo recurso
+          initialData={
+            editingResource?.type === currentResource
+              ? editingResource.data
+              : null
+          }
         />
       )}
 
       {isCouponOpen && (
-        <CouponModal
+        <ExpenseModal
           isOpen={isCouponOpen}
           onClose={() => {
             onCouponClose();
-            setEditingItem(null);
+            setEditingResource(null);
           }}
           stores={stores?.data || []}
           payments={payments?.data || []}
           groups={groups?.data || []}
-          onSuccess={() => loadExpenses(expensePage, expenseSearch)}
-          initialData={editingItem}
+          onSuccess={() => {
+            loadExpenses(expensePage, expenseSearch);
+            setEditingResource(null);
+          }}
+          // Passar dados de edição apenas se for uma despesa
+          initialData={
+            editingResource?.type === 'expense' ? editingResource.data : null
+          }
         />
       )}
 

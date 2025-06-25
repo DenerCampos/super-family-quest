@@ -22,10 +22,15 @@ type Props = {
   onClose: () => void;
   resourceType: 'store' | 'payment' | 'group';
   onSuccess: () => void;
+  initialData?: { id: string; name: string }; // Nova prop para dados iniciais
 };
 
 type ApiResources = {
-  [key in Props['resourceType']]: () => Promise<any>;
+  [key in Props['resourceType']]: (data: any) => Promise<any>;
+};
+
+type UpdateResources = {
+  [key in Props['resourceType']]: (id: string, data: any) => Promise<any>;
 };
 
 const resourceNames = {
@@ -34,17 +39,25 @@ const resourceNames = {
   group: 'Novo Grupo de Produtos',
 };
 
+const editResourceNames = {
+  store: 'Editar Loja',
+  payment: 'Editar Forma de Pagamento',
+  group: 'Editar Grupo de Produtos',
+};
+
 export const SimpleResourceModal = ({
   isOpen,
   onClose,
   resourceType,
   onSuccess,
+  initialData,
 }: Props) => {
   const toast = useToast();
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting, isValid },
   } = useForm<{ name: string }>({
     mode: 'onChange',
@@ -60,32 +73,51 @@ export const SimpleResourceModal = ({
       const formattedData = {
         name: formatName(data.name),
       };
-      
+
+      // Mapeamento para criação
       const mappingApiResources: ApiResources = {
         store: () => api.createStore(formattedData),
         payment: () => api.createPayment(formattedData),
         group: () => api.createGroup(formattedData),
       };
 
-      await mappingApiResources[resourceType]();
+      // Mapeamento para atualização
+      const mappingUpdateResources: UpdateResources = {
+        store: (id) => api.updateStore({ id, name: formattedData.name }),
+        payment: (id) => api.updatePayment({ id, name: formattedData.name }),
+        group: (id) => api.updateGroup({ id, name: formattedData.name }),
+      };
 
-      toast({
-        title: 'Sucesso!',
-        status: 'success',
-        description: `${resourceNames[resourceType]} cadastrado com sucesso`,
-        duration: 3000,
-      });
+      // Se tivermos initialData, estamos editando
+      if (initialData && initialData.id) {
+        await mappingUpdateResources[resourceType](initialData.id);
+        toast({
+          title: 'Atualizado!',
+          status: 'success',
+          description: `${editResourceNames[resourceType]} atualizado com sucesso`,
+          duration: 3000,
+        });
+      } else {
+        // Caso contrário, estamos criando
+        await mappingApiResources[resourceType]();
+        toast({
+          title: 'Sucesso!',
+          status: 'success',
+          description: `${resourceNames[resourceType]} cadastrado com sucesso`,
+          duration: 3000,
+        });
+      }
 
       onSuccess();
       reset();
       onClose();
     } catch (error) {
       console.error(error);
-      
+
       toast({
         title: 'Erro',
         status: 'error',
-        description: 'Falha ao cadastrar',
+        description: initialData ? 'Falha ao atualizar' : 'Falha ao cadastrar',
         duration: 3000,
       });
     }
@@ -94,6 +126,15 @@ export const SimpleResourceModal = ({
   useEffect(() => {
     reset();
   }, [resourceType, reset]);
+
+  // Preencher o formulário quando initialData mudar
+  useEffect(() => {
+    if (initialData) {
+      setValue('name', initialData.name);
+    } else {
+      reset();
+    }
+  }, [initialData, setValue, reset]);
 
   return (
     <Modal
@@ -106,7 +147,11 @@ export const SimpleResourceModal = ({
       <ModalContent bg="purple.800" color="white">
         {isSubmitting && <LoadingOverlay />}
 
-        <ModalHeader>{resourceNames[resourceType]}</ModalHeader>
+        <ModalHeader>
+          {initialData
+            ? editResourceNames[resourceType]
+            : resourceNames[resourceType]}
+        </ModalHeader>
 
         <ModalCloseButton isDisabled={isSubmitting} />
 
@@ -122,10 +167,6 @@ export const SimpleResourceModal = ({
                     value: 3,
                     message: 'Mínimo 3 caracteres',
                   },
-                  // pattern: {
-                  //   value: /^[a-zA-ZÀ-ú\s]+$/,
-                  //   message: 'Apenas letras são permitidas',
-                  // },
                 })}
                 bg="white"
                 color="black"
@@ -149,7 +190,7 @@ export const SimpleResourceModal = ({
               loadingText="Salvando..."
               w="full"
             >
-              Salvar
+              {initialData ? 'Atualizar' : 'Salvar'}
             </Button>
           </form>
         </ModalBody>

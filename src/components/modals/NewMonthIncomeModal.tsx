@@ -60,9 +60,7 @@ export const NewMonthIncomeModal = ({ isOpen, onClose, onEdit }: Props) => {
   const handleConfirm = async () => {
     setIsSubmitting(true);
     try {
-      await api.confirmNewMonthIncomes();
-      console.log('Confirmar receitas');
-      
+      await api.confirmNewMonthIncomes();    
 
       toast({
         title: 'Receitas confirmadas!',

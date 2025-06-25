@@ -16,7 +16,14 @@ export type CouponReader = {
   name: string;
   date: string;
   uri: string;
-  payment: string;
+  repeat: boolean;
+  value: number;
+  store: {
+    name: string;
+  }
+  payment: {
+    name: string
+  };
   items: Array<CouponReaderItems>;
 };
 

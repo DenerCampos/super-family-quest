@@ -8,9 +8,9 @@ import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
 import { FiCamera, FiPlus } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
-import { CouponModal } from '../../components/modals/CouponModal';
+import { ExpenseModal } from '../../components/modals/ExpenseModal';
 import { api } from '../../services';
-import type { Coupom, Groups, Merchant, Payments } from '../../services/resources';
+import type { Expense, Groups, Merchant, Payments } from '../../services/resources';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { convertQRData } from '../../utils/qrCode';
 import { CompleteProfileModal } from '../../components/modals/CompleteProfileModal';
@@ -25,7 +25,7 @@ const Home = () => {
   const [payments, setPayments] = useState<Payments[]>([]);
   const [groups, setGroups] = useState<Groups[]>([]);
   const location = useLocation();
-  const [scannedData, setScannedData] = useState<Coupom | null>(null);
+  const [scannedData, setScannedData] = useState<Expense | null>(null);
   const [scanError, setScanError] = useState('');
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
   const [showNewMonthModal, setShowNewMonthModal] = useState(false);
@@ -134,7 +134,7 @@ const Home = () => {
       </Flex>
 
       {isOpen && (
-        <CouponModal
+        <ExpenseModal
           isOpen={isOpen}
           onClose={onClose}
           stores={stores}

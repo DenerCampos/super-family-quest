@@ -18,21 +18,22 @@ export type PaginationResponse<T> = {
 };
 
 export type Merchant = {
-  id: string;
+  id?: string;
   name: string;
 };
 
 export type Payments = {
-  id: string;
+  id?: string;
   name: string;
 };
 
 export type Groups = {
-  id: string;
+  id?: string;
   name: string;
 };
 
 export type Items = {
+  id?: string;
   code: string | null;
   name: string;
   quantity: number | string;
@@ -43,14 +44,14 @@ export type Items = {
 };
 
 export type Expense = {
-  id: string;
+  id?: string;
   name: string;
   uri: string;
   value: number;
   repeat: boolean;
-  date: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  date: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   payment: Payments;
   store: Merchant;
   items: Array<Items>;
@@ -68,9 +69,9 @@ export type ItemsCreate = {
   };
 };
 
-export type CoupomExpense = {
-  number: string;
-  url?: string | null;
+export type CreateExpense = {
+  name: string;
+  uri: string | null;
   date: string;
   payment: {
     name: string;
@@ -142,7 +143,7 @@ export const ResourcesService = {
     return response.data;
   },
 
-  createExpense: async (data: CoupomExpense): Promise<Expense> => {
+  createExpense: async (data: CreateExpense): Promise<Expense> => {
     const response = await api.post('/expense', data);
 
     return response.data;
@@ -158,5 +159,71 @@ export const ResourcesService = {
     );
 
     return response.data;
+  },
+
+  updateStore: async ({
+    id,
+    name,
+  }: {
+    id: string;
+    name: string;
+  }): Promise<Merchant> => {
+    const response = await api.patch(`/store/${id}`, {
+      name,
+    });
+
+    return response.data;
+  },
+
+  updatePayment: async ({
+    id,
+    name,
+  }: {
+    id: string;
+    name: string;
+  }): Promise<Payments> => {
+    const response = await api.patch(`/payment/${id}`, {
+      name,
+    });
+
+    return response.data;
+  },
+
+  updateGroup: async ({
+    id,
+    name,
+  }: {
+    id: string;
+    name: string;
+  }): Promise<Groups> => {
+    const response = await api.patch(`/group/${id}`, {
+      name,
+    });
+
+    return response.data; 
+  },
+
+  deleteStore: async ({ id }: { id: string }): Promise<void> => {
+    const response = await api.delete(`/store/${id}`);
+
+    return response.data;
+  },
+
+  deletePayment: async ({ id }: { id: string }): Promise<void> => {
+    const response = await api.delete(`/payment/${id}`);
+
+    return response.data;
+  },
+
+  deleteGroup: async ({ id }: { id: string }): Promise<void> => {
+    const response = await api.delete(`/group/${id}`);
+
+    return response.data; 
+  },
+
+  deleteExpense: async ({ id }: { id: string }): Promise<void> => {
+    const response = await api.delete(`/expense/${id}`);
+
+    return response.data; 
   },
 };
