@@ -12,7 +12,7 @@ export const Header = () => {
       p={4}
       justify="space-between"
       align="center"
-      mb={6}
+      // mb={6}
       boxShadow="md"
     >
       {/* Lado Esquerdo - Brasão e Nome */}
