@@ -34,7 +34,6 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const loadProfile = async () => {   
     try {
       const profile = await api.profile();
-      console.log('Profile:', profile);
       
       setProfile((prev) => ({
         ...prev,
