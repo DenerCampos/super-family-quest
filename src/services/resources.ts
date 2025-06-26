@@ -82,6 +82,19 @@ export type CreateExpense = {
   items: Array<ItemsCreate>;
 };
 
+export type CreateRevenue = {
+  name: string;
+  value: number;
+  repeat: boolean;
+}
+
+export type Revenue = {
+  id?: string;
+  name: string;
+  value: number;
+  repeat: boolean;
+};
+
 export const ResourcesService = {
   getStores: async ({
     page = 1,
@@ -200,7 +213,7 @@ export const ResourcesService = {
       name,
     });
 
-    return response.data; 
+    return response.data;
   },
 
   deleteStore: async ({ id }: { id: string }): Promise<void> => {
@@ -218,12 +231,42 @@ export const ResourcesService = {
   deleteGroup: async ({ id }: { id: string }): Promise<void> => {
     const response = await api.delete(`/group/${id}`);
 
-    return response.data; 
+    return response.data;
   },
 
   deleteExpense: async ({ id }: { id: string }): Promise<void> => {
     const response = await api.delete(`/expense/${id}`);
 
-    return response.data; 
+    return response.data;
+  },
+
+  createRevenue: async (data: CreateRevenue): Promise<Revenue> => {
+    const response = await api.post('/revenue', data);
+
+    return response.data;
+  },
+
+  getRevenues: async ({
+    page = 1,
+    limit = 5,
+    search = '',
+  }): Promise<PaginationResponse<Revenue>> => {
+    const response = await api.get(
+      `/revenue?page=${page}&limit=${limit}&search=${search}`,
+    );
+
+    return response.data;
+  },
+
+  updateRevenue: async (id: string, data: Partial<CreateRevenue>): Promise<Revenue> => {
+    const response = await api.patch(`/revenue/${id}`, data);
+
+    return response.data;
+  },
+
+  deleteRevenue: async ({ id }: { id: string }): Promise<void> => {
+    const response = await api.delete(`/revenue/${id}`);
+
+    return response.data;
   },
 };

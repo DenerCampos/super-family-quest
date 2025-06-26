@@ -57,13 +57,31 @@ export const api = {
     limit?: number;
     search?: string;
   }) => ResourcesService.getExpenses({ page, limit, search }),
-  updateStore: ({ id, name }: {id: string; name: string}) => ResourcesService.updateStore({ id, name }),
-  updatePayment: ({ id, name }: {id: string; name: string}) => ResourcesService.updatePayment({ id, name }),
-  updateGroup: ({ id, name }: {id: string; name: string}) => ResourcesService.updateGroup({ id, name }),
-  deleteStore: ({ id }: {id: string}) => ResourcesService.deleteStore({ id }),
-  deletePayment: ({ id }: {id: string}) => ResourcesService.deletePayment({ id }),
-  deleteGroup: ({ id }: {id: string}) => ResourcesService.deleteGroup({ id }),
-  deleteExpense: ({ id }: {id: string}) => ResourcesService.deleteExpense({ id }),
+  updateStore: ({ id, name }: { id: string; name: string }) =>
+    ResourcesService.updateStore({ id, name }),
+  updatePayment: ({ id, name }: { id: string; name: string }) =>
+    ResourcesService.updatePayment({ id, name }),
+  updateGroup: ({ id, name }: { id: string; name: string }) =>
+    ResourcesService.updateGroup({ id, name }),
+  deleteStore: ({ id }: { id: string }) => ResourcesService.deleteStore({ id }),
+  deletePayment: ({ id }: { id: string }) =>
+    ResourcesService.deletePayment({ id }),
+  deleteGroup: ({ id }: { id: string }) => ResourcesService.deleteGroup({ id }),
+  deleteExpense: ({ id }: { id: string }) =>
+    ResourcesService.deleteExpense({ id }),
+  createRevenue: ResourcesService.createRevenue,
+  getRevenues: ({
+    page,
+    limit,
+    search,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) => ResourcesService.getRevenues({ page, limit, search }),
+  updateRevenue: ResourcesService.updateRevenue,
+  deleteRevenue: ({ id }: { id: string }) =>
+    ResourcesService.deleteRevenue({ id }),
 
   confirmNewMonthIncomes: RevenueService.confirmNewMonthIncomes,
   getRepeatedIncomes: RevenueService.getRepeatedIncomes,
