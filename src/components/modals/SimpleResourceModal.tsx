@@ -16,21 +16,25 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { api } from '../../services';
 import { LoadingOverlay } from '../LoadingOverlay';
+import type { Groups, Merchant, Payments } from '../../services/resources';
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   resourceType: 'store' | 'payment' | 'group';
   onSuccess: () => void;
-  initialData?: { id: string; name: string }; // Nova prop para dados iniciais
+  initialData?: { id: string; name: string };
 };
 
 type ApiResources = {
-  [key in Props['resourceType']]: (data: any) => Promise<any>;
+  [key in Props['resourceType']]: (data: { name: string }) => Promise<Merchant | Payments | Groups>;
 };
 
 type UpdateResources = {
-  [key in Props['resourceType']]: (id: string, data: any) => Promise<any>;
+  [key in Props['resourceType']]: (
+    id: string,
+    data: { name: string },
+  ) => Promise<Merchant | Payments | Groups>;
 };
 
 const resourceNames = {

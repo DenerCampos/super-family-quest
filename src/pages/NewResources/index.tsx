@@ -28,12 +28,14 @@ import {
   Stack,
   useToast,
   Spinner,
+  Checkbox,
 } from '@chakra-ui/react';
 import { FiSearch, FiEdit, FiTrash2, FiPlus } from 'react-icons/fi';
 import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
 import { SimpleResourceModal } from '../../components/modals/SimpleResourceModal';
 import { ExpenseModal } from '../../components/modals/ExpenseModal';
+import { RevenueModal } from '../../components/modals/RevenueModal';
 import { api } from '../../services';
 import type {
   Groups,
@@ -41,6 +43,7 @@ import type {
   Payments,
   Expense,
   PaginationResponse,
+  Revenue,
 } from '../../services/resources';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDateToBR } from '../../utils/formatDate';
@@ -63,8 +66,12 @@ const NewResources = () => {
   const [groupPage, setGroupPage] = useState(1);
   const [expensePage, setExpensePage] = useState(1);
 
+  const [revenues, setRevenues] = useState<PaginationResponse<Revenue>>();
+  const [revenueSearch, setRevenueSearch] = useState('');
+  const [revenuePage, setRevenuePage] = useState(1);
+
   const [editingResource, setEditingResource] = useState<{
-    type: 'store' | 'payment' | 'group' | 'expense';
+    type: 'store' | 'payment' | 'group' | 'expense' | 'revenue';
     data: any;
   } | null>(null);
 
@@ -73,6 +80,7 @@ const NewResources = () => {
     payments: true,
     groups: true,
     expenses: true,
+    revenues: true,
   });
 
   const {
@@ -85,10 +93,14 @@ const NewResources = () => {
     onOpen: onCouponOpen,
     onClose: onCouponClose,
   } = useDisclosure();
+  const {
+    isOpen: isRevenueOpen,
+    onOpen: onRevenueOpen,
+    onClose: onRevenueClose,
+  } = useDisclosure();
   const [currentResource, setCurrentResource] = useState<
     'store' | 'payment' | 'group'
   >('store');
-  // const [editingItem, setEditingItem] = useState<any>(null);
   const toast = useToast();
 
   // Função para carregar dados com paginação
@@ -180,16 +192,39 @@ const NewResources = () => {
     }
   };
 
+  const loadRevenues = async (page: number = 1, search: string = '') => {
+    setLoading((prev) => ({ ...prev, revenues: true }));
+    try {
+      const revenuesData = await api.getRevenues({
+        page,
+        limit: ITEMS_PER_PAGE,
+        search,
+      });
+      setRevenues(revenuesData);
+    } catch (error) {
+      toast({
+        title: 'Erro ao carregar receitas',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      console.error(error);
+    } finally {
+      setLoading((prev) => ({ ...prev, revenues: false }));
+    }
+  };
+
   // Carregar dados iniciais
   useEffect(() => {
     loadStores(storePage);
     loadPayments(paymentPage);
     loadGroups(groupPage);
     loadExpenses(expensePage);
+    loadRevenues(revenuePage);
   }, []);
 
   const handleResourceOpen = (
-    resource: 'store' | 'payment' | 'group' | 'expense',
+    resource: 'store' | 'payment' | 'group' | 'expense' | 'revenue',
     itemToEdit?: any,
   ) => {
     // Fechar qualquer modal aberto antes de abrir um novo
@@ -207,6 +242,8 @@ const NewResources = () => {
     // Abrir o modal apropriado
     if (resource === 'expense') {
       onCouponOpen();
+    } else if (resource === 'revenue') {
+      onRevenueOpen();
     } else {
       setCurrentResource(resource);
       onSimpleOpen();
@@ -214,7 +251,7 @@ const NewResources = () => {
   };
 
   const handleDelete = async (
-    type: 'store' | 'payment' | 'group' | 'expense',
+    type: 'store' | 'payment' | 'group' | 'expense' | 'revenue',
     id: string,
   ) => {
     try {
@@ -234,6 +271,10 @@ const NewResources = () => {
         case 'expense':
           await api.deleteExpense({ id });
           loadExpenses(expensePage, expenseSearch);
+          break;
+        case 'revenue':
+          await api.deleteRevenue({ id });
+          loadRevenues(revenuePage, revenueSearch);
           break;
       }
 
@@ -279,6 +320,12 @@ const NewResources = () => {
     setExpensePage(1);
   };
 
+  const handleRevenueSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRevenueSearch(e.target.value);
+    loadRevenues(1, e.target.value);
+    setRevenuePage(1);
+  };
+
   // Funções para mudança de página
   const handleStorePageChange = (page: number) => {
     setStorePage(page);
@@ -300,12 +347,18 @@ const NewResources = () => {
     loadExpenses(page, expenseSearch);
   };
 
+  const handleRevenuePageChange = (page: number) => {
+    setRevenuePage(page);
+    loadRevenues(page, revenueSearch);
+  };
+
   return (
     <Flex direction="column" minH="100vh">
       <Header />
 
       <Box p={4} mb="70px">
-        <Accordion defaultIndex={[0]} allowMultiple>
+        {/* Accordion sem defaultIndex para iniciar fechado */}
+        <Accordion allowMultiple>
           {/* Accordion para Cadastros */}
           <AccordionItem borderWidth={1} borderRadius="md" mb={4}>
             <AccordionButton bg="purple.100" _hover={{ bg: 'purple.200' }}>
@@ -353,50 +406,61 @@ const NewResources = () => {
                   </Text>
                 ) : (
                   <>
-                    <Table variant="simple">
-                      <Thead>
-                        <Tr>
-                          <Th>Nome</Th>
-                          <Th>Ações</Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {stores?.data?.map((store) => (
-                          <Tr key={store.id}>
-                            <Td>{store.name}</Td>
-                            <Td>
-                              <Menu>
-                                <MenuButton
-                                  as={Button}
-                                  size="sm"
-                                  variant="outline"
-                                >
-                                  Ações
-                                </MenuButton>
-                                <MenuList>
-                                  <MenuItem
-                                    icon={<FiEdit />}
-                                    onClick={() =>
-                                      handleResourceOpen('store', store)
-                                    }
-                                  >
-                                    Editar
-                                  </MenuItem>
-                                  <MenuItem
-                                    icon={<FiTrash2 />}
-                                    onClick={() =>
-                                      handleDelete('store', store.id as string)
-                                    }
-                                  >
-                                    Excluir
-                                  </MenuItem>
-                                </MenuList>
-                              </Menu>
-                            </Td>
+                    {/* Container responsivo para tabela */}
+                    <Box
+                      overflowX="auto"
+                      border="1px"
+                      borderColor="gray.200"
+                      borderRadius="md"
+                    >
+                      <Table variant="simple" minW="400px">
+                        <Thead>
+                          <Tr>
+                            <Th>Nome</Th>
+                            <Th>Ações</Th>
                           </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
+                        </Thead>
+                        <Tbody>
+                          {stores?.data?.map((store) => (
+                            <Tr key={store.id}>
+                              <Td>{store.name}</Td>
+                              <Td>
+                                <Menu>
+                                  <MenuButton
+                                    as={Button}
+                                    size="sm"
+                                    variant="outline"
+                                  >
+                                    Ações
+                                  </MenuButton>
+                                  <MenuList>
+                                    <MenuItem
+                                      icon={<FiEdit />}
+                                      onClick={() =>
+                                        handleResourceOpen('store', store)
+                                      }
+                                    >
+                                      Editar
+                                    </MenuItem>
+                                    <MenuItem
+                                      icon={<FiTrash2 />}
+                                      onClick={() =>
+                                        handleDelete(
+                                          'store',
+                                          store.id as string,
+                                        )
+                                      }
+                                    >
+                                      Excluir
+                                    </MenuItem>
+                                  </MenuList>
+                                </Menu>
+                              </Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </Box>
 
                     {/* Paginação */}
                     {stores?.meta && stores.meta.totalPages > 1 && (
@@ -463,50 +527,61 @@ const NewResources = () => {
                   </Text>
                 ) : (
                   <>
-                    <Table variant="simple">
-                      <Thead>
-                        <Tr>
-                          <Th>Nome</Th>
-                          <Th>Ações</Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {payments?.data?.map((payment) => (
-                          <Tr key={payment.id}>
-                            <Td>{payment.name}</Td>
-                            <Td>
-                              <Menu>
-                                <MenuButton
-                                  as={Button}
-                                  size="sm"
-                                  variant="outline"
-                                >
-                                  Ações
-                                </MenuButton>
-                                <MenuList>
-                                  <MenuItem
-                                    icon={<FiEdit />}
-                                    onClick={() =>
-                                      handleResourceOpen('payment', payment)
-                                    }
-                                  >
-                                    Editar
-                                  </MenuItem>
-                                  <MenuItem
-                                    icon={<FiTrash2 />}
-                                    onClick={() =>
-                                      handleDelete('payment', payment.id as string)
-                                    }
-                                  >
-                                    Excluir
-                                  </MenuItem>
-                                </MenuList>
-                              </Menu>
-                            </Td>
+                    {/* Container responsivo para tabela */}
+                    <Box
+                      overflowX="auto"
+                      border="1px"
+                      borderColor="gray.200"
+                      borderRadius="md"
+                    >
+                      <Table variant="simple" minW="400px">
+                        <Thead>
+                          <Tr>
+                            <Th>Nome</Th>
+                            <Th>Ações</Th>
                           </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
+                        </Thead>
+                        <Tbody>
+                          {payments?.data?.map((payment) => (
+                            <Tr key={payment.id}>
+                              <Td>{payment.name}</Td>
+                              <Td>
+                                <Menu>
+                                  <MenuButton
+                                    as={Button}
+                                    size="sm"
+                                    variant="outline"
+                                  >
+                                    Ações
+                                  </MenuButton>
+                                  <MenuList>
+                                    <MenuItem
+                                      icon={<FiEdit />}
+                                      onClick={() =>
+                                        handleResourceOpen('payment', payment)
+                                      }
+                                    >
+                                      Editar
+                                    </MenuItem>
+                                    <MenuItem
+                                      icon={<FiTrash2 />}
+                                      onClick={() =>
+                                        handleDelete(
+                                          'payment',
+                                          payment.id as string,
+                                        )
+                                      }
+                                    >
+                                      Excluir
+                                    </MenuItem>
+                                  </MenuList>
+                                </Menu>
+                              </Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </Box>
 
                     {/* Paginação */}
                     {payments?.meta && payments.meta.totalPages > 1 && (
@@ -579,50 +654,61 @@ const NewResources = () => {
                   </Text>
                 ) : (
                   <>
-                    <Table variant="simple">
-                      <Thead>
-                        <Tr>
-                          <Th>Nome</Th>
-                          <Th>Ações</Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {groups?.data?.map((group) => (
-                          <Tr key={group.id}>
-                            <Td>{group.name}</Td>
-                            <Td>
-                              <Menu>
-                                <MenuButton
-                                  as={Button}
-                                  size="sm"
-                                  variant="outline"
-                                >
-                                  Ações
-                                </MenuButton>
-                                <MenuList>
-                                  <MenuItem
-                                    icon={<FiEdit />}
-                                    onClick={() =>
-                                      handleResourceOpen('group', group)
-                                    }
-                                  >
-                                    Editar
-                                  </MenuItem>
-                                  <MenuItem
-                                    icon={<FiTrash2 />}
-                                    onClick={() =>
-                                      handleDelete('group', group.id as string)
-                                    }
-                                  >
-                                    Excluir
-                                  </MenuItem>
-                                </MenuList>
-                              </Menu>
-                            </Td>
+                    {/* Container responsivo para tabela */}
+                    <Box
+                      overflowX="auto"
+                      border="1px"
+                      borderColor="gray.200"
+                      borderRadius="md"
+                    >
+                      <Table variant="simple" minW="400px">
+                        <Thead>
+                          <Tr>
+                            <Th>Nome</Th>
+                            <Th>Ações</Th>
                           </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
+                        </Thead>
+                        <Tbody>
+                          {groups?.data?.map((group) => (
+                            <Tr key={group.id}>
+                              <Td>{group.name}</Td>
+                              <Td>
+                                <Menu>
+                                  <MenuButton
+                                    as={Button}
+                                    size="sm"
+                                    variant="outline"
+                                  >
+                                    Ações
+                                  </MenuButton>
+                                  <MenuList>
+                                    <MenuItem
+                                      icon={<FiEdit />}
+                                      onClick={() =>
+                                        handleResourceOpen('group', group)
+                                      }
+                                    >
+                                      Editar
+                                    </MenuItem>
+                                    <MenuItem
+                                      icon={<FiTrash2 />}
+                                      onClick={() =>
+                                        handleDelete(
+                                          'group',
+                                          group.id as string,
+                                        )
+                                      }
+                                    >
+                                      Excluir
+                                    </MenuItem>
+                                  </MenuList>
+                                </Menu>
+                              </Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </Box>
 
                     {/* Paginação */}
                     {groups?.meta && groups.meta.totalPages > 1 && (
@@ -701,60 +787,71 @@ const NewResources = () => {
                   </Text>
                 ) : (
                   <>
-                    <Table variant="simple">
-                      <Thead>
-                        <Tr>
-                          <Th>Loja</Th>
-                          <Th>Valor</Th>
-                          <Th>Pagamento</Th>
-                          <Th>Data</Th>
-                          <Th>Ações</Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {expenses?.data?.map((expense) => (
-                          <Tr key={expense.id}>
-                            <Td>{expense.name || '-'}</Td>
-                            <Td>
-                              <Badge colorScheme="red">
-                                - {formatCurrency(expense.value)}
-                              </Badge>
-                            </Td>
-                            <Td>{expense.payment.name || '-'}</Td>
-                            <Td>{formatDateToBR(expense.date)}</Td>
-                            <Td>
-                              <Menu>
-                                <MenuButton
-                                  as={Button}
-                                  size="sm"
-                                  variant="outline"
-                                >
-                                  Ações
-                                </MenuButton>
-                                <MenuList>
-                                  <MenuItem
-                                    icon={<FiEdit />}
-                                    onClick={() =>
-                                      handleResourceOpen('expense', expense)
-                                    }
-                                  >
-                                    Editar
-                                  </MenuItem>
-                                  <MenuItem
-                                    icon={<FiTrash2 />}
-                                    onClick={() =>
-                                      handleDelete('expense', expense.id as string)
-                                    }
-                                  >
-                                    Excluir
-                                  </MenuItem>
-                                </MenuList>
-                              </Menu>
-                            </Td>
+                    {/* Container responsivo para tabela */}
+                    <Box
+                      overflowX="auto"
+                      border="1px"
+                      borderColor="gray.200"
+                      borderRadius="md"
+                    >
+                      <Table variant="simple" minW="600px">
+                        <Thead>
+                          <Tr>
+                            <Th>Loja</Th>
+                            <Th>Valor</Th>
+                            <Th>Pagamento</Th>
+                            <Th>Data</Th>
+                            <Th>Ações</Th>
                           </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
+                        </Thead>
+                        <Tbody>
+                          {expenses?.data?.map((expense) => (
+                            <Tr key={expense.id}>
+                              <Td>{expense.name || '-'}</Td>
+                              <Td>
+                                <Badge colorScheme="red">
+                                  - {formatCurrency(expense.value)}
+                                </Badge>
+                              </Td>
+                              <Td>{expense.payment.name || '-'}</Td>
+                              <Td>{formatDateToBR(expense.date)}</Td>
+                              <Td>
+                                <Menu>
+                                  <MenuButton
+                                    as={Button}
+                                    size="sm"
+                                    variant="outline"
+                                  >
+                                    Ações
+                                  </MenuButton>
+                                  <MenuList>
+                                    <MenuItem
+                                      icon={<FiEdit />}
+                                      onClick={() =>
+                                        handleResourceOpen('expense', expense)
+                                      }
+                                    >
+                                      Editar
+                                    </MenuItem>
+                                    <MenuItem
+                                      icon={<FiTrash2 />}
+                                      onClick={() =>
+                                        handleDelete(
+                                          'expense',
+                                          expense.id as string,
+                                        )
+                                      }
+                                    >
+                                      Excluir
+                                    </MenuItem>
+                                  </MenuList>
+                                </Menu>
+                              </Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </Box>
 
                     {/* Paginação */}
                     {expenses?.meta && expenses.meta.totalPages > 1 && (
@@ -792,7 +889,7 @@ const NewResources = () => {
             </AccordionPanel>
           </AccordionItem>
 
-          {/* Accordion para Receitas (exemplo) */}
+          {/* Accordion para Receitas */}
           <AccordionItem borderWidth={1} borderRadius="md" mb={4}>
             <AccordionButton bg="green.100" _hover={{ bg: 'green.200' }}>
               <Box flex="1" textAlign="left" fontWeight="bold">
@@ -802,9 +899,142 @@ const NewResources = () => {
             </AccordionButton>
 
             <AccordionPanel pb={4}>
-              <Text textAlign="center" py={4} color="gray.500">
-                Em breve - Funcionalidade em desenvolvimento
-              </Text>
+              <Box mb={6}>
+                <Flex justify="space-between" align="center" mb={4}>
+                  <Text fontSize="lg" fontWeight="medium">
+                    Receitas
+                  </Text>
+                  <Button
+                    size="sm"
+                    colorScheme="green"
+                    leftIcon={<FiPlus />}
+                    onClick={() => handleResourceOpen('revenue')}
+                  >
+                    Nova Receita
+                  </Button>
+                </Flex>
+
+                <InputGroup mb={4}>
+                  <InputLeftElement pointerEvents="none">
+                    <Icon as={FiSearch} color="gray.300" />
+                  </InputLeftElement>
+                  <Input
+                    placeholder="Buscar receitas..."
+                    value={revenueSearch}
+                    onChange={handleRevenueSearch}
+                  />
+                </InputGroup>
+
+                {loading.revenues ? (
+                  <Flex justify="center" py={4}>
+                    <Spinner color="green.500" />
+                  </Flex>
+                ) : revenues?.data?.length === 0 ? (
+                  <Text textAlign="center" py={4}>
+                    Nenhuma receita encontrada
+                  </Text>
+                ) : (
+                  <>
+                    <Box
+                      overflowX="auto"
+                      border="1px"
+                      borderColor="gray.200"
+                      borderRadius="md"
+                    >
+                      <Table variant="simple" minW="600px">
+                        <Thead>
+                          <Tr>
+                            <Th>Nome</Th>
+                            <Th>Valor</Th>
+                            <Th>Repete?</Th>
+                            <Th>Ações</Th>
+                          </Tr>
+                        </Thead>
+                        <Tbody>
+                          {revenues?.data?.map((revenue) => (
+                            <Tr key={revenue.id}>
+                              <Td>{revenue.name}</Td>
+                              <Td>
+                                <Badge colorScheme="green">
+                                  + {formatCurrency(revenue.value)}
+                                </Badge>
+                              </Td>
+                              <Td>
+                                <Checkbox
+                                  isChecked={revenue.repeat}
+                                  isDisabled
+                                />
+                              </Td>
+                              <Td>
+                                <Menu>
+                                  <MenuButton
+                                    as={Button}
+                                    size="sm"
+                                    variant="outline"
+                                  >
+                                    Ações
+                                  </MenuButton>
+                                  <MenuList>
+                                    <MenuItem
+                                      icon={<FiEdit />}
+                                      onClick={() =>
+                                        handleResourceOpen('revenue', revenue)
+                                      }
+                                    >
+                                      Editar
+                                    </MenuItem>
+                                    <MenuItem
+                                      icon={<FiTrash2 />}
+                                      onClick={() =>
+                                        handleDelete(
+                                          'revenue',
+                                          revenue.id as string,
+                                        )
+                                      }
+                                    >
+                                      Excluir
+                                    </MenuItem>
+                                  </MenuList>
+                                </Menu>
+                              </Td>
+                            </Tr>
+                          ))}
+                        </Tbody>
+                      </Table>
+                    </Box>
+
+                    {revenues?.meta && revenues.meta.totalPages > 1 && (
+                      <Flex justify="flex-end" mt={4}>
+                        <Stack direction="row" spacing={2}>
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              handleRevenuePageChange(revenuePage - 1)
+                            }
+                            isDisabled={revenuePage === 1}
+                          >
+                            Anterior
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            {revenuePage} / {revenues.meta.totalPages}
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              handleRevenuePageChange(revenuePage + 1)
+                            }
+                            isDisabled={
+                              revenuePage === revenues.meta.totalPages
+                            }
+                          >
+                            Próxima
+                          </Button>
+                        </Stack>
+                      </Flex>
+                    )}
+                  </>
+                )}
+              </Box>
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
@@ -860,6 +1090,23 @@ const NewResources = () => {
           // Passar dados de edição apenas se for uma despesa
           initialData={
             editingResource?.type === 'expense' ? editingResource.data : null
+          }
+        />
+      )}
+
+      {isRevenueOpen && (
+        <RevenueModal
+          isOpen={isRevenueOpen}
+          onClose={() => {
+            onRevenueClose();
+            setEditingResource(null);
+          }}
+          onSuccess={() => {
+            loadRevenues(revenuePage, revenueSearch);
+            setEditingResource(null);
+          }}
+          initialData={
+            editingResource?.type === 'revenue' ? editingResource.data : null
           }
         />
       )}
