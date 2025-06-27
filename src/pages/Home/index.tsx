@@ -35,10 +35,14 @@ const Home = () => {
   // Carregar dados para o modal
   useEffect(() => {
     const loadData = async () => {
+      const paginate = {
+        page: 1,
+        limit: 100,
+      };
       const [storesData, paymentsData, groupsData] = await Promise.all([
-        api.getStores(),
-        api.getPayments(),
-        api.getGroups(),
+        api.getStores(paginate),
+        api.getPayments(paginate),
+        api.getGroups(paginate),
       ]);
       setStores(storesData.data);
       setPayments(paymentsData.data);

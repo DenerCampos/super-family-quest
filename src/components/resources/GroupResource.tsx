@@ -1,0 +1,258 @@
+import { useState, useEffect, useRef } from 'react';
+import {
+  Box,
+  Flex,
+  Text,
+  Button,
+  InputGroup,
+  InputLeftElement,
+  Icon,
+  Input,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Stack,
+  Spinner,
+  useToast,
+} from '@chakra-ui/react';
+import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { api } from '../../services';
+import type { Groups, PaginationResponse } from '../../services/resources';
+
+const ITEMS_PER_PAGE = 5;
+
+interface GroupResourceProps {
+  onEdit: (group: Groups | null) => void;
+  onDelete: (id: string) => void;
+  refreshTrigger?: number; // Prop para forçar atualização
+}
+
+const GroupResource = ({
+  onEdit,
+  onDelete,
+  refreshTrigger,
+}: GroupResourceProps) => {
+  const [groups, setGroups] = useState<PaginationResponse<Groups>>();
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const toast = useToast();
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const loadGroups = async (page: number = 1, search: string = '') => {
+    setLoading(true);
+    try {
+      const groupsData = await api.getGroups({
+        page,
+        limit: ITEMS_PER_PAGE,
+        search,
+      });
+      setGroups(groupsData);
+    } catch (error) {
+      toast({
+        title: 'Erro ao carregar grupos',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Função pública para recarregar dados (será chamada pelo componente pai)
+  const refreshData = () => {
+    loadGroups(page, search);
+  };
+
+  // Expor a função refreshData para o componente pai
+  useEffect(() => {
+    if (refreshTrigger) {
+      refreshData();
+    }
+  }, [refreshTrigger]);
+
+  useEffect(() => {
+    loadGroups(page, search);
+  }, [page]);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearch(value);
+
+    // Debounce da busca para evitar muitas requisições
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(() => {
+      loadGroups(1, value);
+      setPage(1);
+    }, 500);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleNewGroup = () => {;
+    onEdit(null);
+  };
+
+  const handleEdit = (group: Groups) => {
+    onEdit(group);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Tem certeza que deseja excluir este grupo?')) {
+      try {
+        await onDelete(id);
+        // Recarregar dados após exclusão
+        loadGroups(page, search);
+        toast({
+          title: 'Grupo excluído com sucesso',
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        });
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: 'Erro ao excluir grupo',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+  };
+
+  // Cleanup do timeout
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <Box mb={6}>
+      <Flex justify="space-between" align="center" mb={4}>
+        <Text fontSize="lg" fontWeight="medium">
+          Grupos
+        </Text>
+        <Button
+          size="sm"
+          colorScheme="purple"
+          leftIcon={<FiPlus />}
+          onClick={handleNewGroup}
+        >
+          Novo Grupo
+        </Button>
+      </Flex>
+
+      <InputGroup mb={4}>
+        <InputLeftElement pointerEvents="none">
+          <Icon as={FiSearch} color="gray.300" />
+        </InputLeftElement>
+        <Input
+          placeholder="Buscar grupos..."
+          value={search}
+          onChange={handleSearch}
+        />
+      </InputGroup>
+
+      {loading ? (
+        <Flex justify="center" py={4}>
+          <Spinner color="purple.500" />
+        </Flex>
+      ) : groups?.data?.length === 0 ? (
+        <Text textAlign="center" py={4}>
+          Nenhum grupo encontrado
+        </Text>
+      ) : (
+        <>
+          <Box
+            overflowX="auto"
+            border="1px"
+            borderColor="gray.200"
+            borderRadius="md"
+          >
+            <Table variant="simple" minW="400px">
+              <Thead>
+                <Tr>
+                  <Th>Nome</Th>
+                  <Th>Ações</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {groups?.data?.map((group) => (
+                  <Tr key={group.id}>
+                    <Td>{group.name}</Td>
+                    <Td>
+                      <Menu>
+                        <MenuButton as={Button} size="sm" variant="outline">
+                          Ações
+                        </MenuButton>
+                        <MenuList>
+                          <MenuItem
+                            icon={<FiEdit />}
+                            onClick={() => handleEdit(group)}
+                          >
+                            Editar
+                          </MenuItem>
+                          <MenuItem
+                            icon={<FiTrash2 />}
+                            onClick={() => handleDelete(group.id as string)}
+                            color="red.500"
+                          >
+                            Excluir
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </Box>
+
+          {groups?.meta && groups.meta.totalPages > 1 && (
+            <Flex justify="flex-end" mt={4}>
+              <Stack direction="row" spacing={2}>
+                <Button
+                  size="sm"
+                  onClick={() => handlePageChange(page - 1)}
+                  isDisabled={page === 1}
+                >
+                  Anterior
+                </Button>
+                <Button size="sm" variant="outline">
+                  {page} / {groups.meta.totalPages}
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => handlePageChange(page + 1)}
+                  isDisabled={page === groups.meta.totalPages}
+                >
+                  Próxima
+                </Button>
+              </Stack>
+            </Flex>
+          )}
+        </>
+      )}
+    </Box>
+  );
+};
+
+export default GroupResource;

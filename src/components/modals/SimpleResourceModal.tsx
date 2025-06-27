@@ -143,6 +143,9 @@ export const SimpleResourceModal = ({
     }
   }, [initialData, setValue, reset]);
 
+  console.log('initialData', initialData);
+  
+
   return (
     <Modal
       isOpen={isOpen}
