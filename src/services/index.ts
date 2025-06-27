@@ -1,6 +1,7 @@
 import { AuthService } from "./auth";
 import { CouponReaderService } from './couponReader';
 import { ProfileService } from "./profile";
+import { ReportsService } from "./reports";
 import { ResourcesService } from './resources';
 import { RevenueService } from './revenue';
 import { UserService } from "./user";
@@ -85,4 +86,26 @@ export const api = {
 
   confirmNewMonthIncomes: RevenueService.confirmNewMonthIncomes,
   getRepeatedIncomes: RevenueService.getRepeatedIncomes,
+
+  getExpenseByGroup: ({
+    startDate,
+    endDate,
+  }: {
+    startDate: string;
+    endDate: string;
+  }) => ReportsService.getExpenseByGroup({ startDate, endDate }),
+  getExpenseByStore: ({
+    startDate,
+    endDate,
+  }: {
+    startDate: string;
+    endDate: string;
+  }) => ReportsService.getExpenseByStore({ startDate, endDate }),
+  getExpenseByDate: ({
+    startDate,
+    endDate,
+  }: {
+    startDate: string;
+    endDate: string;
+  }) => ReportsService.getExpenseByDate({ startDate, endDate }),
 };
