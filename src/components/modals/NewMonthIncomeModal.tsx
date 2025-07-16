@@ -14,21 +14,24 @@ import {
   useToast,
   Divider,
   Heading,
+  Input,
+  Checkbox,
+  HStack,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
-import { formatCurrencyBRL } from '../../utils/formatCurrency';
+import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
 import type { Revenue } from '../../services/revenue';
+import type { RevenueItem } from '../../types/revenue';
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  onEdit: () => void;
 };
 
-export const NewMonthIncomeModal = ({ isOpen, onClose, onEdit }: Props) => {
+export const NewMonthIncomeModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast();
-  const [incomes, setIncomes] = useState<Revenue[]>([]);
+  const [incomes, setIncomes] = useState<RevenueItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -38,7 +41,16 @@ export const NewMonthIncomeModal = ({ isOpen, onClose, onEdit }: Props) => {
       setIsLoading(true);
       try {
         const data = await api.getRepeatedIncomes();
-        setIncomes(data);
+        // Mapear os dados para incluir o campo isSelected
+        const mappedIncomes: RevenueItem[] = data.map((income: Revenue) => ({
+          id: income.id || crypto.randomUUID(),
+          name: income.name,
+          value: income.value,
+          repeat: income.repeat,
+          date: income.date,
+          isSelected: true,
+        }));
+        setIncomes(mappedIncomes);
       } catch (error) {
         console.error('Erro ao carregar receitas:', error);
         toast({
@@ -60,7 +72,15 @@ export const NewMonthIncomeModal = ({ isOpen, onClose, onEdit }: Props) => {
   const handleConfirm = async () => {
     setIsSubmitting(true);
     try {
-      await api.confirmNewMonthIncomes();    
+      // Filtrar apenas as receitas selecionadas e remover o campo isSelected      
+      const selectedIncomes: Revenue[] = incomes
+        .filter((income) => income.isSelected)
+        .map(({ isSelected, ...income }) => ({ // eslint-disable-line @typescript-eslint/no-unused-vars
+          ...income,
+          value: parseBRLCurrency(formatCurrencyInputBRL(income.value.toString())),
+        }));
+
+      await api.confirmNewMonthIncomes(selectedIncomes);
 
       toast({
         title: 'Receitas confirmadas!',
@@ -81,6 +101,33 @@ export const NewMonthIncomeModal = ({ isOpen, onClose, onEdit }: Props) => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleIncomeChange = (id: string | undefined, field: 'name' | 'value', value: string) => {
+    if (!id) return;
+    
+    setIncomes((prevIncomes) => 
+      prevIncomes.map((income) => {
+        if (income.id === id) {
+          if (field === 'value') {
+            const numericValue = formatCurrencyInputBRL(value);
+            return { ...income, value: numericValue };
+          }
+          return { ...income, name: value };
+        }
+        return income;
+      }) as RevenueItem[]
+    );
+  };
+
+  const handleSelectionChange = (id: string | undefined, isSelected: boolean) => {
+    if (!id) return;
+    
+    setIncomes((prevIncomes) =>
+      prevIncomes.map((income) =>
+        income.id === id ? { ...income, isSelected } : income
+      )
+    );
   };
 
   return (
@@ -106,7 +153,7 @@ export const NewMonthIncomeModal = ({ isOpen, onClose, onEdit }: Props) => {
           </Heading>
 
           <Box
-            maxH="300px"
+            maxH="200px"
             overflowY="auto"
             pr={2}
             css={{
@@ -129,12 +176,57 @@ export const NewMonthIncomeModal = ({ isOpen, onClose, onEdit }: Props) => {
             ) : incomes.length > 0 ? (
               <VStack spacing={3} align="stretch">
                 {incomes.map((income) => (
-                  <Box key={income.id} bg="purple.700" borderRadius="md" p={3}>
-                    <Flex justify="space-between" align="center">
-                      <Text fontWeight="bold">{income.name}</Text>
-                      <Text color="green.300">
-                        R$ {formatCurrencyBRL(income.value)}
-                      </Text>
+                  <Box
+                    key={income.id}
+                    bg={income.isSelected ? 'purple.700' : 'purple.900'}
+                    borderRadius="md"
+                    p={3}
+                    opacity={income.isSelected ? 1 : 0.7}
+                    transition="all 0.2s"
+                    minH="48px"
+                    display="flex"
+                    alignItems="center"
+                  >
+                    <Flex justify="space-between" align="center" gap={2} w="100%">
+                      <HStack spacing={2} flex={1}>
+                        <Checkbox
+                          isChecked={income.isSelected}
+                          onChange={(e) =>
+                            handleSelectionChange(income.id, e.target.checked)
+                          }
+                          colorScheme="green"
+                        />
+                        <Input
+                          value={income.name}
+                          onChange={(e) =>
+                            handleIncomeChange(
+                              income.id,
+                              'name',
+                              e.target.value
+                            )
+                          }
+                          variant="filled"
+                          bg="purple.600"
+                          _hover={{ bg: 'purple.500' }}
+                          _focus={{ bg: 'purple.500' }}
+                          size="sm"
+                          isDisabled={!income.isSelected}
+                        />
+                      </HStack>
+                      <Input
+                        value={String(income.value).replace('.', ',')}
+                        onChange={(e) =>
+                          handleIncomeChange(income.id, 'value', e.target.value)
+                        }
+                        variant="filled"
+                        bg="purple.600"
+                        _hover={{ bg: 'purple.500' }}
+                        _focus={{ bg: 'purple.500' }}
+                        size="sm"
+                        width="150px"
+                        textAlign="right"
+                        isDisabled={!income.isSelected}
+                      />
                     </Flex>
                   </Box>
                 ))}
@@ -149,21 +241,12 @@ export const NewMonthIncomeModal = ({ isOpen, onClose, onEdit }: Props) => {
           <Divider my={4} borderColor="purple.600" />
 
           <Text fontSize="sm" color="purple.200">
-            Verifique se os valores estão corretos para o novo mês. Você pode
-            editar as receitas ou confirmar para continuar.
+            Edite os valores conforme necessário e desmarque as receitas que não
+            devem ser incluídas no novo mês.
           </Text>
         </ModalBody>
 
         <ModalFooter>
-          <Button
-            colorScheme="purple"
-            variant="outline"
-            mr={3}
-            onClick={onEdit}
-            isDisabled={isSubmitting}
-          >
-            Editar Receitas
-          </Button>
           <Button
             colorScheme="green"
             onClick={handleConfirm}
