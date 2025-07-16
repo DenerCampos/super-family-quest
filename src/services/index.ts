@@ -3,7 +3,7 @@ import { CouponReaderService } from './couponReader';
 import { ProfileService } from "./profile";
 import { ReportsService } from "./reports";
 import { ResourcesService } from './resources';
-import { RevenueService } from './revenue';
+import { RevenueService, type Revenue } from './revenue';
 import { UserService } from "./user";
 
 export const api = {
@@ -84,7 +84,8 @@ export const api = {
   deleteRevenue: ({ id }: { id: string }) =>
     ResourcesService.deleteRevenue({ id }),
 
-  confirmNewMonthIncomes: RevenueService.confirmNewMonthIncomes,
+  confirmNewMonthIncomes: (revenues: Revenue[]) =>
+    RevenueService.confirmNewMonthIncomes(revenues),
   getRepeatedIncomes: RevenueService.getRepeatedIncomes,
 
   getExpenseByGroup: ({

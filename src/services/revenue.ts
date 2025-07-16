@@ -5,11 +5,14 @@ export type Revenue = {
   name: string;
   value: number;
   repeat: boolean;
+  date: string;
 }
 
 export const RevenueService = {
-  confirmNewMonthIncomes: async (): Promise<void> => {
-    const response = await api.post(`/revenue/confirm-new-month-revenues`);
+  confirmNewMonthIncomes: async (revenues: Revenue[]): Promise<void> => {
+    const response = await api.post(`/revenue/confirm-new-month-revenues`, {
+      revenues,
+    });
 
     return response.data;
   },
