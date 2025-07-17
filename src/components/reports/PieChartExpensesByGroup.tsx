@@ -91,7 +91,6 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
         color="purple.500" // Cor mais forte para melhor contraste
         textAlign="center"
         mb={4}
-        fontFamily="Pixelify Sans"
         fontWeight="bold"
       >
         Distribuição de Gastos

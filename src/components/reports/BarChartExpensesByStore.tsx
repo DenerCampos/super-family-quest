@@ -100,7 +100,6 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
         color="purple.500"
         textAlign="center"
         mb={4}
-        fontFamily="Pixelify Sans"
         fontWeight="bold"
       >
         Despesas por Lojas
