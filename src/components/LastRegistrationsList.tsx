@@ -92,7 +92,7 @@ export const LastRegistrationsList = ({
   return (
     <VStack spacing={3} align="stretch" mt={4}>
       <Text fontSize="lg" fontWeight="bold" color="purple.800">
-        Últimas Despesas
+        Últimos registros
       </Text>
 
       <AnimatePresence>

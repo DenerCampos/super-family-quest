@@ -82,11 +82,6 @@ const Home = () => {
     await loadProfile();
   };
 
-  const handleEditIncomes = () => {
-    setShowNewMonthModal(false);
-    navigate('/new-resources');
-  };
-
   const handleConfirmNewMonth = async () => {
     setShowNewMonthModal(false);
     await loadProfile();
@@ -167,7 +162,6 @@ const Home = () => {
       <NewMonthIncomeModal
         isOpen={showNewMonthModal}
         onClose={handleConfirmNewMonth}
-        onEdit={handleEditIncomes}
       />
 
       <NavigationBar />
