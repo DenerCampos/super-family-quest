@@ -98,7 +98,8 @@ export const fillMonthDays = (data: DayData[]): DayData[] => {
 
       // Cria a data no formato ISO string (mantém o mesmo padrão do input)
       const isoDate = new Date(currentDate);
-      isoDate.setHours(3, 0, 0, 0); // Mantém o horário 03:00:00.000Z do exemplo
+      // isoDate.setHours(3, 0, 0, 0); // Mantém o horário 03:00:00.000Z do exemplo
+      isoDate.setHours(0, 0, 0, 0);
 
       result.push({
         value: Number(value),
