@@ -24,7 +24,7 @@ type RevenueModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  handleNewRegistration: () => void;
+  handleNewRegistration?: () => void;
   initialData?: {
     id?: string;
     name: string;
