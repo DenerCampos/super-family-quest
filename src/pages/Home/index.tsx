@@ -3,12 +3,18 @@ import {
   Flex,
   Button,
   useDisclosure,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Icon,
 } from '@chakra-ui/react';
 import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
-import { FiCamera, FiPlus } from 'react-icons/fi';
+import { FiCamera, FiPlus, FiDollarSign, FiShoppingBag } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { ExpenseModal } from '../../components/modals/ExpenseModal';
+import { RevenueModal } from '../../components/modals/RevenueModal';
 import { api } from '../../services';
 import type { Expense, Groups, Merchant, Payments } from '../../services/resources';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -20,7 +26,8 @@ import { LastRegistrationsList } from '../../components/LastRegistrationsList';
 
 const Home = () => {
   const { profile, loadProfile } = useAuth();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isExpenseOpen, onOpen: onExpenseOpen, onClose: onExpenseClose } = useDisclosure();
+  const { isOpen: isRevenueOpen, onOpen: onRevenueOpen, onClose: onRevenueClose } = useDisclosure();
   const [stores, setStores] = useState<Merchant[]>([]);
   const [payments, setPayments] = useState<Payments[]>([]);
   const [groups, setGroups] = useState<Groups[]>([]);
@@ -55,7 +62,7 @@ const Home = () => {
   useEffect(() => {
     if (location.state?.scanned && location.state.couponData) {      
       setScannedData(convertQRData(location.state.couponData));
-      onOpen();
+      onExpenseOpen();
     }
     if (location.state?.error) {
       setScanError(location.state.error);
@@ -82,11 +89,6 @@ const Home = () => {
     await loadProfile();
   };
 
-  const handleEditIncomes = () => {
-    setShowNewMonthModal(false);
-    navigate('/new-resources');
-  };
-
   const handleConfirmNewMonth = async () => {
     setShowNewMonthModal(false);
     await loadProfile();
@@ -111,42 +113,81 @@ const Home = () => {
             colorScheme="red"
           />
         </Flex>
-        {/* Botão de Ação Principal */}
-        <Button
-          colorScheme="purple"
-          size="lg"
-          leftIcon={<FiPlus />}
-          w="full"
-          mt={4}
-          boxShadow="md"
-          onClick={onOpen}
+
+        {/* Menus de Ação */}
+        <Flex 
+          gap={4} 
+          direction={{ base: "column", md: "row" }}
         >
-          Adicionar Nova Despesa
-        </Button>
-        <Button
-          colorScheme="teal"
-          size="lg"
-          leftIcon={<FiCamera />}
-          w="full"
-          boxShadow="md"
-          onClick={() => navigate('/scan')}
-        >
-          Ler QR Code da Despesa
-        </Button>
+          <Menu>
+            <MenuButton
+              as={Button}
+              colorScheme="purple"
+              size="lg"
+              leftIcon={<Icon as={FiShoppingBag} />}
+              w="full"
+            >
+              Adicionar Despesa
+            </MenuButton>
+            <MenuList>
+              <MenuItem
+                icon={<FiPlus />}
+                onClick={onExpenseOpen}
+              >
+                Nova Despesa
+              </MenuItem>
+              <MenuItem
+                icon={<FiCamera />}
+                onClick={() => navigate('/scan')}
+              >
+                Ler QR Code
+              </MenuItem>
+            </MenuList>
+          </Menu>
+
+          <Menu>
+            <MenuButton
+              as={Button}
+              colorScheme="green"
+              size="lg"
+              leftIcon={<Icon as={FiDollarSign} />}
+              w="full"
+            >
+              Adicionar Receita
+            </MenuButton>
+            <MenuList>
+              <MenuItem
+                icon={<FiPlus />}
+                onClick={onRevenueOpen}
+              >
+                Nova Receita
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </Flex>
 
         <LastRegistrationsList newRegistrationAdded={newRegistrationAdded} setNewRegistrationAdded={setNewRegistrationAdded} />
       </Flex>
 
-      {isOpen && (
+      {isExpenseOpen && (
         <ExpenseModal
-          isOpen={isOpen}
-          onClose={onClose}
+          isOpen={isExpenseOpen}
+          onClose={onExpenseClose}
           stores={stores}
           payments={payments}
           groups={groups}
           onSuccess={handleSuccess}
           initialData={scannedData}
           setScannedData={setScannedData}
+          handleNewRegistration={handleNewRegistration}
+        />
+      )}
+
+      {isRevenueOpen && (
+        <RevenueModal
+          isOpen={isRevenueOpen}
+          onClose={onRevenueClose}
+          onSuccess={handleSuccess}
           handleNewRegistration={handleNewRegistration}
         />
       )}
@@ -159,15 +200,13 @@ const Home = () => {
         }}
         onComplete={() => {
           setShowCompleteProfile(false);
-          loadProfile(); // Atualiza os dados do usuário
+          loadProfile();
         }}
       />
 
-      {/* Novo Modal para Receitas de Novo Mês */}
       <NewMonthIncomeModal
         isOpen={showNewMonthModal}
         onClose={handleConfirmNewMonth}
-        onEdit={handleEditIncomes}
       />
 
       <NavigationBar />

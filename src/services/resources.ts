@@ -85,6 +85,7 @@ export type CreateExpense = {
 export type CreateRevenue = {
   name: string;
   value: number;
+  date: string;
   repeat: boolean;
 }
 
