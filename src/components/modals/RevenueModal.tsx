@@ -24,11 +24,13 @@ type RevenueModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  handleNewRegistration: () => void;
   initialData?: {
     id?: string;
     name: string;
     value: number;
     repeat: boolean;
+    date?: string;
   };
 };
 
@@ -36,6 +38,7 @@ export const RevenueModal = ({
   isOpen,
   onClose,
   onSuccess,
+  handleNewRegistration,
   initialData,
 }: RevenueModalProps) => {
   const toast = useToast();
@@ -51,6 +54,7 @@ export const RevenueModal = ({
       name: '',
       value: '',
       repeat: false,
+      date: new Date().toISOString().split('T')[0],
     },
   });
 
@@ -60,21 +64,22 @@ export const RevenueModal = ({
       setValue('name', initialData.name);
       setValue('value', formatCurrencyInputBRL(initialData.value.toString()));
       setValue('repeat', initialData.repeat);
+      setValue('date', initialData.date || new Date().toISOString().split('T')[0]);
     } else {
       reset();
     }
   }, [initialData, setValue, reset]);
 
-  const onSubmit = async (data: { name: string; value: string; repeat: boolean }) => {
+  const onSubmit = async (data: { name: string; value: string; date: string; repeat: boolean }) => {
     try {
       const payload = {
         name: data.name,
         value: parseBRLCurrency(data.value),
+        date: data.date,
         repeat: data.repeat,
       };
 
       console.log('payload', payload);
-      
 
       if (initialData?.id) {
         await api.updateRevenue(initialData.id, payload);
@@ -94,6 +99,7 @@ export const RevenueModal = ({
 
       onSuccess();
       reset();
+      if (handleNewRegistration) handleNewRegistration();
       onClose();
     } catch (error) {
       toast({
@@ -119,7 +125,7 @@ export const RevenueModal = ({
         {isSubmitting && <LoadingOverlay />}
 
         <ModalHeader>
-          {initialData ? 'Editar Receita' : 'Nova Receita'}
+          {initialData ? '🧾 Editar Receita' : '🧾 Nova Receita'}
         </ModalHeader>
 
         <ModalCloseButton isDisabled={isSubmitting} />
@@ -177,6 +183,24 @@ export const RevenueModal = ({
               {errors.value && (
                 <Text color="red.300" fontSize="sm" mt={1}>
                   {errors.value.message}
+                </Text>
+              )}
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.date} mb={4}>
+              <FormLabel>Data</FormLabel>
+              <Input
+                type="date"
+                {...register('date', {
+                  required: 'Campo obrigatório',
+                })}
+                bg="white"
+                color="black"
+                isDisabled={isSubmitting}
+              />
+              {errors.date && (
+                <Text color="red.300" fontSize="sm" mt={1}>
+                  {errors.date.message}
                 </Text>
               )}
             </FormControl>
