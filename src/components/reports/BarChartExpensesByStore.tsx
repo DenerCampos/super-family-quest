@@ -84,10 +84,12 @@ export const BarChartExpensesByStore = ({ data }: ColumnChartExpensesProps) => {
               stroke="purple.500"
               tick={{ fontSize: isMobile ? 12 : 14 }}
             />
-            <YAxis
-              tickFormatter={(value) => formatCurrency(value)}
-              stroke="purple.500"
-            />
+            {!isMobile && (
+              <YAxis
+                tickFormatter={(value) => formatCurrency(value)}
+                stroke="purple.500"
+              />
+            )}
             <Tooltip
               formatter={(value) => [formatCurrency(Number(value)), 'Valor']}
               labelFormatter={(value) => {
