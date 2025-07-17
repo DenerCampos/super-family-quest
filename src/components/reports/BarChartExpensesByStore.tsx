@@ -1,4 +1,4 @@
-import { Flex, Text, Box, useBreakpointValue } from '@chakra-ui/react';
+import { Flex, Text, Box, useBreakpointValue, Spinner } from '@chakra-ui/react';
 import {
   BarChart,
   Bar,
@@ -12,9 +12,13 @@ import {
 } from 'recharts';
 import { formatCurrency } from '../../utils/formatCurrency';
 import type { ExpensesByGroup } from '../../services/reports';
+import { DateRangeFilter, defaultDates } from './DateRangeFilter';
+import { useState, useEffect } from 'react';
+import { api } from '../../services';
 
 interface ColumnChartExpensesProps {
   data: ExpensesByGroup[];
+  onDataUpdate?: (data: ExpensesByGroup[]) => void;
 }
 
 const generateBarColors = (count: number) => {
@@ -31,7 +35,43 @@ const generateBarColors = (count: number) => {
   return colors;
 };
 
-export const BarChartExpensesByStore = ({ data }: ColumnChartExpensesProps) => {
+export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: ColumnChartExpensesProps) => {
+  const [startDate, setStartDate] = useState(defaultDates.firstDay);
+  const [endDate, setEndDate] = useState(defaultDates.lastDay);
+  const [data, setData] = useState(initialData);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async (start: string, end: string) => {
+    setLoading(true);
+    try {
+      const response = await api.getExpenseByStore({
+        startDate: start,
+        endDate: end,
+      });
+      setData(response);
+      onDataUpdate?.(response);
+      setError(null);
+    } catch (error) {
+      console.error('Erro ao buscar dados do gráfico:', error);
+      setError('Erro ao carregar dados das lojas');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(startDate, endDate);
+  }, [startDate, endDate]);
+
+  const handleStartDateChange = (date: string) => {
+    setStartDate(date);
+  };
+
+  const handleEndDateChange = (date: string) => {
+    setEndDate(date);
+  };
+
   const chartData = data.map((item) => ({
     name: item.name.length > 10 ? `${item.name.substring(0, 8)}...` : item.name,
     fullName: item.name,
@@ -60,74 +100,104 @@ export const BarChartExpensesByStore = ({ data }: ColumnChartExpensesProps) => {
         color="purple.500"
         textAlign="center"
         mb={4}
-        fontFamily="Pixelify Sans"
         fontWeight="bold"
       >
-        Despesas por Categoria
+        Despesas por Lojas
       </Text>
 
-      <Box width="100%" height={isMobile ? '300px' : '400px'}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            data={chartData}
-            // layout="vertical" // Remove esta linha para ter barras verticais
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="purple.100" />
-            <XAxis
-              dataKey="name"
-              stroke="purple.500"
-              tick={{ fontSize: isMobile ? 12 : 14 }}
-            />
-            <YAxis
-              tickFormatter={(value) => formatCurrency(value)}
-              stroke="purple.500"
-            />
-            <Tooltip
-              formatter={(value) => [formatCurrency(Number(value)), 'Valor']}
-              labelFormatter={(value) => {
-                const fullName = chartData.find(
-                  (item) => item.name === value,
-                )?.fullName;
-                return fullName || value;
+      <DateRangeFilter
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={handleStartDateChange}
+        onEndDateChange={handleEndDateChange}
+      />
+
+      {loading ? (
+        <Flex align="center" justify="center" height="300px">
+          <Spinner
+            size="xl"
+            color="purple.500"
+            thickness="4px"
+            emptyColor="purple.100"
+          />
+          <Text ml={3} color="purple.300">
+            Carregando lojas...
+          </Text>
+        </Flex>
+      ) : error ? (
+        <Text color="red.500" textAlign="center" py={10}>
+          {error}
+        </Text>
+      ) : data.length > 0 ? (
+        <Box width="100%" height={isMobile ? '300px' : '400px'}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              // layout="vertical" // Remove esta linha para ter barras verticais
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
               }}
-              contentStyle={{
-                background: 'purple.50',
-                borderColor: 'purple.200',
-                borderRadius: 'md',
-                color: 'purple.800',
-              }}
-            />
-            <Legend
-              wrapperStyle={{
-                paddingTop: '10px',
-              }}
-              formatter={(value) => (
-                <span style={{ color: 'purple.700' }}>{value}</span>
-              )}
-            />
-            <Bar
-              dataKey="value"
-              name="Valor"
-              radius={[4, 4, 0, 0]} // Bordas arredondadas só no topo
             >
-              {chartData.map((_, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={colors[index]}
-                  stroke="purple.800"
-                  strokeWidth={0.5}
+              <CartesianGrid strokeDasharray="3 3" stroke="purple.100" />
+              <XAxis
+                dataKey="name"
+                stroke="purple.500"
+                tick={{ fontSize: isMobile ? 12 : 14 }}
+              />
+              {!isMobile && (
+                <YAxis
+                  tickFormatter={(value) => formatCurrency(value)}
+                  stroke="purple.500"
                 />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </Box>
+              )}
+              <Tooltip
+                formatter={(value) => [formatCurrency(Number(value)), 'Valor']}
+                labelFormatter={(value) => {
+                  const fullName = chartData.find(
+                    (item) => item.name === value,
+                  )?.fullName;
+                  return fullName || value;
+                }}
+                contentStyle={{
+                  background: 'purple.50',
+                  borderColor: 'purple.200',
+                  borderRadius: 'md',
+                  color: 'purple.800',
+                }}
+              />
+              <Legend
+                wrapperStyle={{
+                  paddingTop: '10px',
+                }}
+                formatter={(value) => (
+                  <span style={{ color: 'purple.700' }}>{value}</span>
+                )}
+              />
+              <Bar
+                dataKey="value"
+                name="Valor"
+                radius={[4, 4, 0, 0]} // Bordas arredondadas só no topo
+              >
+                {chartData.map((_, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={colors[index]}
+                    stroke="purple.800"
+                    strokeWidth={0.5}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </Box>
+      ) : (
+        <Text color="purple.300" py={10} textAlign="center">
+          Nenhum dado de lojas disponível
+        </Text>
+      )}
     </Flex>
   );
 };

@@ -15,6 +15,18 @@ export type ExpensesByDate = {
   date: string;
 };
 
+export type PurchasedItems = {
+  name: string;
+  quantity: number;
+  value: string;
+};
+
+export type ExpensesIncomeComparison = {
+  month: string;
+  totalExpenses: string;
+  totalRevenues: string;
+};
+
 export const ReportsService = {
   getExpenseByGroup: async ({
     startDate,
@@ -53,6 +65,32 @@ export const ReportsService = {
   }): Promise<ExpensesByDate[]> => {
     const response = await api.get(
       `/reports/expense-by-date?startDate=${startDate}&endDate=${endDate}`,
+    );
+
+    return response.data;
+  },
+
+  getMostPurchasedItems: async ({
+    startDate,
+    endDate,
+  }: {
+    startDate: string;
+    endDate: string;
+  }): Promise<PurchasedItems[]> => {
+    const response = await api.get(
+      `/reports/most-purchased-items?startDate=${startDate}&endDate=${endDate}`,
+    );
+
+    return response.data;
+  },
+
+  getExpensesIncomeComparison: async ({
+    year,
+  }: {
+    year: string;
+  }): Promise<ExpensesIncomeComparison[]> => {
+    const response = await api.get(
+      `/reports/expenses-income-comparison?year=${year}`,
     );
 
     return response.data;

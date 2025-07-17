@@ -109,4 +109,16 @@ export const api = {
     startDate: string;
     endDate: string;
   }) => ReportsService.getExpenseByDate({ startDate, endDate }),
+  getMostPurchasedItems: ({
+    startDate,
+    endDate,
+  }: {
+    startDate: string;
+    endDate: string;
+  }) => ReportsService.getMostPurchasedItems({ startDate, endDate }),
+  getExpensesIncomeComparison: ({
+    year,
+  }: {
+    year: string;
+  }) => ReportsService.getExpensesIncomeComparison({ year }),
 };

@@ -1,7 +1,7 @@
 import { Flex, Text, Box, useBreakpointValue, Spinner } from '@chakra-ui/react';
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -10,26 +10,32 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { formatCurrency } from '../../utils/formatCurrency';
-import type { ExpensesByDate } from '../../services/reports';
-import { fillMonthDays, formatDateToBR } from '../../utils/formatDate';
 import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
 
-interface LineChartExpensesProps {
-  data: ExpensesByDate[];
-  onDataUpdate?: (data: ExpensesByDate[]) => void;
+interface TopProductsData {
+  name: string;
+  quantity: number;
+  value: string;
 }
 
-const generateAreaColors = () => {
-  // Tons de roxo principal com variações
+interface HorizontalBarChartTopProductsProps {
+  data: TopProductsData[];
+  onDataUpdate?: (data: TopProductsData[]) => void;
+}
+
+const generateBarColors = () => {
   return {
-    stroke: 'hsl(270, 75%, 60%)', // Roxo principal para a linha
-    fill: 'hsl(270, 75%, 60%, 0.2)', // Roxo com transparência para a área
+    quantity: 'hsl(270, 75%, 60%)', // Roxo para quantidade
+    value: 'hsl(290, 65%, 60%)', // Violeta para valor
   };
 };
 
-export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: LineChartExpensesProps) => {
+export const HorizontalBarChartTopProducts = ({ 
+  data: initialData, 
+  onDataUpdate 
+}: HorizontalBarChartTopProductsProps) => {
   const [startDate, setStartDate] = useState(defaultDates.firstDay);
   const [endDate, setEndDate] = useState(defaultDates.lastDay);
   const [data, setData] = useState(initialData);
@@ -39,7 +45,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
   const fetchData = async (start: string, end: string) => {
     setLoading(true);
     try {
-      const response = await api.getExpenseByDate({
+      const response = await api.getMostPurchasedItems({
         startDate: start,
         endDate: end,
       });
@@ -48,7 +54,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
       setError(null);
     } catch (error) {
       console.error('Erro ao buscar dados do gráfico:', error);
-      setError('Erro ao carregar dados das despesas');
+      setError('Erro ao carregar dados dos produtos');
     } finally {
       setLoading(false);
     }
@@ -66,17 +72,20 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
     setEndDate(date);
   };
 
-  const fillChartData = fillMonthDays(data);
-  const chartData = fillChartData.map((item) => ({
-    date: item.date,
-    formattedDate: formatDateToBR(item.date),
-    formattedDateMobile: new Date(item.date).getDate().toString().padStart(2, '0'),
-    formattedDateDesktop: formatDateToBR(item.date).split('/').slice(0, 2).join('/'),
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const colors = generateBarColors();
+
+  // Processa os dados para o gráfico
+  const chartData = data.map(item => ({
+    name: isMobile && item.name.length > 15 
+      ? `${item.name.substring(0, 13)}...` 
+      : item.name.length > 30 
+      ? `${item.name.substring(0, 28)}...` 
+      : item.name,
+    fullName: item.name,
+    quantity: item.quantity,
     value: Number(item.value),
   }));
-
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const colors = generateAreaColors();
 
   return (
     <Flex
@@ -99,7 +108,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
         mb={4}
         fontWeight="bold"
       >
-        Despesas por Data
+        Produtos Mais Comprados
       </Text>
 
       <DateRangeFilter
@@ -118,7 +127,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
             emptyColor="purple.100"
           />
           <Text ml={3} color="purple.300">
-            Carregando despesas...
+            Carregando produtos...
           </Text>
         </Flex>
       ) : error ? (
@@ -126,36 +135,42 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
           {error}
         </Text>
       ) : data.length > 0 ? (
-        <Box width="100%" height={isMobile ? '300px' : '400px'}>
+        <Box width="100%" height={isMobile ? '400px' : '500px'}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
+            <BarChart
               data={chartData}
+              layout="vertical"
               margin={{
-                top: 10,
+                top: 20,
                 right: 30,
-                left: 20,
-                bottom: 5,
+                left: isMobile ? 80 : 120,
+                bottom: 20,
               }}
+              barSize={20}
+              barGap={8}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="purple.100" />
-              <XAxis
-                dataKey={isMobile ? "formattedDateMobile" : "formattedDateDesktop"}
-                stroke="purple.500"
-                tick={{ fontSize: isMobile ? 12 : 14 }}
+              <XAxis 
+                type="number"
+                tickFormatter={(value) => value.toString()}
               />
-              {!isMobile && (
-                <YAxis
-                  tickFormatter={(value) => formatCurrency(value)}
-                  stroke="purple.500"
-                />
-              )}
+              <YAxis 
+                type="category" 
+                dataKey="name" 
+                width={isMobile ? 120 : 180}
+                tick={{ 
+                  fontSize: isMobile ? 10 : 12,
+                }}
+              />
               <Tooltip
-                formatter={(value) => [formatCurrency(Number(value)), 'Valor']}
+                formatter={(value, name) => {
+                  if (name === 'value') return [formatCurrency(Number(value)), 'Valor Total'];
+                  if (name === 'quantity') return [value, 'Quantidade'];
+                  return [value, name];
+                }}
                 labelFormatter={(value) => {
-                  const fullDate = chartData.find(
-                    (item) => item.formattedDate === value,
-                  )?.date;
-                  return fullDate ? formatDateToBR(fullDate) : value;
+                  const item = chartData.find(item => item.name === value);
+                  return item?.fullName || value;
                 }}
                 contentStyle={{
                   background: 'rgba(255, 255, 255, 0.9)',
@@ -164,37 +179,32 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
                   padding: '8px',
                 }}
               />
-              {!isMobile && (
-                <Legend
-                  verticalAlign="top"
-                  align="center"
-                  wrapperStyle={{
-                    paddingBottom: '20px',
-                  }}
-                />
-              )}
-              <Area
-                type="monotone"
-                dataKey="value"
-                name="Valor Gasto"
-                stroke={colors.stroke}
-                fill={colors.fill}
-                strokeWidth={2}
-                activeDot={{
-                  stroke: colors.stroke,
-                  strokeWidth: 2,
-                  fill: 'white',
-                  r: 4,
-                }}
+              <Legend 
+                verticalAlign="top"
+                align="center"
               />
-            </AreaChart>
+              <Bar
+                dataKey="quantity"
+                name="Quantidade"
+                fill={colors.quantity}
+                radius={[0, 4, 4, 0]}
+                maxBarSize={25}
+              />
+              <Bar
+                dataKey="value"
+                name="Valor Total"
+                fill={colors.value}
+                radius={[0, 4, 4, 0]}
+                maxBarSize={25}
+              />
+            </BarChart>
           </ResponsiveContainer>
         </Box>
       ) : (
         <Text color="purple.300" py={10} textAlign="center">
-          Nenhum dado de despesas disponível
+          Nenhum dado de produtos disponível
         </Text>
       )}
     </Flex>
   );
-};
+}; 
