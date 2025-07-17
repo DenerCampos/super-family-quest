@@ -21,11 +21,18 @@ interface LineChartExpensesProps {
   onDataUpdate?: (data: ExpensesByDate[]) => void;
 }
 
+interface ChartDataItem {
+  date: string;
+  formattedDate: string;
+  formattedDateMobile: string;
+  formattedDateDesktop: string;
+  value: number;
+}
+
 const generateAreaColors = () => {
-  // Tons de roxo principal com variações
   return {
-    stroke: 'hsl(270, 75%, 60%)', // Roxo principal para a linha
-    fill: 'hsl(270, 75%, 60%, 0.2)', // Roxo com transparência para a área
+    stroke: 'hsl(270, 75%, 60%)',
+    fill: 'hsl(270, 75%, 60%, 0.2)',
   };
 };
 
@@ -33,6 +40,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
   const [startDate, setStartDate] = useState(defaultDates.firstDay);
   const [endDate, setEndDate] = useState(defaultDates.lastDay);
   const [data, setData] = useState(initialData);
+  const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,6 +66,22 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
     fetchData(startDate, endDate);
   }, [startDate, endDate]);
 
+  useEffect(() => {
+    if (data.length > 0) {
+      const fillChartData = fillMonthDays(data);
+      const processedData = fillChartData.map((item) => ({
+        date: item.date,
+        formattedDate: formatDateToBR(item.date),
+        formattedDateMobile: new Date(item.date).getDate().toString().padStart(2, '0'),
+        formattedDateDesktop: formatDateToBR(item.date).split('/').slice(0, 2).join('/'),
+        value: Number(item.value),
+      }));
+      setChartData(processedData);
+    } else {
+      setChartData([]);
+    }
+  }, [data]);
+
   const handleStartDateChange = (date: string) => {
     setStartDate(date);
   };
@@ -65,15 +89,6 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
   const handleEndDateChange = (date: string) => {
     setEndDate(date);
   };
-
-  const fillChartData = fillMonthDays(data);
-  const chartData = fillChartData.map((item) => ({
-    date: item.date,
-    formattedDate: formatDateToBR(item.date),
-    formattedDateMobile: new Date(item.date).getDate().toString().padStart(2, '0'),
-    formattedDateDesktop: formatDateToBR(item.date).split('/').slice(0, 2).join('/'),
-    value: Number(item.value),
-  }));
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const colors = generateAreaColors();
@@ -125,7 +140,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
         <Text color="red.500" textAlign="center" py={10}>
           {error}
         </Text>
-      ) : data.length > 0 ? (
+      ) : chartData.length > 0 ? (
         <Box width="100%" height={isMobile ? '300px' : '400px'}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
