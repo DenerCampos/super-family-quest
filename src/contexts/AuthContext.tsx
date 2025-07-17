@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services';
 
@@ -31,6 +31,16 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (token && !profile) {
+      loadProfile().catch(() => {
+        localStorage.removeItem('accessToken');
+        navigate('/login');
+      });
+    }
+  }, []);
+
   const loadProfile = async () => {   
     try {
       const profile = await api.profile();
@@ -41,7 +51,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       }));
     } catch (error) {
       console.error('Failed to load profile:', error);
-      logout();
+      throw error;
     }
   };
 
