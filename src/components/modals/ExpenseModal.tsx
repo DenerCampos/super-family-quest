@@ -22,6 +22,7 @@ import {
   useDisclosure,
   Icon,
   Collapse,
+  Checkbox,
 } from '@chakra-ui/react';
 import { FiChevronDown } from 'react-icons/fi';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -193,8 +194,6 @@ export const ExpenseModal = ({
       };
 
       await api.createExpense(formattedData);
-      
-      
       await loadProfile();
 
       toast({
@@ -307,6 +306,12 @@ export const ExpenseModal = ({
                 {...inputStyle}
                 placeholder="URL opcional"
               />
+            </FormControl>
+
+            <FormControl mb={4}>
+              <Checkbox {...register('repeat')} colorScheme="green" size="lg">
+                Repete todo mês?
+              </Checkbox>
             </FormControl>
 
             {/* Seção de Itens */}
