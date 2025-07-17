@@ -63,7 +63,7 @@ export const BarChartExpensesByStore = ({ data }: ColumnChartExpensesProps) => {
         fontFamily="Pixelify Sans"
         fontWeight="bold"
       >
-        Despesas por Categoria
+        Despesas por Lojas
       </Text>
 
       <Box width="100%" height={isMobile ? '300px' : '400px'}>

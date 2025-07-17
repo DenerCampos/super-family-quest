@@ -69,7 +69,9 @@ export const PieChartExpenses = ({ data }: PieChartExpensesProps) => {
               fill="#8884d8"
               dataKey="value"
               label={({ name, percent }) =>
-                `${name}: ${(percent || 0 * 100).toFixed(0)}%`
+                isMobile ? 
+                `${((percent || 0) * 100).toFixed(0)}%` :
+                `${name}: ${((percent || 0) * 100).toFixed(0)}%`
               }
               animationDuration={500} // Microinteração
             >
@@ -84,11 +86,15 @@ export const PieChartExpenses = ({ data }: PieChartExpensesProps) => {
               ))}
             </Pie>
             <Tooltip
-              formatter={(value) => [formatCurrency(Number(value))]}
+              formatter={(value, name) => [
+                `${formatCurrency(Number(value))} (${((Number(value) / chartData.reduce((acc, curr) => acc + curr.value, 0)) * 100).toFixed(0)}%)`,
+                name
+              ]}
               contentStyle={{
-                background: 'purple.50',
+                background: 'rgba(255, 255, 255, 0.9)',
                 borderColor: 'purple.200',
                 borderRadius: 'md',
+                padding: '8px',
               }}
             />
             {!isMobile && (
@@ -104,6 +110,18 @@ export const PieChartExpenses = ({ data }: PieChartExpensesProps) => {
           </PieChart>
         </ResponsiveContainer>
       </Box>
+      {isMobile && (
+        <Box mt={4} maxH="150px" overflowY="auto">
+          <Flex direction="column" gap={2}>
+            {chartData.map((entry, index) => (
+              <Flex key={`legend-${index}`} align="center" gap={2}>
+                <Box w="12px" h="12px" borderRadius="50%" bg={colors[index]} />
+                <Text color="purple.700" fontSize="sm">{entry.name}</Text>
+              </Flex>
+            ))}
+          </Flex>
+        </Box>
+      )}
     </Flex>
   );
 };

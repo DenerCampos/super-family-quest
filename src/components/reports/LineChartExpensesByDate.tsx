@@ -31,6 +31,8 @@ export const LineChartExpensesByDate = ({ data }: LineChartExpensesProps) => {
   const chartData = fillChartData.map((item) => ({
     date: item.date,
     formattedDate: formatDateToBR(item.date),
+    formattedDateMobile: new Date(item.date).getDate().toString().padStart(2, '0'),
+    formattedDateDesktop: formatDateToBR(item.date).split('/').slice(0, 2).join('/'),
     value: Number(item.value),
   }));
 
@@ -75,14 +77,16 @@ export const LineChartExpensesByDate = ({ data }: LineChartExpensesProps) => {
           >
             <CartesianGrid strokeDasharray="3 3" stroke="purple.100" />
             <XAxis
-              dataKey="formattedDate"
+              dataKey={isMobile ? "formattedDateMobile" : "formattedDateDesktop"}
               stroke="purple.500"
               tick={{ fontSize: isMobile ? 12 : 14 }}
             />
-            <YAxis
-              tickFormatter={(value) => formatCurrency(value)}
-              stroke="purple.500"
-            />
+            {!isMobile && (
+              <YAxis
+                tickFormatter={(value) => formatCurrency(value)}
+                stroke="purple.500"
+              />
+            )}
             <Tooltip
               formatter={(value) => [formatCurrency(Number(value)), 'Valor']}
               labelFormatter={(value) => {
@@ -113,18 +117,17 @@ export const LineChartExpensesByDate = ({ data }: LineChartExpensesProps) => {
               dataKey="value"
               name="Valor Gasto"
               stroke={colors[0]} // Cor principal da linha
-              strokeWidth={3}
+              strokeWidth={1.5} // Reduzido de 3 para 1.5
               dot={{
                 stroke: colors[0], // Cor da borda do ponto
-                strokeWidth: 2,
-                // fill: 'transparent', // Sem preenchimento
-                r: 3, // Raio menor (tamanho do ponto)
+                strokeWidth: 1, // Reduzido de 2 para 1
+                r: 2, // Reduzido de 3 para 2
               }}
               activeDot={{
                 stroke: colors[0],
-                strokeWidth: 3,
-                fill: 'transparent', // Sem preenchimento no hover
-                r: 5, // Raio ligeiramente maior no hover
+                strokeWidth: 2, // Reduzido de 3 para 2
+                fill: colors[0], // Adicionado preenchimento no hover
+                r: 4, // Reduzido de 5 para 4
               }}
             />
           </LineChart>
