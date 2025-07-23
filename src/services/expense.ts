@@ -30,7 +30,7 @@ export type Items = {
   quantity: number | string;
   unit: string;
   value: number | string;
-  total: number;
+  total: number | string;
   group: Groups;
 };
 
@@ -38,7 +38,7 @@ export type ExpenseComplete = {
   id?: string;
   name: string;
   uri: string;
-  value: number;
+  value: number | string;
   repeat: boolean;
   date: string;
   createdAt?: Date;

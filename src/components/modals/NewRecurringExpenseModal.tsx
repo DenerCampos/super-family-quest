@@ -17,10 +17,15 @@ import {
   Input,
   Checkbox,
   HStack,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
-import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
+import { formatCurrencyBRL, formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
 import type { ExpenseComplete } from '../../services/expense';
 
 type ExpenseItem = ExpenseComplete & {
@@ -45,11 +50,21 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       try {
         const data = await api.getExpenseRecurring();
         // Mapear os dados para incluir o campo isSelected
-        const mappedExpenses: ExpenseItem[] = data.map((expense: ExpenseComplete) => ({
-          ...expense,
-          id: expense.id || crypto.randomUUID(),
-          isSelected: true,
-        }));
+        const mappedExpenses: ExpenseItem[] = data.map(
+          (expense: ExpenseComplete) => ({
+            ...expense,
+            value: parseBRLCurrency(formatCurrencyInputBRL(
+              expense.value.toString()),
+            ),
+            items: expense.items.map((item) => ({
+              ...item,
+              value: formatCurrencyInputBRL(item.value.toString()),
+              total: formatCurrencyInputBRL(item.value.toString()),
+            })),
+            id: expense.id || crypto.randomUUID(),
+            isSelected: true,
+          }),
+        );
         setExpenses(mappedExpenses);
       } catch (error) {
         console.error('Erro ao carregar despesas:', error);
@@ -75,11 +90,20 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       // Filtrar apenas as despesas selecionadas e remover o campo isSelected      
       const selectedExpenses: ExpenseComplete[] = expenses
         .filter((expense) => expense.isSelected)
-        .map(({ isSelected, ...expense }) => ({ // eslint-disable-line @typescript-eslint/no-unused-vars
+        .map(({ isSelected, ...expense }) => ({// eslint-disable-line @typescript-eslint/no-unused-vars
           ...expense,
-          value: parseBRLCurrency(
-            formatCurrencyInputBRL(expense.value.toString()),
-          ),
+          store: {
+            ...expense.store,
+            name: expense.name,
+          },
+          items: expense.items.map((item) => ({
+            ...item,
+            value: parseBRLCurrency(
+              formatCurrencyInputBRL(item.value.toString()),
+            ),
+            total: parseBRLCurrency(expense.value.toString()),
+          })),
+          value: parseBRLCurrency(expense.value.toString()),
         }));
 
       const expenseIds = expenses.map((expense) => expense.id).filter((id): id is string => id !== undefined);
@@ -116,11 +140,43 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
     setExpenses((prevExpenses) => 
       prevExpenses.map((expense) => {
         if (expense.id === id) {
-          if (field === 'value') {
-            const numericValue = formatCurrencyInputBRL(value);
-            return { ...expense, value: numericValue };
+          // Agora só permite alterar o nome, já que o valor é calculado automaticamente
+          if (field === 'name') {
+            return { ...expense, name: value };
           }
-          return { ...expense, name: value };
+          return expense;
+        }
+        return expense;
+      })
+    );
+  };
+
+  const handleItemChange = (expenseId: string | undefined, itemIndex: number, field: 'name' | 'value', value: string) => {
+    if (!expenseId) return;
+
+    setExpenses((prevExpenses) =>
+      prevExpenses.map((expense) => {
+        if (expense.id === expenseId) {
+          const updatedItems = [...expense.items];
+          if (field === 'value') {            
+            const numericValue = formatCurrencyInputBRL(value);
+            updatedItems[itemIndex] = { ...updatedItems[itemIndex], value: numericValue };
+          } else {
+            updatedItems[itemIndex] = { ...updatedItems[itemIndex], name: value };
+          }
+          
+          // Calcula o novo valor total baseado na soma dos itens
+          const totalValue = updatedItems.reduce((sum, item) => {
+            const itemValue = typeof item.value === 'string' ? parseBRLCurrency(item.value) : item.value;
+            console.log(itemValue);
+            return sum + (itemValue * (typeof item.quantity === 'string' ? parseFloat(item.quantity) : item.quantity));
+          }, 0);
+          
+          return { 
+            ...expense, 
+            items: updatedItems,
+            value: totalValue // Atualiza o valor total da despesa
+          };
         }
         return expense;
       })
@@ -151,7 +207,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
         <ModalCloseButton />
         <ModalBody>
           <Text mb={4} fontSize="lg">
-            Nobre Guardião do Tesouro, um novo ciclo lunar se inicia! É hora de revisar os tributos e custos do reino para manter nossa fortaleza próspera. 🏰
+            Nobre Guardião do Tesouro, um novo ciclo lunar se inicia! É hora de
+            revisar os tributos e custos do reino para manter nossa fortaleza
+            próspera. 🏰
           </Text>
 
           <Heading size="md" mb={4} color="purple.300">
@@ -159,7 +217,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
           </Heading>
 
           <Box
-            maxH="200px"
+            maxH="300px"
             overflowY="auto"
             pr={2}
             css={{
@@ -189,50 +247,123 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                     p={3}
                     opacity={expense.isSelected ? 1 : 0.7}
                     transition="all 0.2s"
-                    minH="48px"
-                    display="flex"
-                    alignItems="center"
                   >
-                    <Flex justify="space-between" align="center" gap={2} w="100%">
-                      <HStack spacing={2} flex={1}>
-                        <Checkbox
-                          isChecked={expense.isSelected}
-                          onChange={(e) =>
-                            handleSelectionChange(expense.id, e.target.checked)
-                          }
-                          colorScheme="green"
-                        />
+                    <Flex direction="column" gap={3}>
+                      <Flex
+                        justify="space-between"
+                        align="center"
+                        gap={2}
+                        w="100%"
+                      >
+                        <HStack spacing={2} flex={1}>
+                          <Checkbox
+                            isChecked={expense.isSelected}
+                            onChange={(e) =>
+                              handleSelectionChange(
+                                expense.id,
+                                e.target.checked,
+                              )
+                            }
+                            colorScheme="green"
+                          />
+                          <Input
+                            value={expense.name}
+                            onChange={(e) =>
+                              handleExpenseChange(
+                                expense.id,
+                                'name',
+                                e.target.value,
+                              )
+                            }
+                            variant="filled"
+                            bg="purple.600"
+                            _hover={{ bg: 'purple.500' }}
+                            _focus={{ bg: 'purple.500' }}
+                            size="sm"
+                            isDisabled={!expense.isSelected}
+                          />
+                        </HStack>
                         <Input
-                          value={expense.name}
-                          onChange={(e) =>
-                            handleExpenseChange(
-                              expense.id,
-                              'name',
-                              e.target.value
-                            )
-                          }
+                          value={formatCurrencyBRL(expense.value.toString())}
                           variant="filled"
                           bg="purple.600"
                           _hover={{ bg: 'purple.500' }}
                           _focus={{ bg: 'purple.500' }}
                           size="sm"
-                          isDisabled={!expense.isSelected}
+                          width="150px"
+                          textAlign="right"
+                          isDisabled={true}
+                          readOnly
                         />
-                      </HStack>
-                      <Input
-                        value={String(expense.value).replace('.', ',')}
-                        onChange={(e) =>
-                          handleExpenseChange(expense.id, 'value', e.target.value)
-                        }
-                        variant="filled"
-                        bg="purple.600"
-                        _hover={{ bg: 'purple.500' }}
-                        _focus={{ bg: 'purple.500' }}
-                        size="sm"
-                        width="150px"
-                        textAlign="right"
-                        isDisabled={!expense.isSelected}
-                      />
+                      </Flex>
+
+                      <Accordion allowToggle>
+                        <AccordionItem border="none">
+                          <AccordionButton
+                            _hover={{ bg: 'purple.600' }}
+                            borderRadius="md"
+                            p={2}
+                          >
+                            <Box flex="1" textAlign="left">
+                              <Text fontSize="sm" color="purple.200">
+                                Itens ({expense.items.length})
+                              </Text>
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                          <AccordionPanel pb={4}>
+                            <VStack spacing={2} align="stretch">
+                              {expense.items.map((item, index) => (
+                                <Flex
+                                  key={item.id || index}
+                                  gap={2}
+                                  bg="purple.600"
+                                  p={2}
+                                  borderRadius="md"
+                                >
+                                  <Input
+                                    value={item.name}
+                                    onChange={(e) =>
+                                      handleItemChange(
+                                        expense.id,
+                                        index,
+                                        'name',
+                                        e.target.value,
+                                      )
+                                    }
+                                    variant="filled"
+                                    bg="purple.500"
+                                    _hover={{ bg: 'purple.400' }}
+                                    _focus={{ bg: 'purple.400' }}
+                                    size="sm"
+                                    flex={1}
+                                    isDisabled={!expense.isSelected}
+                                  />
+                                  <Input
+                                    value={String(item.value).replace('.', ',')}
+                                    onChange={(e) =>
+                                      handleItemChange(
+                                        expense.id,
+                                        index,
+                                        'value',
+                                        e.target.value,
+                                      )
+                                    }
+                                    variant="filled"
+                                    bg="purple.500"
+                                    _hover={{ bg: 'purple.400' }}
+                                    _focus={{ bg: 'purple.400' }}
+                                    size="sm"
+                                    width="120px"
+                                    textAlign="right"
+                                    isDisabled={!expense.isSelected}
+                                  />
+                                </Flex>
+                              ))}
+                            </VStack>
+                          </AccordionPanel>
+                        </AccordionItem>
+                      </Accordion>
                     </Flex>
                   </Box>
                 ))}
@@ -247,7 +378,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
           <Divider my={4} borderColor="purple.600" />
 
           <Text fontSize="sm" color="purple.200">
-            Ajuste os valores dos tributos conforme necessário e desmarque aqueles que não devem ser mantidos neste ciclo lunar. Um reino próspero depende de uma gestão sábia dos recursos! 🗡️
+            Ajuste os valores dos tributos conforme necessário e desmarque
+            aqueles que não devem ser mantidos neste ciclo lunar. Um reino
+            próspero depende de uma gestão sábia dos recursos! 🗡️
           </Text>
         </ModalBody>
 
