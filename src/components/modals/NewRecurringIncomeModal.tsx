@@ -29,7 +29,7 @@ type Props = {
   onClose: () => void;
 };
 
-export const NewMonthIncomeModal = ({ isOpen, onClose }: Props) => {
+export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast();
   const [incomes, setIncomes] = useState<RevenueItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,7 +40,7 @@ export const NewMonthIncomeModal = ({ isOpen, onClose }: Props) => {
     const loadRepeatedIncomes = async () => {
       setIsLoading(true);
       try {
-        const data = await api.getRepeatedIncomes();
+        const data = await api.getIncomeRecurring();
         // Mapear os dados para incluir o campo isSelected
         const mappedIncomes: RevenueItem[] = data.map((income: Revenue) => ({
           id: income.id || crypto.randomUUID(),
@@ -80,7 +80,12 @@ export const NewMonthIncomeModal = ({ isOpen, onClose }: Props) => {
           value: parseBRLCurrency(formatCurrencyInputBRL(income.value.toString())),
         }));
 
-      await api.confirmNewMonthIncomes(selectedIncomes);
+      const revenueIds = incomes.map((income) => income.id);
+
+      await api.recurringIncomeConfirm({
+        revenues: selectedIncomes,
+        revenueIds,
+      });
 
       toast({
         title: 'Receitas confirmadas!',
@@ -140,16 +145,15 @@ export const NewMonthIncomeModal = ({ isOpen, onClose }: Props) => {
     >
       <ModalOverlay />
       <ModalContent bg="purple.800" color="white">
-        <ModalHeader>⚔️ Novo Mês, Novas Conquistas! ⚔️ </ModalHeader>
+        <ModalHeader>🏰 Nova Fase da Jornada! 🌟</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text mb={4} fontSize="lg">
-            Combatente, você passou de fase! Confira se suas receitas aumentaram
-            💰 ou diminuíram 💸.
+            Saudações, Nobre Guardião do Tesouro Familiar! Um novo ciclo lunar se inicia, e com ele, as fontes de ouro do reino precisam ser revisadas.
           </Text>
 
           <Heading size="md" mb={4} color="purple.300">
-            Receitas que se repetem:
+            Fontes de Ouro Recorrentes:
           </Heading>
 
           <Box
@@ -171,7 +175,7 @@ export const NewMonthIncomeModal = ({ isOpen, onClose }: Props) => {
           >
             {isLoading ? (
               <Text textAlign="center" py={4}>
-                Carregando receitas...
+                Consultando o Grimório Real... 📚
               </Text>
             ) : incomes.length > 0 ? (
               <VStack spacing={3} align="stretch">
@@ -233,7 +237,7 @@ export const NewMonthIncomeModal = ({ isOpen, onClose }: Props) => {
               </VStack>
             ) : (
               <Text textAlign="center" py={4} color="gray.400">
-                Nenhuma receita repetida encontrada
+                Nenhuma fonte de ouro recorrente encontrada no reino 🏰
               </Text>
             )}
           </Box>
@@ -241,8 +245,7 @@ export const NewMonthIncomeModal = ({ isOpen, onClose }: Props) => {
           <Divider my={4} borderColor="purple.600" />
 
           <Text fontSize="sm" color="purple.200">
-            Edite os valores conforme necessário e desmarque as receitas que não
-            devem ser incluídas no novo mês.
+            Ajuste os valores do tesouro conforme necessário e desmarque as fontes de ouro que não devem ser mantidas neste ciclo lunar. Lembre-se: um bom guardião sempre mantém suas finanças em ordem! ⚔️
           </Text>
         </ModalBody>
 
@@ -251,9 +254,9 @@ export const NewMonthIncomeModal = ({ isOpen, onClose }: Props) => {
             colorScheme="green"
             onClick={handleConfirm}
             isLoading={isSubmitting}
-            loadingText="Confirmando..."
+            loadingText="Atualizando o Tesouro..."
           >
-            Tudo Certo, Confirmar!
+            Selar o Decreto Real ✨
           </Button>
         </ModalFooter>
       </ModalContent>

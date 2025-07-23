@@ -21,8 +21,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { convertQRData } from '../../utils/qrCode';
 import { CompleteProfileModal } from '../../components/modals/CompleteProfileModal';
 import { SummaryCard } from '../../components/SummaryCard';
-import { NewMonthIncomeModal } from '../../components/modals/NewMonthIncomeModal';
+import { NewRecurringIncomeModal } from '../../components/modals/NewRecurringIncomeModal';
 import { LastRegistrationsList } from '../../components/LastRegistrationsList';
+import { NewRecurringExpenseModal } from '../../components/modals/NewRecurringExpenseModal';
 
 const Home = () => {
   const { profile, loadProfile } = useAuth();
@@ -35,7 +36,8 @@ const Home = () => {
   const [scannedData, setScannedData] = useState<Expense | null>(null);
   const [scanError, setScanError] = useState('');
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
-  const [showNewMonthModal, setShowNewMonthModal] = useState(false);
+  const [showRecurringRevenuesModal, setShowRecurringRevenuesModal] = useState(false);
+  const [showRecurringExpensesModal, setShowRecurringExpensesModal] = useState(false);
   const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
   const navigate = useNavigate();
 
@@ -76,8 +78,12 @@ const Home = () => {
       setShowCompleteProfile(true);
     }
 
-    if (profile && profile.newMonth) {
-      setShowNewMonthModal(true);
+    if (profile && profile.hasRecurringRevenues) {
+      setShowRecurringRevenuesModal(true);
+    }
+
+    if (profile && profile.hasRecurringExpenses) {
+      setShowRecurringExpensesModal(true);
     }
   }, [profile]);
 
@@ -89,8 +95,13 @@ const Home = () => {
     await loadProfile();
   };
 
-  const handleConfirmNewMonth = async () => {
-    setShowNewMonthModal(false);
+  const handleCloseRecurringExpensesModal = async () => {
+    setShowRecurringExpensesModal(false);
+    await loadProfile();
+  };
+
+  const handleCloseRecurringRevenuesModal = async () => {
+    setShowRecurringRevenuesModal(false);
     await loadProfile();
   };
 
@@ -115,10 +126,7 @@ const Home = () => {
         </Flex>
 
         {/* Menus de Ação */}
-        <Flex 
-          gap={4} 
-          direction={{ base: "column", md: "row" }}
-        >
+        <Flex gap={4} direction={{ base: 'column', md: 'row' }}>
           <Menu>
             <MenuButton
               as={Button}
@@ -130,16 +138,10 @@ const Home = () => {
               Adicionar Despesa
             </MenuButton>
             <MenuList>
-              <MenuItem
-                icon={<FiPlus />}
-                onClick={onExpenseOpen}
-              >
+              <MenuItem icon={<FiPlus />} onClick={onExpenseOpen}>
                 Nova Despesa
               </MenuItem>
-              <MenuItem
-                icon={<FiCamera />}
-                onClick={() => navigate('/scan')}
-              >
+              <MenuItem icon={<FiCamera />} onClick={() => navigate('/scan')}>
                 Ler QR Code
               </MenuItem>
             </MenuList>
@@ -156,17 +158,17 @@ const Home = () => {
               Adicionar Receita
             </MenuButton>
             <MenuList>
-              <MenuItem
-                icon={<FiPlus />}
-                onClick={onRevenueOpen}
-              >
+              <MenuItem icon={<FiPlus />} onClick={onRevenueOpen}>
                 Nova Receita
               </MenuItem>
             </MenuList>
           </Menu>
         </Flex>
 
-        <LastRegistrationsList newRegistrationAdded={newRegistrationAdded} setNewRegistrationAdded={setNewRegistrationAdded} />
+        <LastRegistrationsList
+          newRegistrationAdded={newRegistrationAdded}
+          setNewRegistrationAdded={setNewRegistrationAdded}
+        />
       </Flex>
 
       {isExpenseOpen && (
@@ -204,9 +206,14 @@ const Home = () => {
         }}
       />
 
-      <NewMonthIncomeModal
-        isOpen={showNewMonthModal}
-        onClose={handleConfirmNewMonth}
+      <NewRecurringIncomeModal
+        isOpen={showRecurringRevenuesModal}
+        onClose={handleCloseRecurringRevenuesModal}
+      />
+
+      <NewRecurringExpenseModal
+        isOpen={showRecurringExpensesModal}
+        onClose={handleCloseRecurringExpensesModal}
       />
 
       <NavigationBar />
