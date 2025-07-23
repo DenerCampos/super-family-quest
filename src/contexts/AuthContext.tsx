@@ -15,7 +15,8 @@ export type UserProfile = {
   expenses: number;
   coins: number;
   isFirstAccess: boolean;
-  newMonth: boolean;
+  hasRecurringRevenues: boolean;
+  hasRecurringExpenses: boolean;
 };
 
 type AuthContextType = {
