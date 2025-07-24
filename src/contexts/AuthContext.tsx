@@ -24,12 +24,15 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   loadProfile: () => Promise<void>;
+  showValues: boolean;
+  toggleShowValues: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [showValues, setShowValues] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,8 +79,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     navigate('/login');
   };
 
+  const toggleShowValues = () => {
+    setShowValues(prev => !prev);
+  };
+
   return (
-    <AuthContext.Provider value={{ profile, login, logout, loadProfile }}>
+    <AuthContext.Provider value={{ profile, login, logout, loadProfile, showValues, toggleShowValues }}>
       {children}
     </AuthContext.Provider>
   );

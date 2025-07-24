@@ -1,6 +1,7 @@
 // components/SummaryCard.tsx
 import { Card, CardBody, Text, Heading } from '@chakra-ui/react';
 import { formatCurrency } from '../utils/formatCurrency';
+import { useAuth } from '../contexts/AuthContext';
 
 type Props = {
   title: string;
@@ -9,6 +10,8 @@ type Props = {
 };
 
 export const SummaryCard = ({ title, value, colorScheme }: Props) => {
+  const { showValues } = useAuth();
+
   const colors = {
     green: {
       bg: 'green.100',
@@ -34,8 +37,8 @@ export const SummaryCard = ({ title, value, colorScheme }: Props) => {
         <Text fontSize="sm" color={colors[colorScheme].text}>
           {title}
         </Text>
-        <Heading size="lg" color={colors[colorScheme].heading}>
-          {formatCurrency(value)}
+        <Heading size="lg" color={colors[colorScheme].heading} letterSpacing="2px">
+          {showValues ? formatCurrency(value) : '••••••••'}
         </Heading>
       </CardBody>
     </Card>
