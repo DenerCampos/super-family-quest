@@ -133,8 +133,6 @@ export const LastRegistrationsList = ({
               <Badge
                 colorScheme={registration.type === 'expense' ? 'red' : 'green'}
                 fontSize="sm"
-                fontFamily="monospace"
-                letterSpacing="1px"
               >
                 {registration.type === 'expense' ? '-' : '+'}{' '}
                 {showValues ? formatCurrencyBRL(registration.value) : '••••••••'}

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services';
+import { LOCAL_STORAGE_KEYS } from '../utils/constants';
 
 export type User = {
   id: string;
@@ -32,7 +33,10 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [showValues, setShowValues] = useState(true);
+  const [showValues, setShowValues] = useState(() => {
+    const savedShowValues = localStorage.getItem(LOCAL_STORAGE_KEYS.SHOW_VALUES);
+    return savedShowValues ? JSON.parse(savedShowValues) : true;
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,7 +84,11 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   };
 
   const toggleShowValues = () => {
-    setShowValues(prev => !prev);
+    setShowValues((prev: boolean) => {
+      const newValue = !prev;
+      localStorage.setItem(LOCAL_STORAGE_KEYS.SHOW_VALUES, JSON.stringify(newValue));
+      return newValue;
+    });
   };
 
   return (
