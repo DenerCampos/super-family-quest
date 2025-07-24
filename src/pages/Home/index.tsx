@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
-import { FiCamera, FiPlus, FiDollarSign, FiShoppingBag } from 'react-icons/fi';
+import { FiCamera, FiPlus, FiDollarSign, FiShoppingBag, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { ExpenseModal } from '../../components/modals/ExpenseModal';
 import { RevenueModal } from '../../components/modals/RevenueModal';
@@ -26,7 +26,7 @@ import { LastRegistrationsList } from '../../components/LastRegistrationsList';
 import { NewRecurringExpenseModal } from '../../components/modals/NewRecurringExpenseModal';
 
 const Home = () => {
-  const { profile, loadProfile } = useAuth();
+  const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
   const { isOpen: isExpenseOpen, onOpen: onExpenseOpen, onClose: onExpenseClose } = useDisclosure();
   const { isOpen: isRevenueOpen, onOpen: onRevenueOpen, onClose: onRevenueClose } = useDisclosure();
   const [stores, setStores] = useState<Merchant[]>([]);
@@ -112,7 +112,20 @@ const Home = () => {
       {/* Conteúdo Principal */}
       <Flex direction="column" p={4} gap={4}>
         {/* Cards de Resumo */}
-        <Flex direction="column" gap={4}>
+        <Flex direction="column" gap={4} position="relative">
+          <Button
+            position="absolute"
+            right={2}
+            top={2}
+            size="sm"
+            variant="ghost"
+            colorScheme="purple"
+            onClick={toggleShowValues}
+            zIndex={1}
+            _hover={{ bg: 'purple.100' }}
+          >
+            <Icon as={showValues ? FiEyeOff : FiEye} />
+          </Button>
           <SummaryCard
             title="Receitas do Mês"
             value={profile?.income || 0}

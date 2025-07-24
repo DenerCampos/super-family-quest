@@ -16,6 +16,7 @@ import { formatCurrencyBRL } from '../utils/formatCurrency';
 import { formatDateToBR } from '../utils/formatDate';
 import { capitalizeFirstLetter } from '../utils/formatString';
 import type { Registration } from '../services/profile';
+import { useAuth } from '../contexts/AuthContext';
 
 const MotionBox = motion(Box);
 
@@ -26,6 +27,7 @@ export const LastRegistrationsList = ({
   newRegistrationAdded: boolean;
   setNewRegistrationAdded: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const { showValues } = useAuth();
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -131,9 +133,11 @@ export const LastRegistrationsList = ({
               <Badge
                 colorScheme={registration.type === 'expense' ? 'red' : 'green'}
                 fontSize="sm"
+                fontFamily="monospace"
+                letterSpacing="1px"
               >
                 {registration.type === 'expense' ? '-' : '+'}{' '}
-                {formatCurrencyBRL(registration.value)}
+                {showValues ? formatCurrencyBRL(registration.value) : '••••••••'}
               </Badge>
             </Flex>
 
