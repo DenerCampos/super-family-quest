@@ -30,7 +30,7 @@ type RevenueModalProps = {
     name: string;
     value: number;
     repeat: boolean;
-    date?: string;
+    date: string;
   };
 };
 
@@ -64,7 +64,11 @@ export const RevenueModal = ({
       setValue('name', initialData.name);
       setValue('value', formatCurrencyInputBRL(initialData.value.toString()));
       setValue('repeat', initialData.repeat);
-      setValue('date', initialData.date || new Date().toISOString().split('T')[0]);
+      setValue(
+        'date',
+          initialData.date.split('T')[0] ||
+          new Date().toISOString().split('T')[0],
+      );
     } else {
       reset();
     }
