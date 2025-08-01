@@ -3,7 +3,7 @@ import { CouponReaderService } from './couponReader';
 import { ExpenseService, type ExpenseRecurring } from "./expense";
 import { ProfileService } from "./profile";
 import { ReportsService } from "./reports";
-import { ResourcesService } from './resources';
+import { ResourcesService, type UpdateExpense } from './resources';
 import { RevenueService, type RevenueRecurring } from './revenue';
 import { UserService } from "./user";
 
@@ -50,6 +50,8 @@ export const api = {
   createPayment: ResourcesService.createPayment,
   createGroup: ResourcesService.createGroup,
   createExpense: ResourcesService.createExpense,
+  updateExpense: (id: string, data: UpdateExpense) =>
+    ResourcesService.updateExpense(id, data),
   getExpenses: ({
     page,
     limit,
