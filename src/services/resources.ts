@@ -82,6 +82,16 @@ export type CreateExpense = {
   items: Array<ItemsCreate>;
 };
 
+export type UpdateItem = ItemsCreate & {
+  id: string;
+};
+
+export type UpdateExpense = CreateExpense & {
+  id: string;
+  items: Array<UpdateItem>;
+  removedItemIds?: string[];
+};
+
 export type CreateRevenue = {
   name: string;
   value: number;
@@ -159,6 +169,12 @@ export const ResourcesService = {
 
   createExpense: async (data: CreateExpense): Promise<Expense> => {
     const response = await api.post('/expense', data);
+
+    return response.data;
+  },
+
+  updateExpense: async (id: string, data: UpdateExpense): Promise<Expense> => {
+    const response = await api.patch(`/expense/${id}`, data);
 
     return response.data;
   },

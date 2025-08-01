@@ -83,6 +83,7 @@ export const ExpenseModal = ({
   const { loadProfile } = useAuth();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [removedItemIds, setRemovedItemIds] = useState<string[]>([]);
   const [expandedItemIndex, setExpandedItemIndex] = useState<number>(0);
   const { isOpen: isItemsCollapsed, onToggle: toggleItemsCollapsed } =
     useDisclosure({ defaultIsOpen: false });
@@ -136,6 +137,9 @@ export const ExpenseModal = ({
 
       if (initialData) {
         initialData.date = initialData.date ? new Date(initialData.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+        initialData.items?.forEach((item) => {
+          item.value = formatCurrencyInputBRL(item.value.toString());
+        });
       }
 
       const baseData = initialData || {
@@ -181,19 +185,31 @@ export const ExpenseModal = ({
       const formattedData = {
         ...data,
         name: data.store.name.trim(),
+        value: data.items.reduce((sum, item) => 
+          sum + (Number(parseBRLCurrency(item.value).toFixed(2)) * Number(parseGrams(item.quantity))), 0),
         items: data.items.map((item) => ({
           ...item,
           value: Number(parseBRLCurrency(item.value).toFixed(2)),
           quantity: Number(parseGrams(item.quantity)),
           total:
-            item.total === 0
-              ? Number(parseBRLCurrency(item.value).toFixed(2)) *
-                Number(parseGrams(item.quantity))
-              : item.total,
+            item.total = Number(parseBRLCurrency(item.value).toFixed(2)) * Number(parseGrams(item.quantity))
         })),
       };
 
-      await api.createExpense(formattedData);
+      if (initialData?.id) {
+        await api.updateExpense(initialData.id, {
+          ...formattedData,
+          id: initialData.id,
+          items: formattedData.items.map((item) => ({
+            ...item,
+            id: item.id || '',
+          })),
+          removedItemIds, // Adicionando os IDs dos itens removidos
+        });
+      } else {
+        await api.createExpense(formattedData);
+      }
+
       await loadProfile();
 
       toast({
@@ -240,7 +256,9 @@ export const ExpenseModal = ({
       <ModalOverlay />
       <ModalContent bg="purple.800" color="white">
         {isSubmitting && <LoadingOverlay text="Salvando" />}
-        <ModalHeader>🧾 Nova Despesa</ModalHeader>
+        <ModalHeader>
+          {initialData ? '🧾 Editar Despesa' : '🧾 Nova Despesa'}
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -552,7 +570,16 @@ export const ExpenseModal = ({
                             {/* Botão Remover */}
                             <Flex justify="flex-end">
                               <Button
-                                onClick={() => remove(index)}
+                                onClick={() => {
+                                  const item = watch(`items.${index}`);
+                                  if (item.id && typeof item.id === 'string') {
+                                    setRemovedItemIds((prev) => [
+                                      ...prev,
+                                      item.id as string,
+                                    ]);
+                                  }
+                                  remove(index);
+                                }}
                                 colorScheme="red"
                                 size="sm"
                                 isDisabled={fields.length <= 1}

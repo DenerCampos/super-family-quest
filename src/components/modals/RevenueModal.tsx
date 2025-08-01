@@ -83,8 +83,6 @@ export const RevenueModal = ({
         repeat: data.repeat,
       };
 
-      console.log('payload', payload);
-
       if (initialData?.id) {
         await api.updateRevenue(initialData.id, payload);
         toast({
