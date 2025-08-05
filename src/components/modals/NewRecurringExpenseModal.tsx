@@ -27,6 +27,7 @@ import { useState, useEffect } from 'react';
 import { api } from '../../services';
 import { formatCurrencyBRL, formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
 import type { ExpenseComplete } from '../../services/expense';
+import { parseGrams } from '../../utils/formatGrams';
 
 type ExpenseItem = ExpenseComplete & {
   isSelected: boolean;
@@ -90,7 +91,8 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       // Filtrar apenas as despesas selecionadas e remover o campo isSelected      
       const selectedExpenses: ExpenseComplete[] = expenses
         .filter((expense) => expense.isSelected)
-        .map(({ isSelected, ...expense }) => ({// eslint-disable-line @typescript-eslint/no-unused-vars
+        .map(({ isSelected, ...expense }) => ({
+          // eslint-disable-line @typescript-eslint/no-unused-vars
           ...expense,
           store: {
             ...expense.store,
@@ -101,9 +103,17 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
             value: parseBRLCurrency(
               formatCurrencyInputBRL(item.value.toString()),
             ),
-            total: parseBRLCurrency(expense.value.toString()),
+            total:
+              Number(parseBRLCurrency(item.value).toFixed(2)) *
+              Number(parseGrams(item.quantity)),
           })),
-          value: parseBRLCurrency(expense.value.toString()),
+          value: expense.items.reduce(
+            (sum, item) =>
+              sum +
+              Number(parseBRLCurrency(item.value).toFixed(2)) *
+                Number(parseGrams(item.quantity)),
+            0,
+          ),
         }));
 
       const expenseIds = expenses.map((expense) => expense.id).filter((id): id is string => id !== undefined);
