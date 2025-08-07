@@ -17,6 +17,7 @@ import { formatDateToBR } from '../utils/formatDate';
 import { capitalizeFirstLetter } from '../utils/formatString';
 import type { Registration } from '../services/profile';
 import { useAuth } from '../contexts/AuthContext';
+import { useThemeTranslation } from '../hooks/useThemeTranslation';
 
 const MotionBox = motion(Box);
 
@@ -31,7 +32,7 @@ export const LastRegistrationsList = ({
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
+  const { t } = useThemeTranslation();
   const bgColorExpense = useColorModeValue('red.50', 'gray.700');
   const bgColorRevenue = useColorModeValue('green.50', 'gray.700');
 
@@ -41,7 +42,7 @@ export const LastRegistrationsList = ({
       const data = await api.getLatestRegistrations();
       setRegistrations(data);
     } catch (err) {
-      setError('Erro ao carregar despesas recentes');
+      setError(t('lastRegistrationsList.error'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -86,7 +87,7 @@ export const LastRegistrationsList = ({
   if (registrations.length === 0) {
     return (
       <Box py={4} textAlign="center">
-        <Text color="gray.500">Nenhuma despasa cadastrada ainda</Text>
+        <Text color="gray.500">{t('lastRegistrationsList.noData')}</Text>
       </Box>
     );
   }
@@ -94,7 +95,7 @@ export const LastRegistrationsList = ({
   return (
     <VStack spacing={3} align="stretch" mt={4}>
       <Text fontSize="lg" fontWeight="bold" color="purple.800">
-        Últimos registros
+        {t('lastRegistrationsList.title')}
       </Text>
 
       <AnimatePresence>

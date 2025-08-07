@@ -25,6 +25,7 @@ import {
 import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { api } from '../../services';
 import type { Merchant, PaginationResponse } from '../../services/resources';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -45,7 +46,7 @@ const StoreResource = ({
   const [loading, setLoading] = useState(true);
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-
+  const { t } = useThemeTranslation();
   const loadStores = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {
@@ -57,7 +58,7 @@ const StoreResource = ({
       setStores(storesData);
     } catch (error) {
       toast({
-        title: 'Erro ao carregar lojas',
+        title: t('resources.store.error'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -112,13 +113,13 @@ const StoreResource = ({
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja excluir esta loja?')) {
+    if (window.confirm(t('resources.store.deleteConfirm'))) {
       try {
         await onDelete(id);
         // Recarregar dados após exclusão
         loadStores(page, search);
         toast({
-          title: 'Loja excluída com sucesso',
+          title: t('resources.store.deleteSuccess'),
           status: 'success',
           duration: 2000,
           isClosable: true,
@@ -126,7 +127,7 @@ const StoreResource = ({
       } catch (error) {
         console.error(error);
         toast({
-          title: 'Erro ao excluir loja',
+          title: t('resources.store.deleteError'),
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -148,7 +149,7 @@ const StoreResource = ({
     <Box mb={6}>
       <Flex justify="space-between" align="center" mb={4}>
         <Text fontSize="lg" fontWeight="medium">
-          Lojas
+          {t('resources.store.title')}
         </Text>
         <Button
           size="sm"
@@ -156,7 +157,7 @@ const StoreResource = ({
           leftIcon={<FiPlus />}
           onClick={handleNewStore}
         >
-          Nova Loja
+          {t('resources.store.new')}
         </Button>
       </Flex>
 
@@ -165,7 +166,7 @@ const StoreResource = ({
           <Icon as={FiSearch} color="gray.300" />
         </InputLeftElement>
         <Input
-          placeholder="Buscar lojas..."
+          placeholder={t('resources.store.searchPlaceholder')}
           value={search}
           onChange={handleSearch}
         />
@@ -177,7 +178,7 @@ const StoreResource = ({
         </Flex>
       ) : stores?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
-          Nenhuma loja encontrada
+          {t('resources.store.noData')}
         </Text>
       ) : (
         <>
@@ -190,8 +191,8 @@ const StoreResource = ({
             <Table variant="simple" minW="400px">
               <Thead>
                 <Tr>
-                  <Th>Nome</Th>
-                  <Th>Ações</Th>
+                  <Th>{t('resources.store.name')}</Th>
+                  <Th>{t('resources.store.actions')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -201,21 +202,21 @@ const StoreResource = ({
                     <Td>
                       <Menu>
                         <MenuButton as={Button} size="sm" variant="outline">
-                          Ações
+                          {t('resources.store.actions')}
                         </MenuButton>
                         <MenuList>
                           <MenuItem
                             icon={<FiEdit />}
                             onClick={() => handleEdit(store)}
                           >
-                            Editar
+                            {t('resources.store.edit')}
                           </MenuItem>
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(store.id as string)}
                             color="red.500"
                           >
-                            Excluir
+                            {t('resources.store.delete')}
                           </MenuItem>
                         </MenuList>
                       </Menu>
@@ -234,7 +235,7 @@ const StoreResource = ({
                   onClick={() => handlePageChange(page - 1)}
                   isDisabled={page === 1}
                 >
-                  Anterior
+                  {t('resources.store.previous')}
                 </Button>
                 <Button size="sm" variant="outline">
                   {page} / {stores.meta.totalPages}
@@ -244,7 +245,7 @@ const StoreResource = ({
                   onClick={() => handlePageChange(page + 1)}
                   isDisabled={page === stores.meta.totalPages}
                 >
-                  Próxima
+                  {t('resources.store.next')}
                 </Button>
               </Stack>
             </Flex>

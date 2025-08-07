@@ -12,6 +12,7 @@ import {
 import { formatCurrency } from '../../utils/formatCurrency';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 interface ExpenseIncomeData {
   month: string;
@@ -45,7 +46,7 @@ export const BarChartExpensesIncome = ({
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { t } = useThemeTranslation();
   const fetchData = async (year: string) => {
     setLoading(true);
     try {
@@ -57,7 +58,7 @@ export const BarChartExpensesIncome = ({
       setError(null);
     } catch (error) {
       console.error('Erro ao buscar dados do gráfico:', error);
-      setError('Erro ao carregar dados de receitas e despesas');
+      setError(t('reports.expensesIncome.error'));
     } finally {
       setLoading(false);
     }
@@ -101,7 +102,7 @@ export const BarChartExpensesIncome = ({
         mb={4}
         fontWeight="bold"
       >
-        Comparativo Mensal de Receitas e Despesas
+        {t('reports.expensesIncome.title')}
       </Text>
 
       <Select
@@ -128,7 +129,7 @@ export const BarChartExpensesIncome = ({
             emptyColor="purple.100"
           />
           <Text ml={3} color="purple.300">
-            Carregando dados...
+            {t('reports.expensesIncome.loading')}
           </Text>
         </Flex>
       ) : error ? (
@@ -194,7 +195,7 @@ export const BarChartExpensesIncome = ({
         </Box>
       ) : (
         <Text color="purple.300" py={10} textAlign="center">
-          Nenhum dado disponível para o ano selecionado
+          {t('reports.expensesIncome.noData')}
         </Text>
       )}
     </Flex>

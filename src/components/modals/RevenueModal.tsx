@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form';
 import { api } from '../../services';
 import { LoadingOverlay } from '../LoadingOverlay';
 import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 type RevenueModalProps = {
   isOpen: boolean;
@@ -42,6 +43,7 @@ export const RevenueModal = ({
   initialData,
 }: RevenueModalProps) => {
   const toast = useToast();
+  const { t } = useThemeTranslation();
   const {
     register,
     handleSubmit,
@@ -86,14 +88,14 @@ export const RevenueModal = ({
       if (initialData?.id) {
         await api.updateRevenue(initialData.id, payload);
         toast({
-          title: 'Receita atualizada!',
+          title: t('common.updated'),
           status: 'success',
           duration: 3000,
         });
       } else {
         await api.createRevenue(payload);
         toast({
-          title: 'Receita criada!',
+          title: t('common.created'),
           status: 'success',
           duration: 3000,
         });
@@ -105,8 +107,8 @@ export const RevenueModal = ({
       onClose();
     } catch (error) {
       toast({
-        title: 'Erro',
-        description: initialData ? 'Falha ao atualizar' : 'Falha ao cadastrar',
+        title: t('common.error'),
+        description: initialData ? t('common.updateError') : t('common.createError'),
         status: 'error',
         duration: 3000,
       });
@@ -127,7 +129,7 @@ export const RevenueModal = ({
         {isSubmitting && <LoadingOverlay />}
 
         <ModalHeader>
-          {initialData ? '🧾 Editar Receita' : '🧾 Nova Receita'}
+          {initialData ? t('modals.revenue.edit') : t('modals.revenue.new')}
         </ModalHeader>
 
         <ModalCloseButton isDisabled={isSubmitting} />
@@ -138,15 +140,15 @@ export const RevenueModal = ({
               <FormLabel>Nome</FormLabel>
               <Input
                 {...register('name', {
-                  required: 'Campo obrigatório',
+                  required: t('common.required'),
                   minLength: {
                     value: 3,
-                    message: 'Mínimo 3 caracteres',
+                    message: t('common.minLength', { count: 3 }),
                   },
                 })}
                 bg="white"
                 color="black"
-                placeholder="Nome da receita"
+                placeholder={t('modals.revenue.namePlaceholder')}
                 isDisabled={isSubmitting}
               />
               {errors.name && (
@@ -161,12 +163,12 @@ export const RevenueModal = ({
               <Input
                 value={watch('value')}
                 {...register('value', {
-                  required: 'Campo obrigatório',
+                  required: t('common.required'),
                   validate: (value) => {
                     const numericValue = parseBRLCurrency(value);
-                    if (isNaN(numericValue)) return 'Valor inválido';
+                    if (isNaN(numericValue)) return t('common.invalidValue');
                     return (
-                      numericValue >= 0.01 || 'Valor deve ser maior que 0,00'
+                      numericValue >= 0.01 || t('common.invalidValue')
                     );
                   },
                 })}
@@ -179,7 +181,7 @@ export const RevenueModal = ({
                 }}
                 bg="white"
                 color="black"
-                placeholder="0,00"
+                placeholder={t('modals.revenue.valuePlaceholder')}
                 isDisabled={isSubmitting}
               />
               {errors.value && (
@@ -194,7 +196,7 @@ export const RevenueModal = ({
               <Input
                 type="date"
                 {...register('date', {
-                  required: 'Campo obrigatório',
+                  required: t('common.required'),
                 })}
                 bg="white"
                 color="black"
@@ -209,7 +211,7 @@ export const RevenueModal = ({
 
             <FormControl mb={4}>
               <Checkbox {...register('repeat')} colorScheme="green" size="lg">
-                Repete todo mês?
+                {t('modals.revenue.repeat')}
               </Checkbox>
             </FormControl>
 
@@ -221,7 +223,7 @@ export const RevenueModal = ({
                 isLoading={isSubmitting}
                 loadingText="Salvando..."
               >
-                {initialData ? 'Atualizar' : 'Salvar'}
+                {initialData ? t('common.update') : t('common.save')}
               </Button>
             </Flex>
           </form>

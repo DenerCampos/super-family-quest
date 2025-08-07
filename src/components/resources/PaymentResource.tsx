@@ -25,6 +25,7 @@ import {
 import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { api } from '../../services';
 import type { Payments, PaginationResponse } from '../../services/resources';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -45,7 +46,7 @@ const PaymentResource = ({
   const [loading, setLoading] = useState(true);
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-
+  const { t } = useThemeTranslation();
   const loadPayments = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {
@@ -57,7 +58,7 @@ const PaymentResource = ({
       setPayments(paymentsData);
     } catch (error) {
       toast({
-        title: 'Erro ao carregar formas de pagamento',
+        title: t('resources.payment.error'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -113,14 +114,14 @@ const PaymentResource = ({
 
   const handleDelete = async (id: string) => {
     if (
-      window.confirm('Tem certeza que deseja excluir esta forma de pagamento?')
+      window.confirm(t('resources.payment.deleteConfirm'))
     ) {
       try {
         await onDelete(id);
         // Recarregar dados após exclusão
         loadPayments(page, search);
         toast({
-          title: 'Forma de pagamento excluída com sucesso',
+          title: t('resources.payment.deleteSuccess'),
           status: 'success',
           duration: 2000,
           isClosable: true,
@@ -128,7 +129,7 @@ const PaymentResource = ({
       } catch (error) {
         console.error(error);
         toast({
-          title: 'Erro ao excluir forma de pagamento',
+          title: t('resources.payment.deleteError'),
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -150,7 +151,7 @@ const PaymentResource = ({
     <Box mb={6}>
       <Flex justify="space-between" align="center" mb={4}>
         <Text fontSize="lg" fontWeight="medium">
-          Formas de Pagamento
+          {t('resources.payment.title')}
         </Text>
         <Button
           size="sm"
@@ -158,7 +159,7 @@ const PaymentResource = ({
           leftIcon={<FiPlus />}
           onClick={handleNewPayment}
         >
-          Nova Forma
+          {t('resources.payment.new')}
         </Button>
       </Flex>
 
@@ -167,7 +168,7 @@ const PaymentResource = ({
           <Icon as={FiSearch} color="gray.300" />
         </InputLeftElement>
         <Input
-          placeholder="Buscar formas de pagamento..."
+          placeholder={t('resources.payment.searchPlaceholder')}
           value={search}
           onChange={handleSearch}
         />
@@ -179,7 +180,7 @@ const PaymentResource = ({
         </Flex>
       ) : payments?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
-          Nenhuma forma de pagamento encontrada
+          {t('resources.payment.noData')}
         </Text>
       ) : (
         <>
@@ -192,8 +193,8 @@ const PaymentResource = ({
             <Table variant="simple" minW="400px">
               <Thead>
                 <Tr>
-                  <Th>Nome</Th>
-                  <Th>Ações</Th>
+                  <Th>{t('resources.payment.name')}</Th>
+                  <Th>{t('resources.payment.actions')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -203,21 +204,21 @@ const PaymentResource = ({
                     <Td>
                       <Menu>
                         <MenuButton as={Button} size="sm" variant="outline">
-                          Ações
+                          {t('resources.payment.actions')}
                         </MenuButton>
                         <MenuList>
                           <MenuItem
                             icon={<FiEdit />}
                             onClick={() => handleEdit(payment)}
                           >
-                            Editar
+                            {t('resources.payment.edit')}
                           </MenuItem>
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(payment.id as string)}
                             color="red.500"
                           >
-                            Excluir
+                            {t('resources.payment.delete')}
                           </MenuItem>
                         </MenuList>
                       </Menu>
@@ -236,7 +237,7 @@ const PaymentResource = ({
                   onClick={() => handlePageChange(page - 1)}
                   isDisabled={page === 1}
                 >
-                  Anterior
+                  {t('resources.payment.previous')}
                 </Button>
                 <Button size="sm" variant="outline">
                   {page} / {payments.meta.totalPages}
@@ -246,7 +247,7 @@ const PaymentResource = ({
                   onClick={() => handlePageChange(page + 1)}
                   isDisabled={page === payments.meta.totalPages}
                 >
-                  Próxima
+                  {t('resources.payment.next')}
                 </Button>
               </Stack>
             </Flex>

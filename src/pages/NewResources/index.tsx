@@ -19,8 +19,10 @@ import ExpenseResource from '../../components/resources/ExpenseResource';
 import RevenueResource from '../../components/resources/RevenueResource';
 import { api } from '../../services';
 import type { Expense, Groups, Merchant, Payments, Revenue } from '../../services/resources';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 const NewResources = () => {
+  const { t } = useThemeTranslation();
   const [stores, setStores] = useState<Merchant[]>([]);
   const [payments, setPayments] = useState<Payments[]>([]);
   const [groups, setGroups] = useState<Groups[]>([]);
@@ -143,14 +145,14 @@ const NewResources = () => {
       triggerRefresh(type);
 
       toast({
-        title: 'Item excluído com sucesso',
+        title: t('resources.deleteSuccess'),
         status: 'success',
         duration: 2000,
         isClosable: true,
       });
     } catch (error) {
       toast({
-        title: 'Erro ao excluir item',
+        title: t('resources.deleteError'),
         status: 'error',
         duration: 3000,
         isClosable: true,

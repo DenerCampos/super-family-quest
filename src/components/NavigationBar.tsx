@@ -2,8 +2,10 @@ import { Flex, IconButton, Text, useColorModeValue } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 import { FiHome, FiPieChart, FiPlusSquare, FiUser } from 'react-icons/fi';
 import { GrResources } from 'react-icons/gr';
+import { useThemeTranslation } from '../hooks/useThemeTranslation';
 
 export const NavigationBar = () => {
+  const { t } = useThemeTranslation();
   const activeColor = useColorModeValue('purple.500', 'purple.200');
   const inactiveColor = useColorModeValue('gray.600', 'gray.400');
 
@@ -32,7 +34,7 @@ export const NavigationBar = () => {
               isActive={isActive}
             />
             <Text fontSize="xs" color={isActive ? activeColor : inactiveColor}>
-              Início
+              {t('navigationBar.home')}
             </Text>
           </Flex>
         )}
@@ -50,7 +52,7 @@ export const NavigationBar = () => {
               isActive={isActive}
             />
             <Text fontSize="xs" color={isActive ? activeColor : inactiveColor}>
-              Dashboard
+              {t('navigationBar.dashboard')}
             </Text>
           </Flex>
         )}
@@ -68,7 +70,7 @@ export const NavigationBar = () => {
               isActive={isActive}
             />
             <Text fontSize="xs" color={isActive ? activeColor : inactiveColor}>
-              Recursos
+              {t('navigationBar.resources')}
             </Text>
           </Flex>
         )}
@@ -86,7 +88,7 @@ export const NavigationBar = () => {
               isActive={isActive}
             />
             <Text fontSize="xs" color={isActive ? activeColor : inactiveColor}>
-              Desafios
+              {t('navigationBar.challenges')}
             </Text>
           </Flex>
         )}
@@ -104,7 +106,7 @@ export const NavigationBar = () => {
               isActive={isActive}
             />
             <Text fontSize="xs" color={isActive ? activeColor : inactiveColor}>
-              Perfil
+              {t('navigationBar.profile')}
             </Text>
           </Flex>
         )}

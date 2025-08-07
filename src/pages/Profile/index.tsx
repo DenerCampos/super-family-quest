@@ -30,6 +30,7 @@ import {
 import { FiEdit2, FiCheck, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 // Lista de brasões pré-definidos
 const predefinedCoatOfArms = [
@@ -39,6 +40,7 @@ const predefinedCoatOfArms = [
 
 const Profile = () => {
   const { profile, loadProfile } = useAuth();
+  const { t } = useThemeTranslation();
   const toast = useToast();
   const [name, setName] = useState(profile?.user.name || '');
   const [email, setEmail] = useState(profile?.user.email || '');
@@ -69,7 +71,7 @@ const Profile = () => {
   // Validação de e-mail em tempo real
   useEffect(() => {
     if (email && !validateEmail(email)) {
-      setErrors((prev) => ({ ...prev, email: 'E-mail inválido' }));
+      setErrors((prev) => ({ ...prev, email: t('profile.invalidEmail') }));
     } else {
       setErrors((prev) => ({ ...prev, email: '' }));
     }
@@ -80,12 +82,12 @@ const Profile = () => {
     if (password && confirmPassword && password !== confirmPassword) {
       setErrors((prev) => ({
         ...prev,
-        confirmPassword: 'As senhas não coincidem',
+        confirmPassword: t('profile.passwordsDoNotMatch'),
       }));
     } else if (confirmPassword && !password) {
       setErrors((prev) => ({
         ...prev,
-        confirmPassword: 'Digite a senha primeiro',
+        confirmPassword: t('profile.enterPasswordFirst'),
       }));
     } else {
       setErrors((prev) => ({ ...prev, confirmPassword: '' }));
@@ -107,7 +109,7 @@ const Profile = () => {
     // Validações finais antes de salvar
     if (email && !validateEmail(email)) {
       toast({
-        title: 'E-mail inválido',
+        title: t('profile.invalidEmail'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -118,7 +120,7 @@ const Profile = () => {
     if (password && password.length < 6) {
       setErrors((prev) => ({
         ...prev,
-        password: 'A senha deve ter pelo menos 6 caracteres',
+        password: t('profile.passwordMustBeAtLeast6Characters'),
       }));
       return;
     }
@@ -126,7 +128,7 @@ const Profile = () => {
     if (password && password !== confirmPassword) {
       setErrors((prev) => ({
         ...prev,
-        confirmPassword: 'As senhas não coincidem',
+        confirmPassword: t('profile.passwordsDoNotMatch'),
       }));
       return;
     }
@@ -146,7 +148,7 @@ const Profile = () => {
       loadProfile();
 
       toast({
-        title: 'Perfil atualizado!',
+        title: t('profile.profileUpdated'),
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -159,8 +161,8 @@ const Profile = () => {
     } catch (error) {
       console.error(error);
       toast({
-        title: 'Erro ao atualizar perfil',
-        description: 'Por favor, tente novamente',
+        title: t('profile.errorUpdatingProfile'),
+        description: t('profile.pleaseTryAgain'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -222,12 +224,12 @@ const Profile = () => {
               leftIcon={isEditing ? <FiCheck /> : <FiEdit2 />}
               mb={4}
             >
-              {isEditing ? 'Salvar Alterações' : 'Editar Perfil'}
+              {isEditing ? t('profile.saveChanges') : t('profile.editProfile')}
             </Button>
           </Flex>
 
           <FormControl>
-            <FormLabel>Nome</FormLabel>
+            <FormLabel>{t('profile.name')}</FormLabel>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -237,7 +239,7 @@ const Profile = () => {
           </FormControl>
 
           <FormControl isInvalid={!!errors.email}>
-            <FormLabel>Email</FormLabel>
+            <FormLabel>{t('profile.email')}</FormLabel>
             <Input
               type="email"
               value={email}
@@ -251,7 +253,7 @@ const Profile = () => {
           </FormControl>
 
           <FormControl>
-            <FormLabel>Nome da Família</FormLabel>
+            <FormLabel>{t('profile.familyName')}</FormLabel>
             <Input
               value={family}
               onChange={(e) => setFamily(e.target.value)}
@@ -263,19 +265,19 @@ const Profile = () => {
           {isEditing && (
             <>
               <FormControl isInvalid={!!errors.password}>
-                <FormLabel>Nova Senha (opcional)</FormLabel>
+                <FormLabel>{t('profile.newPassword')} (opcional)</FormLabel>
                 <InputGroup>
                   <Input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Mínimo 6 caracteres"
+                    placeholder={t('profile.minimum6Characters')}
                     bg="white"
                   />
                   <InputRightElement>
                     <IconButton
                       aria-label={
-                        showPassword ? 'Ocultar senha' : 'Mostrar senha'
+                        showPassword ? t('profile.hidePassword') : t('profile.showPassword')
                       }
                       icon={showPassword ? <FiEyeOff /> : <FiEye />}
                       variant="ghost"
@@ -290,19 +292,19 @@ const Profile = () => {
               </FormControl>
 
               <FormControl isInvalid={!!errors.confirmPassword}>
-                <FormLabel>Confirmar Nova Senha</FormLabel>
+                <FormLabel>{t('profile.confirmNewPassword')}</FormLabel>
                 <InputGroup>
                   <Input
                     type={showConfirmPassword ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Repita a nova senha"
+                    placeholder={t('profile.repeatNewPassword')}
                     bg="white"
                   />
                   <InputRightElement>
                     <IconButton
                       aria-label={
-                        showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'
+                        showConfirmPassword ? t('profile.hidePassword') : t('profile.showPassword')
                       }
                       icon={showConfirmPassword ? <FiEyeOff /> : <FiEye />}
                       variant="ghost"
@@ -325,11 +327,11 @@ const Profile = () => {
               colorScheme="purple"
               onClick={handleSave}
               isLoading={isLoading}
-              loadingText="Salvando..."
+              loadingText={t('profile.saving')}
               w="full"
               isDisabled={!!errors.email || !!errors.confirmPassword}
             >
-              Salvar Alterações
+              {t('profile.saveChanges')}
             </Button>
           )}
         </VStack>
@@ -344,7 +346,7 @@ const Profile = () => {
       >
         <ModalOverlay />
         <ModalContent bg="purple.800" color="white">
-          <ModalHeader>Selecione um Brasão para sua Família</ModalHeader>
+          <ModalHeader>{t('profile.selectCoatOfArms')}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <SimpleGrid columns={3} spacing={4}>
@@ -372,7 +374,7 @@ const Profile = () => {
 
             <Center mt={6}>
               <Text fontSize="sm" color="gray.300" textAlign="center">
-                Escolha um brasão para representar sua família
+                {t('profile.chooseCoatOfArms')}
               </Text>
             </Center>
           </ModalBody>

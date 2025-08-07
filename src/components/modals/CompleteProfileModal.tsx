@@ -24,6 +24,7 @@ import {
   parseBRLCurrency,
 } from '../../utils/formatCurrency';
 import { FiInfo } from 'react-icons/fi';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 type Props = {
   isOpen: boolean;
@@ -43,14 +44,16 @@ type FormData = {
 
 export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
   const toast = useToast();
+  const { t } = useThemeTranslation();
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
+    mode: 'onChange',
     defaultValues: {
-      repeatMonthly: true,
+      family: '',
     },
   });
 
@@ -73,9 +76,9 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
       });
 
       toast({
-        title: 'Perfil atualizado!',
+        title: t('profile.complete'),
         status: 'success',
-        description: 'Seus dados foram salvos com sucesso',
+        description: t('profile.success'),
         duration: 3000,
       });
 
@@ -83,9 +86,9 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
     } catch (error) {
       console.error(error);
       toast({
-        title: 'Erro',
+        title: t('common.error'),
         status: 'error',
-        description: 'Falha ao salvar dados do perfil',
+        description: t('common.updateError'),
         duration: 3000,
       });
     }
@@ -100,22 +103,21 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
     >
       <ModalOverlay />
       <ModalContent bg="purple.800" color="white">
-        <ModalHeader>Complete seu perfil</ModalHeader>
+        <ModalHeader>{t('profile.complete')}</ModalHeader>
 
         <ModalBody pb={6}>
           <Text mb={4}>
-            Bem-vindo(a) ao nosso sistema! Por favor, complete estas informações
-            para continuar. Você poderá alterá-las depois no seu perfil.
+            {t('profile.welcome')}
           </Text>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.family} mb={4}>
-              <FormLabel>Nome da Família</FormLabel>
+              <FormLabel>{t('profile.familyName')}</FormLabel>
               <Input
                 {...register('family', {
-                  required: 'Este campo é obrigatório',
+                  required: t('common.required'),
                 })}
-                placeholder="Digite o nome da sua família"
+                placeholder={t('profile.familyNamePlaceholder')}
                 bg="purple.100"
                 color="purple.800"
                 _focus={{
@@ -169,10 +171,10 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
               <FormLabel>Renda Mensal</FormLabel>
               <Input
                 {...register('income', {
-                  required: 'Este campo é obrigatório',
+                  required: t('common.required'),
                   validate: (value) => {
                     const numericValue = parseBRLCurrency(value);
-                    return numericValue > 0 || 'Valor inválido';
+                    return numericValue > 0 || t('common.invalidValue');
                   },
                 })}
                 onChange={(e) => {
@@ -202,9 +204,9 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                 colorScheme="purple"
               >
                 <Flex align="center">
-                  Repetir para todos os meses
+                  {t('profile.repeatMonthly')}
                   <Tooltip
-                    label="Marcando essa opção, todo mês o sistema irá adicionar esse valor. Pode ser alterado em Recursos -> receita"
+                    label={t('profile.repeatMonthlyTooltip')}
                     placement="top"
                     hasArrow
                     bg="purple.500"
@@ -223,8 +225,9 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
               colorScheme="purple"
               w="full"
               isLoading={isSubmitting}
+              loadingText={t('common.saving')}
             >
-              Salvar e Continuar
+              {t('common.save')}
             </Button>
           </form>
         </ModalBody>

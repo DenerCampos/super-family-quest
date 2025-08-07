@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Flex, Input, Button, Text, useToast } from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { api } from '../../services';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -12,12 +13,12 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
-
+  const { t } = useThemeTranslation();
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       toast({
-        title: 'Erro',
-        description: 'As senhas não coincidem',
+        title: t('register.error'),
+        description: t('register.passwordsDoNotMatch'),
         status: 'error',
         duration: 3000,
       });
@@ -27,7 +28,7 @@ const Register = () => {
     if (!email || email.length < 3) {
       toast({
         title: 'Erro',
-        description: 'Nome da família deve ter pelo menos 3 caracteres',
+        description: t('register.familyNameMustBeAtLeast3Characters'),
         status: 'error',
         duration: 3000,
       });
@@ -44,12 +45,12 @@ const Register = () => {
       });
 
       if (!response) {
-        throw new Error('Erro ao criar reino');
+        throw new Error(t('register.errorCreatingRealm'));
       }
 
       toast({
-        title: 'Reino Fundado!',
-        description: 'Seu reino foi criado com sucesso',
+        title: t('register.realmCreated'),
+        description: t('register.realmCreatedSuccessfully'),
         status: 'success',
         duration: 3000,
       });
@@ -58,17 +59,17 @@ const Register = () => {
     } catch (error: any) {
       console.error(error);
 
-      let errorMessage = 'Erro ao criar reino';
+      let errorMessage = t('register.errorCreatingRealm');
       
       if (error.message) {
         errorMessage = error.message;
       }
       if (error.status === 400) {
-        errorMessage = 'Falha ao criar o reuino, usuário já existe';
+        errorMessage = t('register.errorCreatingRealmUserAlreadyExists');
       }
 
       toast({
-        title: 'Erro',
+        title: t('register.error'),
         description: errorMessage,
         status: 'error',
         duration: 4000,
@@ -103,11 +104,11 @@ const Register = () => {
           mb={4}
           fontFamily="Pixelify Sans"
         >
-          Criar Novo Reino
+          {t('register.createNewRealm')}
         </Text>
 
         <Input
-          placeholder="Nome completo"
+          placeholder={t('register.fullName')}
           variant="filled"
           focusBorderColor="purple.500"
           value={name}
@@ -115,7 +116,7 @@ const Register = () => {
           isDisabled={isLoading}
         />
         <Input
-          placeholder="E-mail"
+          placeholder={t('register.email')}
           type="email"
           variant="filled"
           value={email}
@@ -123,7 +124,7 @@ const Register = () => {
           isDisabled={isLoading}
         />
         <Input
-          placeholder="Senha"
+          placeholder={t('register.password')}
           type="password"
           variant="filled"
           value={password}
@@ -131,7 +132,7 @@ const Register = () => {
           isDisabled={isLoading}
         />
         <Input
-          placeholder="Confirmar Senha"
+          placeholder={t('register.confirmPassword')}
           type="password"
           variant="filled"
           value={confirmPassword}
@@ -144,10 +145,10 @@ const Register = () => {
           mt={4}
           onClick={handleRegister}
           isLoading={isLoading}
-          loadingText="Fundando..."
+          loadingText={t('register.funding')}
           isDisabled={isLoading}
         >
-          Criar reino
+          {t('register.createRealm')}
         </Button>
 
         <Button
@@ -159,7 +160,7 @@ const Register = () => {
           fontSize="sm"
           isDisabled={isLoading}
         >
-          Já tem um reino? Entre aqui
+          {t('register.alreadyHaveRealm')}
         </Button>
       </Flex>
     </Flex>

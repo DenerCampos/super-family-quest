@@ -1,8 +1,10 @@
 // src/pages/NotFoundPage/index.tsx
 import { Flex, Heading, Text, Button } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 const NotFoundPage = () => {
+  const { t } = useThemeTranslation();
   return (
     <Flex
       minH="100vh"
@@ -34,12 +36,11 @@ const NotFoundPage = () => {
         </Heading>
 
         <Text color="white" mt={4} fontSize="xl">
-          🗺️ Página Perdida no Mapa! 🧭
+          🗺️ {t('notFoundPage.lost')} 🧭
         </Text>
 
         <Text color="gray.300" mt={2} maxW="400px">
-          Você encontrou um caminho secreto... que não existe! Volte para o
-          reino principal antes que os slimes financeiros te encontrem!
+          {t('notFoundPage.secretPath')}
         </Text>
 
         <Button
@@ -51,7 +52,7 @@ const NotFoundPage = () => {
           _hover={{ transform: 'scale(1.05)' }}
           fontFamily="Press Start 2P"
         >
-          Voltar para a Segurança
+          {t('notFoundPage.back')}
         </Button>
       </Flex>
     </Flex>

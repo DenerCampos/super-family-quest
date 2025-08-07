@@ -24,6 +24,7 @@ import { SummaryCard } from '../../components/SummaryCard';
 import { NewRecurringIncomeModal } from '../../components/modals/NewRecurringIncomeModal';
 import { LastRegistrationsList } from '../../components/LastRegistrationsList';
 import { NewRecurringExpenseModal } from '../../components/modals/NewRecurringExpenseModal';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 const Home = () => {
   const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
@@ -40,7 +41,7 @@ const Home = () => {
   const [showRecurringExpensesModal, setShowRecurringExpensesModal] = useState(false);
   const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
   const navigate = useNavigate();
-
+  const { t } = useThemeTranslation();
   // Carregar dados para o modal
   useEffect(() => {
     const loadData = async () => {
@@ -127,12 +128,12 @@ const Home = () => {
             <Icon as={showValues ? FiEyeOff : FiEye} />
           </Button>
           <SummaryCard
-            title="Receitas do Mês"
+            title={t('home.summary.income')}
             value={profile?.income || 0}
             colorScheme="green"
           />
           <SummaryCard
-            title="Despesas do Mês"
+            title={t('home.summary.expenses')}
             value={profile?.expenses || 0}
             colorScheme="red"
           />
@@ -148,14 +149,14 @@ const Home = () => {
               leftIcon={<Icon as={FiShoppingBag} />}
               w="full"
             >
-              Adicionar Despesa
+              {t('home.addExpense')}
             </MenuButton>
             <MenuList>
               <MenuItem icon={<FiPlus />} onClick={onExpenseOpen}>
-                Nova Despesa
+                {t('home.newExpense')}
               </MenuItem>
               <MenuItem icon={<FiCamera />} onClick={() => navigate('/scan')}>
-                Ler QR Code
+                {t('home.scanQRCode')}
               </MenuItem>
             </MenuList>
           </Menu>
@@ -168,11 +169,11 @@ const Home = () => {
               leftIcon={<Icon as={FiDollarSign} />}
               w="full"
             >
-              Adicionar Receita
+              {t('home.addRevenue')}
             </MenuButton>
             <MenuList>
               <MenuItem icon={<FiPlus />} onClick={onRevenueOpen}>
-                Nova Receita
+                {t('home.newRevenue')}
               </MenuItem>
             </MenuList>
           </Menu>

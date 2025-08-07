@@ -1,0 +1,147 @@
+{
+  "common": {
+    "welcome": "Saudações, Bravo Aventureiro! Bem-vindo à sua Jornada Financeira! 🏰",
+    "balance": "Tesouro Acumulado",
+    "expenses": "Custos da Jornada",
+    "income": "Recompensas",
+    "savings": "Tesouro Real Guardado",
+    "name": "Nome do Item Mágico",
+    "save": "Forjar",
+    "update": "Aprimorar Encantamento",
+    "loading": "Conjurando Magias...",
+    "saving": "Forjando na Bigorna...",
+    "required": "Item necessário para a jornada",
+    "minLength": "Precisa de pelo menos {{count}} runas antigas",
+    "close": "Fechar Portal Mágico",
+    "error": "Maldição!",
+    "success": "Vitória!",
+    "updated": "Encantamento Aprimorado!",
+    "created": "Item Forjado!",
+    "deleted": "Item Destruído",
+    "invalidValue": "Magia Inválida",
+    "loadError": "Os pergaminhos antigos não puderam ser lidos",
+    "updateError": "A forja mágica falhou",
+    "createError": "Falha na forja",
+    "deleteError": "O item resistiu à destruição",
+    "themeToggle": {
+      "rpgMode": "Modo Aventura",
+      "defaultMode": "Modo Normal"
+    }
+  },
+  "auth": {
+    "login": "Entrar no Reino",
+    "register": "Juntar-se à Guilda",
+    "email": "Pergaminho de Contato",
+    "password": "Palavra Secreta",
+    "logout": "Abandonar Reino"
+  },
+  "dashboard": {
+    "totalBalance": "Tesouro Total do Reino",
+    "monthlyExpenses": "Tributos Mensais",
+    "monthlyIncome": "Recompensas Mensais",
+    "savingsGoal": "Meta do Tesouro Real"
+  },
+  "modals": {
+    "recurringIncome": {
+      "title": "🏰 Nova Fase da Jornada! 🌟",
+      "description": "Saudações, Nobre Guardião do Tesouro! Um novo ciclo lunar se inicia, e com ele, as fontes de ouro do reino precisam ser revisadas.",
+      "sources": "Fontes de Ouro Recorrentes",
+      "noSourcesFound": "Nenhuma fonte de ouro recorrente encontrada no reino 🏰",
+      "reminder": "Ajuste os valores do tesouro conforme necessário e desmarque as fontes de ouro que não devem ser mantidas neste ciclo lunar. Lembre-se: um bom guardião sempre mantém suas finanças em ordem! ⚔️",
+      "confirming": "Atualizando o Tesouro Real...",
+      "sealDecree": "Selar o Decreto Real ✨",
+      "deleteConfirm": "Tem certeza que deseja banir esta fonte de ouro do reino?"
+    },
+    "recurringExpense": {
+      "title": "🏰 Tributos do Reino! ⚔️",
+      "description": "Nobre Guardião do Tesouro, um novo ciclo lunar se inicia! É hora de revisar os tributos e custos do reino para manter nossa fortaleza próspera.",
+      "expenses": "Custos Recorrentes do Reino",
+      "noExpensesFound": "Nenhum tributo recorrente encontrado no reino 🏰",
+      "reminder": "Ajuste os valores dos tributos conforme necessário e desmarque os custos que não devem ser mantidos neste ciclo lunar. Um reino próspero é um reino bem administrado! ⚔️",
+      "confirming": "Atualizando o Tesouro Real...",
+      "sealDecree": "Selar o Decreto Real ⚔️",
+      "deleteConfirm": "Tem certeza que deseja abolir este tributo do reino?"
+    },
+    "simpleResource": {
+      "enterName": "Nomeie seu item mágico",
+      "deleteConfirm": "Tem certeza que deseja destruir este item mágico?"
+    }
+  },
+  "navigationBar": {
+    "home": "Salão Principal",
+    "dashboard": "Sala do Tesouro",
+    "resources": "Arsenal",
+    "challenges": "Missões",
+    "profile": "Grimório"
+  },
+  "qrScannerPage": {
+    "back": "Retornar",
+    "instructions": "Use sua Lente Mágica para revelar o conteúdo do pergaminho"
+  },
+  "lastRegistrationsList": {
+    "title": "Registros do Escriba",
+    "noData": "Nenhuma despesa registrada nos pergaminhos",
+    "error": "O escriba falhou ao ler os registros antigos"
+  },
+  "loadingOverlay": {
+    "loading": "Conjurando..."
+  },
+  "login": {
+    "error": "Falha na entrada do Reino",
+    "invalidCredentials": "Pergaminho ou palavra secreta inválidos",
+    "enter": "Entrar no Reino",
+    "create": "Forjar"
+  },
+  "register": {
+    "error": "Falha ao fundar reino",
+    "passwordsDoNotMatch": "As palavras secretas não coincidem",
+    "familyNameMustBeAtLeast3Characters": "O nome da linhagem deve ter pelo menos 3 runas",
+    "errorCreatingRealm": "Falha ao fundar reino",
+    "realmCreated": "Reino Fundado! 👑",
+    "realmCreatedSuccessfully": "Seu reino foi fundado com sucesso",
+    "errorCreatingRealmUserAlreadyExists": "Falha ao fundar reino, este aventureiro já existe",
+    "createNewRealm": "Fundar Novo Reino",
+    "fullName": "Nome do Aventureiro",
+    "email": "Pergaminho de Contato",
+    "password": "Palavra Secreta",
+    "confirmPassword": "Confirmar Palavra Secreta",
+    "createRealm": "Fundar Reino",
+    "alreadyHaveRealm": "Já tem um reino? Entre aqui",
+    "funding": "Fundando Reino..."
+  },
+  "profile": {
+    "invalidEmail": "Pergaminho inválido",
+    "passwordsDoNotMatch": "As palavras secretas não coincidem",
+    "enterPasswordFirst": "Digite a palavra secreta primeiro",
+    "passwordMustBeAtLeast6Characters": "A palavra secreta deve ter pelo menos 6 runas",
+    "profileUpdated": "Grimório Atualizado!",
+    "errorUpdatingProfile": "Falha ao atualizar grimório",
+    "pleaseTryAgain": "Tente novamente, bravo aventureiro",
+    "name": "Nome do Aventureiro",
+    "email": "Pergaminho de Contato",
+    "familyName": "Nome da Linhagem",
+    "newPassword": "Nova Palavra Secreta",
+    "confirmNewPassword": "Confirmar Nova Palavra Secreta",
+    "hidePassword": "Ocultar palavra secreta",
+    "showPassword": "Revelar palavra secreta",
+    "saveChanges": "Selar Alterações",
+    "selectCoatOfArms": "Escolha o Brasão de sua Família",
+    "chooseCoatOfArms": "Selecione um brasão para representar sua nobre linhagem",
+    "complete": "Forje sua Identidade",
+    "welcome": "Saudações, Nobre Aventureiro! Antes de iniciar sua jornada, precisamos conhecer sua linhagem. Estas informações poderão ser alteradas em seu grimório pessoal.",
+    "familyNamePlaceholder": "Digite o nome de sua nobre linhagem",
+    "themeChanged": "O reino mudou sua aparência!"
+  },
+  "newChallenge": {
+    "development": "Os magos ainda estão trabalhando nisso..."
+  },
+  "newResources": {
+    "deleteSuccess": "Item destruído com sucesso",
+    "deleteError": "Falha ao destruir item"
+  },
+  "notFoundPage": {
+    "lost": "Pergaminho Perdido! 📜",
+    "secretPath": "Você encontrou um caminho secreto... que não existe! Volte para o reino principal antes que os slimes financeiros te encontrem! 🐉",
+    "back": "Voltar para a Segurança do Reino"
+  }
+} 

@@ -1,0 +1,147 @@
+{
+  "common": {
+    "welcome": "Bem-vindo ao seu Planejamento Financeiro Familiar",
+    "balance": "Saldo Disponível",
+    "expenses": "Despesas",
+    "income": "Receitas",
+    "savings": "Poupança",
+    "name": "Nome",
+    "save": "Salvar",
+    "update": "Atualizar",
+    "loading": "Carregando...",
+    "saving": "Salvando...",
+    "required": "Campo obrigatório",
+    "minLength": "Mínimo {{count}} caracteres",
+    "close": "Fechar",
+    "error": "Erro",
+    "success": "Sucesso",
+    "updated": "Atualizado com sucesso",
+    "created": "Criado com sucesso",
+    "deleted": "Excluído com sucesso",
+    "invalidValue": "Valor inválido",
+    "loadError": "Não foi possível carregar os dados",
+    "updateError": "Falha ao atualizar",
+    "createError": "Falha ao criar",
+    "deleteError": "Falha ao excluir",
+    "themeToggle": {
+      "rpgMode": "Modo RPG",
+      "defaultMode": "Modo Padrão"
+    }
+  },
+  "auth": {
+    "login": "Entrar",
+    "register": "Criar Conta",
+    "email": "E-mail",
+    "password": "Senha",
+    "logout": "Sair"
+  },
+  "dashboard": {
+    "totalBalance": "Saldo Total",
+    "monthlyExpenses": "Despesas Mensais",
+    "monthlyIncome": "Receitas Mensais",
+    "savingsGoal": "Meta de Economia"
+  },
+  "modals": {
+    "recurringIncome": {
+      "title": "Receitas Mensais",
+      "description": "Vamos revisar suas fontes de renda mensais para manter seu planejamento financeiro atualizado.",
+      "sources": "Fontes de Renda",
+      "noSourcesFound": "Nenhuma fonte de renda mensal cadastrada",
+      "reminder": "Ajuste os valores conforme necessário e desmarque as receitas que não devem ser mantidas neste mês. Um bom planejamento é essencial para suas finanças.",
+      "confirming": "Atualizando receitas...",
+      "sealDecree": "Confirmar",
+      "deleteConfirm": "Tem certeza que deseja excluir esta receita mensal?"
+    },
+    "recurringExpense": {
+      "title": "Despesas Mensais",
+      "description": "Vamos revisar suas despesas mensais para manter seu orçamento organizado.",
+      "expenses": "Lista de Despesas",
+      "noExpensesFound": "Nenhuma despesa mensal cadastrada",
+      "reminder": "Ajuste os valores conforme necessário e desmarque as despesas que não devem ser mantidas neste mês. Um orçamento bem controlado é a chave para o sucesso financeiro.",
+      "confirming": "Atualizando despesas...",
+      "sealDecree": "Confirmar",
+      "deleteConfirm": "Tem certeza que deseja excluir esta despesa mensal?"
+    },
+    "simpleResource": {
+      "enterName": "Digite o nome",
+      "deleteConfirm": "Tem certeza que deseja excluir este item?"
+    }
+  },
+  "navigationBar": {
+    "home": "Início",
+    "dashboard": "Painel",
+    "resources": "Recursos",
+    "challenges": "Objetivos",
+    "profile": "Perfil"
+  },
+  "qrScannerPage": {
+    "back": "Voltar",
+    "instructions": "Posicione a câmera sobre o QR Code da nota fiscal"
+  },
+  "lastRegistrationsList": {
+    "title": "Últimos Lançamentos",
+    "noData": "Nenhuma despesa registrada",
+    "error": "Erro ao carregar lançamentos recentes"
+  },
+  "loadingOverlay": {
+    "loading": "Carregando..."
+  },
+  "login": {
+    "error": "Erro no acesso",
+    "invalidCredentials": "E-mail ou senha inválidos",
+    "enter": "Entrar",
+    "create": "Criar Conta"
+  },
+  "register": {
+    "error": "Erro ao criar conta",
+    "passwordsDoNotMatch": "As senhas não coincidem",
+    "familyNameMustBeAtLeast3Characters": "Nome da família deve ter pelo menos 3 caracteres",
+    "errorCreatingRealm": "Erro ao criar conta",
+    "realmCreated": "Conta Criada",
+    "realmCreatedSuccessfully": "Sua conta foi criada com sucesso",
+    "errorCreatingRealmUserAlreadyExists": "Falha ao criar conta, usuário já existe",
+    "createNewRealm": "Criar Nova Conta",
+    "fullName": "Nome completo",
+    "email": "E-mail",
+    "password": "Senha",
+    "confirmPassword": "Confirmar Senha",
+    "createRealm": "Criar conta",
+    "alreadyHaveRealm": "Já tem uma conta? Entre aqui",
+    "funding": "Criando conta..."
+  },
+  "profile": {
+    "invalidEmail": "E-mail inválido",
+    "passwordsDoNotMatch": "As senhas não coincidem",
+    "enterPasswordFirst": "Digite a senha primeiro",
+    "passwordMustBeAtLeast6Characters": "A senha deve ter pelo menos 6 caracteres",
+    "profileUpdated": "Perfil atualizado",
+    "errorUpdatingProfile": "Erro ao atualizar perfil",
+    "pleaseTryAgain": "Por favor, tente novamente",
+    "name": "Nome",
+    "email": "E-mail",
+    "familyName": "Nome da Família",
+    "newPassword": "Nova Senha",
+    "confirmNewPassword": "Confirmar Nova Senha",
+    "hidePassword": "Ocultar senha",
+    "showPassword": "Mostrar senha",
+    "saveChanges": "Salvar Alterações",
+    "selectCoatOfArms": "Selecione uma Logo para sua Família",
+    "chooseCoatOfArms": "Escolha uma logo para representar sua família",
+    "complete": "Complete seu Cadastro",
+    "welcome": "Bem-vindo(a) ao nosso sistema de gestão financeira! Para começar, precisamos de algumas informações básicas. Você poderá alterá-las depois em seu perfil.",
+    "familyNamePlaceholder": "Digite o nome da sua família",
+    "themeChanged": "Tema alterado com sucesso"
+  },
+  "newChallenge": {
+    "development": "Em desenvolvimento"
+  },
+  "newResources": {
+    "deleteSuccess": "Item excluído com sucesso",
+    "deleteError": "Erro ao excluir item"
+  },
+  "notFoundPage": {
+    "lost": "Página não encontrada",
+    "secretPath": "Desculpe, mas a página que você está procurando não existe. Volte para a página inicial para continuar gerenciando suas finanças.",
+    "back": "Voltar para Página Inicial"
+  }
+} 

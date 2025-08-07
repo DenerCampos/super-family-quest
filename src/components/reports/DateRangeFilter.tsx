@@ -1,4 +1,5 @@
 import { Flex, Input, Text } from "@chakra-ui/react";
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 interface DateRangeFilterProps {
   startDate: string;
@@ -26,6 +27,7 @@ export const DateRangeFilter = ({
   onStartDateChange,
   onEndDateChange,
 }: DateRangeFilterProps) => {
+  const { t } = useThemeTranslation();
   return (
     <Flex 
       gap={4} 
@@ -40,7 +42,7 @@ export const DateRangeFilter = ({
     >
       <Flex align="center" gap={2}>
         <Text fontSize="sm" color="purple.700" whiteSpace="nowrap" fontWeight="medium">
-          Data Inicial:
+          {t('reports.dateRangeFilter.startDate')}
         </Text>
         <Input
           type="date"
@@ -56,7 +58,7 @@ export const DateRangeFilter = ({
       </Flex>
       <Flex align="center" gap={2}>
         <Text fontSize="sm" color="purple.700" whiteSpace="nowrap" fontWeight="medium">
-          Data Final:
+          {t('reports.dateRangeFilter.endDate')}
         </Text>
         <Input
           type="date"

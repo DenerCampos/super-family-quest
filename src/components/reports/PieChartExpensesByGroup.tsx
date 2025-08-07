@@ -5,7 +5,7 @@ import type { ExpensesByGroup } from "../../services/reports";
 import { DateRangeFilter, defaultDates } from "./DateRangeFilter";
 import { useState, useEffect } from "react";
 import { api } from '../../services';
-
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 interface PieChartExpensesProps {
   data: ExpensesByGroup[];
   onDataUpdate?: (data: ExpensesByGroup[]) => void;
@@ -33,7 +33,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { t } = useThemeTranslation();
   const fetchData = async (start: string, end: string) => {
     setLoading(true);
     try {
@@ -46,7 +46,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
       setError(null);
     } catch (error) {
       console.error('Erro ao buscar dados do gráfico:', error);
-      setError('Erro ao carregar dados das categorias');
+      setError(t('reports.expensesByGroup.error'));
     } finally {
       setLoading(false);
     }
@@ -93,7 +93,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
         mb={4}
         fontWeight="bold"
       >
-        Distribuição de Gastos
+        {t('reports.expensesByGroup.title')}
       </Text>
 
       <DateRangeFilter
@@ -112,7 +112,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
             emptyColor="purple.100"
           />
           <Text ml={3} color="purple.300">
-            Carregando categorias...
+            {t('reports.expensesByGroup.loading')}
           </Text>
         </Flex>
       ) : error ? (
@@ -175,7 +175,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
         </Box>
       ) : (
         <Text color="purple.300" py={10} textAlign="center">
-          Nenhum dado de categorias disponível
+          {t('reports.expensesByGroup.noData')}
         </Text>
       )}
       {isMobile && (

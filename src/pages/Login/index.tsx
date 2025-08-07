@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Flex, Input, Button, Text, useToast } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,7 +10,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const toast = useToast();
-
+  const { t } = useThemeTranslation();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -20,8 +21,8 @@ const Login = () => {
       console.error(error);
       
       toast({
-        title: 'Erro no login',
-        description: 'Credenciais inválidas',
+        title: t('login.error'),
+        description: t('login.invalidCredentials'),
         status: 'error',
         duration: 4000,
       });
@@ -85,7 +86,7 @@ const Login = () => {
           mt={4}
           _hover={{ transform: 'translateY(-2px)' }}
         >
-          Entrar no Reino
+          {t('login.enter')}
         </Button>
 
         <Button
@@ -96,7 +97,7 @@ const Login = () => {
           mt={2}
           fontSize="sm"
         >
-          Criar Novo Reino
+          {t('login.create')}
         </Button>
       </Flex>
     </Flex>

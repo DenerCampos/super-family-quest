@@ -6,6 +6,7 @@ import { LoadingOverlay } from '../components/LoadingOverlay';
 import { FiArrowLeft, FiRotateCw } from 'react-icons/fi';
 import { api } from '../services';
 import { parseNFCeQRCode } from '../utils/qrCode';
+import { useThemeTranslation } from '../hooks/useThemeTranslation';
 
 export const QRScannerPage = () => {
   const [loading, setLoading] = useState(true);
@@ -16,7 +17,7 @@ export const QRScannerPage = () => {
   );
   const [currentDeviceIndex, setCurrentDeviceIndex] = useState(0);
   const navigate = useNavigate();
-
+  const { t } = useThemeTranslation();
   // Usar useRef para manter referências estáveis
   const controlsRef = useRef<IScannerControls | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -314,7 +315,7 @@ export const QRScannerPage = () => {
         colorScheme="whiteAlpha"
         zIndex={10}
       >
-        Voltar
+        {t('qrScannerPage.back')}
       </Button>
 
       {/* Botão para trocar câmera - só aparece se houver mais de uma */}
@@ -357,7 +358,7 @@ export const QRScannerPage = () => {
 
       <Flex direction="column" align="center" mt={4}>
         <Text textAlign="center">
-          Aponte a câmera para o QR Code do cupom fiscal
+          {t('qrScannerPage.instructions')}
         </Text>
 
         {availableDevices.length > 1 && (

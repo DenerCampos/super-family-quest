@@ -23,6 +23,7 @@ import { api } from '../../services';
 import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
 import type { Revenue } from '../../services/revenue';
 import type { RevenueItem } from '../../types/revenue';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 type Props = {
   isOpen: boolean;
@@ -31,6 +32,7 @@ type Props = {
 
 export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast();
+  const { t } = useThemeTranslation();
   const [incomes, setIncomes] = useState<RevenueItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,8 +56,8 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
       } catch (error) {
         console.error('Erro ao carregar receitas:', error);
         toast({
-          title: 'Erro',
-          description: 'Não foi possível carregar as receitas repetidas',
+          title: t('common.error'),
+          description: t('common.loadError'),
           status: 'error',
           duration: 3000,
         });
@@ -88,8 +90,8 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
       });
 
       toast({
-        title: 'Receitas confirmadas!',
-        description: 'Seu novo mês foi iniciado com sucesso',
+        title: t('modals.recurringIncome.confirmed'),
+        description: t('modals.recurringIncome.success'),
         status: 'success',
         duration: 3000,
       });
@@ -98,8 +100,8 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
     } catch (error) {
       console.error('Erro ao confirmar receitas:', error);
       toast({
-        title: 'Erro',
-        description: 'Falha ao confirmar as receitas',
+        title: t('common.error'),
+        description: t('common.updateError'),
         status: 'error',
         duration: 3000,
       });
@@ -145,15 +147,15 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
     >
       <ModalOverlay />
       <ModalContent bg="purple.800" color="white">
-        <ModalHeader>🏰 Nova Fase da Jornada! 🌟</ModalHeader>
+        <ModalHeader>{t('modals.recurringIncome.title')}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text mb={4} fontSize="lg">
-            Saudações, Nobre Guardião do Tesouro Familiar! Um novo ciclo lunar se inicia, e com ele, as fontes de ouro do reino precisam ser revisadas.
+            {t('modals.recurringIncome.description')}
           </Text>
 
           <Heading size="md" mb={4} color="purple.300">
-            Fontes de Ouro Recorrentes:
+            {t('modals.recurringIncome.sources')}:
           </Heading>
 
           <Box
@@ -175,7 +177,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
           >
             {isLoading ? (
               <Text textAlign="center" py={4}>
-                Consultando o Grimório Real... 📚
+                {t('common.loading')}
               </Text>
             ) : incomes.length > 0 ? (
               <VStack spacing={3} align="stretch">
@@ -237,7 +239,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
               </VStack>
             ) : (
               <Text textAlign="center" py={4} color="gray.400">
-                Nenhuma fonte de ouro recorrente encontrada no reino 🏰
+                {t('modals.recurringIncome.noSourcesFound')}
               </Text>
             )}
           </Box>
@@ -245,7 +247,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
           <Divider my={4} borderColor="purple.600" />
 
           <Text fontSize="sm" color="purple.200">
-            Ajuste os valores do tesouro conforme necessário e desmarque as fontes de ouro que não devem ser mantidas neste ciclo lunar. Lembre-se: um bom guardião sempre mantém suas finanças em ordem! ⚔️
+            {t('modals.recurringIncome.reminder')}
           </Text>
         </ModalBody>
 
@@ -254,9 +256,9 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
             colorScheme="green"
             onClick={handleConfirm}
             isLoading={isSubmitting}
-            loadingText="Atualizando o Tesouro..."
+            loadingText={t('modals.recurringIncome.confirming')}
           >
-            Selar o Decreto Real ✨
+            {t('modals.recurringIncome.sealDecree')}
           </Button>
         </ModalFooter>
       </ModalContent>

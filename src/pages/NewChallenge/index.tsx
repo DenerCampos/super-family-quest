@@ -1,8 +1,10 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { Header } from "../../components/Header";
 import { NavigationBar } from "../../components/NavigationBar";
+import { useThemeTranslation } from "../../hooks/useThemeTranslation";
 
 const NewChallenge = () => {
+  const { t } = useThemeTranslation();
   return (
     <Flex direction="column" minH="100vh">
       <Header />
@@ -31,7 +33,7 @@ const NewChallenge = () => {
             textAlign="center"
             fontFamily="Pixelify Sans"
           >
-            Em desenvolvimento
+            {t('newChallenge.development')}
           </Text>
         </Flex>
       </Flex>

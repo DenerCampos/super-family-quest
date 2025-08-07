@@ -13,6 +13,7 @@ import { formatCurrency } from '../../utils/formatCurrency';
 import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 interface TopProductsData {
   name: string;
@@ -41,7 +42,7 @@ export const HorizontalBarChartTopProducts = ({
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { t } = useThemeTranslation();
   const fetchData = async (start: string, end: string) => {
     setLoading(true);
     try {
@@ -54,7 +55,7 @@ export const HorizontalBarChartTopProducts = ({
       setError(null);
     } catch (error) {
       console.error('Erro ao buscar dados do gráfico:', error);
-      setError('Erro ao carregar dados dos produtos');
+      setError(t('reports.topProducts.error'));
     } finally {
       setLoading(false);
     }
@@ -108,7 +109,7 @@ export const HorizontalBarChartTopProducts = ({
         mb={4}
         fontWeight="bold"
       >
-        Produtos Mais Comprados
+        {t('reports.topProducts.title')}
       </Text>
 
       <DateRangeFilter
@@ -127,7 +128,7 @@ export const HorizontalBarChartTopProducts = ({
             emptyColor="purple.100"
           />
           <Text ml={3} color="purple.300">
-            Carregando produtos...
+            {t('reports.topProducts.loading')}
           </Text>
         </Flex>
       ) : error ? (
@@ -202,7 +203,7 @@ export const HorizontalBarChartTopProducts = ({
         </Box>
       ) : (
         <Text color="purple.300" py={10} textAlign="center">
-          Nenhum dado de produtos disponível
+          {t('reports.topProducts.noData')}
         </Text>
       )}
     </Flex>

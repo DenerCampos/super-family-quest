@@ -42,6 +42,7 @@ import {
 import { AutocompleteInput } from '../AutocompleteInput';
 import { useAuth } from '../../contexts/AuthContext';
 import { formatGramsInput, parseGrams } from '../../utils/formatGrams';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 const inputStyle = {
   bgColor: 'purple.100',
@@ -81,6 +82,7 @@ export const ExpenseModal = ({
   handleNewRegistration,
 }: Props) => {
   const { loadProfile } = useAuth();
+  const { t } = useThemeTranslation();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [removedItemIds, setRemovedItemIds] = useState<string[]>([]);
@@ -213,9 +215,9 @@ export const ExpenseModal = ({
       await loadProfile();
 
       toast({
-        title: 'Sucesso!',
+        title: t('common.success'),
         status: 'success',
-        description: 'Despesa cadastrada com sucesso',
+        description: t('modals.expense.success'),
         duration: 3000,
       });
 
@@ -227,9 +229,9 @@ export const ExpenseModal = ({
     } catch (error) {
       console.error(error);
       toast({
-        title: 'Erro',
+        title: t('common.error'),
         status: 'error',
-        description: 'Falha ao cadastrar despesa',
+        description: t('common.createError'),
         duration: 3000,
       });
     }
@@ -240,8 +242,8 @@ export const ExpenseModal = ({
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent bg="purple.800" color="white">
-          <LoadingOverlay text="Carregando formulário" />
-          <ModalHeader>🧾 Nova Despesa</ModalHeader>
+          <LoadingOverlay text={t('common.loading')} />
+          <ModalHeader>{t('modals.expense.new')}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={4}>
             <Box minH="300px" />
@@ -255,9 +257,9 @@ export const ExpenseModal = ({
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
       <ModalContent bg="purple.800" color="white">
-        {isSubmitting && <LoadingOverlay text="Salvando" />}
+        {isSubmitting && <LoadingOverlay text={t('common.saving')} />}
         <ModalHeader>
-          {initialData ? '🧾 Editar Despesa' : '🧾 Nova Despesa'}
+          {initialData ? t('modals.expense.edit') : t('modals.expense.new')}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
@@ -271,7 +273,7 @@ export const ExpenseModal = ({
                 onChange={(value) =>
                   setValue('store.name', value, { shouldValidate: true })
                 }
-                placeholder="Selecione ou digite uma loja"
+                placeholder={t('modals.expense.storePlaceholder')}
               />
               {errors.store?.name && (
                 <Text color="red.300" fontSize="sm" mt={1}>
@@ -290,7 +292,7 @@ export const ExpenseModal = ({
                   onChange={(value) =>
                     setValue('payment.name', value, { shouldValidate: true })
                   }
-                  placeholder="Selecione uma forma de pagamento"
+                  placeholder={t('modals.expense.paymentPlaceholder')}
                 />
                 {errors.payment?.name && (
                   <Text color="red.300" fontSize="sm" mt={1}>
@@ -304,7 +306,7 @@ export const ExpenseModal = ({
                 <Input
                   type="date"
                   {...register('date', {
-                    required: 'Campo obrigatório',
+                    required: t('common.required'),
                   })}
                   {...inputStyle}
                 />
@@ -322,20 +324,20 @@ export const ExpenseModal = ({
               <Input
                 {...register('uri')}
                 {...inputStyle}
-                placeholder="URL opcional"
+                placeholder={t('modals.expense.urlPlaceholder')}
               />
             </FormControl>
 
             <FormControl mb={4}>
               <Checkbox {...register('repeat')} colorScheme="green" size="lg">
-                Repete todo mês?
+                {t('modals.expense.repeat')}
               </Checkbox>
             </FormControl>
 
             {/* Seção de Itens */}
             <FormControl isInvalid={!!errors.items}>
               <Flex justify="space-between" align="center" mb={3}>
-                <FormLabel mb={0}>📋 Itens da despesa</FormLabel>
+                <FormLabel mb={0}>{t('modals.expense.items')}</FormLabel>
                 <Button
                   size="sm"
                   variant="ghost"
@@ -351,7 +353,7 @@ export const ExpenseModal = ({
                     />
                   }
                 >
-                  {isItemsCollapsed ? 'Ocultar' : 'Mostrar'} Itens
+                  {isItemsCollapsed ? t('modals.expense.hideItems') : t('modals.expense.showItems')}
                 </Button>
               </Flex>
 
@@ -401,10 +403,10 @@ export const ExpenseModal = ({
                                 <FormLabel fontSize="sm">Código</FormLabel>
                                 <Input
                                   {...register(`items.${index}.code`, {
-                                    required: 'Código obrigatório',
+                                    required: t('common.required'),
                                     pattern: {
                                       value: /^[a-zA-Z0-9]+$/,
-                                      message: 'Apenas letras e números',
+                                      message: t('common.invalidValue'),
                                     },
                                   })}
                                   {...smallInputStyle}
@@ -423,10 +425,10 @@ export const ExpenseModal = ({
                                 <FormLabel fontSize="sm">Nome</FormLabel>
                                 <Input
                                   {...register(`items.${index}.name`, {
-                                    required: 'Nome obrigatório',
+                                    required: t('common.required'),
                                     minLength: {
                                       value: 3,
-                                      message: 'Mínimo 3 caracteres',
+                                      message: t('common.minLength', { count: 3 }),
                                     },
                                   })}
                                   {...smallInputStyle}
@@ -449,13 +451,13 @@ export const ExpenseModal = ({
                                 <Input
                                   type="text"
                                   {...register(`items.${index}.quantity`, {
-                                    required: 'Campo obrigatório',
+                                    required: t('common.required'),
                                     validate: (value) => {
                                       const numValue = parseGrams(value);
                                       if (isNaN(numValue))
-                                        return 'Valor inválido';
+                                        return t('common.invalidValue');
                                       if (numValue <= 0)
-                                        return 'Deve ser maior que 0';
+                                        return t('common.invalidValue');
                                       return true;
                                     },
                                   })}
@@ -488,7 +490,7 @@ export const ExpenseModal = ({
                                 <FormLabel fontSize="sm">Unidade</FormLabel>
                                 <Input
                                   {...register(`items.${index}.unit`, {
-                                    required: 'Campo obrigatório',
+                                    required: t('common.required'),
                                   })}
                                   {...smallInputStyle}
                                   size="sm"
@@ -514,10 +516,10 @@ export const ExpenseModal = ({
                                       const numericValue =
                                         parseBRLCurrency(value);
                                       if (isNaN(numericValue))
-                                        return 'Valor inválido';
+                                        return t('common.invalidValue');
                                       return (
                                         numericValue >= 0.01 ||
-                                        'Valor deve ser maior que 0,00'
+                                        t('common.invalidValue')
                                       );
                                     },
                                   })}
@@ -618,9 +620,9 @@ export const ExpenseModal = ({
               size="lg"
               isDisabled={!isValid || isSubmitting}
               isLoading={isSubmitting}
-              loadingText="Salvando..."
+              loadingText={t('common.saving')}
             >
-              Salvar Despesa
+              {initialData ? t('common.update') : t('common.save')}
             </Button>
           </form>
         </ModalBody>

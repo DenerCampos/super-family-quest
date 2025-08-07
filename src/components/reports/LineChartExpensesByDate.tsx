@@ -15,6 +15,7 @@ import { fillMonthDays, formatDateToBR } from '../../utils/formatDate';
 import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 interface LineChartExpensesProps {
   data: ExpensesByDate[];
@@ -43,7 +44,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { t } = useThemeTranslation();
   const fetchData = async (start: string, end: string) => {
     setLoading(true);
     try {
@@ -56,7 +57,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
       setError(null);
     } catch (error) {
       console.error('Erro ao buscar dados do gráfico:', error);
-      setError('Erro ao carregar dados das despesas');
+      setError(t('reports.expensesByDate.error'));
     } finally {
       setLoading(false);
     }
@@ -114,7 +115,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
         mb={4}
         fontWeight="bold"
       >
-        Despesas por Data
+        {t('reports.expensesByDate.title')}
       </Text>
 
       <DateRangeFilter
@@ -133,7 +134,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
             emptyColor="purple.100"
           />
           <Text ml={3} color="purple.300">
-            Carregando despesas...
+            {t('reports.expensesByDate.loading')}
           </Text>
         </Flex>
       ) : error ? (
@@ -207,7 +208,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
         </Box>
       ) : (
         <Text color="purple.300" py={10} textAlign="center">
-          Nenhum dado de despesas disponível
+          {t('reports.expensesByDate.noData')}
         </Text>
       )}
     </Flex>

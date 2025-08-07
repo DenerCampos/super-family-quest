@@ -28,6 +28,7 @@ import { api } from '../../services';
 import type { Expense, PaginationResponse } from '../../services/resources';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDateToBR } from '../../utils/formatDate';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -48,7 +49,7 @@ const ExpenseResource = ({
   const [loading, setLoading] = useState(true);
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-
+  const { t } = useThemeTranslation();
   const loadExpenses = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {
@@ -60,7 +61,7 @@ const ExpenseResource = ({
       setExpenses(expensesData);
     } catch (error) {
       toast({
-        title: 'Erro ao carregar despesas',
+        title: t('resources.expense.error'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -115,13 +116,13 @@ const ExpenseResource = ({
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja excluir esta despesa?')) {
+    if (window.confirm(t('resources.expense.deleteConfirm'))) {
       try {
         await onDelete(id);
         // Recarregar dados após exclusão
         loadExpenses(page, search);
         toast({
-          title: 'Despesa excluída com sucesso',
+          title: t('resources.expense.deleteSuccess'),
           status: 'success',
           duration: 2000,
           isClosable: true,
@@ -129,7 +130,7 @@ const ExpenseResource = ({
       } catch (error) {
         console.error(error);
         toast({
-          title: 'Erro ao excluir despesa',
+          title: t('resources.expense.deleteError'),
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -151,7 +152,7 @@ const ExpenseResource = ({
     <Box mb={6}>
       <Flex justify="space-between" align="center" mb={4}>
         <Text fontSize="lg" fontWeight="medium">
-          Despesas
+          {t('resources.expense.title')}
         </Text>
         <Button
           size="sm"
@@ -159,7 +160,7 @@ const ExpenseResource = ({
           leftIcon={<FiPlus />}
           onClick={handleNewExpense}
         >
-          Nova Despesa
+          {t('resources.expense.new')}
         </Button>
       </Flex>
 
@@ -168,7 +169,7 @@ const ExpenseResource = ({
           <Icon as={FiSearch} color="gray.300" />
         </InputLeftElement>
         <Input
-          placeholder="Buscar despesas..."
+          placeholder={t('resources.expense.searchPlaceholder')}
           value={search}
           onChange={handleSearch}
         />
@@ -180,7 +181,7 @@ const ExpenseResource = ({
         </Flex>
       ) : expenses?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
-          Nenhuma despesa encontrada
+          {t('resources.expense.noData')}
         </Text>
       ) : (
         <>
@@ -193,11 +194,11 @@ const ExpenseResource = ({
             <Table variant="simple" minW="600px">
               <Thead>
                 <Tr>
-                  <Th>Loja</Th>
-                  <Th>Valor</Th>
-                  <Th>Pagamento</Th>
-                  <Th>Data</Th>
-                  <Th>Ações</Th>
+                  <Th>{t('resources.expense.store')}</Th>
+                  <Th>{t('resources.expense.value')}</Th>
+                  <Th>{t('resources.expense.payment')}</Th>
+                  <Th>{t('resources.expense.date')}</Th>
+                  <Th>{t('resources.expense.actions')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -214,21 +215,21 @@ const ExpenseResource = ({
                     <Td>
                       <Menu>
                         <MenuButton as={Button} size="sm" variant="outline">
-                          Ações
+                          {t('resources.expense.actions')}
                         </MenuButton>
                         <MenuList>
                           <MenuItem
                             icon={<FiEdit />}
                             onClick={() => handleEdit(expense)}
                           >
-                            Editar
+                            {t('resources.expense.edit')}
                           </MenuItem>
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(expense.id as string)}
                             color="red.500"
                           >
-                            Excluir
+                            {t('resources.expense.delete')}
                           </MenuItem>
                         </MenuList>
                       </Menu>
@@ -247,7 +248,7 @@ const ExpenseResource = ({
                   onClick={() => handlePageChange(page - 1)}
                   isDisabled={page === 1}
                 >
-                  Anterior
+                  {t('resources.expense.previous')}
                 </Button>
                 <Button size="sm" variant="outline">
                   {page} / {expenses.meta.totalPages}
@@ -257,7 +258,7 @@ const ExpenseResource = ({
                   onClick={() => handlePageChange(page + 1)}
                   isDisabled={page === expenses.meta.totalPages}
                 >
-                  Próxima
+                  {t('resources.expense.next')}
                 </Button>
               </Stack>
             </Flex>

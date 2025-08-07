@@ -3,31 +3,30 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalBody,
-  ModalFooter,
   ModalCloseButton,
-  Button,
-  VStack,
+  ModalBody,
   Text,
   Box,
-  Flex,
-  useToast,
-  Divider,
   Heading,
-  Input,
+  Button,
+  useToast,
+  VStack,
+  Flex,
   Checkbox,
-  HStack,
+  Input,
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Divider,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
 import { formatCurrencyBRL, formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
 import type { ExpenseComplete } from '../../services/expense';
 import { parseGrams } from '../../utils/formatGrams';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 type ExpenseItem = ExpenseComplete & {
   isSelected: boolean;
@@ -40,6 +39,7 @@ type Props = {
 
 export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast();
+  const { t } = useThemeTranslation();
   const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,8 +70,8 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       } catch (error) {
         console.error('Erro ao carregar despesas:', error);
         toast({
-          title: 'Erro',
-          description: 'Não foi possível carregar as despesas repetidas',
+          title: t('common.error'),
+          description: t('common.loadError'),
           status: 'error',
           duration: 3000,
         });
@@ -91,8 +91,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       // Filtrar apenas as despesas selecionadas e remover o campo isSelected      
       const selectedExpenses: ExpenseComplete[] = expenses
         .filter((expense) => expense.isSelected)
-        .map(({ isSelected, ...expense }) => ({
-          // eslint-disable-line @typescript-eslint/no-unused-vars
+        .map(({ isSelected, ...expense }) => ({// eslint-disable-line @typescript-eslint/no-unused-vars
           ...expense,
           store: {
             ...expense.store,
@@ -124,8 +123,8 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       });
 
       toast({
-        title: 'Despesas confirmadas!',
-        description: 'Suas despesas recorrentes foram atualizadas com sucesso',
+        title: t('modals.recurringExpense.confirmed'),
+        description: t('modals.recurringExpense.success'),
         status: 'success',
         duration: 3000,
       });
@@ -134,8 +133,8 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
     } catch (error) {
       console.error('Erro ao confirmar despesas:', error);
       toast({
-        title: 'Erro',
-        description: 'Falha ao confirmar as despesas',
+        title: t('common.error'),
+        description: t('common.updateError'),
         status: 'error',
         duration: 3000,
       });
@@ -213,17 +212,15 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
     >
       <ModalOverlay />
       <ModalContent bg="purple.800" color="white">
-        <ModalHeader>🏰 Tributos do Reino! ⚔️</ModalHeader>
+        <ModalHeader>{t('modals.recurringExpense.title')}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text mb={4} fontSize="lg">
-            Nobre Guardião do Tesouro, um novo ciclo lunar se inicia! É hora de
-            revisar os tributos e custos do reino para manter nossa fortaleza
-            próspera. 🏰
+            {t('modals.recurringExpense.description')}
           </Text>
 
           <Heading size="md" mb={4} color="purple.300">
-            Custos Recorrentes do Reino:
+            {t('modals.recurringExpense.expenses')}:
           </Heading>
 
           <Box
@@ -245,9 +242,13 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
           >
             {isLoading ? (
               <Text textAlign="center" py={4}>
-                Consultando o Livro de Contas Real... 📚
+                {t('common.loading')}
               </Text>
-            ) : expenses.length > 0 ? (
+            ) : expenses.length === 0 ? (
+              <Text textAlign="center" py={4} color="gray.400">
+                {t('modals.recurringExpense.noExpensesFound')}
+              </Text>
+            ) : (
               <VStack spacing={3} align="stretch">
                 {expenses.map((expense) => (
                   <Box
@@ -378,32 +379,26 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                   </Box>
                 ))}
               </VStack>
-            ) : (
-              <Text textAlign="center" py={4} color="gray.400">
-                Nenhum tributo recorrente encontrado no reino 🏰
-              </Text>
             )}
           </Box>
 
           <Divider my={4} borderColor="purple.600" />
 
           <Text fontSize="sm" color="purple.200">
-            Ajuste os valores dos tributos conforme necessário e desmarque
-            aqueles que não devem ser mantidos neste ciclo lunar. Um reino
-            próspero depende de uma gestão sábia dos recursos! 🗡️
+            {t('modals.recurringExpense.reminder')}
           </Text>
-        </ModalBody>
 
-        <ModalFooter>
           <Button
-            colorScheme="green"
+            mt={4}
+            colorScheme="purple"
+            w="full"
             onClick={handleConfirm}
             isLoading={isSubmitting}
-            loadingText="Atualizando os Tributos..."
+            loadingText={t('modals.recurringExpense.confirming')}
           >
-            Decretar os Tributos ✨
+            {t('modals.recurringExpense.sealDecree')}
           </Button>
-        </ModalFooter>
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

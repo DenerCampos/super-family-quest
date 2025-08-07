@@ -28,7 +28,7 @@ import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { api } from '../../services';
 import type { Revenue, PaginationResponse } from '../../services/resources';
 import { formatCurrency } from '../../utils/formatCurrency';
-
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 const ITEMS_PER_PAGE = 5;
 
 interface RevenueResourceProps {
@@ -48,7 +48,7 @@ const RevenueResource = ({
   const [loading, setLoading] = useState(true);
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-
+  const { t } = useThemeTranslation();
   const loadRevenues = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {
@@ -60,7 +60,7 @@ const RevenueResource = ({
       setRevenues(revenuesData);
     } catch (error) {
       toast({
-        title: 'Erro ao carregar receitas',
+        title: t('resources.revenue.error'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -115,13 +115,13 @@ const RevenueResource = ({
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja excluir esta receita?')) {
+    if (window.confirm(t('resources.revenue.deleteConfirm'))) {
       try {
         await onDelete(id);
         // Recarregar dados após exclusão
         loadRevenues(page, search);
         toast({
-          title: 'Receita excluída com sucesso',
+          title: t('resources.revenue.deleteSuccess'),
           status: 'success',
           duration: 2000,
           isClosable: true,
@@ -129,7 +129,7 @@ const RevenueResource = ({
       } catch (error) {
         console.error(error);
         toast({
-          title: 'Erro ao excluir receita',
+          title: t('resources.revenue.deleteError'),
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -151,7 +151,7 @@ const RevenueResource = ({
     <Box mb={6}>
       <Flex justify="space-between" align="center" mb={4}>
         <Text fontSize="lg" fontWeight="medium">
-          Receitas
+          {t('resources.revenue.title')}
         </Text>
         <Button
           size="sm"
@@ -159,7 +159,7 @@ const RevenueResource = ({
           leftIcon={<FiPlus />}
           onClick={handleNewRevenue}
         >
-          Nova Receita
+          {t('resources.revenue.new')}
         </Button>
       </Flex>
 
@@ -168,7 +168,7 @@ const RevenueResource = ({
           <Icon as={FiSearch} color="gray.300" />
         </InputLeftElement>
         <Input
-          placeholder="Buscar receitas..."
+          placeholder={t('resources.revenue.searchPlaceholder')}
           value={search}
           onChange={handleSearch}
         />
@@ -180,7 +180,7 @@ const RevenueResource = ({
         </Flex>
       ) : revenues?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
-          Nenhuma receita encontrada
+          {t('resources.revenue.noData')}
         </Text>
       ) : (
         <>
@@ -193,10 +193,10 @@ const RevenueResource = ({
             <Table variant="simple" minW="600px">
               <Thead>
                 <Tr>
-                  <Th>Nome</Th>
-                  <Th>Valor</Th>
-                  <Th>Repete?</Th>
-                  <Th>Ações</Th>
+                  <Th>{t('resources.revenue.name')}</Th>
+                  <Th>{t('resources.revenue.value')}</Th>
+                  <Th>{t('resources.revenue.repeat')}</Th>
+                  <Th>{t('resources.revenue.actions')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -214,21 +214,21 @@ const RevenueResource = ({
                     <Td>
                       <Menu>
                         <MenuButton as={Button} size="sm" variant="outline">
-                          Ações
+                          {t('resources.revenue.actions')}
                         </MenuButton>
                         <MenuList>
                           <MenuItem
                             icon={<FiEdit />}
                             onClick={() => handleEdit(revenue)}
                           >
-                            Editar
+                            {t('resources.revenue.edit')}
                           </MenuItem>
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(revenue.id as string)}
                             color="red.500"
                           >
-                            Excluir
+                            {t('resources.revenue.delete')}
                           </MenuItem>
                         </MenuList>
                       </Menu>
@@ -247,7 +247,7 @@ const RevenueResource = ({
                   onClick={() => handlePageChange(page - 1)}
                   isDisabled={page === 1}
                 >
-                  Anterior
+                  {t('resources.revenue.previous')}
                 </Button>
                 <Button size="sm" variant="outline">
                   {page} / {revenues.meta.totalPages}
@@ -257,7 +257,7 @@ const RevenueResource = ({
                   onClick={() => handlePageChange(page + 1)}
                   isDisabled={page === revenues.meta.totalPages}
                 >
-                  Próxima
+                  {t('resources.revenue.next')}
                 </Button>
               </Stack>
             </Flex>

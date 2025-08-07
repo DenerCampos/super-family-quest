@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form';
 import { api } from '../../services';
 import { LoadingOverlay } from '../LoadingOverlay';
 import type { Groups, Merchant, Payments } from '../../services/resources';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 type Props = {
   isOpen: boolean;
@@ -57,6 +58,7 @@ export const SimpleResourceModal = ({
   initialData,
 }: Props) => {
   const toast = useToast();
+  const { t } = useThemeTranslation();
   const {
     register,
     handleSubmit,
@@ -99,7 +101,7 @@ export const SimpleResourceModal = ({
           formattedData,
         );
         toast({
-          title: 'Atualizado!',
+          title: t('common.updated'),
           status: 'success',
           description: `${editResourceNames[resourceType]} atualizado com sucesso`,
           duration: 3000,
@@ -108,7 +110,7 @@ export const SimpleResourceModal = ({
         // Caso contrário, estamos criando
         await mappingApiResources[resourceType](formattedData);
         toast({
-          title: 'Sucesso!',
+          title: t('common.success'),
           status: 'success',
           description: `${resourceNames[resourceType]} cadastrado com sucesso`,
           duration: 3000,
@@ -122,9 +124,9 @@ export const SimpleResourceModal = ({
       console.error(error);
 
       toast({
-        title: 'Erro',
+        title: t('common.error'),
         status: 'error',
-        description: initialData ? 'Falha ao atualizar' : 'Falha ao cadastrar',
+        description: initialData ? t('common.updateError') : t('common.createError'),
         duration: 3000,
       });
     }
@@ -143,8 +145,6 @@ export const SimpleResourceModal = ({
     }
   }, [initialData, setValue, reset]);
 
-  console.log('initialData', initialData);
-  
 
   return (
     <Modal
@@ -168,19 +168,19 @@ export const SimpleResourceModal = ({
         <ModalBody pb={4} opacity={isSubmitting ? 0.5 : 1}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.name}>
-              <FormLabel>Nome</FormLabel>
+              <FormLabel>{t('common.name')}</FormLabel>
 
               <Input
                 {...register('name', {
-                  required: 'Campo obrigatório',
+                  required: t('common.required'),
                   minLength: {
                     value: 3,
-                    message: 'Mínimo 3 caracteres',
+                    message: t('common.minLength', { count: 3 }),
                   },
                 })}
                 bg="white"
                 color="black"
-                placeholder="Informe o nome"
+                placeholder={t('modals.simpleResource.enterName')}
                 isDisabled={isSubmitting}
               />
 
@@ -197,10 +197,10 @@ export const SimpleResourceModal = ({
               type="submit"
               isDisabled={!isValid || isSubmitting}
               isLoading={isSubmitting}
-              loadingText="Salvando..."
+              loadingText={t('common.saving')}
               w="full"
             >
-              {initialData ? 'Atualizar' : 'Salvar'}
+              {initialData ? t('common.update') : t('common.save')}
             </Button>
           </form>
         </ModalBody>

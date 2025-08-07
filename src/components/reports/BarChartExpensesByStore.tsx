@@ -15,6 +15,7 @@ import type { ExpensesByGroup } from '../../services/reports';
 import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
+import { useThemeTranslation } from '../../hooks/useThemeTranslation';
 
 interface ColumnChartExpensesProps {
   data: ExpensesByGroup[];
@@ -41,7 +42,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { t } = useThemeTranslation();
   const fetchData = async (start: string, end: string) => {
     setLoading(true);
     try {
@@ -54,7 +55,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
       setError(null);
     } catch (error) {
       console.error('Erro ao buscar dados do gráfico:', error);
-      setError('Erro ao carregar dados das lojas');
+      setError(t('reports.expensesByStore.error'));
     } finally {
       setLoading(false);
     }
@@ -102,7 +103,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
         mb={4}
         fontWeight="bold"
       >
-        Despesas por Lojas
+        {t('reports.expensesByStore.title')}
       </Text>
 
       <DateRangeFilter
@@ -121,7 +122,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
             emptyColor="purple.100"
           />
           <Text ml={3} color="purple.300">
-            Carregando lojas...
+            {t('reports.expensesByStore.loading')}
           </Text>
         </Flex>
       ) : error ? (
@@ -195,7 +196,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
         </Box>
       ) : (
         <Text color="purple.300" py={10} textAlign="center">
-          Nenhum dado de lojas disponível
+          {t('reports.expensesByStore.noData')}
         </Text>
       )}
     </Flex>
