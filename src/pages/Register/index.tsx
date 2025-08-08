@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Flex, Input, Button, Text, useToast } from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { api } from '../../services';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +13,7 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       toast({

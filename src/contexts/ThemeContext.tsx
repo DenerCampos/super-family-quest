@@ -23,18 +23,20 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     return (savedTheme as ThemeNamespace) || 'default';
   });
 
-  const { changeTheme: i18nChangeTheme } = useThemeTranslation();
+  const { changeTheme: i18nChangeTheme } = useThemeTranslation(currentTheme);
 
   const changeTheme = (theme: ThemeNamespace) => {
-    setCurrentTheme(theme);
-    i18nChangeTheme(theme);
-    localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, theme);
+    if (theme !== currentTheme) {
+      setCurrentTheme(theme);
+      i18nChangeTheme(theme);
+      localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, theme);
+    }
   };
 
   // Aplica o tema inicial
   useEffect(() => {
     i18nChangeTheme(currentTheme);
-  }, []);
+  }, [currentTheme, i18nChangeTheme]);
 
   return (
     <ThemeContext.Provider value={{ currentTheme, changeTheme }}>

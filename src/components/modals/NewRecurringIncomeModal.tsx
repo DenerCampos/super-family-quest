@@ -23,7 +23,7 @@ import { api } from '../../services';
 import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
 import type { Revenue } from '../../services/revenue';
 import type { RevenueItem } from '../../types/revenue';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 type Props = {
   isOpen: boolean;
@@ -32,7 +32,7 @@ type Props = {
 
 export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const [incomes, setIncomes] = useState<RevenueItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);

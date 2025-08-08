@@ -12,7 +12,7 @@ import {
 import { formatCurrency } from '../../utils/formatCurrency';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 interface ExpenseIncomeData {
   month: string;
@@ -46,7 +46,7 @@ export const BarChartExpensesIncome = ({
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const fetchData = async (year: string) => {
     setLoading(true);
     try {

@@ -25,7 +25,7 @@ import {
 import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { api } from '../../services';
 import type { Groups, PaginationResponse } from '../../services/resources';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 const ITEMS_PER_PAGE = 5;
 
 interface GroupResourceProps {
@@ -45,7 +45,7 @@ const GroupResource = ({
   const [loading, setLoading] = useState(true);
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const loadGroups = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {

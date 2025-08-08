@@ -19,7 +19,7 @@ import { useForm } from 'react-hook-form';
 import { api } from '../../services';
 import { LoadingOverlay } from '../LoadingOverlay';
 import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 type RevenueModalProps = {
   isOpen: boolean;
@@ -43,7 +43,7 @@ export const RevenueModal = ({
   initialData,
 }: RevenueModalProps) => {
   const toast = useToast();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const {
     register,
     handleSubmit,

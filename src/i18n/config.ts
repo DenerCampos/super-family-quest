@@ -17,8 +17,13 @@ i18n
     lng: 'pt',
     fallbackLng: 'pt',
     defaultNS: 'default',
+    ns: ['default', 'rpg'],
+    fallbackNS: 'default',
     interpolation: {
       escapeValue: false,
+    },
+    react: {
+      useSuspense: false,
     },
   });
 

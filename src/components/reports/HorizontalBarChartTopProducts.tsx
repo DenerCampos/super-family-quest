@@ -13,7 +13,7 @@ import { formatCurrency } from '../../utils/formatCurrency';
 import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 interface TopProductsData {
   name: string;
@@ -42,7 +42,7 @@ export const HorizontalBarChartTopProducts = ({
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const fetchData = async (start: string, end: string) => {
     setLoading(true);
     try {

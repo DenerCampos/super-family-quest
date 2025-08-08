@@ -17,7 +17,7 @@ import { formatDateToBR } from '../utils/formatDate';
 import { capitalizeFirstLetter } from '../utils/formatString';
 import type { Registration } from '../services/profile';
 import { useAuth } from '../contexts/AuthContext';
-import { useThemeTranslation } from '../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
 
 const MotionBox = motion(Box);
 
@@ -32,7 +32,7 @@ export const LastRegistrationsList = ({
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const bgColorExpense = useColorModeValue('red.50', 'gray.700');
   const bgColorRevenue = useColorModeValue('green.50', 'gray.700');
 

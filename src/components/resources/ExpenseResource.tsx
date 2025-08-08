@@ -28,7 +28,7 @@ import { api } from '../../services';
 import type { Expense, PaginationResponse } from '../../services/resources';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDateToBR } from '../../utils/formatDate';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -49,7 +49,7 @@ const ExpenseResource = ({
   const [loading, setLoading] = useState(true);
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const loadExpenses = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {

@@ -6,6 +6,8 @@ export function useThemeTranslation(themeNamespace: ThemeNamespace = 'default') 
 
   const changeTheme = (newTheme: ThemeNamespace) => {
     i18n.setDefaultNamespace(newTheme);
+    // Força a recarregar as traduções com o novo namespace
+    i18n.reloadResources('pt', newTheme);
   };
 
   return {

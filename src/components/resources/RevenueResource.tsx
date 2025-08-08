@@ -28,7 +28,7 @@ import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { api } from '../../services';
 import type { Revenue, PaginationResponse } from '../../services/resources';
 import { formatCurrency } from '../../utils/formatCurrency';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 const ITEMS_PER_PAGE = 5;
 
 interface RevenueResourceProps {
@@ -48,7 +48,7 @@ const RevenueResource = ({
   const [loading, setLoading] = useState(true);
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const loadRevenues = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {

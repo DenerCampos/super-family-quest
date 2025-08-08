@@ -24,7 +24,7 @@ import {
   parseBRLCurrency,
 } from '../../utils/formatCurrency';
 import { FiInfo } from 'react-icons/fi';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 type Props = {
   isOpen: boolean;
@@ -44,7 +44,7 @@ type FormData = {
 
 export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
   const toast = useToast();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const {
     register,
     handleSubmit,

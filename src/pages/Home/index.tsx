@@ -24,7 +24,7 @@ import { SummaryCard } from '../../components/SummaryCard';
 import { NewRecurringIncomeModal } from '../../components/modals/NewRecurringIncomeModal';
 import { LastRegistrationsList } from '../../components/LastRegistrationsList';
 import { NewRecurringExpenseModal } from '../../components/modals/NewRecurringExpenseModal';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 const Home = () => {
   const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
@@ -41,7 +41,7 @@ const Home = () => {
   const [showRecurringExpensesModal, setShowRecurringExpensesModal] = useState(false);
   const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
   const navigate = useNavigate();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   // Carregar dados para o modal
   useEffect(() => {
     const loadData = async () => {

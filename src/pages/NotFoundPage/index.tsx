@@ -1,10 +1,10 @@
 // src/pages/NotFoundPage/index.tsx
 import { Flex, Heading, Text, Button } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 const NotFoundPage = () => {
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   return (
     <Flex
       minH="100vh"

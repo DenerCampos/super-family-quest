@@ -42,7 +42,7 @@ import {
 import { AutocompleteInput } from '../AutocompleteInput';
 import { useAuth } from '../../contexts/AuthContext';
 import { formatGramsInput, parseGrams } from '../../utils/formatGrams';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 const inputStyle = {
   bgColor: 'purple.100',
@@ -82,7 +82,7 @@ export const ExpenseModal = ({
   handleNewRegistration,
 }: Props) => {
   const { loadProfile } = useAuth();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [removedItemIds, setRemovedItemIds] = useState<string[]>([]);

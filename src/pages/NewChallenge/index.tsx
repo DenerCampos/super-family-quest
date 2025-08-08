@@ -1,10 +1,10 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { Header } from "../../components/Header";
 import { NavigationBar } from "../../components/NavigationBar";
-import { useThemeTranslation } from "../../hooks/useThemeTranslation";
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 const NewChallenge = () => {
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   return (
     <Flex direction="column" minH="100vh">
       <Header />

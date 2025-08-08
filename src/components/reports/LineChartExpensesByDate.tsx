@@ -15,7 +15,7 @@ import { fillMonthDays, formatDateToBR } from '../../utils/formatDate';
 import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 interface LineChartExpensesProps {
   data: ExpensesByDate[];
@@ -44,7 +44,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const fetchData = async (start: string, end: string) => {
     setLoading(true);
     try {

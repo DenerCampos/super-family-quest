@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import { api } from '../../services';
 import { LoadingOverlay } from '../LoadingOverlay';
 import type { Groups, Merchant, Payments } from '../../services/resources';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 type Props = {
   isOpen: boolean;
@@ -58,7 +58,7 @@ export const SimpleResourceModal = ({
   initialData,
 }: Props) => {
   const toast = useToast();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const {
     register,
     handleSubmit,

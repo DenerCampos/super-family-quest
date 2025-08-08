@@ -30,7 +30,7 @@ import {
 import { FiEdit2, FiCheck, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 // Lista de brasões pré-definidos
 const predefinedCoatOfArms = [
@@ -40,8 +40,8 @@ const predefinedCoatOfArms = [
 
 const Profile = () => {
   const { profile, loadProfile } = useAuth();
-  const { t } = useThemeTranslation();
   const toast = useToast();
+  const { t } = useThemedTranslation();
   const [name, setName] = useState(profile?.user.name || '');
   const [email, setEmail] = useState(profile?.user.email || '');
   const [family, setFamily] = useState(profile?.user.family || '');

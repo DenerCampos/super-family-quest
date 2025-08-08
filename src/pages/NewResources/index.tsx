@@ -19,10 +19,10 @@ import ExpenseResource from '../../components/resources/ExpenseResource';
 import RevenueResource from '../../components/resources/RevenueResource';
 import { api } from '../../services';
 import type { Expense, Groups, Merchant, Payments, Revenue } from '../../services/resources';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 const NewResources = () => {
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const [stores, setStores] = useState<Merchant[]>([]);
   const [payments, setPayments] = useState<Payments[]>([]);
   const [groups, setGroups] = useState<Groups[]>([]);

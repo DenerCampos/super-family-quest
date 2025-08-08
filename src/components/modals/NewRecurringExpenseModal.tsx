@@ -26,7 +26,7 @@ import { api } from '../../services';
 import { formatCurrencyBRL, formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
 import type { ExpenseComplete } from '../../services/expense';
 import { parseGrams } from '../../utils/formatGrams';
-import { useThemeTranslation } from '../../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 type ExpenseItem = ExpenseComplete & {
   isSelected: boolean;
@@ -39,7 +39,7 @@ type Props = {
 
 export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);

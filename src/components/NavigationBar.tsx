@@ -2,10 +2,10 @@ import { Flex, IconButton, Text, useColorModeValue } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 import { FiHome, FiPieChart, FiPlusSquare, FiUser } from 'react-icons/fi';
 import { GrResources } from 'react-icons/gr';
-import { useThemeTranslation } from '../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
 
 export const NavigationBar = () => {
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const activeColor = useColorModeValue('purple.500', 'purple.200');
   const inactiveColor = useColorModeValue('gray.600', 'gray.400');
 

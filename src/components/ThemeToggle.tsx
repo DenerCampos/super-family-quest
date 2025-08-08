@@ -1,11 +1,11 @@
 import { Button, useToast } from '@chakra-ui/react';
 import { useTheme } from '../contexts/ThemeContext';
 import type { ThemeNamespace } from '../i18n/types';
-import { useThemeTranslation } from '../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
 
 export function ThemeToggle() {
   const { currentTheme, changeTheme } = useTheme();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
   const toast = useToast();
 
   const handleThemeChange = () => {
@@ -27,7 +27,7 @@ export function ThemeToggle() {
       variant="outline"
       size="sm"
     >
-      {currentTheme === 'default' ? 'Modo RPG' : 'Modo Padrão'}
+      {t('header.themeToggle.' + (currentTheme === 'default' ? 'rpgMode' : 'defaultMode'))}
     </Button>
   );
 } 
