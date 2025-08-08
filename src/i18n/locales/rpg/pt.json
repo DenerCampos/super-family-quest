@@ -22,11 +22,7 @@
     "loadError": "Os pergaminhos antigos não puderam ser lidos",
     "updateError": "A forja mágica falhou",
     "createError": "Falha na forja",
-    "deleteError": "O item resistiu à destruição",
-    "themeToggle": {
-      "rpgMode": "Modo Aventura",
-      "defaultMode": "Modo Normal"
-    }
+    "deleteError": "O item resistiu à destruição"
   },
   "auth": {
     "login": "Entrar no Reino",
@@ -41,7 +37,184 @@
     "monthlyIncome": "Recompensas Mensais",
     "savingsGoal": "Meta do Tesouro Real"
   },
+  "home": {
+    "summary": {
+      "income": "Recompensas do Ciclo Lunar",
+      "expenses": "Tributos do Ciclo Lunar"
+    },
+    "addExpense": "Registrar Tributo",
+    "newExpense": "Novo Tributo",
+    "scanQRCode": "Ler Pergaminho Mágico",
+    "addRevenue": "Registrar Recompensa",
+    "newRevenue": "Nova Recompensa"
+  },
+  "reports": {
+    "dateRangeFilter": {
+      "startDate": "Início do Ciclo",
+      "endDate": "Fim do Ciclo"
+    },
+    "expensesByStore": {
+      "title": "Tributos por Mercador",
+      "loading": "Consultando os Pergaminhos Antigos...",
+      "error": "Os pergaminhos estão ilegíveis!",
+      "noData": "Nenhum tributo encontrado neste ciclo lunar",
+      "value": "Valor em Ouro"
+    },
+    "expensesByGroup": {
+      "title": "Tributos por Categoria Mágica",
+      "loading": "Consultando os Pergaminhos Antigos...",
+      "error": "Os pergaminhos estão ilegíveis!",
+      "noData": "Nenhum tributo encontrado neste ciclo lunar",
+      "value": "Valor em Ouro"
+    },
+    "expensesByDate": {
+      "title": "Tributos por Data",
+      "loading": "Consultando os Pergaminhos Antigos...",
+      "error": "Os pergaminhos estão ilegíveis!",
+      "noData": "Nenhum tributo encontrado neste ciclo lunar",
+      "value": "Valor em Ouro"
+    },
+    "expensesIncome": {
+      "title": "Tributos vs Recompensas",
+      "loading": "Consultando os Pergaminhos Antigos...",
+      "error": "Os pergaminhos estão ilegíveis!",
+      "noData": "Nenhum registro encontrado neste ciclo lunar",
+      "expenses": "Tributos",
+      "income": "Recompensas"
+    },
+    "topProducts": {
+      "title": "Itens Mais Adquiridos",
+      "loading": "Consultando os Pergaminhos Antigos...",
+      "error": "Os pergaminhos estão ilegíveis!",
+      "noData": "Nenhum item encontrado neste ciclo lunar",
+      "value": "Valor em Ouro",
+      "quantity": "Quantidade"
+    }
+  },
+  "resources": {
+    "expense": {
+      "title": "Tributos do Reino",
+      "new": "Novo Tributo",
+      "error": "Erro ao consultar os tributos",
+      "deleteConfirm": "Tem certeza que deseja abolir este tributo?",
+      "deleteSuccess": "Tributo abolido com sucesso",
+      "deleteError": "Erro ao abolir tributo",
+      "searchPlaceholder": "Buscar nos pergaminhos antigos...",
+      "noData": "Nenhum tributo encontrado nos registros",
+      "store": "Mercador",
+      "value": "Valor em Ouro",
+      "payment": "Forma de Pagamento",
+      "date": "Data do Tributo",
+      "actions": "Ações",
+      "edit": "Aprimorar",
+      "delete": "Abolir",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
+    },
+    "revenue": {
+      "title": "Recompensas do Reino",
+      "new": "Nova Recompensa",
+      "error": "Erro ao consultar as recompensas",
+      "deleteConfirm": "Tem certeza que deseja remover esta recompensa?",
+      "deleteSuccess": "Recompensa removida com sucesso",
+      "deleteError": "Erro ao remover recompensa",
+      "searchPlaceholder": "Buscar nos pergaminhos antigos...",
+      "noData": "Nenhuma recompensa encontrada nos registros",
+      "name": "Nome da Recompensa",
+      "value": "Valor em Ouro",
+      "repeat": "Recorrente",
+      "actions": "Ações",
+      "edit": "Aprimorar",
+      "delete": "Remover",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
+    },
+    "group": {
+      "title": "Categorias Mágicas",
+      "new": "Nova Categoria Mágica",
+      "error": "Erro ao consultar as categorias mágicas",
+      "deleteConfirm": "Tem certeza que deseja banir esta categoria mágica?",
+      "deleteSuccess": "Categoria mágica banida com sucesso",
+      "deleteError": "Erro ao banir categoria mágica",
+      "searchPlaceholder": "Buscar nos pergaminhos antigos...",
+      "noData": "Nenhuma categoria mágica encontrada nos registros",
+      "name": "Nome da Categoria",
+      "actions": "Ações",
+      "edit": "Aprimorar",
+      "delete": "Banir",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
+    },
+    "payment": {
+      "title": "Formas de Pagamento do Reino",
+      "new": "Nova Forma de Pagamento",
+      "error": "Erro ao consultar as formas de pagamento",
+      "deleteConfirm": "Tem certeza que deseja banir esta forma de pagamento?",
+      "deleteSuccess": "Forma de pagamento banida com sucesso",
+      "deleteError": "Erro ao banir forma de pagamento",
+      "searchPlaceholder": "Buscar nos pergaminhos antigos...",
+      "noData": "Nenhuma forma de pagamento encontrada nos registros",
+      "name": "Nome da Forma de Pagamento",
+      "actions": "Ações",
+      "edit": "Aprimorar",
+      "delete": "Banir",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
+    },
+    "store": {
+      "title": "Mercadores do Reino",
+      "new": "Novo Mercador",
+      "error": "Erro ao consultar os mercadores",
+      "deleteConfirm": "Tem certeza que deseja banir este mercador do reino?",
+      "deleteSuccess": "Mercador banido com sucesso",
+      "deleteError": "Erro ao banir mercador",
+      "searchPlaceholder": "Buscar nos pergaminhos antigos...",
+      "noData": "Nenhum mercador encontrado nos registros",
+      "name": "Nome do Mercador",
+      "actions": "Ações",
+      "edit": "Aprimorar",
+      "delete": "Banir",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
+    }
+  },
   "modals": {
+    "revenue": {
+      "new": "Nova Recompensa",
+      "edit": "Aprimorar Recompensa",
+      "namePlaceholder": "Digite o nome da recompensa",
+      "valuePlaceholder": "Digite o valor em ouro",
+      "repeat": "Repetir a cada ciclo lunar",
+      "name": "Nome da Recompensa",
+      "value": "Valor em Ouro",
+      "date": "Data da Conquista"
+    },
+    "expense": {
+      "new": "Novo Tributo",
+      "edit": "Aprimorar Tributo",
+      "success": "Tributo registrado com sucesso no livro do reino! ⚔️",
+      "storePlaceholder": "Digite o nome do mercador",
+      "paymentPlaceholder": "Selecione a forma de pagamento",
+      "urlPlaceholder": "URL do pergaminho mágico (opcional)",
+      "repeat": "Repetir a cada ciclo lunar",
+      "items": "Itens Mágicos",
+      "showItems": "Revelar Itens",
+      "hideItems": "Ocultar Itens",
+      "store": "Mercador",
+      "payment": "Forma de Pagamento",
+      "date": "Data do Tributo",
+      "url": "Pergaminho Mágico",
+      "code": "Runa",
+      "name": "Nome do Item",
+      "quantity": "Quantidade",
+      "unit": "Medida",
+      "unitValue": "Valor em Ouro",
+      "group": "Categoria Mágica",
+      "groupPlaceholder": "Selecione ou digite uma categoria",
+      "removeItem": "Destruir Item",
+      "addItem": "Adicionar Item Mágico",
+      "newItem": "Novo item mágico"
+    },
     "recurringIncome": {
       "title": "🏰 Nova Fase da Jornada! 🌟",
       "description": "Saudações, Nobre Guardião do Tesouro! Um novo ciclo lunar se inicia, e com ele, as fontes de ouro do reino precisam ser revisadas.",
@@ -50,7 +223,9 @@
       "reminder": "Ajuste os valores do tesouro conforme necessário e desmarque as fontes de ouro que não devem ser mantidas neste ciclo lunar. Lembre-se: um bom guardião sempre mantém suas finanças em ordem! ⚔️",
       "confirming": "Atualizando o Tesouro Real...",
       "sealDecree": "Selar o Decreto Real ✨",
-      "deleteConfirm": "Tem certeza que deseja banir esta fonte de ouro do reino?"
+      "deleteConfirm": "Tem certeza que deseja banir esta fonte de ouro do reino?",
+      "confirmed": "Tesouro Real Atualizado! ✨",
+      "success": "As fontes de ouro do reino foram atualizadas com sucesso! 🏰"
     },
     "recurringExpense": {
       "title": "🏰 Tributos do Reino! ⚔️",
@@ -60,7 +235,9 @@
       "reminder": "Ajuste os valores dos tributos conforme necessário e desmarque os custos que não devem ser mantidos neste ciclo lunar. Um reino próspero é um reino bem administrado! ⚔️",
       "confirming": "Atualizando o Tesouro Real...",
       "sealDecree": "Selar o Decreto Real ⚔️",
-      "deleteConfirm": "Tem certeza que deseja abolir este tributo do reino?"
+      "deleteConfirm": "Tem certeza que deseja abolir este tributo do reino?",
+      "confirmed": "Tributos Atualizados! ⚔️",
+      "success": "Os tributos do reino foram atualizados com sucesso! 🏰"
     },
     "simpleResource": {
       "enterName": "Nomeie seu item mágico",
@@ -76,7 +253,10 @@
   },
   "qrScannerPage": {
     "back": "Retornar",
-    "instructions": "Use sua Lente Mágica para revelar o conteúdo do pergaminho"
+    "instructions": "Use sua Lente Mágica para revelar o conteúdo do pergaminho",
+    "title": "Posicione a Lente Mágica",
+    "camera": "Lente Mágica: {{name}} ({{current}}/{{total}})",
+    "defaultCamera": "Lente Padrão"
   },
   "lastRegistrationsList": {
     "title": "Registros do Escriba",
@@ -90,7 +270,11 @@
     "error": "Falha na entrada do Reino",
     "invalidCredentials": "Pergaminho ou palavra secreta inválidos",
     "enter": "Entrar no Reino",
-    "create": "Forjar"
+    "create": "Forjar",
+    "loading": "Adentrando o Reino...",
+    "emailPlaceholder": "Pergaminho de Contato",
+    "passwordPlaceholder": "Palavra Secreta",
+    "title": "SUPER FAMILY QUEST"
   },
   "register": {
     "error": "Falha ao fundar reino",
@@ -130,6 +314,10 @@
     "complete": "Forje sua Identidade",
     "welcome": "Saudações, Nobre Aventureiro! Antes de iniciar sua jornada, precisamos conhecer sua linhagem. Estas informações poderão ser alteradas em seu grimório pessoal.",
     "familyNamePlaceholder": "Digite o nome de sua nobre linhagem",
+    "editProfile": "Editar Grimório",
+    "minimum6Characters": "Mínimo 6 runas antigas",
+    "repeatNewPassword": "Repita a palavra secreta",
+    "saving": "Forjando alterações...",
     "themeChanged": "O reino mudou sua aparência!"
   },
   "newChallenge": {
@@ -143,5 +331,11 @@
     "lost": "Pergaminho Perdido! 📜",
     "secretPath": "Você encontrou um caminho secreto... que não existe! Volte para o reino principal antes que os slimes financeiros te encontrem! 🐉",
     "back": "Voltar para a Segurança do Reino"
+  },
+  "header": {
+    "themeToggle": {
+      "rpgMode": "Modo Aventura",
+      "defaultMode": "Modo Normal"
+    }
   }
 } 

@@ -22,11 +22,7 @@
     "loadError": "Não foi possível carregar os dados",
     "updateError": "Falha ao atualizar",
     "createError": "Falha ao criar",
-    "deleteError": "Falha ao excluir",
-    "themeToggle": {
-      "rpgMode": "Modo RPG",
-      "defaultMode": "Modo Padrão"
-    }
+    "deleteError": "Falha ao excluir"
   },
   "auth": {
     "login": "Entrar",
@@ -41,7 +37,184 @@
     "monthlyIncome": "Receitas Mensais",
     "savingsGoal": "Meta de Economia"
   },
+  "home": {
+    "summary": {
+      "income": "Receitas do Mês",
+      "expenses": "Despesas do Mês"
+    },
+    "addExpense": "Adicionar Despesa",
+    "newExpense": "Nova Despesa",
+    "scanQRCode": "Ler Nota Fiscal",
+    "addRevenue": "Adicionar Receita",
+    "newRevenue": "Nova Receita"
+  },
+  "reports": {
+    "dateRangeFilter": {
+      "startDate": "Data Inicial",
+      "endDate": "Data Final"
+    },
+    "expensesByStore": {
+      "title": "Despesas por Estabelecimento",
+      "loading": "Carregando dados...",
+      "error": "Erro ao carregar dados do gráfico",
+      "noData": "Nenhuma despesa encontrada no período",
+      "value": "Valor"
+    },
+    "expensesByGroup": {
+      "title": "Despesas por Categoria",
+      "loading": "Carregando dados...",
+      "error": "Erro ao carregar dados do gráfico",
+      "noData": "Nenhuma despesa encontrada no período",
+      "value": "Valor"
+    },
+    "expensesByDate": {
+      "title": "Despesas por Data",
+      "loading": "Carregando dados...",
+      "error": "Erro ao carregar dados do gráfico",
+      "noData": "Nenhuma despesa encontrada no período",
+      "value": "Valor"
+    },
+    "expensesIncome": {
+      "title": "Despesas vs Receitas",
+      "loading": "Carregando dados...",
+      "error": "Erro ao carregar dados do gráfico",
+      "noData": "Nenhum dado encontrado no período",
+      "expenses": "Despesas",
+      "income": "Receitas"
+    },
+    "topProducts": {
+      "title": "Produtos Mais Comprados",
+      "loading": "Carregando dados...",
+      "error": "Erro ao carregar dados do gráfico",
+      "noData": "Nenhum produto encontrado no período",
+      "value": "Valor",
+      "quantity": "Quantidade"
+    }
+  },
+  "resources": {
+    "expense": {
+      "title": "Despesas",
+      "new": "Nova Despesa",
+      "error": "Erro ao carregar despesas",
+      "deleteConfirm": "Tem certeza que deseja excluir esta despesa?",
+      "deleteSuccess": "Despesa excluída com sucesso",
+      "deleteError": "Erro ao excluir despesa",
+      "searchPlaceholder": "Buscar despesas...",
+      "noData": "Nenhuma despesa encontrada",
+      "store": "Estabelecimento",
+      "value": "Valor",
+      "payment": "Pagamento",
+      "date": "Data",
+      "actions": "Ações",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "previous": "Anterior",
+      "next": "Próximo"
+    },
+    "revenue": {
+      "title": "Receitas",
+      "new": "Nova Receita",
+      "error": "Erro ao carregar receitas",
+      "deleteConfirm": "Tem certeza que deseja excluir esta receita?",
+      "deleteSuccess": "Receita excluída com sucesso",
+      "deleteError": "Erro ao excluir receita",
+      "searchPlaceholder": "Buscar receitas...",
+      "noData": "Nenhuma receita encontrada",
+      "name": "Nome",
+      "value": "Valor",
+      "repeat": "Recorrente",
+      "actions": "Ações",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "previous": "Anterior",
+      "next": "Próximo"
+    },
+    "group": {
+      "title": "Categorias",
+      "new": "Nova Categoria",
+      "error": "Erro ao carregar categorias",
+      "deleteConfirm": "Tem certeza que deseja excluir esta categoria?",
+      "deleteSuccess": "Categoria excluída com sucesso",
+      "deleteError": "Erro ao excluir categoria",
+      "searchPlaceholder": "Buscar categorias...",
+      "noData": "Nenhuma categoria encontrada",
+      "name": "Nome",
+      "actions": "Ações",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "previous": "Anterior",
+      "next": "Próximo"
+    },
+    "payment": {
+      "title": "Formas de Pagamento",
+      "new": "Nova Forma de Pagamento",
+      "error": "Erro ao carregar formas de pagamento",
+      "deleteConfirm": "Tem certeza que deseja excluir esta forma de pagamento?",
+      "deleteSuccess": "Forma de pagamento excluída com sucesso",
+      "deleteError": "Erro ao excluir forma de pagamento",
+      "searchPlaceholder": "Buscar formas de pagamento...",
+      "noData": "Nenhuma forma de pagamento encontrada",
+      "name": "Nome",
+      "actions": "Ações",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "previous": "Anterior",
+      "next": "Próximo"
+    },
+    "store": {
+      "title": "Estabelecimentos",
+      "new": "Novo Estabelecimento",
+      "error": "Erro ao carregar estabelecimentos",
+      "deleteConfirm": "Tem certeza que deseja excluir este estabelecimento?",
+      "deleteSuccess": "Estabelecimento excluído com sucesso",
+      "deleteError": "Erro ao excluir estabelecimento",
+      "searchPlaceholder": "Buscar estabelecimentos...",
+      "noData": "Nenhum estabelecimento encontrado",
+      "name": "Nome",
+      "actions": "Ações",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "previous": "Anterior",
+      "next": "Próximo"
+    }
+  },
   "modals": {
+    "revenue": {
+      "new": "Nova Receita",
+      "edit": "Editar Receita",
+      "namePlaceholder": "Digite o nome da receita",
+      "valuePlaceholder": "Digite o valor",
+      "repeat": "Repetir mensalmente",
+      "name": "Nome",
+      "value": "Valor",
+      "date": "Data"
+    },
+    "expense": {
+      "new": "Nova Despesa",
+      "edit": "Editar Despesa",
+      "success": "Despesa salva com sucesso",
+      "storePlaceholder": "Digite o nome da loja",
+      "paymentPlaceholder": "Selecione a forma de pagamento",
+      "urlPlaceholder": "URL opcional da despesa",
+      "repeat": "Repetir mensalmente",
+      "items": "Itens",
+      "showItems": "Mostrar Itens",
+      "hideItems": "Ocultar Itens",
+      "store": "Loja",
+      "payment": "Pagamento",
+      "date": "Data",
+      "url": "URL da Despesa",
+      "code": "Código",
+      "name": "Nome",
+      "quantity": "Quantidade",
+      "unit": "Unidade",
+      "unitValue": "Valor Unitário",
+      "group": "Grupo",
+      "groupPlaceholder": "Selecione ou digite um grupo",
+      "removeItem": "Remover Item",
+      "addItem": "Adicionar Item",
+      "newItem": "Novo item"
+    },
     "recurringIncome": {
       "title": "Receitas Mensais",
       "description": "Vamos revisar suas fontes de renda mensais para manter seu planejamento financeiro atualizado.",
@@ -50,7 +223,9 @@
       "reminder": "Ajuste os valores conforme necessário e desmarque as receitas que não devem ser mantidas neste mês. Um bom planejamento é essencial para suas finanças.",
       "confirming": "Atualizando receitas...",
       "sealDecree": "Confirmar",
-      "deleteConfirm": "Tem certeza que deseja excluir esta receita mensal?"
+      "deleteConfirm": "Tem certeza que deseja excluir esta receita mensal?",
+      "confirmed": "Receitas atualizadas",
+      "success": "Suas receitas mensais foram atualizadas com sucesso"
     },
     "recurringExpense": {
       "title": "Despesas Mensais",
@@ -60,7 +235,9 @@
       "reminder": "Ajuste os valores conforme necessário e desmarque as despesas que não devem ser mantidas neste mês. Um orçamento bem controlado é a chave para o sucesso financeiro.",
       "confirming": "Atualizando despesas...",
       "sealDecree": "Confirmar",
-      "deleteConfirm": "Tem certeza que deseja excluir esta despesa mensal?"
+      "deleteConfirm": "Tem certeza que deseja excluir esta despesa mensal?",
+      "confirmed": "Despesas atualizadas",
+      "success": "Suas despesas mensais foram atualizadas com sucesso"
     },
     "simpleResource": {
       "enterName": "Digite o nome",
@@ -76,7 +253,10 @@
   },
   "qrScannerPage": {
     "back": "Voltar",
-    "instructions": "Posicione a câmera sobre o QR Code da nota fiscal"
+    "instructions": "Posicione a câmera sobre o QR Code da nota fiscal",
+    "title": "Posicione o QR Code",
+    "camera": "Câmera: {{name}} ({{current}}/{{total}})",
+    "defaultCamera": "Padrão"
   },
   "lastRegistrationsList": {
     "title": "Últimos Lançamentos",
@@ -90,7 +270,11 @@
     "error": "Erro no acesso",
     "invalidCredentials": "E-mail ou senha inválidos",
     "enter": "Entrar",
-    "create": "Criar Conta"
+    "create": "Criar Conta",
+    "loading": "Entrando...",
+    "emailPlaceholder": "E-mail",
+    "passwordPlaceholder": "Senha",
+    "title": "SUPER FAMILY QUEST"
   },
   "register": {
     "error": "Erro ao criar conta",
@@ -130,6 +314,10 @@
     "complete": "Complete seu Cadastro",
     "welcome": "Bem-vindo(a) ao nosso sistema de gestão financeira! Para começar, precisamos de algumas informações básicas. Você poderá alterá-las depois em seu perfil.",
     "familyNamePlaceholder": "Digite o nome da sua família",
+    "editProfile": "Editar Perfil",
+    "minimum6Characters": "Mínimo 6 caracteres",
+    "repeatNewPassword": "Repita a nova senha",
+    "saving": "Salvando...",
     "themeChanged": "Tema alterado com sucesso"
   },
   "newChallenge": {
@@ -143,5 +331,11 @@
     "lost": "Página não encontrada",
     "secretPath": "Desculpe, mas a página que você está procurando não existe. Volte para a página inicial para continuar gerenciando suas finanças.",
     "back": "Voltar para Página Inicial"
+  },
+  "header": {
+    "themeToggle": {
+      "rpgMode": "Modo RPG",
+      "defaultMode": "Modo Padrão"
+    }
   }
 } 
