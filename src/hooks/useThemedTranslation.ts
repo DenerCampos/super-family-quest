@@ -5,5 +5,5 @@ export function useThemedTranslation() {
   const { currentTheme } = useTheme();
   const { t, changeTheme } = useThemeTranslation(currentTheme);
 
-  return { t, currentTheme, changeTheme };
+  return { t, changeTheme };
 } 

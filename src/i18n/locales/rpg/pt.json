@@ -318,7 +318,14 @@
     "minimum6Characters": "Mínimo 6 runas antigas",
     "repeatNewPassword": "Repita a palavra secreta",
     "saving": "Forjando alterações...",
-    "themeChanged": "O reino mudou sua aparência!"
+    "themeChanged": "O reino mudou sua aparência!",
+    "themes": {
+      "title": "Temas",
+      "available": "Temas Disponíveis",
+      "unlocked": "Desbloqueado",
+      "locked": "Bloqueado",
+      "select": "Selecionar Tema"
+    }
   },
   "newChallenge": {
     "development": "Os magos ainda estão trabalhando nisso..."

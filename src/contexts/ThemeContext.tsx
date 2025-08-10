@@ -1,56 +1,44 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import type { ThemeNamespace } from '../i18n/types';
-import { useThemeTranslation } from '../hooks/useThemeTranslation';
-
-const LOCAL_STORAGE_KEYS = {
-  THEME: '@super-family-quest/theme',
-};
+import { ChakraProvider } from '@chakra-ui/react';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
 
 interface ThemeContextData {
   currentTheme: ThemeNamespace;
   changeTheme: (theme: ThemeNamespace) => void;
 }
 
-interface ThemeProviderProps {
-  children: React.ReactNode;
-}
-
 const ThemeContext = createContext<ThemeContextData>({} as ThemeContextData);
 
-export function ThemeProvider({ children }: ThemeProviderProps) {
+const LOCAL_STORAGE_KEY = '@super-family-quest/theme';
+
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState<ThemeNamespace>(() => {
-    const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.THEME);
-    return (savedTheme as ThemeNamespace) || 'default';
+    const saved = localStorage.getItem(LOCAL_STORAGE_KEY) as ThemeNamespace;
+    return saved || 'default';
   });
 
-  const { changeTheme: i18nChangeTheme } = useThemeTranslation(currentTheme);
+  const { changeTheme: i18nChangeTheme } = useThemedTranslation();
 
   const changeTheme = (theme: ThemeNamespace) => {
-    if (theme !== currentTheme) {
-      setCurrentTheme(theme);
-      i18nChangeTheme(theme);
-      localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, theme);
-    }
+    localStorage.setItem(LOCAL_STORAGE_KEY, theme);
+    setCurrentTheme(theme);
+    i18nChangeTheme(theme); // Sincroniza o tema de texto
   };
-
-  // Aplica o tema inicial
-  useEffect(() => {
-    i18nChangeTheme(currentTheme);
-  }, [currentTheme, i18nChangeTheme]);
 
   return (
     <ThemeContext.Provider value={{ currentTheme, changeTheme }}>
-      {children}
+      <ChakraProvider>
+        {children}
+      </ChakraProvider>
     </ThemeContext.Provider>
   );
-}
+};
 
-export function useTheme() {
+export const useTheme = () => {
   const context = useContext(ThemeContext);
-
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
-
   return context;
-} 
+}; 

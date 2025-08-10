@@ -26,11 +26,20 @@ import {
   FormErrorMessage,
   InputGroup,
   InputRightElement,
+  Icon,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
 } from '@chakra-ui/react';
-import { FiEdit2, FiCheck, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiEdit2, FiCheck, FiEye, FiEyeOff, FiUser, FiSettings } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { themeService } from '../../services/theme';
+import { useTheme } from '../../contexts/ThemeContext';
+import type { ThemeNamespace } from '../../i18n/types';
 
 // Lista de brasões pré-definidos
 const predefinedCoatOfArms = [
@@ -42,6 +51,9 @@ const Profile = () => {
   const { profile, loadProfile } = useAuth();
   const toast = useToast();
   const { t } = useThemedTranslation();
+  const { currentTheme, changeTheme } = useTheme();
+
+  // Estados para edição de perfil
   const [name, setName] = useState(profile?.user.name || '');
   const [email, setEmail] = useState(profile?.user.email || '');
   const [family, setFamily] = useState(profile?.user.family || '');
@@ -67,6 +79,15 @@ const Profile = () => {
   const [selectedCoat, setSelectedCoat] = useState(
     profile?.user.coatOfArms || predefinedCoatOfArms[0],
   );
+
+  // Estados para temas
+  const [availableThemes, setAvailableThemes] = useState<{
+    id: ThemeNamespace;
+    name: string;
+    isUnlocked: boolean;
+    requiredCoins?: number;
+  }[]>([]);
+  const [isLoadingThemes, setIsLoadingThemes] = useState(true);
 
   // Validação de e-mail em tempo real
   useEffect(() => {
@@ -94,6 +115,28 @@ const Profile = () => {
     }
   }, [password, confirmPassword]);
 
+  // Carrega os temas disponíveis
+  useEffect(() => {
+    const loadThemes = async () => {
+      try {
+        const themes = await themeService.mockGetAvailableThemes();
+        setAvailableThemes(themes);
+      } catch (error) {
+        console.error('Erro ao carregar temas:', error);
+        toast({
+          title: t('common.error'),
+          description: 'Erro ao carregar temas disponíveis',
+          status: 'error',
+          duration: 3000,
+        });
+      } finally {
+        setIsLoadingThemes(false);
+      }
+    };
+
+    loadThemes();
+  }, [toast, t]);
+
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -103,6 +146,31 @@ const Profile = () => {
     setSelectedCoat(image);
     setIsCoatChanged(true);
     closeCoatModal();
+  };
+
+  // Função para mudar o tema
+  const handleThemeChange = (themeId: ThemeNamespace) => {
+    const theme = availableThemes.find(t => t.id === themeId);
+    
+    if (!theme) return;
+
+    if (!theme.isUnlocked) {
+      toast({
+        title: t('common.error'),
+        description: `Você precisa de ${theme.requiredCoins} moedas para desbloquear este tema`,
+        status: 'error',
+        duration: 3000,
+      });
+      return;
+    }
+
+    changeTheme(themeId);
+    toast({
+      title: t('common.success'),
+      description: t('profile.themeChanged'),
+      status: 'success',
+      duration: 3000,
+    });
   };
 
   const handleSave = async () => {
@@ -175,167 +243,244 @@ const Profile = () => {
   return (
     <Flex direction="column" minH="100vh">
       <Header />
+      <Tabs isFitted>
+        <TabList>
+          <Tab>
+            <Icon as={FiUser} mr={2} />
+            {t('profile.editProfile')}
+          </Tab>
+          <Tab>
+            <Icon as={FiSettings} mr={2} />
+            Temas
+          </Tab>
+        </TabList>
 
-      <Flex
-        p={4}
-        direction="column"
-        maxW="600px"
-        mx="auto"
-        w="full"
-        overflowY="auto"
-        h={'calc(100vh - 220px)'}
-        css={{
-          '&::-webkit-scrollbar': {
-            width: '4px',
-          },
-          '&::-webkit-scrollbar-track': {
-            background: 'transparent',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            background: 'purple.500',
-            borderRadius: '4px',
-          },
-        }}
-      >
-        <VStack spacing={6} mb={10}>
-          <Flex direction="column" align="center" w="full">
-            <Box position="relative" mb={4}>
-              <Avatar
-                size="2xl"
-                src={selectedCoat}
-                border="3px solid"
-                borderColor="purple.500"
-              />
-              <IconButton
-                aria-label="Alterar brasão"
-                icon={<FiEdit2 />}
-                position="absolute"
-                bottom={2}
-                right={2}
-                colorScheme="purple"
-                rounded="full"
-                onClick={openCoatModal}
-              />
-            </Box>
-
-            <Button
-              onClick={() => setIsEditing(!isEditing)}
-              colorScheme="purple"
-              leftIcon={isEditing ? <FiCheck /> : <FiEdit2 />}
-              mb={4}
-            >
-              {isEditing ? t('profile.saveChanges') : t('profile.editProfile')}
-            </Button>
-          </Flex>
-
-          <FormControl>
-            <FormLabel>{t('profile.name')}</FormLabel>
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              isDisabled={!isEditing}
-              bg={isEditing ? 'white' : 'gray.100'}
-            />
-          </FormControl>
-
-          <FormControl isInvalid={!!errors.email}>
-            <FormLabel>{t('profile.email')}</FormLabel>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              isDisabled={!isEditing}
-              bg={isEditing ? 'white' : 'gray.100'}
-            />
-            {errors.email && (
-              <FormErrorMessage>{errors.email}</FormErrorMessage>
-            )}
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>{t('profile.familyName')}</FormLabel>
-            <Input
-              value={family}
-              onChange={(e) => setFamily(e.target.value)}
-              isDisabled={!isEditing}
-              bg={isEditing ? 'white' : 'gray.100'}
-            />
-          </FormControl>
-
-          {isEditing && (
-            <>
-              <FormControl isInvalid={!!errors.password}>
-                <FormLabel>{t('profile.newPassword')} (opcional)</FormLabel>
-                <InputGroup>
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder={t('profile.minimum6Characters')}
-                    bg="white"
-                  />
-                  <InputRightElement>
-                    <IconButton
-                      aria-label={
-                        showPassword ? t('profile.hidePassword') : t('profile.showPassword')
-                      }
-                      icon={showPassword ? <FiEyeOff /> : <FiEye />}
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowPassword(!showPassword)}
-                    />
-                  </InputRightElement>
-                </InputGroup>
-                {errors.password && (
-                  <FormErrorMessage>{errors.password}</FormErrorMessage>
-                )}
-              </FormControl>
-
-              <FormControl isInvalid={!!errors.confirmPassword}>
-                <FormLabel>{t('profile.confirmNewPassword')}</FormLabel>
-                <InputGroup>
-                  <Input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder={t('profile.repeatNewPassword')}
-                    bg="white"
-                  />
-                  <InputRightElement>
-                    <IconButton
-                      aria-label={
-                        showConfirmPassword ? t('profile.hidePassword') : t('profile.showPassword')
-                      }
-                      icon={showConfirmPassword ? <FiEyeOff /> : <FiEye />}
-                      variant="ghost"
-                      size="sm"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    />
-                  </InputRightElement>
-                </InputGroup>
-                {errors.confirmPassword && (
-                  <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage>
-                )}
-              </FormControl>
-            </>
-          )}
-
-          {(isEditing || isCoatChanged) && (
-            <Button
-              colorScheme="purple"
-              onClick={handleSave}
-              isLoading={isLoading}
-              loadingText={t('profile.saving')}
+        <TabPanels>
+          {/* Aba de Perfil - Mantendo o estilo original */}
+          <TabPanel>
+            <Flex
+              p={4}
+              direction="column"
+              maxW="600px"
+              mx="auto"
               w="full"
-              isDisabled={!!errors.email || !!errors.confirmPassword}
+              overflowY="auto"
+              h={'calc(100vh - 220px)'}
+              css={{
+                '&::-webkit-scrollbar': {
+                  width: '4px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: 'transparent',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: 'purple.500',
+                  borderRadius: '4px',
+                },
+              }}
             >
-              {t('profile.saveChanges')}
-            </Button>
-          )}
-        </VStack>
-      </Flex>
+              <VStack spacing={6} mb={10}>
+                <Flex direction="column" align="center" w="full">
+                  <Box position="relative" mb={4}>
+                    <Avatar
+                      size="2xl"
+                      src={selectedCoat}
+                      border="3px solid"
+                      borderColor="purple.500"
+                    />
+                    <IconButton
+                      aria-label="Alterar brasão"
+                      icon={<FiEdit2 />}
+                      position="absolute"
+                      bottom={2}
+                      right={2}
+                      colorScheme="purple"
+                      rounded="full"
+                      onClick={openCoatModal}
+                    />
+                  </Box>
+
+                  <Button
+                    onClick={() => setIsEditing(!isEditing)}
+                    colorScheme="purple"
+                    leftIcon={isEditing ? <FiCheck /> : <FiEdit2 />}
+                    mb={4}
+                  >
+                    {isEditing ? t('profile.saveChanges') : t('profile.editProfile')}
+                  </Button>
+                </Flex>
+
+                <FormControl>
+                  <FormLabel>{t('profile.name')}</FormLabel>
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    isDisabled={!isEditing}
+                    bg={isEditing ? 'white' : 'gray.100'}
+                  />
+                </FormControl>
+
+                <FormControl isInvalid={!!errors.email}>
+                  <FormLabel>{t('profile.email')}</FormLabel>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    isDisabled={!isEditing}
+                    bg={isEditing ? 'white' : 'gray.100'}
+                  />
+                  {errors.email && (
+                    <FormErrorMessage>{errors.email}</FormErrorMessage>
+                  )}
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>{t('profile.familyName')}</FormLabel>
+                  <Input
+                    value={family}
+                    onChange={(e) => setFamily(e.target.value)}
+                    isDisabled={!isEditing}
+                    bg={isEditing ? 'white' : 'gray.100'}
+                  />
+                </FormControl>
+
+                {isEditing && (
+                  <>
+                    <FormControl isInvalid={!!errors.password}>
+                      <FormLabel>{t('profile.newPassword')} (opcional)</FormLabel>
+                      <InputGroup>
+                        <Input
+                          type={showPassword ? 'text' : 'password'}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder={t('profile.minimum6Characters')}
+                          bg="white"
+                        />
+                        <InputRightElement>
+                          <IconButton
+                            aria-label={
+                              showPassword ? t('profile.hidePassword') : t('profile.showPassword')
+                            }
+                            icon={showPassword ? <FiEyeOff /> : <FiEye />}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowPassword(!showPassword)}
+                          />
+                        </InputRightElement>
+                      </InputGroup>
+                      {errors.password && (
+                        <FormErrorMessage>{errors.password}</FormErrorMessage>
+                      )}
+                    </FormControl>
+
+                    <FormControl isInvalid={!!errors.confirmPassword}>
+                      <FormLabel>{t('profile.confirmNewPassword')}</FormLabel>
+                      <InputGroup>
+                        <Input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder={t('profile.repeatNewPassword')}
+                          bg="white"
+                        />
+                        <InputRightElement>
+                          <IconButton
+                            aria-label={
+                              showConfirmPassword ? t('profile.hidePassword') : t('profile.showPassword')
+                            }
+                            icon={showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              setShowConfirmPassword(!showConfirmPassword)
+                            }
+                          />
+                        </InputRightElement>
+                      </InputGroup>
+                      {errors.confirmPassword && (
+                        <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage>
+                      )}
+                    </FormControl>
+                  </>
+                )}
+
+                {(isEditing || isCoatChanged) && (
+                  <Button
+                    colorScheme="purple"
+                    onClick={handleSave}
+                    isLoading={isLoading}
+                    loadingText={t('profile.saving')}
+                    w="full"
+                    isDisabled={!!errors.email || !!errors.confirmPassword}
+                  >
+                    {t('profile.saveChanges')}
+                  </Button>
+                )}
+              </VStack>
+            </Flex>
+          </TabPanel>
+
+          {/* Aba de Temas */}
+          <TabPanel>
+            <Box maxW="600px" mx="auto" p={4}>
+              {isLoadingThemes ? (
+                <Center py={8}>
+                  <Text>Carregando temas...</Text>
+                </Center>
+              ) : (
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+                  {availableThemes.map((theme) => (
+                    <Box
+                      key={theme.id}
+                      p={6}
+                      borderWidth={2}
+                      borderRadius="lg"
+                      cursor={theme.isUnlocked ? 'pointer' : 'not-allowed'}
+                      onClick={() => handleThemeChange(theme.id)}
+                      bg={currentTheme === theme.id ? 'purple.50' : 'transparent'}
+                      borderColor={currentTheme === theme.id ? 'purple.500' : 'gray.200'}
+                      opacity={theme.isUnlocked ? 1 : 0.6}
+                      position="relative"
+                      transition="all 0.2s"
+                      _hover={{
+                        transform: theme.isUnlocked ? 'translateY(-2px)' : 'none',
+                        shadow: theme.isUnlocked ? 'md' : 'none',
+                      }}
+                    >
+                      <Flex justify="space-between" align="center" mb={2}>
+                        <Text fontSize="lg" fontWeight="bold">
+                          {theme.name}
+                        </Text>
+                        {currentTheme === theme.id && (
+                          <Icon as={FiCheck} color="green.500" boxSize={5} />
+                        )}
+                      </Flex>
+                      
+                      {!theme.isUnlocked && (
+                        <Flex
+                          position="absolute"
+                          top={0}
+                          right={0}
+                          bottom={0}
+                          left={0}
+                          bg="blackAlpha.50"
+                          justify="center"
+                          align="center"
+                          borderRadius="lg"
+                        >
+                          <Text fontSize="md" fontWeight="medium" color="gray.600">
+                            Requer {theme.requiredCoins} moedas
+                          </Text>
+                        </Flex>
+                      )}
+                    </Box>
+                  ))}
+                </SimpleGrid>
+              )}
+            </Box>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
 
       {/* Modal para seleção de brasão */}
       <Modal

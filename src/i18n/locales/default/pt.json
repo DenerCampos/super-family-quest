@@ -318,7 +318,14 @@
     "minimum6Characters": "Mínimo 6 caracteres",
     "repeatNewPassword": "Repita a nova senha",
     "saving": "Salvando...",
-    "themeChanged": "Tema alterado com sucesso"
+    "themeChanged": "Tema alterado com sucesso",
+    "themes": {
+      "title": "Temas",
+      "available": "Temas Disponíveis",
+      "unlocked": "Desbloqueado",
+      "locked": "Bloqueado",
+      "select": "Selecionar Tema"
+    }
   },
   "newChallenge": {
     "development": "Em desenvolvimento"
