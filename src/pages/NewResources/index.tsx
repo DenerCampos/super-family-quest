@@ -20,8 +20,10 @@ import RevenueResource from '../../components/resources/RevenueResource';
 import { api } from '../../services';
 import type { Expense, Groups, Merchant, Payments, Revenue } from '../../services/resources';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const NewResources = () => {
+  const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const [stores, setStores] = useState<Merchant[]>([]);
   const [payments, setPayments] = useState<Payments[]>([]);
@@ -176,7 +178,7 @@ const NewResources = () => {
       <Box p={4} mb="70px">
         <Accordion allowMultiple>
           {/* Seção Cadastros */}
-          <ResourceContainer title="Cadastros" colorScheme="purple">
+          <ResourceContainer title="Cadastros" colorScheme={getColor('chakra.theme')}>
             <StoreResource
               onEdit={(store) => handleResourceOpen('store', store)}
               onDelete={(id) => handleDelete('store', id)}
@@ -197,7 +199,7 @@ const NewResources = () => {
           </ResourceContainer>
 
           {/* Seção Despesas */}
-          <ResourceContainer title="Despesas" colorScheme="red">
+          <ResourceContainer title="Despesas" colorScheme={getColor('chakra.red')}>
             <ExpenseResource
               onEdit={(expense) => handleResourceOpen('expense', expense)}
               onDelete={(id) => handleDelete('expense', id)}
@@ -206,7 +208,7 @@ const NewResources = () => {
           </ResourceContainer>
 
           {/* Seção Receitas */}
-          <ResourceContainer title="Receitas" colorScheme="green">
+          <ResourceContainer title="Receitas" colorScheme={getColor('chakra.green')}>
             <RevenueResource
               onEdit={(revenue) => handleResourceOpen('revenue', revenue)}
               onDelete={(id) => handleDelete('revenue', id)}

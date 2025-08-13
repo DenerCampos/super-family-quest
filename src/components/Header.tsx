@@ -6,11 +6,11 @@ import { useVisualTheme } from '../hooks/useVisualTheme';
 
 export const Header = () => {
   const { logout, profile } = useAuth();
-  const { getColor, getFont, getAsset } = useVisualTheme();
+  const { getColor, getFont } = useVisualTheme();
 
   return (
     <Flex
-      bg={getColor('primary.800')}
+      bg={getColor('background.primary')}
       p={4}
       justify="space-between"
       align="center"
@@ -19,14 +19,14 @@ export const Header = () => {
       {/* Lado Esquerdo - Brasão e Nome */}
       <Flex align="center" gap={3}>
         <Image
-          src={getAsset('images.coatOfArms.solare')}
+          src={profile?.user.coatOfArms}
           boxSize="40px"
           objectFit="contain"
           alt="Brasão da Família"
         />
         <Heading 
           size="md" 
-          color={getColor('text.primary')}
+          color={getColor('text.inverted')}
           fontFamily={getFont('heading')}
         >
           {profile?.user.family}
@@ -40,7 +40,7 @@ export const Header = () => {
           icon={<FiLogOut />}
           aria-label="Sair"
           variant="ghost"
-          color={getColor('text.primary')}
+          color={getColor('text.inverted')}
           _hover={{
             bg: getColor('primary.700'),
             color: getColor('text.primary'),

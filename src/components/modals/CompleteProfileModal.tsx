@@ -25,6 +25,7 @@ import {
 } from '../../utils/formatCurrency';
 import { FiInfo } from 'react-icons/fi';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 type Props = {
   isOpen: boolean;
@@ -39,12 +40,14 @@ type FormData = {
   family: string;
   income: string;
   incomeName: string;
+  date: string;
   repeatMonthly: boolean;
 };
 
 export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
   const toast = useToast();
   const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const {
     register,
     handleSubmit,
@@ -54,6 +57,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
     mode: 'onChange',
     defaultValues: {
       family: '',
+      date: new Date().toISOString().split('T')[0],
     },
   });
 
@@ -72,6 +76,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
         family: data.family,
         income: parseBRLCurrency(data.income),
         incomeName: data.incomeName,
+        date: data.date,
         repeatMonthly: data.repeatMonthly,
       });
 
@@ -102,13 +107,14 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent bg="purple.800" color="white">
+      <ModalContent
+        bg={getColor('background.primary')}
+        color={getColor('text.inverted')}
+      >
         <ModalHeader>{t('profile.complete')}</ModalHeader>
 
         <ModalBody pb={6}>
-          <Text mb={4}>
-            {t('profile.welcome')}
-          </Text>
+          <Text mb={4}>{t('profile.welcome')}</Text>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.family} mb={4}>
@@ -118,15 +124,15 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                   required: t('common.required'),
                 })}
                 placeholder={t('profile.familyNamePlaceholder')}
-                bg="purple.100"
-                color="purple.800"
+                bg={getColor('background.write')}
+                color={getColor('text.default')}
                 _focus={{
-                  borderColor: 'purple.500',
-                  boxShadow: '0 0 0 1px purple.500',
+                  borderColor: getColor('border.tertiary'),
+                  boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
                 }}
               />
               {errors.family && (
-                <Text color="red.300" fontSize="sm">
+                <Text color={getColor('status.error')} fontSize="sm">
                   {errors.family.message}
                 </Text>
               )}
@@ -135,40 +141,44 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
             {/* Novo campo: Nome da receita */}
             <FormControl isInvalid={!!errors.incomeName} mb={4}>
               <Flex align="center">
-                <FormLabel>Nome da Receita</FormLabel>
+                <FormLabel>{t('profile.nameRevenue')}</FormLabel>
                 <Tooltip
-                  label="Nome da receita é sua fonte de renda principal"
+                  label={t('profile.nameRevenueTooltip')}
                   placement="top"
                   hasArrow
-                  bg="purple.500"
-                  color="white"
+                  bg={getColor('background.tertiary')}
+                  color={getColor('text.inverted')}
                 >
                   <Box ml={1}>
-                    <Icon as={FiInfo} color="purple.300" boxSize={4} />
+                    <Icon
+                      as={FiInfo}
+                      color={getColor('primary.300')}
+                      boxSize={4}
+                    />
                   </Box>
                 </Tooltip>
               </Flex>
               <Input
                 {...register('incomeName', {
-                  required: 'Este campo é obrigatório',
+                  required: t('common.required'),
                 })}
-                placeholder="Ex: Salário, Freelance, etc"
-                bg="purple.100"
-                color="purple.800"
+                placeholder={t('profile.nameRevenuePlaceholder')}
+                bg={getColor('background.write')}
+                color={getColor('text.default')}
                 _focus={{
-                  borderColor: 'purple.500',
-                  boxShadow: '0 0 0 1px purple.500',
+                  borderColor: getColor('border.tertiary'),
+                  boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
                 }}
               />
               {errors.incomeName && (
-                <Text color="red.300" fontSize="sm">
+                <Text color={getColor('status.error')} fontSize="sm">
                   {errors.incomeName.message}
                 </Text>
               )}
             </FormControl>
 
             <FormControl isInvalid={!!errors.income} mb={4}>
-              <FormLabel>Renda Mensal</FormLabel>
+              <FormLabel>{t('profile.monthlyIncome')}</FormLabel>
               <Input
                 {...register('income', {
                   required: t('common.required'),
@@ -181,17 +191,35 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                   const formatted = formatCurrencyInputBRL(e.target.value);
                   e.target.value = formatted;
                 }}
-                placeholder="R$ 0,00"
-                bg="purple.100"
-                color="purple.800"
+                placeholder={t('profile.monthlyIncomePlaceholder')}
+                bg={getColor('background.write')}
+                color={getColor('text.default')}
                 _focus={{
-                  borderColor: 'purple.500',
-                  boxShadow: '0 0 0 1px purple.500',
+                  borderColor: getColor('border.tertiary'),
+                  boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
                 }}
               />
               {errors.income && (
-                <Text color="red.300" fontSize="sm">
+                <Text color={getColor('status.error')} fontSize="sm">
                   {errors.income.message}
+                </Text>
+              )}
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.date} mb={4}>
+              <FormLabel>{t('profile.date')}</FormLabel>
+              <Input
+                type="date"
+                {...register('date', {
+                  required: t('common.required'),
+                })}
+                bg={getColor('background.write')}
+                color={getColor('text.default')}
+                isDisabled={isSubmitting}
+              />
+              {errors.date && (
+                <Text color={getColor('status.error')} fontSize="sm" mt={1}>
+                  {errors.date.message}
                 </Text>
               )}
             </FormControl>
@@ -201,7 +229,10 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
               <Checkbox
                 {...register('repeatMonthly')}
                 defaultChecked
-                colorScheme="purple"
+                color={getColor('text.inverted')}
+                _hover={{
+                  bg: getColor('background.button.hover.primary'),
+                }}
               >
                 <Flex align="center">
                   {t('profile.repeatMonthly')}
@@ -209,11 +240,15 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                     label={t('profile.repeatMonthlyTooltip')}
                     placement="top"
                     hasArrow
-                    bg="purple.500"
-                    color="white"
+                    bg={getColor('background.tertiary')}
+                    color={getColor('text.inverted')}
                   >
                     <Box ml={1}>
-                      <Icon as={FiInfo} color="purple.300" boxSize={4} />
+                      <Icon
+                        as={FiInfo}
+                        color={getColor('primary.300')}
+                        boxSize={4}
+                      />
                     </Box>
                   </Tooltip>
                 </Flex>
@@ -222,7 +257,11 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
 
             <Button
               type="submit"
-              colorScheme="purple"
+              color={getColor('text.inverted')}
+              bg={getColor('background.tertiary')}
+              _hover={{
+                bg: getColor('background.button.hover.primary'),
+              }}
               w="full"
               isLoading={isSubmitting}
               loadingText={t('common.saving')}

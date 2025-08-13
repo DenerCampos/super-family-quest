@@ -29,6 +29,7 @@ import type { Expense, PaginationResponse } from '../../services/resources';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDateToBR } from '../../utils/formatDate';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -43,6 +44,7 @@ const ExpenseResource = ({
   onDelete,
   refreshTrigger,
 }: ExpenseResourceProps) => {
+  const { getColor } = useVisualTheme();
   const [expenses, setExpenses] = useState<PaginationResponse<Expense>>();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -156,7 +158,10 @@ const ExpenseResource = ({
         </Text>
         <Button
           size="sm"
-          colorScheme="red"
+          bg={getColor('primary.500')}
+          color={getColor('background.write')}
+          _hover={{ bg: getColor('primary.600') }}
+          _focus={{ bg: getColor('primary.700') }}
           leftIcon={<FiPlus />}
           onClick={handleNewExpense}
         >
@@ -177,7 +182,7 @@ const ExpenseResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color="red.500" />
+          <Spinner color={getColor('primary.500')} />
         </Flex>
       ) : expenses?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
@@ -188,7 +193,7 @@ const ExpenseResource = ({
           <Box
             overflowX="auto"
             border="1px"
-            borderColor="gray.200"
+            borderColor={getColor('gray.200')}
             borderRadius="md"
           >
             <Table variant="simple" minW="600px">
@@ -206,7 +211,7 @@ const ExpenseResource = ({
                   <Tr key={expense.id}>
                     <Td>{expense.name || '-'}</Td>
                     <Td>
-                      <Badge colorScheme="red">
+                      <Badge colorScheme={getColor('chakra.red')}>
                         - {formatCurrency(expense.value)}
                       </Badge>
                     </Td>
@@ -227,7 +232,7 @@ const ExpenseResource = ({
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(expense.id as string)}
-                            color="red.500"
+                            color={getColor('chakra.red')}
                           >
                             {t('resources.expense.delete')}
                           </MenuItem>

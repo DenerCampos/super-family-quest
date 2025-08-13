@@ -1,4 +1,5 @@
 import { Box, AbsoluteCenter, Image, Text, keyframes } from '@chakra-ui/react';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 // Animação dos pontos
 const loadingAnimation = keyframes`
@@ -11,13 +12,10 @@ const loadingAnimation = keyframes`
 
 type LoadingState = 'save' | 'loading';
 
-const gifAnimation: Record<LoadingState, string> = {
-  save: '/assets/images/knigth-solare.gif',
-  loading: '/assets/images/knigth-loading.gif',
-};
-
 export const LoadingOverlay = ({ typeLoading = 'save', text = 'Carregando' }: { typeLoading?: LoadingState, text?: string }) => {
-  const gifLoading =  gifAnimation[typeLoading];
+  const { getColor, getFont, getAsset } = useVisualTheme();
+  const gifLoading = getAsset(`animations.loading.${typeLoading}`);
+
   return (
     <Box
       position="absolute"
@@ -25,7 +23,8 @@ export const LoadingOverlay = ({ typeLoading = 'save', text = 'Carregando' }: { 
       left={0}
       right={0}
       bottom={0}
-      bg="blackAlpha.700"
+      bg={getColor('background.primary')}
+      opacity={0.9}
       zIndex={9999}
       borderRadius="md"
     >
@@ -39,8 +38,9 @@ export const LoadingOverlay = ({ typeLoading = 'save', text = 'Carregando' }: { 
             mb={4}
           />
           <Text
-            color="white"
+            color={getColor('text.primary')}
             fontSize="lg"
+            fontFamily={getFont('heading')}
             _after={{
               content: '""',
               animation: `${loadingAnimation} 1s infinite`,

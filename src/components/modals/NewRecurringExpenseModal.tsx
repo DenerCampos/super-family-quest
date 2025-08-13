@@ -20,6 +20,7 @@ import {
   AccordionPanel,
   AccordionIcon,
   Divider,
+  HStack,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
@@ -27,6 +28,7 @@ import { formatCurrencyBRL, formatCurrencyInputBRL, parseBRLCurrency } from '../
 import type { ExpenseComplete } from '../../services/expense';
 import { parseGrams } from '../../utils/formatGrams';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 type ExpenseItem = ExpenseComplete & {
   isSelected: boolean;
@@ -40,6 +42,7 @@ type Props = {
 export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast();
   const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -211,7 +214,10 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent bg="purple.800" color="white">
+      <ModalContent
+        bg={getColor('background.primary')}
+        color={getColor('text.inverted')}
+      >
         <ModalHeader>{t('modals.recurringExpense.title')}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -219,7 +225,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
             {t('modals.recurringExpense.description')}
           </Text>
 
-          <Heading size="md" mb={4} color="purple.300">
+          <Heading size="md" mb={4} color={getColor('text.inverted')}>
             {t('modals.recurringExpense.expenses')}:
           </Heading>
 
@@ -235,7 +241,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                 background: 'transparent',
               },
               '&::-webkit-scrollbar-thumb': {
-                background: 'purple.500',
+                background: getColor('background.tertiary'),
                 borderRadius: '4px',
               },
             }}
@@ -245,7 +251,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                 {t('common.loading')}
               </Text>
             ) : expenses.length === 0 ? (
-              <Text textAlign="center" py={4} color="gray.400">
+              <Text textAlign="center" py={4} color={getColor('text.inverted')}>
                 {t('modals.recurringExpense.noExpensesFound')}
               </Text>
             ) : (
@@ -253,7 +259,11 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                 {expenses.map((expense) => (
                   <Box
                     key={expense.id}
-                    bg={expense.isSelected ? 'purple.700' : 'purple.900'}
+                    bg={
+                      expense.isSelected
+                        ? getColor('primary.700')
+                        : getColor('primary.900')
+                    }
                     borderRadius="md"
                     p={3}
                     opacity={expense.isSelected ? 1 : 0.7}
@@ -275,7 +285,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                                 e.target.checked,
                               )
                             }
-                            colorScheme="green"
+                            colorScheme={getColor('chakra.green')}
                           />
                           <Input
                             value={expense.name}
@@ -287,9 +297,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                               )
                             }
                             variant="filled"
-                            bg="purple.600"
-                            _hover={{ bg: 'purple.500' }}
-                            _focus={{ bg: 'purple.500' }}
+                            bg={getColor('primary.600')}
+                            _hover={{ bg: getColor('primary.500') }}
+                            _focus={{ bg: getColor('primary.500') }}
                             size="sm"
                             isDisabled={!expense.isSelected}
                           />
@@ -297,9 +307,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                         <Input
                           value={formatCurrencyBRL(expense.value.toString())}
                           variant="filled"
-                          bg="purple.600"
-                          _hover={{ bg: 'purple.500' }}
-                          _focus={{ bg: 'purple.500' }}
+                          bg={getColor('primary.600')}
+                          _hover={{ bg: getColor('primary.500') }}
+                          _focus={{ bg: getColor('primary.500') }}
                           size="sm"
                           width="150px"
                           textAlign="right"
@@ -311,12 +321,12 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                       <Accordion allowToggle>
                         <AccordionItem border="none">
                           <AccordionButton
-                            _hover={{ bg: 'purple.600' }}
+                            _hover={{ bg: getColor('primary.600') }}
                             borderRadius="md"
                             p={2}
                           >
                             <Box flex="1" textAlign="left">
-                              <Text fontSize="sm" color="purple.200">
+                              <Text fontSize="sm" color={getColor('primary.200')}>
                                 Itens ({expense.items.length})
                               </Text>
                             </Box>
@@ -328,7 +338,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                                 <Flex
                                   key={item.id || index}
                                   gap={2}
-                                  bg="purple.600"
+                                  bg={getColor('primary.600')}
                                   p={2}
                                   borderRadius="md"
                                 >
@@ -343,9 +353,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                                       )
                                     }
                                     variant="filled"
-                                    bg="purple.500"
-                                    _hover={{ bg: 'purple.400' }}
-                                    _focus={{ bg: 'purple.400' }}
+                                    bg={getColor('primary.500')}
+                                    _hover={{ bg: getColor('primary.400') }}
+                                    _focus={{ bg: getColor('primary.400') }}
                                     size="sm"
                                     flex={1}
                                     isDisabled={!expense.isSelected}
@@ -361,9 +371,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                                       )
                                     }
                                     variant="filled"
-                                    bg="purple.500"
-                                    _hover={{ bg: 'purple.400' }}
-                                    _focus={{ bg: 'purple.400' }}
+                                    bg={getColor('primary.500')}
+                                    _hover={{ bg: getColor('primary.400') }}
+                                    _focus={{ bg: getColor('primary.400') }}
                                     size="sm"
                                     width="120px"
                                     textAlign="right"
@@ -382,15 +392,18 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
             )}
           </Box>
 
-          <Divider my={4} borderColor="purple.600" />
+          <Divider my={4} borderColor={getColor('primary.600')} />
 
-          <Text fontSize="sm" color="purple.200">
+          <Text fontSize="sm" color={getColor('primary.200')}>
             {t('modals.recurringExpense.reminder')}
           </Text>
 
           <Button
             mt={4}
-            colorScheme="purple"
+            bg={getColor('background.secondary')}
+            color={getColor('text.inverted')}
+            _hover={{ bg: getColor('background.button.hover.primary') }}
+            _focus={{ bg: getColor('background.button.hover.primary') }}
             w="full"
             onClick={handleConfirm}
             isLoading={isSubmitting}

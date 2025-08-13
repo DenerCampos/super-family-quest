@@ -20,6 +20,7 @@ import { api } from '../../services';
 import { LoadingOverlay } from '../LoadingOverlay';
 import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 type RevenueModalProps = {
   isOpen: boolean;
@@ -42,6 +43,7 @@ export const RevenueModal = ({
   handleNewRegistration,
   initialData,
 }: RevenueModalProps) => {
+  const { getColor } = useVisualTheme();
   const toast = useToast();
   const { t } = useThemedTranslation();
   const {
@@ -125,7 +127,7 @@ export const RevenueModal = ({
     >
       <ModalOverlay />
 
-      <ModalContent bg="purple.800" color="white">
+      <ModalContent bg={getColor('background.primary')} color={getColor('text.inverted')}>
         {isSubmitting && <LoadingOverlay />}
 
         <ModalHeader>
@@ -137,7 +139,7 @@ export const RevenueModal = ({
         <ModalBody pb={4} opacity={isSubmitting ? 0.5 : 1}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.name} mb={4}>
-              <FormLabel>Nome</FormLabel>
+              <FormLabel>{t('modals.revenue.name')}</FormLabel>
               <Input
                 {...register('name', {
                   required: t('common.required'),
@@ -146,20 +148,20 @@ export const RevenueModal = ({
                     message: t('common.minLength', { count: 3 }),
                   },
                 })}
-                bg="white"
-                color="black"
+                bg={getColor('background.write')}
+                color={getColor('text.default')}
                 placeholder={t('modals.revenue.namePlaceholder')}
                 isDisabled={isSubmitting}
               />
               {errors.name && (
-                <Text color="red.300" fontSize="sm" mt={1}>
+                <Text color={getColor('status.error')} fontSize="sm" mt={1}>
                   {errors.name.message}
                 </Text>
               )}
             </FormControl>
 
             <FormControl isInvalid={!!errors.value} mb={4}>
-              <FormLabel>Valor</FormLabel>
+              <FormLabel>{t('modals.revenue.value')}</FormLabel>
               <Input
                 value={watch('value')}
                 {...register('value', {
@@ -179,49 +181,52 @@ export const RevenueModal = ({
                     shouldDirty: true,
                   });
                 }}
-                bg="white"
-                color="black"
+                bg={getColor('background.write')}
+                color={getColor('text.default')}
                 placeholder={t('modals.revenue.valuePlaceholder')}
                 isDisabled={isSubmitting}
               />
               {errors.value && (
-                <Text color="red.300" fontSize="sm" mt={1}>
+                <Text color={getColor('status.error')} fontSize="sm" mt={1}>
                   {errors.value.message}
                 </Text>
               )}
             </FormControl>
 
             <FormControl isInvalid={!!errors.date} mb={4}>
-              <FormLabel>Data</FormLabel>
+              <FormLabel>{t('modals.revenue.date')}</FormLabel>
               <Input
                 type="date"
                 {...register('date', {
                   required: t('common.required'),
                 })}
-                bg="white"
-                color="black"
+                bg={getColor('background.write')}
+                color={getColor('text.default')}
                 isDisabled={isSubmitting}
               />
               {errors.date && (
-                <Text color="red.300" fontSize="sm" mt={1}>
+                <Text color={getColor('status.error')} fontSize="sm" mt={1}>
                   {errors.date.message}
                 </Text>
               )}
             </FormControl>
 
             <FormControl mb={4}>
-              <Checkbox {...register('repeat')} colorScheme="green" size="lg">
+              <Checkbox {...register('repeat')} colorScheme={getColor('chakra.green')} size="lg">
                 {t('modals.revenue.repeat')}
               </Checkbox>
             </FormControl>
 
             <Flex justify="flex-end">
               <Button
-                colorScheme="purple"
+                bg={getColor('background.secondary')}
+                color={getColor('text.inverted')}
+                _hover={{ bg: getColor('background.button.hover.primary') }}
+                _focus={{ bg: getColor('background.button.hover.primary') }}
                 type="submit"
                 isDisabled={!isValid || isSubmitting}
                 isLoading={isSubmitting}
-                loadingText="Salvando..."
+                loadingText={t('common.saving')}
               >
                 {initialData ? t('common.update') : t('common.save')}
               </Button>

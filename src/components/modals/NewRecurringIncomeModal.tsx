@@ -24,6 +24,7 @@ import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurr
 import type { Revenue } from '../../services/revenue';
 import type { RevenueItem } from '../../types/revenue';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 type Props = {
   isOpen: boolean;
@@ -33,6 +34,7 @@ type Props = {
 export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast();
   const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const [incomes, setIncomes] = useState<RevenueItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -146,7 +148,10 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent bg="purple.800" color="white">
+      <ModalContent
+        bg={getColor('background.primary')}
+        color={getColor('text.inverted')}
+      >
         <ModalHeader>{t('modals.recurringIncome.title')}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -154,7 +159,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
             {t('modals.recurringIncome.description')}
           </Text>
 
-          <Heading size="md" mb={4} color="purple.300">
+          <Heading size="md" mb={4} color={getColor('text.inverted')}>
             {t('modals.recurringIncome.sources')}:
           </Heading>
 
@@ -170,7 +175,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                 background: 'transparent',
               },
               '&::-webkit-scrollbar-thumb': {
-                background: 'purple.500',
+                background: getColor('background.tertiary'),
                 borderRadius: '4px',
               },
             }}
@@ -184,7 +189,11 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                 {incomes.map((income) => (
                   <Box
                     key={income.id}
-                    bg={income.isSelected ? 'purple.700' : 'purple.900'}
+                    bg={
+                      income.isSelected
+                        ? getColor('primary.700')
+                        : getColor('primary.900')
+                    }
                     borderRadius="md"
                     p={3}
                     opacity={income.isSelected ? 1 : 0.7}
@@ -193,14 +202,19 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                     display="flex"
                     alignItems="center"
                   >
-                    <Flex justify="space-between" align="center" gap={2} w="100%">
+                    <Flex
+                      justify="space-between"
+                      align="center"
+                      gap={2}
+                      w="100%"
+                    >
                       <HStack spacing={2} flex={1}>
                         <Checkbox
                           isChecked={income.isSelected}
                           onChange={(e) =>
                             handleSelectionChange(income.id, e.target.checked)
                           }
-                          colorScheme="green"
+                          colorScheme={getColor('chakra.green')}
                         />
                         <Input
                           value={income.name}
@@ -208,11 +222,11 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                             handleIncomeChange(
                               income.id,
                               'name',
-                              e.target.value
+                              e.target.value,
                             )
                           }
                           variant="filled"
-                          bg="purple.600"
+                          bg={getColor('primary.600')}
                           _hover={{ bg: 'purple.500' }}
                           _focus={{ bg: 'purple.500' }}
                           size="sm"
@@ -225,7 +239,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                           handleIncomeChange(income.id, 'value', e.target.value)
                         }
                         variant="filled"
-                        bg="purple.600"
+                        bg={getColor('primary.600')}
                         _hover={{ bg: 'purple.500' }}
                         _focus={{ bg: 'purple.500' }}
                         size="sm"
@@ -244,16 +258,19 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
             )}
           </Box>
 
-          <Divider my={4} borderColor="purple.600" />
+          <Divider my={4} borderColor={getColor('primary.600')} />
 
-          <Text fontSize="sm" color="purple.200">
+          <Text fontSize="sm" color={getColor('primary.200')}>
             {t('modals.recurringIncome.reminder')}
           </Text>
         </ModalBody>
 
         <ModalFooter>
           <Button
-            colorScheme="green"
+            bg={getColor('background.secondary')}
+            color={getColor('text.inverted')}
+            _hover={{ bg: getColor('background.button.hover.primary') }}
+            _focus={{ bg: getColor('background.button.hover.primary') }}
             onClick={handleConfirm}
             isLoading={isSubmitting}
             loadingText={t('modals.recurringIncome.confirming')}

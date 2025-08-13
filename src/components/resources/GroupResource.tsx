@@ -26,6 +26,7 @@ import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { api } from '../../services';
 import type { Groups, PaginationResponse } from '../../services/resources';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 const ITEMS_PER_PAGE = 5;
 
 interface GroupResourceProps {
@@ -46,6 +47,7 @@ const GroupResource = ({
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const loadGroups = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {
@@ -152,7 +154,10 @@ const GroupResource = ({
         </Text>
         <Button
           size="sm"
-          colorScheme="purple"
+          bg={getColor('primary.500')}
+          color={getColor('background.write')}
+          _hover={{ bg: getColor('primary.600') }}
+          _focus={{ bg: getColor('primary.700') }}
           leftIcon={<FiPlus />}
           onClick={handleNewGroup}
         >
@@ -162,7 +167,7 @@ const GroupResource = ({
 
       <InputGroup mb={4}>
         <InputLeftElement pointerEvents="none">
-          <Icon as={FiSearch} color="gray.300" />
+          <Icon as={FiSearch} color={getColor('gray.300')} />
         </InputLeftElement>
         <Input
           placeholder={t('resources.group.searchPlaceholder')}
@@ -173,7 +178,7 @@ const GroupResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color="purple.500" />
+          <Spinner color={getColor('primary.500')} />
         </Flex>
       ) : groups?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
@@ -184,7 +189,7 @@ const GroupResource = ({
           <Box
             overflowX="auto"
             border="1px"
-            borderColor="gray.200"
+            borderColor={getColor('gray.200')}
             borderRadius="md"
           >
             <Table variant="simple" minW="400px">
@@ -213,7 +218,7 @@ const GroupResource = ({
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(group.id as string)}
-                            color="red.500"
+                            color={getColor('chakra.red')}
                           >
                             {t('resources.group.delete')}
                           </MenuItem>

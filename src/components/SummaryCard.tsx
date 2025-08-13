@@ -2,6 +2,7 @@
 import { Card, CardBody, Text, Heading } from '@chakra-ui/react';
 import { formatCurrency } from '../utils/formatCurrency';
 import { useAuth } from '../contexts/AuthContext';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 type Props = {
   title: string;
@@ -11,19 +12,22 @@ type Props = {
 
 export const SummaryCard = ({ title, value, colorScheme }: Props) => {
   const { showValues } = useAuth();
+  const { getColor } = useVisualTheme();
+
+  console.log(getColor('summaryCard.revenue.bg'));
 
   const colors = {
     green: {
-      bg: 'green.100',
-      border: 'green.500',
-      text: 'green.800',
-      heading: 'green.900',
+      bg: getColor('summaryCard.revenue.bg'),
+      border: getColor('summaryCard.revenue.border'),
+      text: getColor('summaryCard.revenue.text'),
+      heading: getColor('summaryCard.revenue.heading'),
     },
     red: {
-      bg: 'red.100',
-      border: 'red.500',
-      text: 'red.800',
-      heading: 'red.900',
+      bg: getColor('summaryCard.expense.bg'),
+      border: getColor('summaryCard.expense.border'),
+      text: getColor('summaryCard.expense.text'),
+      heading: getColor('summaryCard.expense.heading'),
     },
   };
 

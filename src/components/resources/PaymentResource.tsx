@@ -26,6 +26,7 @@ import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { api } from '../../services';
 import type { Payments, PaginationResponse } from '../../services/resources';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -47,6 +48,7 @@ const PaymentResource = ({
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const loadPayments = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {
@@ -155,7 +157,10 @@ const PaymentResource = ({
         </Text>
         <Button
           size="sm"
-          colorScheme="purple"
+          bg={getColor('primary.500')}
+          color={getColor('background.write')}
+          _hover={{ bg: getColor('primary.600') }}
+          _focus={{ bg: getColor('primary.700') }}
           leftIcon={<FiPlus />}
           onClick={handleNewPayment}
         >
@@ -165,7 +170,7 @@ const PaymentResource = ({
 
       <InputGroup mb={4}>
         <InputLeftElement pointerEvents="none">
-          <Icon as={FiSearch} color="gray.300" />
+          <Icon as={FiSearch} color={getColor('gray.300')} />
         </InputLeftElement>
         <Input
           placeholder={t('resources.payment.searchPlaceholder')}
@@ -176,7 +181,7 @@ const PaymentResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color="purple.500" />
+          <Spinner color={getColor('primary.500')} />
         </Flex>
       ) : payments?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
@@ -187,7 +192,7 @@ const PaymentResource = ({
           <Box
             overflowX="auto"
             border="1px"
-            borderColor="gray.200"
+            borderColor={getColor('gray.200')}
             borderRadius="md"
           >
             <Table variant="simple" minW="400px">
@@ -216,7 +221,7 @@ const PaymentResource = ({
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(payment.id as string)}
-                            color="red.500"
+                            color={getColor('chakra.red')}
                           >
                             {t('resources.payment.delete')}
                           </MenuItem>

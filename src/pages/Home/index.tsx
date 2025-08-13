@@ -25,9 +25,11 @@ import { NewRecurringIncomeModal } from '../../components/modals/NewRecurringInc
 import { LastRegistrationsList } from '../../components/LastRegistrationsList';
 import { NewRecurringExpenseModal } from '../../components/modals/NewRecurringExpenseModal';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const Home = () => {
-  const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
+  const { profile, loadProfile, showValues, toggleShowValues } = useAuth();  
+  const { getColor } = useVisualTheme();
   const { isOpen: isExpenseOpen, onOpen: onExpenseOpen, onClose: onExpenseClose } = useDisclosure();
   const { isOpen: isRevenueOpen, onOpen: onRevenueOpen, onClose: onRevenueClose } = useDisclosure();
   const [stores, setStores] = useState<Merchant[]>([]);
@@ -120,10 +122,11 @@ const Home = () => {
             top={2}
             size="sm"
             variant="ghost"
-            colorScheme="purple"
+            bg={getColor('background.button.primary')}
+            color={getColor('text.inverted')}
+            _hover={{ bg: getColor('background.button.hover.neutral') }}
             onClick={toggleShowValues}
             zIndex={1}
-            _hover={{ bg: 'purple.100' }}
           >
             <Icon as={showValues ? FiEyeOff : FiEye} />
           </Button>
@@ -144,7 +147,9 @@ const Home = () => {
           <Menu>
             <MenuButton
               as={Button}
-              colorScheme="purple"
+              bg={getColor('background.button.expense')}
+              color={getColor('text.inverted')}
+              _hover={{ bg: getColor('background.button.hover.expense') }}
               size="lg"
               leftIcon={<Icon as={FiShoppingBag} />}
               w="full"
@@ -164,7 +169,9 @@ const Home = () => {
           <Menu>
             <MenuButton
               as={Button}
-              colorScheme="green"
+              bg={getColor('background.button.revenue')}
+              color={getColor('text.inverted')}
+              _hover={{ bg: getColor('background.button.hover.revenue') }}
               size="lg"
               leftIcon={<Icon as={FiDollarSign} />}
               w="full"

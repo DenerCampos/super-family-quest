@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Flex, Input, Button, Text, useToast } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ const Login = () => {
   const { login } = useAuth();
   const toast = useToast();
   const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -54,7 +56,7 @@ const Login = () => {
       >
         <Text
           fontSize="2xl"
-          color="purple.300"
+          color={getColor('primary.300')}
           textAlign="center"
           mb={4}
           fontFamily="Pixelify Sans"
@@ -68,6 +70,7 @@ const Login = () => {
           variant="filled"
           onChange={(e) => setEmail(e.target.value)}
           type="email"
+          color={getColor('text.default')}
         />
 
         <Input
@@ -76,15 +79,21 @@ const Login = () => {
           variant="filled"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          color={getColor('text.default')}
         />
 
         <Button
           type="submit"
           isLoading={isLoading}
           loadingText="Entrando..."
-          colorScheme="purple"
+          bg={getColor('primary.500')}
+          color={getColor('background.write')}
+          _focus={{ bg: getColor('primary.700') }}
           mt={4}
-          _hover={{ transform: 'translateY(-2px)' }}
+          _hover={{
+            transform: 'translateY(-2px)',
+            bg: getColor('primary.600'),
+          }}
         >
           {t('login.enter')}
         </Button>
@@ -92,7 +101,7 @@ const Login = () => {
         <Button
           as={RouterLink}
           to="/register"
-          color="blue.300"
+          color={getColor('primary.300')}
           variant="link"
           mt={2}
           fontSize="sm"

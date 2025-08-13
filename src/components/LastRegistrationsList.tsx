@@ -18,6 +18,7 @@ import { capitalizeFirstLetter } from '../utils/formatString';
 import type { Registration } from '../services/profile';
 import { useAuth } from '../contexts/AuthContext';
 import { useThemedTranslation } from '../hooks/useThemedTranslation';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 const MotionBox = motion(Box);
 
@@ -33,8 +34,10 @@ export const LastRegistrationsList = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { t } = useThemedTranslation();
-  const bgColorExpense = useColorModeValue('red.50', 'gray.700');
-  const bgColorRevenue = useColorModeValue('green.50', 'gray.700');
+  const { getColor } = useVisualTheme();
+
+  const bgColorExpense = getColor('background.lastRegistrations.expense');
+  const bgColorRevenue = getColor('background.lastRegistrations.revenue');
 
   const fetchLastRegistrations = async () => {
     try {
@@ -71,7 +74,7 @@ export const LastRegistrationsList = ({
   if (loading) {
     return (
       <Flex justify="center" py={6}>
-        <Spinner color="purple.500" />
+        <Spinner color={getColor('primary.500')} />
       </Flex>
     );
   }
@@ -79,7 +82,7 @@ export const LastRegistrationsList = ({
   if (error) {
     return (
       <Box py={4} textAlign="center">
-        <Text color="red.500">{error}</Text>
+        <Text color={getColor('text.error')}>{error}</Text>
       </Box>
     );
   }
@@ -87,14 +90,16 @@ export const LastRegistrationsList = ({
   if (registrations.length === 0) {
     return (
       <Box py={4} textAlign="center">
-        <Text color="gray.500">{t('lastRegistrationsList.noData')}</Text>
+        <Text color={getColor('text.muted')}>
+          {t('lastRegistrationsList.noData')}
+        </Text>
       </Box>
     );
   }
 
   return (
     <VStack spacing={3} align="stretch" mt={4}>
-      <Text fontSize="lg" fontWeight="bold" color="purple.800">
+      <Text fontSize="lg" fontWeight="bold" color={getColor('text.default')}>
         {t('lastRegistrationsList.title')}
       </Text>
 
@@ -113,7 +118,9 @@ export const LastRegistrationsList = ({
             }}
             borderLeftWidth="4px"
             borderLeftColor={
-              registration.type === 'expense' ? 'red.400' : 'green.400'
+              registration.type === 'expense'
+                ? getColor('border.lastRegistrations.expense')
+                : getColor('border.lastRegistrations.revenue')
             }
             bg={
               registration.type === 'expense' ? bgColorExpense : bgColorRevenue
@@ -124,7 +131,7 @@ export const LastRegistrationsList = ({
           >
             <Flex justify="space-between" align="center">
               <Flex align="center">
-                <Icon as={FaStore} color="purple.500" mr={2} />
+                <Icon as={FaStore} color={getColor('primary.500')} mr={2} />
                 <Text fontWeight="medium">
                   {capitalizeFirstLetter(registration.name) ||
                     'Loja desconhecida'}
@@ -132,15 +139,26 @@ export const LastRegistrationsList = ({
               </Flex>
 
               <Badge
-                colorScheme={registration.type === 'expense' ? 'red' : 'green'}
+                colorScheme={
+                  registration.type === 'expense'
+                    ? getColor('background.lastRegistrations.badge.expense')
+                    : getColor('background.lastRegistrations.badge.revenue')
+                }
                 fontSize="sm"
               >
                 {registration.type === 'expense' ? '-' : '+'}{' '}
-                {showValues ? formatCurrencyBRL(registration.value) : '••••••••'}
+                {showValues
+                  ? formatCurrencyBRL(registration.value)
+                  : '••••••'}
               </Badge>
             </Flex>
 
-            <Flex mt={2} justify="space-between" color="gray.500" fontSize="sm">
+            <Flex
+              mt={2}
+              justify="space-between"
+              color={getColor('text.muted')}
+              fontSize="sm"
+            >
               <Text>{formatDateToBR(registration.date)}</Text>
               <Flex align="center">
                 <Icon as={FaCoins} mr={1} />

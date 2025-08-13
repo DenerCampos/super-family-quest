@@ -23,17 +23,20 @@ export const ProfileService = {
     family,
     income,
     incomeName,
+    date,
     repeatMonthly,
   }: {
     family: string;
     income: number;
     incomeName: string;
+    date: string;
     repeatMonthly: boolean;
   }): Promise<void> => {
     await api.post('/profile/complete-profile', {
       family,
       income,
       name: incomeName,
+      date,
       repeatMonthly,
     });
   },

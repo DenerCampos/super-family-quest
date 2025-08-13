@@ -29,6 +29,7 @@ import { api } from '../../services';
 import type { Revenue, PaginationResponse } from '../../services/resources';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 const ITEMS_PER_PAGE = 5;
 
 interface RevenueResourceProps {
@@ -49,6 +50,7 @@ const RevenueResource = ({
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const loadRevenues = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {
@@ -155,7 +157,10 @@ const RevenueResource = ({
         </Text>
         <Button
           size="sm"
-          colorScheme="green"
+          bg={getColor('primary.500')}
+          color={getColor('background.write')}
+          _hover={{ bg: getColor('primary.600') }}
+          _focus={{ bg: getColor('primary.700') }}
           leftIcon={<FiPlus />}
           onClick={handleNewRevenue}
         >
@@ -165,7 +170,7 @@ const RevenueResource = ({
 
       <InputGroup mb={4}>
         <InputLeftElement pointerEvents="none">
-          <Icon as={FiSearch} color="gray.300" />
+          <Icon as={FiSearch} color={getColor('gray.300')} />
         </InputLeftElement>
         <Input
           placeholder={t('resources.revenue.searchPlaceholder')}
@@ -176,7 +181,7 @@ const RevenueResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color="green.500" />
+          <Spinner color={getColor('primary.500')} />
         </Flex>
       ) : revenues?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
@@ -187,7 +192,7 @@ const RevenueResource = ({
           <Box
             overflowX="auto"
             border="1px"
-            borderColor="gray.200"
+            borderColor={getColor('gray.200')}
             borderRadius="md"
           >
             <Table variant="simple" minW="600px">
@@ -204,7 +209,7 @@ const RevenueResource = ({
                   <Tr key={revenue.id}>
                     <Td>{revenue.name}</Td>
                     <Td>
-                      <Badge colorScheme="green">
+                      <Badge colorScheme={getColor('chakra.green')}>
                         + {formatCurrency(revenue.value)}
                       </Badge>
                     </Td>
@@ -226,7 +231,7 @@ const RevenueResource = ({
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(revenue.id as string)}
-                            color="red.500"
+                            color={getColor('chakra.red')}
                           >
                             {t('resources.revenue.delete')}
                           </MenuItem>

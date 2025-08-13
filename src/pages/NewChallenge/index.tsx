@@ -2,8 +2,10 @@ import { Flex, Text } from "@chakra-ui/react";
 import { Header } from "../../components/Header";
 import { NavigationBar } from "../../components/NavigationBar";
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const NewChallenge = () => {
+  const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   return (
     <Flex direction="column" minH="100vh">
@@ -29,7 +31,7 @@ const NewChallenge = () => {
         >
           <Text
             fontSize="2xl"
-            color="purple.300"
+            color={getColor('primary.300')}
             textAlign="center"
             fontFamily="Pixelify Sans"
           >

@@ -1,5 +1,6 @@
 import { Flex, Image, Text, keyframes } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 const pulse = keyframes`
   0% { transform: scale(1); }
@@ -14,6 +15,7 @@ type CoinDisplayProps = {
 export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
   const [prevCoins, setPrevCoins] = useState(coins);
   const [animate, setAnimate] = useState(false);
+  const { getColor, getAsset } = useVisualTheme();
 
   useEffect(() => {
     if (coins !== prevCoins) {
@@ -26,12 +28,12 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
     }
   }, [coins]);
 
-  const gifSrc = `/assets/images/gold-coin.gif?t=${new Date().getTime()}`;   
+  const gifSrc = getAsset('images.goldCoin');
 
   return (
     <Flex
       align="center"
-      bg="purple.700"
+      bg={getColor('primary.700')}
       px={3}
       py={1}
       borderRadius="md"
@@ -43,13 +45,13 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
         mr={2}
         animation={animate ? `${pulse} 0.5s ease-in-out` : 'none'}
       />
-      <Text color="yellow.400" fontWeight="bold">
+      <Text color={getColor('text.gold')} fontWeight="bold">
         {coins}
       </Text>
 
       {animate && (
         <Text
-          color="green.300"
+          color={getColor('text.emerald')}
           fontWeight="bold"
           position="absolute"
           right="-20px"

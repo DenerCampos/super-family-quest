@@ -14,6 +14,7 @@ import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 interface TopProductsData {
   name: string;
@@ -43,6 +44,7 @@ export const HorizontalBarChartTopProducts = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const fetchData = async (start: string, end: string) => {
     setLoading(true);
     try {
@@ -94,7 +96,7 @@ export const HorizontalBarChartTopProducts = ({
       p={4}
       borderRadius="lg"
       border="2px solid"
-      borderColor="purple.200"
+      borderColor={getColor('primary.200')}
       width="100%"
       maxW="600px"
       mx="auto"
@@ -104,7 +106,7 @@ export const HorizontalBarChartTopProducts = ({
     >
       <Text
         fontSize="xl"
-        color="purple.500"
+        color={getColor('primary.500')}
         textAlign="center"
         mb={4}
         fontWeight="bold"
@@ -123,11 +125,11 @@ export const HorizontalBarChartTopProducts = ({
         <Flex align="center" justify="center" height="300px">
           <Spinner
             size="xl"
-            color="purple.500"
+            color={getColor('primary.500')}
             thickness="4px"
-            emptyColor="purple.100"
+            emptyColor={getColor('primary.100')}
           />
-          <Text ml={3} color="purple.300">
+          <Text ml={3} color={getColor('primary.300')}>
             {t('reports.topProducts.loading')}
           </Text>
         </Flex>
@@ -150,7 +152,7 @@ export const HorizontalBarChartTopProducts = ({
               barSize={20}
               barGap={8}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="purple.100" />
+              <CartesianGrid strokeDasharray="3 3" stroke={getColor('primary.100')} />
               <XAxis 
                 type="number"
                 tickFormatter={(value) => value.toString()}
@@ -175,7 +177,7 @@ export const HorizontalBarChartTopProducts = ({
                 }}
                 contentStyle={{
                   background: 'rgba(255, 255, 255, 0.9)',
-                  borderColor: 'purple.200',
+                  borderColor: getColor('primary.200'),
                   borderRadius: 'md',
                   padding: '8px',
                 }}
@@ -202,7 +204,7 @@ export const HorizontalBarChartTopProducts = ({
           </ResponsiveContainer>
         </Box>
       ) : (
-        <Text color="purple.300" py={10} textAlign="center">
+        <Text color={getColor('primary.300')} py={10} textAlign="center">
           {t('reports.topProducts.noData')}
         </Text>
       )}

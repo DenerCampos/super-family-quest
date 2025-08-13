@@ -7,8 +7,10 @@ import { FiArrowLeft, FiRotateCw } from 'react-icons/fi';
 import { api } from '../services';
 import { parseNFCeQRCode } from '../utils/qrCode';
 import { useThemeTranslation } from '../hooks/useThemeTranslation';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 export const QRScannerPage = () => {
+  const { getColor } = useVisualTheme();
   const [loading, setLoading] = useState(true);
   const [loadingRead, setLoadingRead] = useState(false);
   const [error, setError] = useState('');
@@ -293,8 +295,8 @@ export const QRScannerPage = () => {
       align="center"
       justify="center"
       height="100vh"
-      bg="purple.800"
-      color="white"
+      bg={getColor('background.primary')}
+      color={getColor('text.inverted')}
       p={4}
     >
       {loading && (
@@ -312,7 +314,10 @@ export const QRScannerPage = () => {
         onClick={handleBack}
         leftIcon={<FiArrowLeft />}
         variant="ghost"
-        colorScheme="whiteAlpha"
+        bg={getColor('background.secondary')}
+        color={getColor('text.inverted')}
+        _hover={{ bg: getColor('background.button.hover.primary') }}
+        _focus={{ bg: getColor('background.button.hover.primary') }}
         zIndex={10}
       >
         {t('qrScannerPage.back')}
@@ -327,14 +332,17 @@ export const QRScannerPage = () => {
           onClick={switchCamera}
           icon={<FiRotateCw />}
           variant="ghost"
-          colorScheme="whiteAlpha"
+          bg={getColor('background.secondary')}
+          color={getColor('text.inverted')}
+          _hover={{ bg: getColor('background.button.hover.primary') }}
+          _focus={{ bg: getColor('background.button.hover.primary') }}
           aria-label="Trocar câmera"
           zIndex={10}
           isDisabled={loading || isInitializingRef.current}
         />
       )}
 
-      <Heading mb={4}>Posicione o QR Code</Heading>
+      <Heading mb={4}>{t('qrScannerPage.title')}</Heading>
 
       <Box
         id="scanner-container"
@@ -342,14 +350,14 @@ export const QRScannerPage = () => {
         maxWidth="600px"
         height="400px"
         border="2px solid"
-        borderColor="purple.500"
+        borderColor={getColor('primary.500')}
         borderRadius="md"
         overflow="hidden"
         position="relative"
       >
         {error && (
           <Flex height="100%" align="center" justify="center">
-            <Text color="red.300" textAlign="center" p={4}>
+            <Text color={getColor('status.error')} textAlign="center" p={4}>
               {error}
             </Text>
           </Flex>
@@ -362,9 +370,12 @@ export const QRScannerPage = () => {
         </Text>
 
         {availableDevices.length > 1 && (
-          <Text fontSize="sm" color="purple.200" mt={2}>
-            Câmera: {availableDevices[currentDeviceIndex]?.label || 'Padrão'}(
-            {currentDeviceIndex + 1}/{availableDevices.length})
+          <Text fontSize="sm" color={getColor('primary.200')} mt={2}>
+            {t('qrScannerPage.camera', {
+              name: availableDevices[currentDeviceIndex]?.label || t('qrScannerPage.defaultCamera'),
+              current: currentDeviceIndex + 1,
+              total: availableDevices.length,
+            })}
           </Text>
         )}
       </Flex>
