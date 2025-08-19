@@ -1,12 +1,15 @@
 // import { api } from './api';
 import type { ThemeNamespace } from '../i18n/types';
+import { defaultTheme, rpgTheme } from '../theme/themes';
 
-interface AvailableTheme {
+export interface ThemeConfig {
   id: ThemeNamespace;
   name: string;
+  theme: typeof defaultTheme;
+  requiredCoins?: number;
+  description?: string;
   isUnlocked: boolean;
   unlockedAt?: string;
-  requiredCoins?: number;
 }
 
 export const themeService = {
@@ -17,7 +20,7 @@ export const themeService = {
 //   },
 
   // Simula a resposta da API enquanto não implementamos o backend
-  async mockGetAvailableThemes(): Promise<AvailableTheme[]> {
+  async mockGetAvailableThemes(): Promise<ThemeConfig[]> {
     // Simula delay da rede
     await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -25,14 +28,34 @@ export const themeService = {
       {
         id: 'default',
         name: 'Modo Padrão',
-        isUnlocked: true, // Sempre desbloqueado
+        theme: defaultTheme,
+        description: 'Tema profissional para gestão financeira',
+        isUnlocked: true,
       },
       {
         id: 'rpg',
-        name: 'Modo RPG Medieval',
-        isUnlocked: true,
+        name: 'RPG Medieval',
+        theme: rpgTheme,
         requiredCoins: 1000,
+        description: 'Tema medieval com elementos de RPG',
+        isUnlocked: true,
       },
+      {
+        id: 'cyberpunk', // Adicionar esse id em ThemeNamespace
+        name: 'Cyberpunk',
+        theme: rpgTheme, // Criar o tema em themes.ts
+        requiredCoins: 2000,
+        description: 'Tema futurista com elementos neon',
+        isUnlocked: false,
+      },
+      // Para adicionar um novo tema, basta adicionar aqui:
+      // {
+      //   id: 'cyberpunk', // Adicionar esse id em ThemeNamespace
+      //   name: 'Cyberpunk',
+      //   theme: cyberpunkTheme, // Criar o tema em themes.ts
+      //   requiredCoins: 2000,
+      //   description: 'Tema futurista com elementos neon',
+      // },
     ];
   },
 }; 

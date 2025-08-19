@@ -81,16 +81,12 @@ export const AutocompleteInput = ({
         onChange={handleInputChange}
         placeholder={placeholder}
         autoComplete="off"
-        bg={getColor('background.write')}
-        color={getColor('text.default')}
+        bg={getColor('input.background')}
+        color={getColor('text.primary')}
         fontFamily={getFont('body')}
-        borderColor={getColor('background.tertiary')}
-        _hover={{
-          borderColor: getColor('primary.400'),
-        }}
+        borderColor={getColor('input.border')}
         _focus={{
-          borderColor: getColor('primary.500'),
-          boxShadow: `0 0 0 1px ${getColor('primary.500')}`,
+          borderColor: getColor('input.focus'),
         }}
       />
 
@@ -98,7 +94,7 @@ export const AutocompleteInput = ({
         <Portal>
           <Box ref={dropdownRef} style={dropdownStyles}>
             <List
-              bg={getColor('background.write')}
+              bg={getColor('input.primary')}
               boxShadow="md"
               maxH="200px"
               overflowY="auto"
@@ -115,7 +111,7 @@ export const AutocompleteInput = ({
                   color={getColor('text.default')}
                   fontFamily={getFont('body')}
                   _hover={{
-                    bg: getColor('background.hover'),
+                    bg: getColor('input.hover'),
                     color: getColor('text.accent'),
                   }}
                   onClick={() => handleSelectOption(option)}

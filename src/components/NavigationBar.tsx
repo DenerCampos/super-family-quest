@@ -20,7 +20,7 @@ export const NavigationBar = () => {
       p={2}
       boxShadow="lg"
       borderTopWidth="1px"
-      borderTopColor={getColor('primary.700')}
+      borderTopColor={getColor('border.primary')}
     >
       <NavLink to="/home">
         {({ isActive }) => (
@@ -30,20 +30,20 @@ export const NavigationBar = () => {
               aria-label="Home"
               variant="ghost"
               color={
-                isActive ? getColor('primary.500') : getColor('text.secondary')
+                isActive ? getColor('text.accent') : getColor('text.primary')
               }
               fontSize="24px"
               isActive={isActive}
               _hover={{
-                color: getColor('primary.400'),
+                color: getColor('text.link'),
               }}
             />
             <Text
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.inverted')
-                  : getColor('text.secondary')
+                  ? getColor('text.primary')
+                  : getColor('text.primary')
               }
               fontFamily={getFont('body')}
             >
@@ -61,20 +61,20 @@ export const NavigationBar = () => {
               aria-label="Dashboard"
               variant="ghost"
               color={
-                isActive ? getColor('primary.500') : getColor('text.secondary')
+                isActive ? getColor('text.accent') : getColor('text.primary')
               }
               fontSize="24px"
               isActive={isActive}
               _hover={{
-                color: getColor('primary.400'),
+                color: getColor('text.link'),
               }}
             />
             <Text
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.inverted')
-                  : getColor('text.secondary')
+                  ? getColor('text.primary')
+                  : getColor('text.primary')
               }
               fontFamily={getFont('body')}
             >
@@ -92,20 +92,20 @@ export const NavigationBar = () => {
               aria-label="Novo recurso"
               variant="ghost"
               color={
-                isActive ? getColor('primary.500') : getColor('text.secondary')
+                isActive ? getColor('text.accent') : getColor('text.primary')
               }
               fontSize="24px"
               isActive={isActive}
               _hover={{
-                color: getColor('primary.400'),
+                color: getColor('text.link'),
               }}
             />
             <Text
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.inverted')
-                  : getColor('text.secondary')
+                  ? getColor('text.primary')
+                  : getColor('text.primary')
               }
               fontFamily={getFont('body')}
             >
@@ -123,20 +123,20 @@ export const NavigationBar = () => {
               aria-label="Novo desafio"
               variant="ghost"
               color={
-                isActive ? getColor('primary.500') : getColor('text.secondary')
+                isActive ? getColor('text.accent') : getColor('text.primary')
               }
               fontSize="24px"
               isActive={isActive}
               _hover={{
-                color: getColor('primary.400'),
+                color: getColor('text.link'),
               }}
             />
             <Text
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.inverted')
-                  : getColor('text.secondary')
+                  ? getColor('text.primary')
+                  : getColor('text.primary')
               }
               fontFamily={getFont('body')}
             >
@@ -154,20 +154,20 @@ export const NavigationBar = () => {
               aria-label="Perfil"
               variant="ghost"
               color={
-                isActive ? getColor('primary.500') : getColor('text.secondary')
+                isActive ? getColor('text.accent') : getColor('text.primary')
               }
               fontSize="24px"
               isActive={isActive}
               _hover={{
-                color: getColor('primary.400'),
+                color: getColor('text.link'),
               }}
             />
             <Text
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.inverted')
-                  : getColor('text.secondary')
+                  ? getColor('text.primary')
+                  : getColor('text.primary')
               }
               fontFamily={getFont('body')}
             >

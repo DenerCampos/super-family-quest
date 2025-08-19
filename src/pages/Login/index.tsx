@@ -12,7 +12,7 @@ const Login = () => {
   const { login } = useAuth();
   const toast = useToast();
   const { t } = useThemedTranslation();
-  const { getColor } = useVisualTheme();
+  const { getColor, getFont, getAsset } = useVisualTheme();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -36,7 +36,7 @@ const Login = () => {
   return (
     <Flex
       minH="100vh"
-      bgImage="url('/assets/images/login-bg.png')"
+      bgImage={`url(${getAsset('images.background.login')})`}
       bgSize="cover"
       bgPosition="center"
       align="center"
@@ -46,20 +46,20 @@ const Login = () => {
     >
       <Flex
         direction="column"
-        bg="rgba(23, 25, 35, 0.8)"
         p={8}
         borderRadius="lg"
         gap={4}
         w="100%"
         maxW="400px"
         backdropFilter="blur(4px)"
+        bg={getColor('background.login')}
       >
         <Text
           fontSize="2xl"
-          color={getColor('primary.300')}
+          color={getColor('text.primary')}
           textAlign="center"
           mb={4}
-          fontFamily="Pixelify Sans"
+          fontFamily={getFont('theme')}
         >
           SUPER FAMILY QUEST
         </Text>
@@ -70,7 +70,17 @@ const Login = () => {
           variant="filled"
           onChange={(e) => setEmail(e.target.value)}
           type="email"
-          color={getColor('text.default')}
+          color={getColor('text.primary')}
+          _hover={{
+            bg: getColor('input.hover'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
 
         <Input
@@ -79,21 +89,23 @@ const Login = () => {
           variant="filled"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          color={getColor('text.default')}
+          color={getColor('text.primary')}
+          _hover={{
+            bg: getColor('input.hover'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
 
         <Button
           type="submit"
           isLoading={isLoading}
           loadingText="Entrando..."
-          bg={getColor('primary.500')}
-          color={getColor('background.write')}
-          _focus={{ bg: getColor('primary.700') }}
+          colorScheme={getColor('button.primary')}
           mt={4}
-          _hover={{
-            transform: 'translateY(-2px)',
-            bg: getColor('primary.600'),
-          }}
         >
           {t('login.enter')}
         </Button>
@@ -101,7 +113,7 @@ const Login = () => {
         <Button
           as={RouterLink}
           to="/register"
-          color={getColor('primary.300')}
+          color={getColor('link.primary')}
           variant="link"
           mt={2}
           fontSize="sm"

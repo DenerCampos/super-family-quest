@@ -1,8 +1,8 @@
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from './useThemeContext';
 import { defaultTheme, rpgTheme } from '../theme/themes';
 
 export function useVisualTheme() {
-  const { currentTheme } = useTheme();
+  const { currentTheme, isDarkMode } = useTheme();
   const theme = currentTheme === 'rpg' ? rpgTheme : defaultTheme;
 
   const getAsset = (path: string) => {
@@ -21,7 +21,7 @@ export function useVisualTheme() {
     return typeof current === 'string' ? current : '';
   };
 
-  const getColor = (path: string) => {
+  const getColor = (path: string): string => {
     if (!theme) return '';
     
     // Divide o caminho em partes
@@ -34,10 +34,16 @@ export function useVisualTheme() {
       current = current[part] as Record<string, unknown>;
     }
     
+    // Se o valor é um objeto com light/dark, retorna o valor apropriado
+    if (typeof current === 'object' && 'light' in current && 'dark' in current) {
+      const colorObj = current as { light: string; dark: string };
+      return isDarkMode ? colorObj.dark : colorObj.light;
+    }
+    
     return typeof current === 'string' ? current : '';
   };
 
-  const getFont = (type: 'body' | 'heading' | 'mono') => {
+  const getFont = (type: 'body' | 'heading' | 'mono' | 'theme') => {
     if (!theme) return '';
     return theme.fonts[type];
   };

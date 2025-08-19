@@ -150,7 +150,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
       <ModalOverlay />
       <ModalContent
         bg={getColor('background.primary')}
-        color={getColor('text.inverted')}
+        color={getColor('text.primary')}
       >
         <ModalHeader>{t('modals.recurringIncome.title')}</ModalHeader>
         <ModalCloseButton />
@@ -159,7 +159,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
             {t('modals.recurringIncome.description')}
           </Text>
 
-          <Heading size="md" mb={4} color={getColor('text.inverted')}>
+          <Heading size="md" mb={4} color={getColor('text.primary')}>
             {t('modals.recurringIncome.sources')}:
           </Heading>
 
@@ -191,8 +191,8 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                     key={income.id}
                     bg={
                       income.isSelected
-                        ? getColor('primary.700')
-                        : getColor('primary.900')
+                        ? getColor('background.selected')
+                        : getColor('background.tertiary')
                     }
                     borderRadius="md"
                     p={3}
@@ -214,7 +214,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                           onChange={(e) =>
                             handleSelectionChange(income.id, e.target.checked)
                           }
-                          colorScheme={getColor('chakra.green')}
+                          colorScheme={getColor('chakraColors.green')}
                         />
                         <Input
                           value={income.name}
@@ -226,9 +226,11 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                             )
                           }
                           variant="filled"
-                          bg={getColor('primary.600')}
-                          _hover={{ bg: 'purple.500' }}
-                          _focus={{ bg: 'purple.500' }}
+                          bg={getColor('input.backgroundPrimary')}
+                          color={getColor('text.primary')}
+                          _hover={{
+                            bg: getColor('input.backgroundPrimary'),
+                          }}
                           size="sm"
                           isDisabled={!income.isSelected}
                         />
@@ -239,9 +241,11 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                           handleIncomeChange(income.id, 'value', e.target.value)
                         }
                         variant="filled"
-                        bg={getColor('primary.600')}
-                        _hover={{ bg: 'purple.500' }}
-                        _focus={{ bg: 'purple.500' }}
+                        bg={getColor('input.backgroundPrimary')}
+                        _hover={{
+                          bg: getColor('input.backgroundPrimary'),
+                        }}
+                        color={getColor('text.primary')}
                         size="sm"
                         width="150px"
                         textAlign="right"
@@ -258,19 +262,23 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
             )}
           </Box>
 
-          <Divider my={4} borderColor={getColor('primary.600')} />
+          <Divider my={4} borderColor={getColor('border.primary')} />
 
-          <Text fontSize="sm" color={getColor('primary.200')}>
+          <Text fontSize="sm" color={getColor('text.secondary')}>
             {t('modals.recurringIncome.reminder')}
           </Text>
         </ModalBody>
 
         <ModalFooter>
           <Button
-            bg={getColor('background.secondary')}
-            color={getColor('text.inverted')}
-            _hover={{ bg: getColor('background.button.hover.primary') }}
-            _focus={{ bg: getColor('background.button.hover.primary') }}
+            bg={getColor('background.tertiary')}
+            color={getColor('text.primary')}
+            border="1px solid"
+            borderColor={getColor('border.primary')}
+            _hover={{
+              bg: getColor('background.selected'),
+              color: getColor('text.accent'),
+            }}
             onClick={handleConfirm}
             isLoading={isSubmitting}
             loadingText={t('modals.recurringIncome.confirming')}

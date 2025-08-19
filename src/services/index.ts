@@ -5,9 +5,11 @@ import { ProfileService } from "./profile";
 import { ReportsService } from "./reports";
 import { ResourcesService, type UpdateExpense } from './resources';
 import { RevenueService, type RevenueRecurring } from './revenue';
+import { themeService } from "./theme";
 import { UserService } from "./user";
 
 export const api = {
+  getAvailableThemes: themeService.mockGetAvailableThemes,
   profile: ProfileService.profile,
   completeProfile: ProfileService.completeProfile,
   getLatestRegistrations: (limit?: number) =>

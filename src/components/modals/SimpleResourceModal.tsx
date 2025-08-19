@@ -156,7 +156,10 @@ export const SimpleResourceModal = ({
       size="md"
     >
       <ModalOverlay />
-      <ModalContent bg={getColor('background.primary')} color={getColor('text.primary')}>
+      <ModalContent
+        bg={getColor('background.primary')}
+        color={getColor('text.primary')}
+      >
         {isSubmitting && <LoadingOverlay />}
 
         <ModalHeader fontFamily={getFont('heading')}>
@@ -170,7 +173,10 @@ export const SimpleResourceModal = ({
         <ModalBody pb={6}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.name}>
-              <FormLabel color={getColor('text.primary')} fontFamily={getFont('body')}>
+              <FormLabel
+                color={getColor('text.primary')}
+                fontFamily={getFont('body')}
+              >
                 {t('common.name')}
               </FormLabel>
 
@@ -182,23 +188,15 @@ export const SimpleResourceModal = ({
                     message: t('common.minLength', { count: 3 }),
                   },
                 })}
-                bg={getColor('background.write')}
-                color={getColor('text.default')}
-                borderColor={getColor('background.tertiary')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
                 fontFamily={getFont('body')}
                 placeholder={t('modals.simpleResource.enterName')}
                 isDisabled={isSubmitting}
-                _hover={{
-                  borderColor: getColor('primary.400'),
-                }}
-                _focus={{
-                  borderColor: getColor('primary.500'),
-                  boxShadow: `0 0 0 1px ${getColor('primary.500')}`,
-                }}
               />
 
               {errors.name && (
-                <Text color="red.300" fontSize="sm" mt={1}>
+                <Text color={getColor('status.error')} fontSize="sm" mt={1}>
                   {errors.name.message}
                 </Text>
               )}
@@ -206,18 +204,20 @@ export const SimpleResourceModal = ({
 
             <Button
               mt={4}
-              colorScheme="purple"
+              bg={getColor('background.tertiary')}
+              color={getColor('text.primary')}
+              border="1px solid"
+              borderColor={getColor('border.primary')}
+              _hover={{
+                bg: getColor('background.selected'),
+                color: getColor('text.accent'),
+              }}
               type="submit"
               isDisabled={!isValid || isSubmitting}
               isLoading={isSubmitting}
               loadingText={t('common.saving')}
               w="full"
-              bg={getColor('primary.500')}
-              color={getColor('text.primary')}
               fontFamily={getFont('body')}
-              _hover={{
-                bg: getColor('primary.600'),
-              }}
             >
               {initialData ? t('common.update') : t('common.save')}
             </Button>

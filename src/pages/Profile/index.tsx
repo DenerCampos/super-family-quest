@@ -33,13 +33,14 @@ import {
   Tab,
   TabPanel,
 } from '@chakra-ui/react';
-import { FiEdit2, FiCheck, FiEye, FiEyeOff, FiUser, FiSettings } from 'react-icons/fi';
+import { FiEdit2, FiCheck, FiEye, FiEyeOff, FiUser, FiSettings, FiMoon, FiSun } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
-import { themeService } from '../../services/theme';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../hooks/useThemeContext';
 import type { ThemeNamespace } from '../../i18n/types';
+import type { ThemeConfig } from '../../services/theme';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 // Lista de brasões pré-definidos
 const predefinedCoatOfArms = [
@@ -51,8 +52,8 @@ const Profile = () => {
   const { profile, loadProfile } = useAuth();
   const toast = useToast();
   const { t } = useThemedTranslation();
-  const { currentTheme, changeTheme } = useTheme();
-
+  const { currentTheme, changeTheme, isDarkMode, toggleDarkMode } = useTheme();
+  const { getColor } = useVisualTheme();
   // Estados para edição de perfil
   const [name, setName] = useState(profile?.user.name || '');
   const [email, setEmail] = useState(profile?.user.email || '');
@@ -81,12 +82,7 @@ const Profile = () => {
   );
 
   // Estados para temas
-  const [availableThemes, setAvailableThemes] = useState<{
-    id: ThemeNamespace;
-    name: string;
-    isUnlocked: boolean;
-    requiredCoins?: number;
-  }[]>([]);
+  const [availableThemes, setAvailableThemes] = useState<ThemeConfig[]>([]);
   const [isLoadingThemes, setIsLoadingThemes] = useState(true);
 
   // Validação de e-mail em tempo real
@@ -119,7 +115,7 @@ const Profile = () => {
   useEffect(() => {
     const loadThemes = async () => {
       try {
-        const themes = await themeService.mockGetAvailableThemes();
+        const themes = await api.getAvailableThemes();
         setAvailableThemes(themes);
       } catch (error) {
         console.error('Erro ao carregar temas:', error);
@@ -245,13 +241,23 @@ const Profile = () => {
       <Header />
       <Tabs isFitted>
         <TabList>
-          <Tab>
+          <Tab
+            _selected={{
+              color: getColor('text.primary'),
+              bg: getColor('background.tertiary'),
+            }}
+          >
             <Icon as={FiUser} mr={2} />
             {t('profile.editProfile')}
           </Tab>
-          <Tab>
+          <Tab
+            _selected={{
+              color: getColor('text.primary'),
+              bg: getColor('background.tertiary'),
+            }}
+          >
             <Icon as={FiSettings} mr={2} />
-            Temas
+            {t('profile.themes.title')}
           </Tab>
         </TabList>
 
@@ -286,7 +292,7 @@ const Profile = () => {
                       size="2xl"
                       src={selectedCoat}
                       border="3px solid"
-                      borderColor="purple.500"
+                      borderColor={getColor('border.primary')}
                     />
                     <IconButton
                       aria-label="Alterar brasão"
@@ -294,7 +300,7 @@ const Profile = () => {
                       position="absolute"
                       bottom={2}
                       right={2}
-                      colorScheme="purple"
+                      colorScheme={getColor('button.primary')}
                       rounded="full"
                       onClick={openCoatModal}
                     />
@@ -302,11 +308,13 @@ const Profile = () => {
 
                   <Button
                     onClick={() => setIsEditing(!isEditing)}
-                    colorScheme="purple"
+                    colorScheme={getColor('button.primary')}
                     leftIcon={isEditing ? <FiCheck /> : <FiEdit2 />}
                     mb={4}
                   >
-                    {isEditing ? t('profile.saveChanges') : t('profile.editProfile')}
+                    {isEditing
+                      ? t('profile.saveChanges')
+                      : t('profile.editProfile')}
                   </Button>
                 </Flex>
 
@@ -316,7 +324,11 @@ const Profile = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     isDisabled={!isEditing}
-                    bg={isEditing ? 'white' : 'gray.100'}
+                    bg={
+                      isEditing
+                        ? getColor('input.primary')
+                        : getColor('input.secondary')
+                    }
                   />
                 </FormControl>
 
@@ -327,7 +339,11 @@ const Profile = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     isDisabled={!isEditing}
-                    bg={isEditing ? 'white' : 'gray.100'}
+                    bg={
+                      isEditing
+                        ? getColor('input.primary')
+                        : getColor('input.secondary')
+                    }
                   />
                   {errors.email && (
                     <FormErrorMessage>{errors.email}</FormErrorMessage>
@@ -340,26 +356,34 @@ const Profile = () => {
                     value={family}
                     onChange={(e) => setFamily(e.target.value)}
                     isDisabled={!isEditing}
-                    bg={isEditing ? 'white' : 'gray.100'}
+                    bg={
+                      isEditing
+                        ? getColor('input.primary')
+                        : getColor('input.secondary')
+                    }
                   />
                 </FormControl>
 
                 {isEditing && (
                   <>
                     <FormControl isInvalid={!!errors.password}>
-                      <FormLabel>{t('profile.newPassword')} (opcional)</FormLabel>
+                      <FormLabel>
+                        {t('profile.newPassword')} (opcional)
+                      </FormLabel>
                       <InputGroup>
                         <Input
                           type={showPassword ? 'text' : 'password'}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder={t('profile.minimum6Characters')}
-                          bg="white"
+                          bg={getColor('input.primary')}
                         />
                         <InputRightElement>
                           <IconButton
                             aria-label={
-                              showPassword ? t('profile.hidePassword') : t('profile.showPassword')
+                              showPassword
+                                ? t('profile.hidePassword')
+                                : t('profile.showPassword')
                             }
                             icon={showPassword ? <FiEyeOff /> : <FiEye />}
                             variant="ghost"
@@ -381,14 +405,18 @@ const Profile = () => {
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder={t('profile.repeatNewPassword')}
-                          bg="white"
+                          bg={getColor('input.primary')}
                         />
                         <InputRightElement>
                           <IconButton
                             aria-label={
-                              showConfirmPassword ? t('profile.hidePassword') : t('profile.showPassword')
+                              showConfirmPassword
+                                ? t('profile.hidePassword')
+                                : t('profile.showPassword')
                             }
-                            icon={showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+                            icon={
+                              showConfirmPassword ? <FiEyeOff /> : <FiEye />
+                            }
                             variant="ghost"
                             size="sm"
                             onClick={() =>
@@ -398,7 +426,9 @@ const Profile = () => {
                         </InputRightElement>
                       </InputGroup>
                       {errors.confirmPassword && (
-                        <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage>
+                        <FormErrorMessage>
+                          {errors.confirmPassword}
+                        </FormErrorMessage>
                       )}
                     </FormControl>
                   </>
@@ -406,7 +436,7 @@ const Profile = () => {
 
                 {(isEditing || isCoatChanged) && (
                   <Button
-                    colorScheme="purple"
+                    colorScheme={getColor('button.primary')}
                     onClick={handleSave}
                     isLoading={isLoading}
                     loadingText={t('profile.saving')}
@@ -423,9 +453,27 @@ const Profile = () => {
           {/* Aba de Temas */}
           <TabPanel>
             <Box maxW="600px" mx="auto" p={4}>
+              {/* Opção de Dark Mode */}
+              <Flex justify="flex-end" mb={6}>
+                <IconButton
+                  aria-label="Alternar modo escuro"
+                  icon={<Icon as={isDarkMode ? FiMoon : FiSun} />}
+                  onClick={toggleDarkMode}
+                  colorScheme={
+                    isDarkMode
+                      ? getColor('chakraColors.black')
+                      : getColor('chakraColors.yellow')
+                  }
+                  variant="ghost"
+                  size="sm"
+                  fontSize="24px"
+                />
+              </Flex>
+
+              {/* Lista de Temas */}
               {isLoadingThemes ? (
                 <Center py={8}>
-                  <Text>Carregando temas...</Text>
+                  <Text>{t('profile.loadingThemes')}</Text>
                 </Center>
               ) : (
                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
@@ -437,13 +485,23 @@ const Profile = () => {
                       borderRadius="lg"
                       cursor={theme.isUnlocked ? 'pointer' : 'not-allowed'}
                       onClick={() => handleThemeChange(theme.id)}
-                      bg={currentTheme === theme.id ? 'purple.50' : 'transparent'}
-                      borderColor={currentTheme === theme.id ? 'purple.500' : 'gray.200'}
+                      bg={
+                        currentTheme === theme.id
+                          ? getColor('background.quaternary')
+                          : getColor('chakraColors.white')
+                      }
+                      borderColor={
+                        currentTheme === theme.id
+                          ? getColor('border.selected')
+                          : getColor('border.noSelect')
+                      }
                       opacity={theme.isUnlocked ? 1 : 0.6}
                       position="relative"
                       transition="all 0.2s"
                       _hover={{
-                        transform: theme.isUnlocked ? 'translateY(-2px)' : 'none',
+                        transform: theme.isUnlocked
+                          ? 'translateY(-2px)'
+                          : 'none',
                         shadow: theme.isUnlocked ? 'md' : 'none',
                       }}
                     >
@@ -452,10 +510,10 @@ const Profile = () => {
                           {theme.name}
                         </Text>
                         {currentTheme === theme.id && (
-                          <Icon as={FiCheck} color="green.500" boxSize={5} />
+                          <Icon as={FiCheck} color={getColor('chakraColors.green')} boxSize={5} />
                         )}
                       </Flex>
-                      
+
                       {!theme.isUnlocked && (
                         <Flex
                           position="absolute"
@@ -468,8 +526,12 @@ const Profile = () => {
                           align="center"
                           borderRadius="lg"
                         >
-                          <Text fontSize="md" fontWeight="medium" color="gray.600">
-                            Requer {theme.requiredCoins} moedas
+                          <Text
+                            fontSize="md"
+                            fontWeight="medium"
+                            color={getColor('chakraColors.gray')}
+                          >
+                            {t('profile.themes.requires', { count: theme.requiredCoins })}
                           </Text>
                         </Flex>
                       )}
@@ -490,14 +552,14 @@ const Profile = () => {
         isCentered
       >
         <ModalOverlay />
-        <ModalContent bg="purple.800" color="white">
+        <ModalContent bg={getColor('background.primary')} color={getColor('text.primary')}>
           <ModalHeader>{t('profile.selectCoatOfArms')}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <SimpleGrid columns={3} spacing={4}>
-              {predefinedCoatOfArms.map((image, index) => (
+              {predefinedCoatOfArms.map((image) => (
                 <Image
-                  key={index}
+                  key={image}
                   src={image}
                   boxSize="100px"
                   objectFit="contain"
@@ -505,11 +567,11 @@ const Profile = () => {
                   borderRadius="md"
                   border={selectedCoat === image ? '3px solid' : '1px solid'}
                   borderColor={
-                    selectedCoat === image ? 'purple.500' : 'gray.200'
+                    selectedCoat === image ? getColor('border.selected') : getColor('border.noSelect')
                   }
                   _hover={{
                     transform: 'scale(1.05)',
-                    borderColor: 'purple.300',
+                    borderColor: getColor('border.primary'),
                   }}
                   transition="all 0.2s"
                   onClick={() => handleCoatChange(image)}
@@ -518,7 +580,7 @@ const Profile = () => {
             </SimpleGrid>
 
             <Center mt={6}>
-              <Text fontSize="sm" color="gray.300" textAlign="center">
+              <Text fontSize="sm" color={getColor('text.primary')} textAlign="center">
                 {t('profile.chooseCoatOfArms')}
               </Text>
             </Center>

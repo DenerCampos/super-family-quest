@@ -1,9 +1,39 @@
 // src/pages/Cadastro/index.tsx
 import { useState } from 'react';
-import { Flex, Input, Button, Text, useToast } from '@chakra-ui/react';
+import {
+  Flex,
+  Input,
+  Button,
+  Text,
+  useToast,
+  defineStyle,
+} from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
+
+const floatingStyles = defineStyle({
+  pos: 'absolute',
+  bg: 'bg',
+  px: '0.5',
+  top: '-3',
+  insetStart: '2',
+  fontWeight: 'normal',
+  pointerEvents: 'none',
+  transition: 'position',
+  _peerPlaceholderShown: {
+    color: 'fg.muted',
+    top: '2.5',
+    insetStart: '3',
+  },
+  _peerFocusVisible: {
+    color: 'fg',
+    top: '-3',
+    insetStart: '2',
+  },
+});
+
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +44,7 @@ const Register = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const { t } = useThemedTranslation();
+  const { getAsset, getColor, getFont } = useVisualTheme();
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       toast({
@@ -82,14 +113,14 @@ const Register = () => {
   return (
     <Flex
       minH="100vh"
-      bgImage="url('/assets/images/register-bg.png')"
+      bgImage={`url(${getAsset('images.background.register')})`}
       bgSize="cover"
       align="center"
       justify="center"
     >
       <Flex
         direction="column"
-        bg="rgba(23, 25, 35, 0.8)"
+        bg={getColor('background.login')}
         p={8}
         borderRadius="lg"
         gap={4}
@@ -99,10 +130,10 @@ const Register = () => {
       >
         <Text
           fontSize="2xl"
-          color="purple.300"
+          color={getColor('text.primary')}
           textAlign="center"
           mb={4}
-          fontFamily="Pixelify Sans"
+          fontFamily={getFont('theme')}
         >
           {t('register.createNewRealm')}
         </Text>
@@ -110,38 +141,83 @@ const Register = () => {
         <Input
           placeholder={t('register.fullName')}
           variant="filled"
-          focusBorderColor="purple.500"
+          focusBorderColor={getColor('border.primary')}
           value={name}
           onChange={(e) => setName(e.target.value)}
+          color={getColor('text.primary')}
           isDisabled={isLoading}
+          _hover={{
+            bg: getColor('input.hover'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
         <Input
           placeholder={t('register.email')}
           type="email"
           variant="filled"
+          focusBorderColor={getColor('border.primary')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          color={getColor('text.primary')}
           isDisabled={isLoading}
+          _hover={{
+            bg: getColor('input.hover'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
         <Input
           placeholder={t('register.password')}
           type="password"
           variant="filled"
+          focusBorderColor={getColor('border.primary')}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          color={getColor('text.primary')}
           isDisabled={isLoading}
+          _hover={{
+            bg: getColor('input.hover'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
         <Input
           placeholder={t('register.confirmPassword')}
           type="password"
           variant="filled"
+          focusBorderColor={getColor('border.primary')}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          color={getColor('text.primary')}
           isDisabled={isLoading}
+          _hover={{
+            bg: getColor('input.hover'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
 
         <Button
-          colorScheme="purple"
+          colorScheme={getColor('button.primary')}
           mt={4}
           onClick={handleRegister}
           isLoading={isLoading}
@@ -155,7 +231,7 @@ const Register = () => {
           as={RouterLink}
           to="/login"
           variant="link"
-          color="blue.300"
+          color={getColor('link.primary')}
           mt={2}
           fontSize="sm"
           isDisabled={isLoading}

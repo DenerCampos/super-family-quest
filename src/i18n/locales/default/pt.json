@@ -335,7 +335,9 @@
       "available": "Temas Disponíveis",
       "unlocked": "Desbloqueado",
       "locked": "Bloqueado",
-      "select": "Selecionar Tema"
+      "select": "Selecionar Tema",
+      "loading": "Carregando temas...",
+      "requires": "Requer {{count}} moedas"
     }
   },
   "newChallenge": {

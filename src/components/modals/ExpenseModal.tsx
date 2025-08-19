@@ -45,20 +45,6 @@ import { formatGramsInput, parseGrams } from '../../utils/formatGrams';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
-const inputStyle = {
-  bgColor: 'purple.100',
-  color: 'purple.800',
-  _focus: {
-    borderColor: 'purple.500',
-    boxShadow: '0 0 0 1px purple.500',
-  },
-};
-
-const smallInputStyle = {
-  ...inputStyle,
-  size: 'sm',
-};
-
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -91,6 +77,26 @@ export const ExpenseModal = ({
   const [expandedItemIndex, setExpandedItemIndex] = useState<number>(0);
   const { isOpen: isItemsCollapsed, onToggle: toggleItemsCollapsed } =
     useDisclosure({ defaultIsOpen: false });
+
+  const inputStyle = {
+    bg: getColor('input.background'),
+    color: getColor('text.primary'),
+    _focus: {
+      borderColor: getColor('input.focus'),
+      boxShadow: `0 0 0 1px ${getColor('input.focusBorder')}`,
+    },
+    sx: {
+      '&::-webkit-calendar-picker-indicator': {
+        filter: 'invert(1)',
+        cursor: 'pointer',
+      },
+    },
+  };
+
+  const smallInputStyle = {
+    ...inputStyle,
+    size: 'sm',
+  };
 
   const defaultItem = {
     code: '1',
@@ -260,7 +266,7 @@ export const ExpenseModal = ({
       <ModalOverlay />
       <ModalContent
         bg={getColor('background.primary')}
-        color={getColor('text.inverted')}
+        color={getColor('text.primary')}
       >
         {isSubmitting && <LoadingOverlay text={t('common.saving')} />}
         <ModalHeader>
@@ -334,7 +340,7 @@ export const ExpenseModal = ({
             </FormControl>
 
             <FormControl mb={4}>
-              <Checkbox {...register('repeat')} colorScheme="green" size="lg">
+              <Checkbox {...register('repeat')} colorScheme={getColor('chakraColors.green')} size="lg">
                 {t('modals.expense.repeat')}
               </Checkbox>
             </FormControl>
@@ -402,14 +408,19 @@ export const ExpenseModal = ({
                           <AccordionIcon />
                         </AccordionButton>
 
-                        <AccordionPanel bg={getColor('background.secondary')} pb={4}>
+                        <AccordionPanel
+                          bg={getColor('background.secondary')}
+                          pb={4}
+                        >
                           <Flex direction="column" gap={4}>
                             {/* Código e Nome */}
                             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                               <FormControl
                                 isInvalid={!!errors.items?.[index]?.code}
                               >
-                                <FormLabel fontSize="sm">{t('modals.expense.code')}</FormLabel>
+                                <FormLabel fontSize="sm">
+                                  {t('modals.expense.code')}
+                                </FormLabel>
                                 <Input
                                   {...register(`items.${index}.code`, {
                                     required: t('common.required'),
@@ -431,7 +442,9 @@ export const ExpenseModal = ({
                               <FormControl
                                 isInvalid={!!errors.items?.[index]?.name}
                               >
-                                <FormLabel fontSize="sm">{t('modals.expense.name')}</FormLabel>
+                                <FormLabel fontSize="sm">
+                                  {t('modals.expense.name')}
+                                </FormLabel>
                                 <Input
                                   {...register(`items.${index}.name`, {
                                     required: t('common.required'),
@@ -458,7 +471,9 @@ export const ExpenseModal = ({
                               <FormControl
                                 isInvalid={!!errors.items?.[index]?.quantity}
                               >
-                                <FormLabel fontSize="sm">{t('modals.expense.quantity')}</FormLabel>
+                                <FormLabel fontSize="sm">
+                                  {t('modals.expense.quantity')}
+                                </FormLabel>
                                 <Input
                                   type="text"
                                   {...register(`items.${index}.quantity`, {
@@ -489,7 +504,11 @@ export const ExpenseModal = ({
                                   size="sm"
                                 />
                                 {errors.items?.[index]?.quantity && (
-                                  <Text color={getColor('text.error')} fontSize="xs" mt={1}>
+                                  <Text
+                                    color={getColor('text.error')}
+                                    fontSize="xs"
+                                    mt={1}
+                                  >
                                     {errors.items[index]?.quantity?.message}
                                   </Text>
                                 )}
@@ -498,7 +517,9 @@ export const ExpenseModal = ({
                               <FormControl
                                 isInvalid={!!errors.items?.[index]?.unit}
                               >
-                                <FormLabel fontSize="sm">{t('modals.expense.unit')}</FormLabel>
+                                <FormLabel fontSize="sm">
+                                  {t('modals.expense.unit')}
+                                </FormLabel>
                                 <Input
                                   {...register(`items.${index}.unit`, {
                                     required: t('common.required'),
@@ -507,7 +528,11 @@ export const ExpenseModal = ({
                                   size="sm"
                                 />
                                 {errors.items?.[index]?.unit && (
-                                  <Text color={getColor('text.error')} fontSize="xs" mt={1}>
+                                  <Text
+                                    color={getColor('text.error')}
+                                    fontSize="xs"
+                                    mt={1}
+                                  >
                                     {errors.items[index]?.unit?.message}
                                   </Text>
                                 )}
@@ -551,7 +576,11 @@ export const ExpenseModal = ({
                                   size="sm"
                                 />
                                 {errors.items?.[index]?.value && (
-                                  <Text color={getColor('text.error')} fontSize="xs" mt={1}>
+                                  <Text
+                                    color={getColor('text.error')}
+                                    fontSize="xs"
+                                    mt={1}
+                                  >
                                     {errors.items[index]?.value?.message}
                                   </Text>
                                 )}
@@ -562,7 +591,9 @@ export const ExpenseModal = ({
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.group?.name}
                             >
-                              <FormLabel fontSize="sm">{t('modals.expense.group')}</FormLabel>
+                              <FormLabel fontSize="sm">
+                                {t('modals.expense.group')}
+                              </FormLabel>
                               <AutocompleteInput
                                 value={watch(`items.${index}.group.name`) || ''}
                                 options={groups.map((group) => group.name)}
@@ -574,7 +605,11 @@ export const ExpenseModal = ({
                                 placeholder="Selecione ou digite um grupo"
                               />
                               {errors.items?.[index]?.group?.name && (
-                                <Text color={getColor('text.error')} fontSize="xs" mt={1}>
+                                <Text
+                                  color={getColor('text.error')}
+                                  fontSize="xs"
+                                  mt={1}
+                                >
                                   {errors.items[index]?.group?.name?.message}
                                 </Text>
                               )}
@@ -593,7 +628,7 @@ export const ExpenseModal = ({
                                   }
                                   remove(index);
                                 }}
-                                colorScheme={getColor('chakra.red')}
+                                colorScheme={getColor('chakraColors.red')}
                                 size="sm"
                                 isDisabled={fields.length <= 1}
                               >
@@ -608,13 +643,17 @@ export const ExpenseModal = ({
 
                   <Button
                     onClick={handleAddItem}
-                    bg={getColor('background.primary')}
                     mt={4}
                     w="full"
                     variant="outline"
-                    borderColor={getColor('border.tertiary')}
-                    color={getColor('text.inverted')}
-                    _hover={{ bg: getColor('background.button.hover.secondary') }}
+                    color={getColor('text.primary')}
+                    bg={getColor('background.tertiary')}
+                    border="1px solid"
+                    borderColor={getColor('border.primary')}
+                    _hover={{
+                      bg: getColor('background.selected'),
+                      color: getColor('text.accent'),
+                    }}
                   >
                     {t('modals.expense.addItem')}
                   </Button>
@@ -625,9 +664,14 @@ export const ExpenseModal = ({
             {/* Botão Salvar */}
             <Button
               mt={6}
-              bg={getColor('background.secondary')}
-              color={getColor('text.inverted')}
-              _hover={{ bg: getColor('background.button.hover.primary') }}
+              color={getColor('text.primary')}
+              bg={getColor('background.tertiary')}
+              border="1px solid"
+              borderColor={getColor('border.primary')}
+              _hover={{
+                bg: getColor('background.selected'),
+                color: getColor('text.accent'),
+              }}
               type="submit"
               w="full"
               size="lg"

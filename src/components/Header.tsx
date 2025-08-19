@@ -11,10 +11,12 @@ export const Header = () => {
   return (
     <Flex
       bg={getColor('background.primary')}
+      borderBottomWidth="1px"
+      borderBottomColor={getColor('border.primary')}
       p={4}
       justify="space-between"
       align="center"
-      boxShadow="md"
+      boxShadow="lg"
     >
       {/* Lado Esquerdo - Brasão e Nome */}
       <Flex align="center" gap={3}>
@@ -23,10 +25,15 @@ export const Header = () => {
           boxSize="40px"
           objectFit="contain"
           alt="Brasão da Família"
+          borderRadius="md"
+          borderWidth="2px"
+          borderColor={getColor('border.secondary')}
+          p={1}
+          bg={getColor('background.secondary')}
         />
-        <Heading 
-          size="md" 
-          color={getColor('text.inverted')}
+        <Heading
+          size="md"
+          color={getColor('text.primary')}
           fontFamily={getFont('heading')}
         >
           {profile?.user.family}
@@ -40,11 +47,12 @@ export const Header = () => {
           icon={<FiLogOut />}
           aria-label="Sair"
           variant="ghost"
-          color={getColor('text.inverted')}
+          color={getColor('text.primary')}
           _hover={{
-            bg: getColor('primary.700'),
-            color: getColor('text.primary'),
+            bg: getColor('background.tertiary'),
+            color: getColor('text.accent')
           }}
+          colorScheme="gray"
           onClick={logout}
         />
       </Flex>

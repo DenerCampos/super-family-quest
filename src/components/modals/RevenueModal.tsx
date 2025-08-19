@@ -127,7 +127,10 @@ export const RevenueModal = ({
     >
       <ModalOverlay />
 
-      <ModalContent bg={getColor('background.primary')} color={getColor('text.inverted')}>
+      <ModalContent
+        bg={getColor('background.primary')}
+        color={getColor('text.primary')}
+      >
         {isSubmitting && <LoadingOverlay />}
 
         <ModalHeader>
@@ -148,8 +151,8 @@ export const RevenueModal = ({
                     message: t('common.minLength', { count: 3 }),
                   },
                 })}
-                bg={getColor('background.write')}
-                color={getColor('text.default')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
                 placeholder={t('modals.revenue.namePlaceholder')}
                 isDisabled={isSubmitting}
               />
@@ -169,9 +172,7 @@ export const RevenueModal = ({
                   validate: (value) => {
                     const numericValue = parseBRLCurrency(value);
                     if (isNaN(numericValue)) return t('common.invalidValue');
-                    return (
-                      numericValue >= 0.01 || t('common.invalidValue')
-                    );
+                    return numericValue >= 0.01 || t('common.invalidValue');
                   },
                 })}
                 onChange={(e) => {
@@ -181,8 +182,8 @@ export const RevenueModal = ({
                     shouldDirty: true,
                   });
                 }}
-                bg={getColor('background.write')}
-                color={getColor('text.default')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
                 placeholder={t('modals.revenue.valuePlaceholder')}
                 isDisabled={isSubmitting}
               />
@@ -200,8 +201,14 @@ export const RevenueModal = ({
                 {...register('date', {
                   required: t('common.required'),
                 })}
-                bg={getColor('background.write')}
-                color={getColor('text.default')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
+                sx={{
+                  '&::-webkit-calendar-picker-indicator': {
+                    filter: 'invert(1)',
+                    cursor: 'pointer',
+                  },
+                }}
                 isDisabled={isSubmitting}
               />
               {errors.date && (
@@ -212,17 +219,25 @@ export const RevenueModal = ({
             </FormControl>
 
             <FormControl mb={4}>
-              <Checkbox {...register('repeat')} colorScheme={getColor('chakra.green')} size="lg">
+              <Checkbox
+                {...register('repeat')}
+                colorScheme={getColor('chakraColors.green')}
+                size="lg"
+              >
                 {t('modals.revenue.repeat')}
               </Checkbox>
             </FormControl>
 
             <Flex justify="flex-end">
               <Button
-                bg={getColor('background.secondary')}
-                color={getColor('text.inverted')}
-                _hover={{ bg: getColor('background.button.hover.primary') }}
-                _focus={{ bg: getColor('background.button.hover.primary') }}
+                color={getColor('text.primary')}
+                bg={getColor('background.tertiary')}
+                border="1px solid"
+                borderColor={getColor('border.primary')}
+                _hover={{
+                  bg: getColor('background.selected'),
+                  color: getColor('text.accent'),
+                }}
                 type="submit"
                 isDisabled={!isValid || isSubmitting}
                 isLoading={isSubmitting}

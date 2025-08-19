@@ -2,13 +2,15 @@
 import { Flex, Heading, Text, Button } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const NotFoundPage = () => {
   const { t } = useThemedTranslation();
+  const { getAsset, getColor, getFont } = useVisualTheme();
   return (
     <Flex
       minH="100vh"
-      bgImage="url('/assets/images/notfound-bg.png')"
+      bgImage={`url(${getAsset('images.background.notFound')})`}
       bgSize="cover"
       bgPosition="center"
       align="center"
@@ -18,7 +20,7 @@ const NotFoundPage = () => {
       p={4}
     >
       <Flex
-        bg="rgba(23, 25, 35, 0.9)"
+        bg={getColor('background.login')}
         p={8}
         borderRadius="xl"
         direction="column"
@@ -28,8 +30,8 @@ const NotFoundPage = () => {
       >
         <Heading
           fontSize="6xl"
-          color="purple.300"
-          fontFamily="Press Start 2P"
+          color={getColor('text.primary')}
+          fontFamily={getFont('mono')}
           textShadow="2px 2px #000"
         >
           404
@@ -46,11 +48,11 @@ const NotFoundPage = () => {
         <Button
           as={RouterLink}
           to="/home"
-          colorScheme="purple"
+          colorScheme={getColor('button.primary')}
           mt={6}
-          size="lg"
+          size="sm"
           _hover={{ transform: 'scale(1.05)' }}
-          fontFamily="Press Start 2P"
+          fontFamily={getFont('mono')}
         >
           {t('notFoundPage.back')}
         </Button>

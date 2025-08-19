@@ -1,153 +1,156 @@
 import type { ThemeNamespace } from '../i18n/types';
 
+// Interface para as cores do Chakra (50-950)
+interface ColorScale {
+  50: string;
+  100: string;
+  200: string;
+  300: string;
+  400: string;
+  500: string;
+  600: string;
+  700: string;
+  800: string;
+  900: string;
+  950: string;
+}
+
+// Interface para tokens que têm variantes light/dark
+interface ThemeToken {
+  light: string;
+  dark: string;
+}
+
 export interface ThemeColors {
-  primary: {
-    50: string;
-    100: string;
-    200: string;
-    300: string;
-    400: string;
-    500: string;
-    600: string;
-    700: string;
-    800: string;
-    900: string;
-  };
-  secondary: {
-    50: string;
-    100: string;
-    200: string;
-    300: string;
-    400: string;
-    500: string;
-    600: string;
-    700: string;
-    800: string;
-    900: string;
-  };
-  accent: {
-    50: string;
-    100: string;
-    200: string;
-    300: string;
-    400: string;
-    500: string;
-    600: string;
-    700: string;
-    800: string;
-    900: string;
-  };
-  gray: {
-    50: string;
-    100: string;
-    200: string;
-    300: string;
-    400: string;
-    500: string;
-    600: string;
-    700: string;
-    800: string;
-    900: string;
-  };
-  chakra: {
-    blue: string;
-    green: string;
+  // Cores principais do tema
+  primary: string;
+  secondary: string;
+  accent: string;
+  gray: string;
+  revenue: string;
+  expense: string;
+
+  chakraColors: {
     red: string;
+    green: string;
     yellow: string;
     purple: string;
-    orange: string;
+    blue: string;
+    cyan: string;
     pink: string;
+    orange: string;
+    teal: string;
     gray: string;
-    theme: string;
+    white: string;
+    black: string;
   };
+
+  // Tokens semânticos para background
   background: {
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    write: string;
-    hover: string;
+    primary: ThemeToken;
+    secondary: ThemeToken;
+    tertiary: ThemeToken;
+    quaternary: ThemeToken;
+    selected: ThemeToken;
+    noSelect: ThemeToken;
+    write: ThemeToken;
+    hover: ThemeToken;
     lastRegistrations: {
-      expense: string;
-      revenue: string;
-      neutral: string;
-      badge: {
-        expense: string;
-        revenue: string;
-      };
+      expense: ThemeToken;
+      revenue: ThemeToken;
+      neutral: ThemeToken;
     };
-    button: {
-      primary: string;
-      expense: string;
-      revenue: string;
-      neutral: string;
-      inverted: string;
-      hover: {
-        primary: string;
-        secondary: string;
-        tertiary: string;
-        expense: string;
-        revenue: string;
-        neutral: string;
-      };
+    loading: ThemeToken;
+    summaryCard: {
+      revenue: ThemeToken;
+      expense: ThemeToken;
     };
+    login: ThemeToken;
   };
-  border: {
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    lastRegistrations: {
-      expense: string;
-      revenue: string;
-      neutral: string;
-    };
-  };
+
+  // Tokens semânticos para texto
   text: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    disabled: string;
-    link: string;
-    highlight: string;
-    muted: string;
-    inverted: string;
-    gold: string;
-    silver: string;
-    bronze: string;
-    copper: string;
-    platinum: string;
-    diamond: string;
-    emerald: string;
-    ruby: string;
-    sapphire: string;
-    amethyst: string;
-    default: string;
+    primary: ThemeToken;
+    secondary: ThemeToken;
+    tertiary: ThemeToken;
+    accent: ThemeToken;
+    disabled: ThemeToken;
+    link: ThemeToken;
+    gold: ThemeToken;
+    summaryCard: {
+      revenue: ThemeToken;
+      expense: ThemeToken;
+    };
+    lastRegistrations: {
+      expense: ThemeToken;
+      revenue: ThemeToken;
+    };
   };
+
+  // Tokens semânticos para heading
+  heading: {
+    summaryCard: {
+      revenue: ThemeToken;
+      expense: ThemeToken;
+    };
+  };
+
+  // Tokens semânticos para bordas
+  border: {
+    primary: ThemeToken;
+    secondary: ThemeToken;
+    selected: ThemeToken;
+    noSelect: ThemeToken;
+    lastRegistrations: {
+      expense: ThemeToken;
+      revenue: ThemeToken;
+      neutral: ThemeToken;
+    };
+    summaryCard: {
+      revenue: ThemeToken;
+      expense: ThemeToken;
+    };
+  };
+
+  // Tokens semânticos para status
   status: {
-    success: string;
-    error: string;
-    warning: string;
-    info: string;
+    success: ThemeToken;
+    error: ThemeToken;
+    warning: ThemeToken;
+    info: ThemeToken;
   };
-  summaryCard: {
-    expense: {
-      bg: string;
-      border: string;
-      text: string;
-      heading: string;
-    };
-    revenue: {
-      bg: string;
-      border: string;
-      text: string;
-      heading: string;
-    };
+
+  // Configuração de botões usando cores do Chakra
+  button: {
+    primary: ThemeToken;
+    secondary: ThemeToken;
+    danger: ThemeToken;
+    warning: ThemeToken;
   };
-} 
+
+  link: {
+    primary: ThemeToken;
+  };
+
+  input: {
+    primary: ThemeToken;
+    secondary: ThemeToken;
+    hover: ThemeToken;
+    focus: ThemeToken;
+    border: ThemeToken;
+    background: ThemeToken;
+    focusBorder: ThemeToken;
+    backgroundPrimary: ThemeToken;
+    backgroundSecondary: ThemeToken;
+    focusPrimary: ThemeToken;
+  };
+}
 
 export interface ThemeFonts {
   body: string;
   heading: string;
   mono: string;
+  theme: string;
 }
 
 export interface ThemeAssets {
@@ -180,4 +183,4 @@ export interface VisualTheme {
   colors: ThemeColors;
   fonts: ThemeFonts;
   assets: ThemeAssets;
-} 
+}

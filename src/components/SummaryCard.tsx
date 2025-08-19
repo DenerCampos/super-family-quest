@@ -7,41 +7,49 @@ import { useVisualTheme } from '../hooks/useVisualTheme';
 type Props = {
   title: string;
   value: number;
-  colorScheme: 'green' | 'red';
+  type: 'revenue' | 'expense';
 };
 
-export const SummaryCard = ({ title, value, colorScheme }: Props) => {
+export const SummaryCard = ({ title, value, type }: Props) => {
   const { showValues } = useAuth();
-  const { getColor } = useVisualTheme();
-
-  console.log(getColor('summaryCard.revenue.bg'));
+  const { getColor, getFont} = useVisualTheme();
 
   const colors = {
-    green: {
-      bg: getColor('summaryCard.revenue.bg'),
-      border: getColor('summaryCard.revenue.border'),
-      text: getColor('summaryCard.revenue.text'),
-      heading: getColor('summaryCard.revenue.heading'),
+    revenue: {
+      bg: getColor('background.tertiary'),
+      border: getColor('border.summaryCard.revenue'),
+      text: getColor('text.primary'),
+      heading: getColor('text.primary'),
     },
-    red: {
-      bg: getColor('summaryCard.expense.bg'),
-      border: getColor('summaryCard.expense.border'),
-      text: getColor('summaryCard.expense.text'),
-      heading: getColor('summaryCard.expense.heading'),
+    expense: {
+      bg: getColor('background.tertiary'),
+      border: getColor('border.summaryCard.expense'),
+      text: getColor('text.primary'),
+      heading: getColor('text.primary'),
     },
   };
 
   return (
     <Card
-      bg={colors[colorScheme].bg}
+      bg={colors[type].bg}
       borderLeft="4px solid"
-      borderColor={colors[colorScheme].border}
+      borderColor={colors[type].border}
     >
       <CardBody>
-        <Text fontSize="sm" color={colors[colorScheme].text}>
+        <Text
+          fontSize="md"
+          color={colors[type].text}
+          fontFamily={getFont('body')}
+          fontWeight="bold"
+        >
           {title}
         </Text>
-        <Heading size="lg" color={colors[colorScheme].heading} letterSpacing="2px">
+        <Heading
+          size="lg"
+          color={colors[type].heading}
+          letterSpacing="2px"
+          fontFamily={getFont('mono')}
+        >
           {showValues ? formatCurrency(value) : '••••••••'}
         </Heading>
       </CardBody>

@@ -109,7 +109,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
       <ModalOverlay />
       <ModalContent
         bg={getColor('background.primary')}
-        color={getColor('text.inverted')}
+        color={getColor('text.primary')}
       >
         <ModalHeader>{t('profile.complete')}</ModalHeader>
 
@@ -124,8 +124,8 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                   required: t('common.required'),
                 })}
                 placeholder={t('profile.familyNamePlaceholder')}
-                bg={getColor('background.write')}
-                color={getColor('text.default')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
                 _focus={{
                   borderColor: getColor('border.tertiary'),
                   boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
@@ -147,7 +147,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                   placement="top"
                   hasArrow
                   bg={getColor('background.tertiary')}
-                  color={getColor('text.inverted')}
+                  color={getColor('text.primary')}
                 >
                   <Box ml={1}>
                     <Icon
@@ -163,8 +163,8 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                   required: t('common.required'),
                 })}
                 placeholder={t('profile.nameRevenuePlaceholder')}
-                bg={getColor('background.write')}
-                color={getColor('text.default')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
                 _focus={{
                   borderColor: getColor('border.tertiary'),
                   boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
@@ -192,8 +192,8 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                   e.target.value = formatted;
                 }}
                 placeholder={t('profile.monthlyIncomePlaceholder')}
-                bg={getColor('background.write')}
-                color={getColor('text.default')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
                 _focus={{
                   borderColor: getColor('border.tertiary'),
                   boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
@@ -213,8 +213,14 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                 {...register('date', {
                   required: t('common.required'),
                 })}
-                bg={getColor('background.write')}
-                color={getColor('text.default')}
+                bg={getColor('input.background')}
+                sx={{
+                  '&::-webkit-calendar-picker-indicator': {
+                    filter: 'invert(1)',
+                    cursor: 'pointer',
+                  },
+                }}
+                color={getColor('text.primary')}
                 isDisabled={isSubmitting}
               />
               {errors.date && (
@@ -229,10 +235,8 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
               <Checkbox
                 {...register('repeatMonthly')}
                 defaultChecked
-                color={getColor('text.inverted')}
-                _hover={{
-                  bg: getColor('background.button.hover.primary'),
-                }}
+                colorScheme={getColor('chakraColors.green')}
+                size="lg"
               >
                 <Flex align="center">
                   {t('profile.repeatMonthly')}
@@ -241,7 +245,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                     placement="top"
                     hasArrow
                     bg={getColor('background.tertiary')}
-                    color={getColor('text.inverted')}
+                    color={getColor('text.primary')}
                   >
                     <Box ml={1}>
                       <Icon
@@ -257,10 +261,13 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
 
             <Button
               type="submit"
-              color={getColor('text.inverted')}
+              color={getColor('text.primary')}
               bg={getColor('background.tertiary')}
+              border="1px solid"
+              borderColor={getColor('border.primary')}
               _hover={{
-                bg: getColor('background.button.hover.primary'),
+                bg: getColor('background.selected'),
+                color: getColor('text.accent'),
               }}
               w="full"
               isLoading={isSubmitting}

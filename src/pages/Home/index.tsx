@@ -109,7 +109,12 @@ const Home = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh" pb="70px" bg="purple.50">
+    <Flex
+      direction="column"
+      minH="100vh"
+      pb="70px"
+      bg={getColor('background.secondary')}
+    >
       <Header />
 
       {/* Conteúdo Principal */}
@@ -122,9 +127,12 @@ const Home = () => {
             top={2}
             size="sm"
             variant="ghost"
-            bg={getColor('background.button.primary')}
-            color={getColor('text.inverted')}
-            _hover={{ bg: getColor('background.button.hover.neutral') }}
+            color={getColor('text.primary')}
+            _hover={{
+              bg: getColor('background.selected'),
+              color: getColor('text.accent'),
+            }}
+            colorScheme="gray"
             onClick={toggleShowValues}
             zIndex={1}
           >
@@ -133,12 +141,12 @@ const Home = () => {
           <SummaryCard
             title={t('home.summary.income')}
             value={profile?.income || 0}
-            colorScheme="green"
+            type="revenue"
           />
           <SummaryCard
             title={t('home.summary.expenses')}
             value={profile?.expenses || 0}
-            colorScheme="red"
+            type="expense"
           />
         </Flex>
 
@@ -147,9 +155,14 @@ const Home = () => {
           <Menu>
             <MenuButton
               as={Button}
-              bg={getColor('background.button.expense')}
-              color={getColor('text.inverted')}
-              _hover={{ bg: getColor('background.button.hover.expense') }}
+              color={getColor('text.primary')}
+              bg={getColor('background.tertiary')}
+              border="1px solid"
+              borderColor={getColor('border.primary')}
+              _hover={{
+                bg: getColor('background.selected'),
+                color: getColor('text.accent'),
+              }}
               size="lg"
               leftIcon={<Icon as={FiShoppingBag} />}
               w="full"
@@ -169,11 +182,16 @@ const Home = () => {
           <Menu>
             <MenuButton
               as={Button}
-              bg={getColor('background.button.revenue')}
-              color={getColor('text.inverted')}
-              _hover={{ bg: getColor('background.button.hover.revenue') }}
+              color={getColor('text.primary')}
+              bg={getColor('background.tertiary')}
+              border="1px solid"
+              borderColor={getColor('border.primary')}
+              _hover={{
+                bg: getColor('background.selected'),
+                color: getColor('text.accent'),
+              }}
               size="lg"
-              leftIcon={<Icon as={FiDollarSign} />}
+              leftIcon={<Icon as={FiDollarSign} color={getColor('text.primary')} />}
               w="full"
             >
               {t('home.addRevenue')}

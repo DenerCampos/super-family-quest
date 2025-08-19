@@ -5,7 +5,7 @@ import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const NewChallenge = () => {
-  const { getColor } = useVisualTheme();
+  const { getColor, getAsset, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
   return (
     <Flex direction="column" minH="100vh">
@@ -13,14 +13,14 @@ const NewChallenge = () => {
 
       <Flex
         flex={1}
-        bgImage="url('/assets/images/under-construction-bg.png')"
+        bgImage={`url(${getAsset('images.background.underConstruction')})`}
         bgSize="cover"
         bgPosition="center"
         align="center"
         justify="center"
       >
         <Flex
-          bg="rgba(23, 25, 35, 0.8)"
+          bg={getColor('background.login')}
           p={8}
           borderRadius="lg"
           align="center"
@@ -31,9 +31,9 @@ const NewChallenge = () => {
         >
           <Text
             fontSize="2xl"
-            color={getColor('primary.300')}
+            color={getColor('text.primary')}
             textAlign="center"
-            fontFamily="Pixelify Sans"
+            fontFamily={getFont('theme')}
           >
             {t('newChallenge.development')}
           </Text>
