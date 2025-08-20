@@ -155,10 +155,10 @@ const StoreResource = ({
         </Text>
         <Button
           size="sm"
-          bg={getColor('primary.500')}
-          color={getColor('background.write')}
-          _hover={{ bg: getColor('primary.600') }}
-          _focus={{ bg: getColor('primary.700') }}
+          bg={getColor('background.tertiary')}
+          color={getColor('text.primary')}
+          _hover={{ bg: getColor('background.tertiary') }}
+          _focus={{ bg: getColor('background.tertiary') }}
           leftIcon={<FiPlus />}
           onClick={handleNewStore}
         >
@@ -179,7 +179,7 @@ const StoreResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color={getColor('primary.500')} />
+          <Spinner color={getColor('text.accent')} />
         </Flex>
       ) : stores?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
@@ -190,7 +190,7 @@ const StoreResource = ({
           <Box
             overflowX="auto"
             border="1px"
-            borderColor={getColor('gray.200')}
+            borderColor={getColor('gray.500')}
             borderRadius="md"
           >
             <Table variant="simple" minW="400px">
@@ -219,7 +219,7 @@ const StoreResource = ({
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(store.id as string)}
-                            color={getColor('chakra.red')}
+                            color={getColor('chakraColors.red')}
                           >
                             {t('resources.store.delete')}
                           </MenuItem>

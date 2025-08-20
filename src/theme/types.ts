@@ -66,6 +66,7 @@ export interface ThemeColors {
       expense: ThemeToken;
     };
     login: ThemeToken;
+    reports: ThemeToken;
   };
 
   // Tokens semânticos para texto
@@ -85,6 +86,7 @@ export interface ThemeColors {
       expense: ThemeToken;
       revenue: ThemeToken;
     };
+    reports: ThemeToken;
   };
 
   // Tokens semânticos para heading
@@ -110,6 +112,7 @@ export interface ThemeColors {
       revenue: ThemeToken;
       expense: ThemeToken;
     };
+    reports: ThemeToken;
   };
 
   // Tokens semânticos para status

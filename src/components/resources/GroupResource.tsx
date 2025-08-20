@@ -154,10 +154,10 @@ const GroupResource = ({
         </Text>
         <Button
           size="sm"
-          bg={getColor('primary.500')}
-          color={getColor('background.write')}
-          _hover={{ bg: getColor('primary.600') }}
-          _focus={{ bg: getColor('primary.700') }}
+          bg={getColor('background.secondary')}
+          color={getColor('text.primary')}
+          _hover={{ bg: getColor('background.secondary') }}
+          _focus={{ bg: getColor('background.secondary') }}
           leftIcon={<FiPlus />}
           onClick={handleNewGroup}
         >
@@ -178,7 +178,7 @@ const GroupResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color={getColor('primary.500')} />
+          <Spinner color={getColor('text.accent')} />
         </Flex>
       ) : groups?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
@@ -218,7 +218,7 @@ const GroupResource = ({
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(group.id as string)}
-                            color={getColor('chakra.red')}
+                            color={getColor('chakraColors.red')}
                           >
                             {t('resources.group.delete')}
                           </MenuItem>

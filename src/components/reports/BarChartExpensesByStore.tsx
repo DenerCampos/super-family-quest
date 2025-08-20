@@ -90,12 +90,12 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
       p={4}
       borderRadius="lg"
       border="2px solid"
-      borderColor={getColor('primary.200')}
+      borderColor={getColor('border.primary')}
       width="100%"
       maxW="600px"
       mx="auto"
       mb={6}
-      bg="transparent"
+      bg={getColor('background.reports')}
       boxShadow="sm"
     >
       <Text
@@ -119,16 +119,16 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
         <Flex align="center" justify="center" height="300px">
           <Spinner
             size="xl"
-            color={getColor('primary.500')}
+            color={getColor('text.accent')}
             thickness="4px"
-            emptyColor={getColor('primary.100')}
+            emptyColor={getColor('text.accent')}
           />
-          <Text ml={3} color={getColor('primary.300')}>
+          <Text ml={3} color={getColor('text.accent')}>
             {t('reports.expensesByStore.loading')}
           </Text>
         </Flex>
       ) : error ? (
-        <Text color="red.500" textAlign="center" py={10}>
+        <Text color={getColor('status.error')} textAlign="center" py={10}>
           {error}
         </Text>
       ) : data.length > 0 ? (
@@ -144,16 +144,19 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
                 bottom: 5,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke={getColor('primary.100')} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke={getColor('chakraColors.gray.200')}
+              />
               <XAxis
                 dataKey="name"
-                stroke={getColor('primary.500')}
+                stroke={getColor('text.reports')}
                 tick={{ fontSize: isMobile ? 12 : 14 }}
               />
               {!isMobile && (
                 <YAxis
                   tickFormatter={(value) => formatCurrency(value)}
-                  stroke={getColor('primary.500')}
+                  stroke={getColor('text.reports')}
                 />
               )}
               <Tooltip
@@ -165,10 +168,10 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
                   return fullName || value;
                 }}
                 contentStyle={{
-                  background: getColor('primary.50'),
-                  borderColor: getColor('primary.200'),
+                  background: getColor('background.quaternary'),
+                  borderColor: getColor('border.primary'),
                   borderRadius: 'md',
-                  color: getColor('primary.800'),
+                  color: getColor('text.reports'),
                 }}
               />
               <Legend
@@ -176,7 +179,9 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
                   paddingTop: '10px',
                 }}
                 formatter={(value) => (
-                  <span style={{ color: getColor('primary.700') }}>{value}</span>
+                  <span style={{ color: getColor('background.primary') }}>
+                    {value}
+                  </span>
                 )}
               />
               <Bar
@@ -188,7 +193,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
                   <Cell
                     key={`cell-${index}`}
                     fill={colors[index]}
-                    stroke={getColor('primary.800')}
+                    stroke={getColor('text.reports')}
                     strokeWidth={0.5}
                   />
                 ))}
@@ -197,7 +202,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
           </ResponsiveContainer>
         </Box>
       ) : (
-        <Text color={getColor('primary.300')} py={10} textAlign="center">
+        <Text color={getColor('text.reports')} py={10} textAlign="center">
           {t('reports.expensesByStore.noData')}
         </Text>
       )}

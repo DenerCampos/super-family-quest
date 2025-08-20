@@ -158,10 +158,10 @@ const ExpenseResource = ({
         </Text>
         <Button
           size="sm"
-          bg={getColor('primary.500')}
-          color={getColor('background.write')}
-          _hover={{ bg: getColor('primary.600') }}
-          _focus={{ bg: getColor('primary.700') }}
+          bg={getColor('background.secondary')}
+          color={getColor('text.primary')}
+          _hover={{ bg: getColor('background.secondary') }}
+          _focus={{ bg: getColor('background.secondary') }}
           leftIcon={<FiPlus />}
           onClick={handleNewExpense}
         >
@@ -182,7 +182,7 @@ const ExpenseResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color={getColor('primary.500')} />
+          <Spinner color={getColor('text.accent')} />
         </Flex>
       ) : expenses?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
@@ -193,7 +193,7 @@ const ExpenseResource = ({
           <Box
             overflowX="auto"
             border="1px"
-            borderColor={getColor('gray.200')}
+            borderColor={getColor('gray.500')}
             borderRadius="md"
           >
             <Table variant="simple" minW="600px">
@@ -211,7 +211,7 @@ const ExpenseResource = ({
                   <Tr key={expense.id}>
                     <Td>{expense.name || '-'}</Td>
                     <Td>
-                      <Badge colorScheme={getColor('chakra.red')}>
+                      <Badge colorScheme={getColor('chakraColors.red')}>
                         - {formatCurrency(expense.value)}
                       </Badge>
                     </Td>
@@ -232,7 +232,7 @@ const ExpenseResource = ({
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(expense.id as string)}
-                            color={getColor('chakra.red')}
+                            color={getColor('chakraColors.red')}
                           >
                             {t('resources.expense.delete')}
                           </MenuItem>

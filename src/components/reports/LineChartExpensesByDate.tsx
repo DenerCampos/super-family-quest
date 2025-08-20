@@ -102,17 +102,17 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
       p={4}
       borderRadius="lg"
       border="2px solid"
-      borderColor={getColor('primary.200')}
+      borderColor={getColor('border.primary')}
       width="100%"
       maxW="600px"
       mx="auto"
       mb={6}
-      bg="transparent"
+      bg={getColor('background.reports')}
       boxShadow="sm"
     >
       <Text
         fontSize="xl"
-        color={getColor('primary.500')}
+        color={getColor('text.reports')}
         textAlign="center"
         mb={4}
         fontWeight="bold"
@@ -131,16 +131,16 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
         <Flex align="center" justify="center" height="300px">
           <Spinner
             size="xl"
-            color={getColor('primary.500')}
+            color={getColor('text.accent')}
             thickness="4px"
-            emptyColor={getColor('primary.100')}
+            emptyColor={getColor('text.accent')}
           />
-          <Text ml={3} color={getColor('primary.300')}>
+          <Text ml={3} color={getColor('text.accent')}>
             {t('reports.expensesByDate.loading')}
           </Text>
         </Flex>
       ) : error ? (
-        <Text color="red.500" textAlign="center" py={10}>
+        <Text color={getColor('status.error')} textAlign="center" py={10}>
           {error}
         </Text>
       ) : chartData.length > 0 ? (
@@ -155,16 +155,16 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
                 bottom: 5,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke={getColor('primary.100')} />
+              <CartesianGrid strokeDasharray="3 3" stroke={getColor('text.accent')} />
               <XAxis
                 dataKey={isMobile ? "formattedDateMobile" : "formattedDateDesktop"}
-                stroke={getColor('primary.500')}
+                stroke={getColor('text.accent')}
                 tick={{ fontSize: isMobile ? 12 : 14 }}
               />
               {!isMobile && (
                 <YAxis
                   tickFormatter={(value) => formatCurrency(value)}
-                  stroke={getColor('primary.500')}
+                  stroke={getColor('text.accent')}
                 />
               )}
               <Tooltip
@@ -176,8 +176,8 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
                   return fullDate ? formatDateToBR(fullDate) : value;
                 }}
                 contentStyle={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  borderColor: getColor('primary.200'),
+                  background: getColor('background.reports'),
+                  borderColor: getColor('border.primary'),
                   borderRadius: 'md',
                   padding: '8px',
                 }}
@@ -209,7 +209,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
           </ResponsiveContainer>
         </Box>
       ) : (
-        <Text color={getColor('primary.300')} py={10} textAlign="center">
+        <Text color={getColor('text.accent')} py={10} textAlign="center">
           {t('reports.expensesByDate.noData')}
         </Text>
       )}

@@ -6,8 +6,11 @@ import { BarChartExpensesByStore } from '../../components/reports/BarChartExpens
 import { LineChartExpensesByDate } from '../../components/reports/LineChartExpensesByDate';
 import { HorizontalBarChartTopProducts } from '../../components/reports/HorizontalBarChartTopProducts';
 import { BarChartExpensesIncome } from '../../components/reports/BarChartExpensesIncome';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const Dashboard = () => {
+    const { getColor } = useVisualTheme();
+
   return (
     <Flex direction="column" minH="100vh">
       <Header />
@@ -20,6 +23,7 @@ const Dashboard = () => {
         pt={8}
         pb={20}
         px={4}
+        bg={getColor('background.primary')}
       >
         <SimpleGrid columns={1} spacing={6} width="100%" maxW="1200px">
           <PieChartExpenses data={[]} />

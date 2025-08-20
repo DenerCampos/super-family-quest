@@ -237,7 +237,7 @@ const Profile = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh">
+    <Flex direction="column" minH="100vh" bg={getColor('background.primary')}>
       <Header />
       <Tabs isFitted>
         <TabList>
@@ -246,6 +246,7 @@ const Profile = () => {
               color: getColor('text.primary'),
               bg: getColor('background.tertiary'),
             }}
+            color={getColor('text.primary')}
           >
             <Icon as={FiUser} mr={2} />
             {t('profile.editProfile')}
@@ -255,6 +256,7 @@ const Profile = () => {
               color: getColor('text.primary'),
               bg: getColor('background.tertiary'),
             }}
+            color={getColor('text.primary')}
           >
             <Icon as={FiSettings} mr={2} />
             {t('profile.themes.title')}
@@ -319,21 +321,34 @@ const Profile = () => {
                 </Flex>
 
                 <FormControl>
-                  <FormLabel>{t('profile.name')}</FormLabel>
+                  <FormLabel color={getColor('text.primary')}>
+                    {t('profile.name')}
+                  </FormLabel>
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     isDisabled={!isEditing}
                     bg={
                       isEditing
-                        ? getColor('input.primary')
+                        ? getColor('input.background')
                         : getColor('input.secondary')
                     }
+                    color={
+                      isEditing
+                        ? getColor('text.primary')
+                        : getColor('text.secundary')
+                    }
+                    _focus={{
+                      borderColor: getColor('border.tertiary'),
+                      boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
+                    }}
                   />
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.email}>
-                  <FormLabel>{t('profile.email')}</FormLabel>
+                  <FormLabel color={getColor('text.primary')}>
+                    {t('profile.email')}
+                  </FormLabel>
                   <Input
                     type="email"
                     value={email}
@@ -341,9 +356,18 @@ const Profile = () => {
                     isDisabled={!isEditing}
                     bg={
                       isEditing
-                        ? getColor('input.primary')
+                        ? getColor('input.background')
                         : getColor('input.secondary')
                     }
+                    color={
+                      isEditing
+                        ? getColor('text.primary')
+                        : getColor('text.secundary')
+                    }
+                    _focus={{
+                      borderColor: getColor('border.tertiary'),
+                      boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
+                    }}
                   />
                   {errors.email && (
                     <FormErrorMessage>{errors.email}</FormErrorMessage>
@@ -351,23 +375,34 @@ const Profile = () => {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel>{t('profile.familyName')}</FormLabel>
+                  <FormLabel color={getColor('text.primary')}>
+                    {t('profile.familyName')}
+                  </FormLabel>
                   <Input
                     value={family}
                     onChange={(e) => setFamily(e.target.value)}
                     isDisabled={!isEditing}
                     bg={
                       isEditing
-                        ? getColor('input.primary')
+                        ? getColor('input.background')
                         : getColor('input.secondary')
                     }
+                    color={
+                      isEditing
+                        ? getColor('text.primary')
+                        : getColor('text.secundary')
+                    }
+                    _focus={{
+                      borderColor: getColor('border.tertiary'),
+                      boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
+                    }}
                   />
                 </FormControl>
 
                 {isEditing && (
                   <>
                     <FormControl isInvalid={!!errors.password}>
-                      <FormLabel>
+                      <FormLabel color={getColor('text.primary')}>
                         {t('profile.newPassword')} (opcional)
                       </FormLabel>
                       <InputGroup>
@@ -376,7 +411,20 @@ const Profile = () => {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder={t('profile.minimum6Characters')}
-                          bg={getColor('input.primary')}
+                          bg={
+                            isEditing
+                              ? getColor('input.background')
+                              : getColor('input.secondary')
+                          }
+                          color={
+                            isEditing
+                              ? getColor('text.primary')
+                              : getColor('text.secundary')
+                          }
+                          _focus={{
+                            borderColor: getColor('border.tertiary'),
+                            boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
+                          }}
                         />
                         <InputRightElement>
                           <IconButton
@@ -398,14 +446,29 @@ const Profile = () => {
                     </FormControl>
 
                     <FormControl isInvalid={!!errors.confirmPassword}>
-                      <FormLabel>{t('profile.confirmNewPassword')}</FormLabel>
+                      <FormLabel color={getColor('text.primary')}>
+                        {t('profile.confirmNewPassword')}
+                      </FormLabel>
                       <InputGroup>
                         <Input
                           type={showConfirmPassword ? 'text' : 'password'}
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder={t('profile.repeatNewPassword')}
-                          bg={getColor('input.primary')}
+                          bg={
+                            isEditing
+                              ? getColor('input.background')
+                              : getColor('input.secondary')
+                          }
+                          color={
+                            isEditing
+                              ? getColor('text.primary')
+                              : getColor('text.secundary')
+                          }
+                          _focus={{
+                            borderColor: getColor('border.tertiary'),
+                            boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
+                          }}
                         />
                         <InputRightElement>
                           <IconButton
@@ -510,7 +573,11 @@ const Profile = () => {
                           {theme.name}
                         </Text>
                         {currentTheme === theme.id && (
-                          <Icon as={FiCheck} color={getColor('chakraColors.green')} boxSize={5} />
+                          <Icon
+                            as={FiCheck}
+                            color={getColor('chakraColors.green')}
+                            boxSize={5}
+                          />
                         )}
                       </Flex>
 
@@ -531,7 +598,9 @@ const Profile = () => {
                             fontWeight="medium"
                             color={getColor('chakraColors.gray')}
                           >
-                            {t('profile.themes.requires', { count: theme.requiredCoins })}
+                            {t('profile.themes.requires', {
+                              count: theme.requiredCoins,
+                            })}
                           </Text>
                         </Flex>
                       )}
@@ -552,7 +621,10 @@ const Profile = () => {
         isCentered
       >
         <ModalOverlay />
-        <ModalContent bg={getColor('background.primary')} color={getColor('text.primary')}>
+        <ModalContent
+          bg={getColor('background.primary')}
+          color={getColor('text.primary')}
+        >
           <ModalHeader>{t('profile.selectCoatOfArms')}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
@@ -567,7 +639,9 @@ const Profile = () => {
                   borderRadius="md"
                   border={selectedCoat === image ? '3px solid' : '1px solid'}
                   borderColor={
-                    selectedCoat === image ? getColor('border.selected') : getColor('border.noSelect')
+                    selectedCoat === image
+                      ? getColor('border.selected')
+                      : getColor('border.noSelect')
                   }
                   _hover={{
                     transform: 'scale(1.05)',
@@ -580,7 +654,11 @@ const Profile = () => {
             </SimpleGrid>
 
             <Center mt={6}>
-              <Text fontSize="sm" color={getColor('text.primary')} textAlign="center">
+              <Text
+                fontSize="sm"
+                color={getColor('text.primary')}
+                textAlign="center"
+              >
                 {t('profile.chooseCoatOfArms')}
               </Text>
             </Center>

@@ -96,17 +96,17 @@ export const HorizontalBarChartTopProducts = ({
       p={4}
       borderRadius="lg"
       border="2px solid"
-      borderColor={getColor('primary.200')}
+      borderColor={getColor('border.primary')}
       width="100%"
       maxW="600px"
       mx="auto"
       mb={6}
-      bg="transparent"
+      bg={getColor('background.reports')}
       boxShadow="sm"
     >
       <Text
         fontSize="xl"
-        color={getColor('primary.500')}
+        color={getColor('text.reports')}
         textAlign="center"
         mb={4}
         fontWeight="bold"
@@ -125,16 +125,16 @@ export const HorizontalBarChartTopProducts = ({
         <Flex align="center" justify="center" height="300px">
           <Spinner
             size="xl"
-            color={getColor('primary.500')}
+            color={getColor('text.accent')}
             thickness="4px"
-            emptyColor={getColor('primary.100')}
+            emptyColor={getColor('text.accent')}
           />
-          <Text ml={3} color={getColor('primary.300')}>
+          <Text ml={3} color={getColor('text.accent')}>
             {t('reports.topProducts.loading')}
           </Text>
         </Flex>
       ) : error ? (
-        <Text color="red.500" textAlign="center" py={10}>
+        <Text color={getColor('status.error')} textAlign="center" py={10}>
           {error}
         </Text>
       ) : data.length > 0 ? (
@@ -152,40 +152,41 @@ export const HorizontalBarChartTopProducts = ({
               barSize={20}
               barGap={8}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke={getColor('primary.100')} />
-              <XAxis 
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke={getColor('text.accent')}
+              />
+              <XAxis
                 type="number"
                 tickFormatter={(value) => value.toString()}
               />
-              <YAxis 
-                type="category" 
-                dataKey="name" 
+              <YAxis
+                type="category"
+                dataKey="name"
                 width={isMobile ? 120 : 180}
-                tick={{ 
+                tick={{
                   fontSize: isMobile ? 10 : 12,
                 }}
               />
               <Tooltip
                 formatter={(value, name) => {
-                  if (name === 'value') return [formatCurrency(Number(value)), 'Valor Total'];
+                  if (name === 'value')
+                    return [formatCurrency(Number(value)), 'Valor Total'];
                   if (name === 'quantity') return [value, 'Quantidade'];
                   return [value, name];
                 }}
                 labelFormatter={(value) => {
-                  const item = chartData.find(item => item.name === value);
+                  const item = chartData.find((item) => item.name === value);
                   return item?.fullName || value;
                 }}
                 contentStyle={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  borderColor: getColor('primary.200'),
+                  background: getColor('background.reports'),
+                  borderColor: getColor('border.primary'),
                   borderRadius: 'md',
                   padding: '8px',
                 }}
               />
-              <Legend 
-                verticalAlign="top"
-                align="center"
-              />
+              <Legend verticalAlign="top" align="center" />
               <Bar
                 dataKey="quantity"
                 name="Quantidade"
@@ -204,7 +205,7 @@ export const HorizontalBarChartTopProducts = ({
           </ResponsiveContainer>
         </Box>
       ) : (
-        <Text color={getColor('primary.300')} py={10} textAlign="center">
+        <Text color={getColor('text.accent')} py={10} textAlign="center">
           {t('reports.topProducts.noData')}
         </Text>
       )}

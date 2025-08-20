@@ -172,13 +172,13 @@ const NewResources = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh">
+    <Flex direction="column" minH="100vh" bg={getColor('background.primary')}>
       <Header />
 
       <Box p={4} mb="70px">
         <Accordion allowMultiple>
           {/* Seção Cadastros */}
-          <ResourceContainer title="Cadastros" colorScheme={getColor('chakra.theme')}>
+          <ResourceContainer title="Cadastros" colorScheme={getColor('gray')}>
             <StoreResource
               onEdit={(store) => handleResourceOpen('store', store)}
               onDelete={(id) => handleDelete('store', id)}
@@ -199,7 +199,10 @@ const NewResources = () => {
           </ResourceContainer>
 
           {/* Seção Despesas */}
-          <ResourceContainer title="Despesas" colorScheme={getColor('chakra.red')}>
+          <ResourceContainer
+            title="Despesas"
+            colorScheme={getColor('expense')}
+          >
             <ExpenseResource
               onEdit={(expense) => handleResourceOpen('expense', expense)}
               onDelete={(id) => handleDelete('expense', id)}
@@ -208,7 +211,10 @@ const NewResources = () => {
           </ResourceContainer>
 
           {/* Seção Receitas */}
-          <ResourceContainer title="Receitas" colorScheme={getColor('chakra.green')}>
+          <ResourceContainer
+            title="Receitas"
+            colorScheme={getColor('revenue')}
+          >
             <RevenueResource
               onEdit={(revenue) => handleResourceOpen('revenue', revenue)}
               onDelete={(id) => handleDelete('revenue', id)}

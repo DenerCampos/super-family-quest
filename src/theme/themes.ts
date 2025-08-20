@@ -140,11 +140,38 @@ export const defaultTheme: VisualTheme = {
   name: 'Default',
   colors: {
     // Cores principais do tema
-    primary: chakraColors.blue,
-    secondary: chakraColors.green,
-    accent: chakraColors.yellow,
-    gray: chakraColors.gray,
-
+    primary: 'blue',
+    secondary: 'green',
+    accent: 'yellow',
+    gray: 'gray',
+    revenue: 'green',
+    expense: 'red',
+    heading: {
+      summaryCard: {
+        revenue: {
+          light: 'green.900',
+          dark: 'green.700',
+        },
+        expense: {
+          light: 'red.900',
+          dark: 'red.700',
+        },
+      },
+    },
+    chakraColors: {
+      red: 'red',
+      green: 'green',
+      yellow: 'yellow',
+      purple: 'purple',
+      blue: 'blue',
+      cyan: 'cyan',
+      pink: 'pink',
+      orange: 'orange',
+      teal: 'teal',
+      gray: 'gray',
+      white: 'white',
+      black: 'black',
+    },
     // Tokens semânticos
     background: {
       primary: {
@@ -158,6 +185,18 @@ export const defaultTheme: VisualTheme = {
       tertiary: {
         light: 'blue.200',
         dark: 'blue.600',
+      },
+      quaternary: {
+        light: 'blue.50',
+        dark: 'blue.50',
+      },
+      selected: {
+        light: 'blue.500',
+        dark: 'blue.500',
+      },
+      noSelect: {
+        light: 'gray.200',
+        dark: 'gray.200',
       },
       write: {
         light: 'white',
@@ -181,6 +220,28 @@ export const defaultTheme: VisualTheme = {
           dark: 'gray.700',
         },
       },
+      loading: {
+        light: 'blue.500',
+        dark: 'blue.500',
+      },
+      summaryCard: {
+        revenue: {
+          light: 'green.500',
+          dark: 'green.200',
+        },
+        expense: {
+          light: 'red.500',
+          dark: 'red.200',
+        },
+      },
+      login: {
+        light: 'rgba(23, 25, 35, 0.8)',
+        dark: 'rgba(23, 25, 35, 0.8)',
+      },
+      reports: {
+        light: 'blue.50',
+        dark: 'blue.50',
+      },
     },
     text: {
       primary: {
@@ -190,6 +251,10 @@ export const defaultTheme: VisualTheme = {
       secondary: {
         light: 'gray.600',
         dark: 'gray.300',
+      },
+      tertiary: {
+        light: 'gray.500',
+        dark: 'gray.200',
       },
       accent: {
         light: 'blue.500',
@@ -203,6 +268,34 @@ export const defaultTheme: VisualTheme = {
         light: 'blue.500',
         dark: 'blue.300',
       },
+      gold: {
+        light: 'yellow.500',
+        dark: 'yellow.500',
+      },
+      summaryCard: {
+        revenue: {
+          light: 'green.900',
+          dark: 'green.700',
+        },
+        expense: {
+          light: 'red.900',
+          dark: 'red.700',
+        },
+      },
+      lastRegistrations: {
+        expense: {
+          light: 'red.500',
+          dark: 'white',
+        },
+        revenue: {
+          light: 'green.500',
+          dark: 'white',
+        },
+      },
+      reports: {
+        light: 'black',
+        dark: 'black',
+      },
     },
     border: {
       primary: {
@@ -212,6 +305,42 @@ export const defaultTheme: VisualTheme = {
       secondary: {
         light: 'gray.200',
         dark: 'gray.600',
+      },
+      selected: {
+        light: 'blue.500',
+        dark: 'blue.500',
+      },
+      noSelect: {
+        light: 'gray.200',
+        dark: 'gray.200',
+      },
+      lastRegistrations: {
+        expense: {
+          light: 'red.500',
+          dark: 'red.500',
+        },
+        revenue: {
+          light: 'green.500',
+          dark: 'green.500',
+        },
+        neutral: {
+          light: 'gray.100',
+          dark: 'gray.700',
+        },
+      },
+      summaryCard: {
+        revenue: {
+          light: 'green.800',
+          dark: 'green.500',
+        },
+        expense: {
+          light: 'red.800',
+          dark: 'red.500',
+        },
+      },
+      reports: {
+        light: 'black',
+        dark: 'black',
       },
     },
     status: {
@@ -233,22 +362,83 @@ export const defaultTheme: VisualTheme = {
       },
     },
     button: {
-      primary: 'blue',
-      secondary: 'green',
-      danger: 'red',
-      warning: 'yellow',
+      primary: {
+        light: 'blue',
+        dark: 'blue',
+      },
+      secondary: {
+        light: 'blue',
+        dark: 'blue',
+      },
+      danger: {
+        light: 'red',
+        dark: 'red',
+      },
+      warning: {
+        light: 'yellow',
+        dark: 'yellow',
+      },
+    },
+    link: {
+      primary: {
+        light: 'blue.300',
+        dark: 'blue.300',
+      },
+    },
+    input: {
+      primary: {
+        light: 'white',
+        dark: 'white',
+      },
+      secondary: {
+        light: 'gray.200',
+        dark: 'gray.200',
+      },
+      hover: {
+        light: 'transparent',
+        dark: 'transparent',
+      },
+      focus: {
+        light: 'transparent',
+        dark: 'transparent',
+      },
+      border: {
+        light: 'blue.200',
+        dark: 'white',
+      },
+      focusBorder: {
+        light: 'blue.300',
+        dark: 'blue.600',
+      },
+      background: {
+        light: 'transparent',
+        dark: 'transparent',
+      },
+      backgroundPrimary: {
+        light: 'blue.50',
+        dark: 'blue.600',
+      },
+      backgroundSecondary: {
+        light: 'blue.50',
+        dark: 'blue.700',
+      },
+      focusPrimary: {
+        light: 'blue.500',
+        dark: 'transparent',
+      },
     },
   },
   fonts: {
     body: "'Roboto', sans-serif",
     heading: "'Poppins', sans-serif",
     mono: "'Roboto Mono', monospace",
+    theme: "'Roboto', sans-serif",
   },
   assets: {
     images: {
       logo: '/assets/images/logo-default.png',
       background: {
-        login: '/assets/images/login-bg-default.jpg',
+        login: '/assets/images/login-bg-default.png',
         register: '/assets/images/register-bg-default.jpg',
         notFound: '/assets/images/notfound-bg-default.jpg',
         underConstruction: '/assets/images/under-construction-bg-default.jpg',
@@ -362,6 +552,10 @@ export const rpgTheme: VisualTheme = {
         light: 'rgba(23, 25, 35, 0.8)',
         dark: 'rgba(23, 25, 35, 0.8)',
       },
+      reports: {
+        light: 'purple.50',
+        dark: 'purple.50',
+      },
     },
     text: {
       primary: {
@@ -411,6 +605,10 @@ export const rpgTheme: VisualTheme = {
           light: 'green.500',
           dark: 'white',
         },
+      },
+      reports: {
+        light: 'black',
+        dark: 'black',
       },
     },
     heading: {
@@ -465,6 +663,10 @@ export const rpgTheme: VisualTheme = {
           light: 'red.800',
           dark: 'red.500',
         },
+      },
+      reports: {
+        light: 'black',
+        dark: 'black',
       },
     },
     status: {

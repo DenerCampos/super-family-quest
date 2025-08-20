@@ -157,10 +157,10 @@ const RevenueResource = ({
         </Text>
         <Button
           size="sm"
-          bg={getColor('primary.500')}
-          color={getColor('background.write')}
-          _hover={{ bg: getColor('primary.600') }}
-          _focus={{ bg: getColor('primary.700') }}
+          bg={getColor('background.secondary')}
+          color={getColor('text.primary')}
+          _hover={{ bg: getColor('background.secondary') }}
+          _focus={{ bg: getColor('background.secondary') }}
           leftIcon={<FiPlus />}
           onClick={handleNewRevenue}
         >
@@ -181,7 +181,7 @@ const RevenueResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color={getColor('primary.500')} />
+          <Spinner color={getColor('text.accent')} />
         </Flex>
       ) : revenues?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
@@ -192,7 +192,7 @@ const RevenueResource = ({
           <Box
             overflowX="auto"
             border="1px"
-            borderColor={getColor('gray.200')}
+            borderColor={getColor('gray.500')}
             borderRadius="md"
           >
             <Table variant="simple" minW="600px">
@@ -209,7 +209,7 @@ const RevenueResource = ({
                   <Tr key={revenue.id}>
                     <Td>{revenue.name}</Td>
                     <Td>
-                      <Badge colorScheme={getColor('chakra.green')}>
+                      <Badge colorScheme={getColor('chakraColors.green')}>
                         + {formatCurrency(revenue.value)}
                       </Badge>
                     </Td>
@@ -231,7 +231,7 @@ const RevenueResource = ({
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(revenue.id as string)}
-                            color={getColor('chakra.red')}
+                            color={getColor('chakraColors.red')}
                           >
                             {t('resources.revenue.delete')}
                           </MenuItem>
