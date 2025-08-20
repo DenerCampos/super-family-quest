@@ -16,7 +16,7 @@ export const NavigationBar = () => {
       bottom={0}
       left={0}
       right={0}
-      bg={getColor('background.primary')}
+      bg={getColor('background.navigation')}
       p={2}
       boxShadow="lg"
       borderTopWidth="1px"
@@ -30,7 +30,7 @@ export const NavigationBar = () => {
               aria-label="Home"
               variant="ghost"
               color={
-                isActive ? getColor('text.accent') : getColor('text.primary')
+                isActive ? getColor('text.accent') : getColor('text.navigation')
               }
               fontSize="24px"
               isActive={isActive}
@@ -42,8 +42,8 @@ export const NavigationBar = () => {
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.primary')
-                  : getColor('text.primary')
+                  ? getColor('text.navigation')
+                  : getColor('text.navigation')
               }
               fontFamily={getFont('body')}
             >
@@ -61,7 +61,7 @@ export const NavigationBar = () => {
               aria-label="Dashboard"
               variant="ghost"
               color={
-                isActive ? getColor('text.accent') : getColor('text.primary')
+                isActive ? getColor('text.accent') : getColor('text.navigation')
               }
               fontSize="24px"
               isActive={isActive}
@@ -73,8 +73,8 @@ export const NavigationBar = () => {
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.primary')
-                  : getColor('text.primary')
+                  ? getColor('text.navigation')
+                  : getColor('text.navigation')
               }
               fontFamily={getFont('body')}
             >
@@ -92,7 +92,7 @@ export const NavigationBar = () => {
               aria-label="Novo recurso"
               variant="ghost"
               color={
-                isActive ? getColor('text.accent') : getColor('text.primary')
+                isActive ? getColor('text.accent') : getColor('text.navigation')
               }
               fontSize="24px"
               isActive={isActive}
@@ -104,8 +104,8 @@ export const NavigationBar = () => {
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.primary')
-                  : getColor('text.primary')
+                  ? getColor('text.navigation')
+                  : getColor('text.navigation')
               }
               fontFamily={getFont('body')}
             >
@@ -123,7 +123,7 @@ export const NavigationBar = () => {
               aria-label="Novo desafio"
               variant="ghost"
               color={
-                isActive ? getColor('text.accent') : getColor('text.primary')
+                isActive ? getColor('text.accent') : getColor('text.navigation')
               }
               fontSize="24px"
               isActive={isActive}
@@ -135,8 +135,8 @@ export const NavigationBar = () => {
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.primary')
-                  : getColor('text.primary')
+                  ? getColor('text.navigation')
+                  : getColor('text.navigation')
               }
               fontFamily={getFont('body')}
             >
@@ -154,7 +154,7 @@ export const NavigationBar = () => {
               aria-label="Perfil"
               variant="ghost"
               color={
-                isActive ? getColor('text.accent') : getColor('text.primary')
+                isActive ? getColor('text.accent') : getColor('text.navigation')
               }
               fontSize="24px"
               isActive={isActive}
@@ -166,8 +166,8 @@ export const NavigationBar = () => {
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.primary')
-                  : getColor('text.primary')
+                  ? getColor('text.navigation')
+                  : getColor('text.navigation')
               }
               fontFamily={getFont('body')}
             >

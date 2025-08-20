@@ -16,16 +16,16 @@ export const SummaryCard = ({ title, value, type }: Props) => {
 
   const colors = {
     revenue: {
-      bg: getColor('background.tertiary'),
+      bg: getColor('background.summaryCard.revenue'),
       border: getColor('border.summaryCard.revenue'),
-      text: getColor('text.primary'),
-      heading: getColor('text.primary'),
+      text: getColor('text.summaryCard.revenue'),
+      heading: getColor('text.summaryCard.revenue'),
     },
     expense: {
-      bg: getColor('background.tertiary'),
+      bg: getColor('background.summaryCard.expense'),
       border: getColor('border.summaryCard.expense'),
-      text: getColor('text.primary'),
-      heading: getColor('text.primary'),
+      text: getColor('text.summaryCard.expense'),
+      heading: getColor('text.summaryCard.expense'),
     },
   };
 

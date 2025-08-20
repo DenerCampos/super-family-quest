@@ -55,10 +55,16 @@ export interface ThemeColors {
     noSelect: ThemeToken;
     write: ThemeToken;
     hover: ThemeToken;
+    header: ThemeToken;
+    navigation: ThemeToken;
     lastRegistrations: {
       expense: ThemeToken;
       revenue: ThemeToken;
       neutral: ThemeToken;
+      badge: {
+        expense: ThemeToken;
+        revenue: ThemeToken;
+      };
     };
     loading: ThemeToken;
     summaryCard: {
@@ -87,7 +93,9 @@ export interface ThemeColors {
       revenue: ThemeToken;
     };
     reports: ThemeToken;
-  };
+    header: ThemeToken;
+    navigation: ThemeToken;
+    };
 
   // Tokens semânticos para heading
   heading: {
@@ -129,6 +137,19 @@ export interface ThemeColors {
     secondary: ThemeToken;
     danger: ThemeToken;
     warning: ThemeToken;
+    background: {
+      expense: ThemeToken;
+      revenue: ThemeToken;
+    };
+    text: {
+      primary: ThemeToken;
+      expense: ThemeToken;
+      revenue: ThemeToken;
+    };
+    border: {
+      expense: ThemeToken;
+      revenue: ThemeToken;
+    };
   };
 
   link: {

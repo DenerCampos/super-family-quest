@@ -10,7 +10,7 @@ export const Header = () => {
 
   return (
     <Flex
-      bg={getColor('background.primary')}
+      bg={getColor('background.header')}
       borderBottomWidth="1px"
       borderBottomColor={getColor('border.primary')}
       p={4}
@@ -33,7 +33,7 @@ export const Header = () => {
         />
         <Heading
           size="md"
-          color={getColor('text.primary')}
+          color={getColor('text.header')}
           fontFamily={getFont('heading')}
         >
           {profile?.user.family}
@@ -47,7 +47,7 @@ export const Header = () => {
           icon={<FiLogOut />}
           aria-label="Sair"
           variant="ghost"
-          color={getColor('text.primary')}
+          color={getColor('text.header')}
           _hover={{
             bg: getColor('background.tertiary'),
             color: getColor('text.accent')

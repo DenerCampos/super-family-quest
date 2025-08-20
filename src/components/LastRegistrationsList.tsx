@@ -36,8 +36,8 @@ export const LastRegistrationsList = ({
   const { t } = useThemedTranslation();
   const { getColor, getFont } = useVisualTheme();
 
-  const bgColorExpense = getColor('background.tertiary');
-  const bgColorRevenue = getColor('background.tertiary');
+  const bgColorExpense = getColor('background.lastRegistrations.expense');
+  const bgColorRevenue = getColor('background.lastRegistrations.revenue');
 
   const fetchLastRegistrations = async () => {
     try {
@@ -157,7 +157,11 @@ export const LastRegistrationsList = ({
                     ? getColor('text.lastRegistrations.expense')
                     : getColor('text.lastRegistrations.revenue')
                 }
-                bg={getColor('background.secondary')}
+                bg={
+                  registration.type === 'expense'
+                    ? getColor('background.lastRegistrations.badge.expense')
+                    : getColor('background.lastRegistrations.badge.revenue')
+                }
                 borderRadius="md"
                 fontSize="sm"
                 fontFamily={getFont('body')}

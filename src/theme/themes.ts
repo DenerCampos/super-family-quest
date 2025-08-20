@@ -206,6 +206,14 @@ export const defaultTheme: VisualTheme = {
         light: 'gray.100',
         dark: 'gray.700',
       },
+      header: {
+        light: 'blue.300',
+        dark: 'blue.800',
+      },
+      navigation: {
+        light: 'blue.300',
+        dark: 'blue.800',
+      },
       lastRegistrations: {
         expense: {
           light: 'red.50',
@@ -218,6 +226,16 @@ export const defaultTheme: VisualTheme = {
         neutral: {
           light: 'gray.100',
           dark: 'gray.700',
+        },
+        badge: {
+          expense: {
+            light: 'red.500',
+            dark: 'blue.700',
+          },
+          revenue: {
+            light: 'green.500',
+            dark: 'blue.700',
+          },
         },
       },
       loading: {
@@ -295,6 +313,14 @@ export const defaultTheme: VisualTheme = {
       reports: {
         light: 'black',
         dark: 'black',
+      },
+      header: {
+        light: 'white',
+        dark: 'white',
+      },
+      navigation: {
+        light: 'white',
+        dark: 'white',
       },
     },
     border: {
@@ -377,6 +403,40 @@ export const defaultTheme: VisualTheme = {
       warning: {
         light: 'yellow',
         dark: 'yellow',
+      },
+      background: {
+        expense: {
+          light: 'red.500',
+          dark: 'blue.800',
+        },
+        revenue: {
+          light: 'green.500',
+          dark: 'blue.800',
+        },
+      },
+      text: {
+        expense: {
+          light: 'red.',
+          dark: 'white',
+        },
+        revenue: {
+          light: 'green',
+          dark: 'white',
+        },
+        primary: {
+          light: 'white',
+          dark: 'white',
+        },
+      },
+      border: {
+        expense: {
+          light: 'red.800',
+          dark: 'blue.800',
+        },
+        revenue: {
+          light: 'green.800',
+          dark: 'blue.800',
+        },
       },
     },
     link: {
@@ -496,7 +556,7 @@ export const rpgTheme: VisualTheme = {
         dark: 'purple.700',
       },
       tertiary: {
-        light: 'purple.200',
+        light: 'white',
         dark: 'purple.600',
       },
       quaternary: {
@@ -504,7 +564,7 @@ export const rpgTheme: VisualTheme = {
         dark: 'purple.50',
       },
       selected: {
-        light: 'purple.500',
+        light: 'purple.200',
         dark: 'purple.500',
       },
       noSelect: {
@@ -519,33 +579,50 @@ export const rpgTheme: VisualTheme = {
         light: 'gray.100',
         dark: 'gray.700',
       },
+      header: {
+        light: 'purple.50',
+        dark: 'purple.800',
+      },
+      navigation: {
+        light: 'purple.50',
+        dark: 'purple.800',
+      },
       lastRegistrations: {
         expense: {
           light: 'red.50',
-          dark: 'red.50',
+          dark: 'purple.600',
         },
         revenue: {
           light: 'green.50',
-          dark: 'green.50',
+          dark: 'purple.600',
         },
         neutral: {
           light: 'gray.100',
           dark: 'gray.700',
+        },
+        badge: {
+          expense: {
+            light: 'red.200',
+            dark: 'purple.700',
+          },
+          revenue: {
+            light: 'green.200',
+            dark: 'purple.700',
+          },
         },
       },
       loading: {
         light: 'purple.500',
         dark: 'purple.500',
       },
-      //remover
       summaryCard: {
         revenue: {
-          light: 'green.500',
-          dark: 'green.200',
+          light: 'green.200',
+          dark: 'purple.600',
         },
         expense: {
-          light: 'red.500',
-          dark: 'red.200',
+          light: 'red.200',
+          dark: 'purple.600',
         },
       },
       login: {
@@ -588,12 +665,12 @@ export const rpgTheme: VisualTheme = {
       },
       summaryCard: {
         revenue: {
-          light: 'green.900',
-          dark: 'green.700',
+          light: 'green.800',
+          dark: 'white',
         },
         expense: {
-          light: 'red.900',
-          dark: 'red.700',
+          light: 'red.800',
+          dark: 'white',
         },
       },
       lastRegistrations: {
@@ -609,6 +686,14 @@ export const rpgTheme: VisualTheme = {
       reports: {
         light: 'black',
         dark: 'black',
+      },
+      header: {
+        light: 'purple.800',
+        dark: 'white',
+      },
+      navigation: {
+        light: 'purple.800',
+        dark: 'white',
       },
     },
     heading: {
@@ -656,11 +741,11 @@ export const rpgTheme: VisualTheme = {
       },
       summaryCard: {
         revenue: {
-          light: 'green.800',
+          light: 'green.500',
           dark: 'green.500',
         },
         expense: {
-          light: 'red.800',
+          light: 'red.500',
           dark: 'red.500',
         },
       },
@@ -703,6 +788,40 @@ export const rpgTheme: VisualTheme = {
       warning: {
         light: 'yellow',
         dark: 'yellow',
+      },
+      background: {
+        expense: {
+          light: 'purple.600',
+          dark: 'purple.600',
+        },
+        revenue: {
+          light: 'purple.600',
+          dark: 'purple.600',
+        },
+      },
+      text: {
+        expense: {
+          light: 'white',
+          dark: 'white',
+        },
+        revenue: {
+          light: 'white',
+          dark: 'white',
+        },
+        primary: {
+          light: 'white',
+          dark: 'white',
+        },
+      },
+      border: {
+        expense: {
+          light: 'purple.800',
+          dark: 'purple.800',
+        },
+        revenue: {
+          light: 'purple.800',
+          dark: 'purple.800',
+        },
       },
     },
     link: {

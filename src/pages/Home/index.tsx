@@ -155,16 +155,16 @@ const Home = () => {
           <Menu>
             <MenuButton
               as={Button}
-              color={getColor('text.primary')}
-              bg={getColor('background.tertiary')}
+              color={getColor('button.text.expense')}
+              bg={getColor('button.background.expense')}
               border="1px solid"
-              borderColor={getColor('border.primary')}
+              borderColor={getColor('button.border.expense')}
               _hover={{
                 bg: getColor('background.selected'),
                 color: getColor('text.accent'),
               }}
               size="lg"
-              leftIcon={<Icon as={FiShoppingBag} />}
+              leftIcon={<Icon as={FiShoppingBag} color={getColor('button.text.expense')} />}
               w="full"
             >
               {t('home.addExpense')}
@@ -182,16 +182,16 @@ const Home = () => {
           <Menu>
             <MenuButton
               as={Button}
-              color={getColor('text.primary')}
-              bg={getColor('background.tertiary')}
+              color={getColor('button.text.revenue')}
+              bg={getColor('button.background.revenue')}
               border="1px solid"
-              borderColor={getColor('border.primary')}
+              borderColor={getColor('button.border.revenue')}
               _hover={{
                 bg: getColor('background.selected'),
                 color: getColor('text.accent'),
               }}
               size="lg"
-              leftIcon={<Icon as={FiDollarSign} color={getColor('text.primary')} />}
+              leftIcon={<Icon as={FiDollarSign} color={getColor('button.text.revenue')} />}
               w="full"
             >
               {t('home.addRevenue')}
