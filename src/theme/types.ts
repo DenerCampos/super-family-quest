@@ -4,6 +4,9 @@ import type { ThemeNamespace } from '../i18n/types';
 export interface ThemeColors {
   // Cores principais do tema
   primary: string;
+  secondary: string;
+  accent: string;
+  gray: string;
   revenue: string;
   expense: string;
 

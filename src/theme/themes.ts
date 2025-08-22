@@ -168,17 +168,16 @@ export const defaultTheme: VisualTheme = {
       quaternary: 'blue.50',
       selected: 'blue.500',
       noSelect: 'gray.200',
-      write: 'gray.800',
       hover: 'gray.700',
       header: 'blue.800',
       navigation: 'blue.800',
       lastRegistrations: {
-        expense: 'red.900',
-        revenue: 'green.900',
-        neutral: 'gray.700',
+        expense: 'red.50',
+        revenue: 'green.50',
+        neutral: 'gray.200',
         badge: {
-          expense: 'blue.700',
-          revenue: 'blue.700',
+          expense: 'red.100',
+          revenue: 'green.100',
         },
       },
       loading: 'blue.500',
@@ -188,6 +187,17 @@ export const defaultTheme: VisualTheme = {
       },
       login: 'rgba(23, 25, 35, 0.8)',
       reports: 'blue.50',
+      coin: 'blue.700',
+      home: 'blue.50',
+      dashboard: 'blue.50',
+      resources: 'blue.50',
+      profile: {
+        primary: 'blue.50',
+        secondary: 'blue.600',
+        selected: 'white',
+      },
+      dateRangeFilter: 'blue.200',
+      qrScanner: 'blue.500',
     },
     text: {
       primary: 'white',
@@ -196,18 +206,46 @@ export const defaultTheme: VisualTheme = {
       accent: 'blue.300',
       disabled: 'gray.500',
       link: 'blue.300',
-      gold: 'yellow.500',
+
+      coin: 'yellow.500',
       summaryCard: {
         revenue: 'green.700',
         expense: 'red.700',
       },
       lastRegistrations: {
-        expense: 'white',
-        revenue: 'white',
+        title: 'blue.800',
+        primary: 'black',
+        icon: 'blue.800',
+        neutral: 'gray.500',
+        expense: 'red.500',
+        revenue: 'green.500',
       },
-      reports: 'black',
+      reports: {
+        title: 'blue.800',
+        primary: 'blue.600',
+        icon: 'blue.800',
+        neutral: 'gray.500',
+        expense: 'red.500',
+        revenue: 'green.500',
+      },
       header: 'white',
-      navigation: 'white',
+      navigation: {
+        active: 'blue.800',
+        inactive: 'white',
+      },
+      hover: {
+        expense: 'blue.700',
+        revenue: 'blue.700',
+        neutral: 'blue.700',
+        inverse: 'blue.800',
+      },
+      eye: 'blue.500',
+      dateRangeFilter: 'blue.800',
+      profile: {
+        primary: 'blue.800',
+        secondary: 'blue.500',
+        selected: 'white',
+      },
     },
     heading: {
       summaryCard: {
@@ -230,6 +268,9 @@ export const defaultTheme: VisualTheme = {
         expense: 'red.500',
       },
       reports: 'black',
+      header: 'blue.900',
+      navigation: 'blue.900',
+      coin: 'blue.700',
     },
     status: {
       success: 'green.300',
@@ -243,8 +284,11 @@ export const defaultTheme: VisualTheme = {
       danger: 'red',
       warning: 'yellow',
       background: {
-        expense: 'blue.800',
-        revenue: 'blue.800',
+        primary: 'blue.800',
+        expense: 'blue.500',
+        revenue: 'green.500',
+        neutral: 'blue.500',
+        inverse: 'white',
       },
       text: {
         primary: 'white',
@@ -254,6 +298,30 @@ export const defaultTheme: VisualTheme = {
       border: {
         expense: 'blue.800',
         revenue: 'blue.800',
+        neutral: 'blue.800',
+      },
+      hover: {
+        text: {
+          default: 'white',
+          expense: 'white',
+          revenue: 'white',
+          neutral: 'white',
+          inverse: 'blue.800',
+        },
+        background: {
+          default: 'white',
+          expense: 'white',
+          revenue: 'white',
+          neutral: 'blue.800',
+          inverse: 'white',
+        },
+        border: {
+          default: 'blue.800',
+          expense: 'blue.800',
+          revenue: 'green.800',
+          neutral: 'blue.800',
+          inverse: 'blue.800',
+        },
       },
     },
     link: {
@@ -283,9 +351,9 @@ export const defaultTheme: VisualTheme = {
       logo: '/assets/images/logo-default.png',
       background: {
         login: '/assets/images/login-bg-default.png',
-        register: '/assets/images/register-bg-default.jpg',
-        notFound: '/assets/images/notfound-bg-default.jpg',
-        underConstruction: '/assets/images/under-construction-bg-default.jpg',
+        register: '/assets/images/register-bg-default.png',
+        notFound: '/assets/images/notfound-bg-default.png',
+        underConstruction: '/assets/images/under-construction-bg-default.png',
       },
       coatOfArms: {
         family: '/assets/images/coat_of_arms_family.png',
@@ -309,6 +377,9 @@ export const rpgTheme: VisualTheme = {
   name: 'RPG Medieval',
   colors: {
     primary: 'purple',
+    secondary: 'red',
+    accent: 'yellow',
+    gray: 'gray',
     revenue: 'green',
     expense: 'red',
     chakraColors: {
@@ -512,12 +583,12 @@ export const rpgTheme: VisualTheme = {
   },
   assets: {
     images: {
-      logo: '/assets/images/logo-rpg.png',
+      logo: '/assets/images/logo-medieval.png',
       background: {
-        login: '/assets/images/login-bg.png',
-        register: '/assets/images/register-bg.png',
-        notFound: '/assets/images/notfound-bg.png',
-        underConstruction: '/assets/images/under-construction-bg.png',
+        login: '/assets/images/login-bg-medieval.png',
+        register: '/assets/images/register-bg-medieval.png',
+        notFound: '/assets/images/notfound-bg-medieval.png',
+        underConstruction: '/assets/images/under-construction-bg-medieval.png',
       },
       coatOfArms: {
         family: '/assets/images/coat_of_arms_family.png',
