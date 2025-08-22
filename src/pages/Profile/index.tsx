@@ -33,7 +33,7 @@ import {
   Tab,
   TabPanel,
 } from '@chakra-ui/react';
-import { FiEdit2, FiCheck, FiEye, FiEyeOff, FiUser, FiSettings, FiMoon, FiSun } from 'react-icons/fi';
+import { FiEdit2, FiCheck, FiEye, FiEyeOff, FiUser, FiSettings } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -52,7 +52,7 @@ const Profile = () => {
   const { profile, loadProfile } = useAuth();
   const toast = useToast();
   const { t } = useThemedTranslation();
-  const { currentTheme, changeTheme, isDarkMode, toggleDarkMode } = useTheme();
+  const { currentTheme, changeTheme } = useTheme();
   const { getColor } = useVisualTheme();
   // Estados para edição de perfil
   const [name, setName] = useState(profile?.user.name || '');
@@ -237,26 +237,26 @@ const Profile = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh" bg={getColor('background.primary')}>
+    <Flex direction="column" minH="100vh" bg={getColor('background.profile.primary')}>
       <Header />
       <Tabs isFitted>
         <TabList>
           <Tab
             _selected={{
-              color: getColor('text.primary'),
-              bg: getColor('background.tertiary'),
+              color: getColor('text.profile.selected'),
+              bg: getColor('background.profile.secondary'),
             }}
-            color={getColor('text.primary')}
+            color={getColor('text.profile.primary')}
           >
             <Icon as={FiUser} mr={2} />
             {t('profile.editProfile')}
           </Tab>
           <Tab
             _selected={{
-              color: getColor('text.primary'),
-              bg: getColor('background.tertiary'),
+              color: getColor('text.profile.selected'),
+              bg: getColor('background.profile.secondary'),
             }}
-            color={getColor('text.primary')}
+            color={getColor('text.profile.primary')}
           >
             <Icon as={FiSettings} mr={2} />
             {t('profile.themes.title')}
@@ -321,7 +321,7 @@ const Profile = () => {
                 </Flex>
 
                 <FormControl>
-                  <FormLabel color={getColor('text.primary')}>
+                  <FormLabel color={getColor('text.profile.primary')}>
                     {t('profile.name')}
                   </FormLabel>
                   <Input
@@ -330,13 +330,13 @@ const Profile = () => {
                     isDisabled={!isEditing}
                     bg={
                       isEditing
-                        ? getColor('input.background')
+                        ? getColor('input.primary')
                         : getColor('input.secondary')
                     }
                     color={
                       isEditing
-                        ? getColor('text.primary')
-                        : getColor('text.secundary')
+                        ? getColor('text.profile.primary')
+                        : getColor('text.profile.secondary')
                     }
                     _focus={{
                       borderColor: getColor('border.tertiary'),
@@ -346,7 +346,7 @@ const Profile = () => {
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.email}>
-                  <FormLabel color={getColor('text.primary')}>
+                  <FormLabel color={getColor('text.profile.primary')}>
                     {t('profile.email')}
                   </FormLabel>
                   <Input
@@ -356,13 +356,13 @@ const Profile = () => {
                     isDisabled={!isEditing}
                     bg={
                       isEditing
-                        ? getColor('input.background')
+                        ? getColor('input.primary')
                         : getColor('input.secondary')
                     }
                     color={
                       isEditing
-                        ? getColor('text.primary')
-                        : getColor('text.secundary')
+                        ? getColor('text.profile.primary')
+                        : getColor('text.profile.secondary')
                     }
                     _focus={{
                       borderColor: getColor('border.tertiary'),
@@ -375,7 +375,7 @@ const Profile = () => {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel color={getColor('text.primary')}>
+                  <FormLabel color={getColor('text.profile.primary')}>
                     {t('profile.familyName')}
                   </FormLabel>
                   <Input
@@ -384,13 +384,13 @@ const Profile = () => {
                     isDisabled={!isEditing}
                     bg={
                       isEditing
-                        ? getColor('input.background')
+                        ? getColor('input.primary')
                         : getColor('input.secondary')
                     }
                     color={
                       isEditing
-                        ? getColor('text.primary')
-                        : getColor('text.secundary')
+                        ? getColor('text.profile.primary')
+                        : getColor('text.profile.secondary')
                     }
                     _focus={{
                       borderColor: getColor('border.tertiary'),
@@ -402,7 +402,7 @@ const Profile = () => {
                 {isEditing && (
                   <>
                     <FormControl isInvalid={!!errors.password}>
-                      <FormLabel color={getColor('text.primary')}>
+                      <FormLabel color={getColor('text.profile.primary')}>
                         {t('profile.newPassword')} (opcional)
                       </FormLabel>
                       <InputGroup>
@@ -413,13 +413,13 @@ const Profile = () => {
                           placeholder={t('profile.minimum6Characters')}
                           bg={
                             isEditing
-                              ? getColor('input.background')
+                              ? getColor('input.primary')
                               : getColor('input.secondary')
                           }
                           color={
                             isEditing
-                              ? getColor('text.primary')
-                              : getColor('text.secundary')
+                              ? getColor('text.profile.primary')
+                              : getColor('text.profile.secondary')
                           }
                           _focus={{
                             borderColor: getColor('border.tertiary'),
@@ -446,7 +446,7 @@ const Profile = () => {
                     </FormControl>
 
                     <FormControl isInvalid={!!errors.confirmPassword}>
-                      <FormLabel color={getColor('text.primary')}>
+                      <FormLabel color={getColor('text.profile.primary')}>
                         {t('profile.confirmNewPassword')}
                       </FormLabel>
                       <InputGroup>
@@ -457,13 +457,13 @@ const Profile = () => {
                           placeholder={t('profile.repeatNewPassword')}
                           bg={
                             isEditing
-                              ? getColor('input.background')
+                              ? getColor('input.primary')
                               : getColor('input.secondary')
                           }
                           color={
                             isEditing
-                              ? getColor('text.primary')
-                              : getColor('text.secundary')
+                              ? getColor('text.profile.primary')
+                              : getColor('text.profile.primary')
                           }
                           _focus={{
                             borderColor: getColor('border.tertiary'),
@@ -516,23 +516,6 @@ const Profile = () => {
           {/* Aba de Temas */}
           <TabPanel>
             <Box maxW="600px" mx="auto" p={4}>
-              {/* Opção de Dark Mode */}
-              <Flex justify="flex-end" mb={6}>
-                <IconButton
-                  aria-label="Alternar modo escuro"
-                  icon={<Icon as={isDarkMode ? FiMoon : FiSun} />}
-                  onClick={toggleDarkMode}
-                  colorScheme={
-                    isDarkMode
-                      ? getColor('chakraColors.black')
-                      : getColor('chakraColors.yellow')
-                  }
-                  variant="ghost"
-                  size="sm"
-                  fontSize="24px"
-                />
-              </Flex>
-
               {/* Lista de Temas */}
               {isLoadingThemes ? (
                 <Center py={8}>

@@ -146,18 +146,6 @@ export const defaultTheme: VisualTheme = {
     gray: 'gray',
     revenue: 'green',
     expense: 'red',
-    heading: {
-      summaryCard: {
-        revenue: {
-          light: 'green.900',
-          dark: 'green.700',
-        },
-        expense: {
-          light: 'red.900',
-          dark: 'red.700',
-        },
-      },
-    },
     chakraColors: {
       red: 'red',
       green: 'green',
@@ -174,318 +162,114 @@ export const defaultTheme: VisualTheme = {
     },
     // Tokens semânticos
     background: {
-      primary: {
-        light: 'blue.50',
-        dark: 'blue.800',
-      },
-      secondary: {
-        light: 'blue.100',
-        dark: 'blue.700',
-      },
-      tertiary: {
-        light: 'blue.200',
-        dark: 'blue.600',
-      },
-      quaternary: {
-        light: 'blue.50',
-        dark: 'blue.50',
-      },
-      selected: {
-        light: 'blue.500',
-        dark: 'blue.500',
-      },
-      noSelect: {
-        light: 'gray.200',
-        dark: 'gray.200',
-      },
-      write: {
-        light: 'white',
-        dark: 'gray.800',
-      },
-      hover: {
-        light: 'gray.100',
-        dark: 'gray.700',
-      },
-      header: {
-        light: 'blue.300',
-        dark: 'blue.800',
-      },
-      navigation: {
-        light: 'blue.300',
-        dark: 'blue.800',
-      },
+      primary: 'blue.800',
+      secondary: 'blue.700',
+      tertiary: 'blue.600',
+      quaternary: 'blue.50',
+      selected: 'blue.500',
+      noSelect: 'gray.200',
+      write: 'gray.800',
+      hover: 'gray.700',
+      header: 'blue.800',
+      navigation: 'blue.800',
       lastRegistrations: {
-        expense: {
-          light: 'red.50',
-          dark: 'red.900',
-        },
-        revenue: {
-          light: 'green.50',
-          dark: 'green.900',
-        },
-        neutral: {
-          light: 'gray.100',
-          dark: 'gray.700',
-        },
+        expense: 'red.900',
+        revenue: 'green.900',
+        neutral: 'gray.700',
         badge: {
-          expense: {
-            light: 'red.500',
-            dark: 'blue.700',
-          },
-          revenue: {
-            light: 'green.500',
-            dark: 'blue.700',
-          },
+          expense: 'blue.700',
+          revenue: 'blue.700',
         },
       },
-      loading: {
-        light: 'blue.500',
-        dark: 'blue.500',
-      },
+      loading: 'blue.500',
       summaryCard: {
-        revenue: {
-          light: 'green.500',
-          dark: 'green.200',
-        },
-        expense: {
-          light: 'red.500',
-          dark: 'red.200',
-        },
+        revenue: 'green.200',
+        expense: 'red.200',
       },
-      login: {
-        light: 'rgba(23, 25, 35, 0.8)',
-        dark: 'rgba(23, 25, 35, 0.8)',
-      },
-      reports: {
-        light: 'blue.50',
-        dark: 'blue.50',
-      },
+      login: 'rgba(23, 25, 35, 0.8)',
+      reports: 'blue.50',
     },
     text: {
-      primary: {
-        light: 'gray.800',
-        dark: 'white',
-      },
-      secondary: {
-        light: 'gray.600',
-        dark: 'gray.300',
-      },
-      tertiary: {
-        light: 'gray.500',
-        dark: 'gray.200',
-      },
-      accent: {
-        light: 'blue.500',
-        dark: 'blue.300',
-      },
-      disabled: {
-        light: 'gray.400',
-        dark: 'gray.500',
-      },
-      link: {
-        light: 'blue.500',
-        dark: 'blue.300',
-      },
-      gold: {
-        light: 'yellow.500',
-        dark: 'yellow.500',
-      },
+      primary: 'white',
+      secondary: 'gray.300',
+      tertiary: 'gray.200',
+      accent: 'blue.300',
+      disabled: 'gray.500',
+      link: 'blue.300',
+      gold: 'yellow.500',
       summaryCard: {
-        revenue: {
-          light: 'green.900',
-          dark: 'green.700',
-        },
-        expense: {
-          light: 'red.900',
-          dark: 'red.700',
-        },
+        revenue: 'green.700',
+        expense: 'red.700',
       },
       lastRegistrations: {
-        expense: {
-          light: 'red.500',
-          dark: 'white',
-        },
-        revenue: {
-          light: 'green.500',
-          dark: 'white',
-        },
+        expense: 'white',
+        revenue: 'white',
       },
-      reports: {
-        light: 'black',
-        dark: 'black',
-      },
-      header: {
-        light: 'white',
-        dark: 'white',
-      },
-      navigation: {
-        light: 'white',
-        dark: 'white',
+      reports: 'black',
+      header: 'white',
+      navigation: 'white',
+    },
+    heading: {
+      summaryCard: {
+        revenue: 'green.700',
+        expense: 'red.700',
       },
     },
     border: {
-      primary: {
-        light: 'blue.200',
-        dark: 'blue.700',
-      },
-      secondary: {
-        light: 'gray.200',
-        dark: 'gray.600',
-      },
-      selected: {
-        light: 'blue.500',
-        dark: 'blue.500',
-      },
-      noSelect: {
-        light: 'gray.200',
-        dark: 'gray.200',
-      },
+      primary: 'blue.700',
+      secondary: 'gray.600',
+      selected: 'blue.500',
+      noSelect: 'gray.200',
       lastRegistrations: {
-        expense: {
-          light: 'red.500',
-          dark: 'red.500',
-        },
-        revenue: {
-          light: 'green.500',
-          dark: 'green.500',
-        },
-        neutral: {
-          light: 'gray.100',
-          dark: 'gray.700',
-        },
+        expense: 'red.500',
+        revenue: 'green.500',
+        neutral: 'gray.700',
       },
       summaryCard: {
-        revenue: {
-          light: 'green.800',
-          dark: 'green.500',
-        },
-        expense: {
-          light: 'red.800',
-          dark: 'red.500',
-        },
+        revenue: 'green.500',
+        expense: 'red.500',
       },
-      reports: {
-        light: 'black',
-        dark: 'black',
-      },
+      reports: 'black',
     },
     status: {
-      success: {
-        light: 'green.500',
-        dark: 'green.300',
-      },
-      error: {
-        light: 'red.500',
-        dark: 'red.300',
-      },
-      warning: {
-        light: 'yellow.500',
-        dark: 'yellow.300',
-      },
-      info: {
-        light: 'blue.500',
-        dark: 'blue.300',
-      },
+      success: 'green.300',
+      error: 'red.300',
+      warning: 'yellow.300',
+      info: 'blue.300',
     },
     button: {
-      primary: {
-        light: 'blue',
-        dark: 'blue',
-      },
-      secondary: {
-        light: 'blue',
-        dark: 'blue',
-      },
-      danger: {
-        light: 'red',
-        dark: 'red',
-      },
-      warning: {
-        light: 'yellow',
-        dark: 'yellow',
-      },
+      primary: 'blue',
+      secondary: 'blue',
+      danger: 'red',
+      warning: 'yellow',
       background: {
-        expense: {
-          light: 'red.500',
-          dark: 'blue.800',
-        },
-        revenue: {
-          light: 'green.500',
-          dark: 'blue.800',
-        },
+        expense: 'blue.800',
+        revenue: 'blue.800',
       },
       text: {
-        expense: {
-          light: 'red.',
-          dark: 'white',
-        },
-        revenue: {
-          light: 'green',
-          dark: 'white',
-        },
-        primary: {
-          light: 'white',
-          dark: 'white',
-        },
+        primary: 'white',
+        expense: 'white',
+        revenue: 'white',
       },
       border: {
-        expense: {
-          light: 'red.800',
-          dark: 'blue.800',
-        },
-        revenue: {
-          light: 'green.800',
-          dark: 'blue.800',
-        },
+        expense: 'blue.800',
+        revenue: 'blue.800',
       },
     },
     link: {
-      primary: {
-        light: 'blue.300',
-        dark: 'blue.300',
-      },
+      primary: 'blue.300',
     },
     input: {
-      primary: {
-        light: 'white',
-        dark: 'white',
-      },
-      secondary: {
-        light: 'gray.200',
-        dark: 'gray.200',
-      },
-      hover: {
-        light: 'transparent',
-        dark: 'transparent',
-      },
-      focus: {
-        light: 'transparent',
-        dark: 'transparent',
-      },
-      border: {
-        light: 'blue.200',
-        dark: 'white',
-      },
-      focusBorder: {
-        light: 'blue.300',
-        dark: 'blue.600',
-      },
-      background: {
-        light: 'transparent',
-        dark: 'transparent',
-      },
-      backgroundPrimary: {
-        light: 'blue.50',
-        dark: 'blue.600',
-      },
-      backgroundSecondary: {
-        light: 'blue.50',
-        dark: 'blue.700',
-      },
-      focusPrimary: {
-        light: 'blue.500',
-        dark: 'transparent',
-      },
+      primary: 'white',
+      secondary: 'gray.200',
+      hover: 'transparent',
+      focus: 'transparent',
+      border: 'white',
+      background: 'transparent',
+      focusBorder: 'blue.600',
+      backgroundPrimary: 'blue.600',
+      backgroundSecondary: 'blue.700',
+      focusPrimary: 'transparent',
     },
   },
   fonts: {
@@ -524,11 +308,7 @@ export const rpgTheme: VisualTheme = {
   id: 'rpg',
   name: 'RPG Medieval',
   colors: {
-    // Cores principais do tema
     primary: 'purple',
-    secondary: 'red',
-    accent: 'yellow',
-    gray: 'gray',
     revenue: 'green',
     expense: 'red',
     chakraColors: {
@@ -547,330 +327,181 @@ export const rpgTheme: VisualTheme = {
     },
     // Tokens semânticos
     background: {
-      primary: {
-        light: 'purple.50',
-        dark: 'purple.800',
-      },
-      secondary: {
-        light: 'purple.50',
-        dark: 'purple.700',
-      },
-      tertiary: {
-        light: 'white',
-        dark: 'purple.600',
-      },
-      quaternary: {
-        light: 'purple.50',
-        dark: 'purple.50',
-      },
-      selected: {
-        light: 'purple.200',
-        dark: 'purple.500',
-      },
-      noSelect: {
-        light: 'gray.200',
-        dark: 'gray.200',
-      },
-      write: {
-        light: 'white',
-        dark: 'gray.800',
-      },
-      hover: {
-        light: 'gray.100',
-        dark: 'gray.700',
-      },
-      header: {
-        light: 'purple.50',
-        dark: 'purple.800',
-      },
-      navigation: {
-        light: 'purple.50',
-        dark: 'purple.800',
-      },
+      primary: 'purple.800',
+      secondary: 'purple.700',
+      tertiary: 'purple.600',
+      quaternary: 'purple.50',
+      selected: 'purple.500',
+      noSelect: 'gray.200',
+      hover: 'gray.700',
+      header: 'purple.800',
+      navigation: 'purple.800',
       lastRegistrations: {
-        expense: {
-          light: 'red.50',
-          dark: 'purple.600',
-        },
-        revenue: {
-          light: 'green.50',
-          dark: 'purple.600',
-        },
-        neutral: {
-          light: 'gray.100',
-          dark: 'gray.700',
-        },
+        expense: 'red.50',
+        revenue: 'green.50',
+        neutral: 'gray.200',
         badge: {
-          expense: {
-            light: 'red.200',
-            dark: 'purple.700',
-          },
-          revenue: {
-            light: 'green.200',
-            dark: 'purple.700',
-          },
+          expense: 'red.100',
+          revenue: 'green.100',
         },
       },
-      loading: {
-        light: 'purple.500',
-        dark: 'purple.500',
-      },
+      loading: 'purple.500',
       summaryCard: {
-        revenue: {
-          light: 'green.200',
-          dark: 'purple.600',
-        },
-        expense: {
-          light: 'red.200',
-          dark: 'purple.600',
-        },
+        revenue: 'green.200',
+        expense: 'red.200',
       },
-      login: {
-        light: 'rgba(23, 25, 35, 0.8)',
-        dark: 'rgba(23, 25, 35, 0.8)',
+      login: 'rgba(23, 25, 35, 0.8)',
+      reports: 'purple.50',
+      coin: 'purple.700',
+      home: 'purple.50',
+      dashboard: 'purple.50',
+      resources: 'purple.50',
+      profile: {
+        primary: 'purple.50',
+        secondary: 'purple.600',
+        selected: 'white',
       },
-      reports: {
-        light: 'purple.50',
-        dark: 'purple.50',
-      },
+      dateRangeFilter: 'purple.200',
+      qrScanner: 'purple.500',
     },
     text: {
-      primary: {
-        light: 'gray.800',
-        dark: 'white',
-      },
-      secondary: {
-        light: 'gray.600',
-        dark: 'gray.500',
-      },
-      tertiary: {
-        light: 'gray.500',
-        dark: 'gray.200',
-      },
-      accent: {
-        light: 'purple.800',
-        dark: 'purple.800',
-      },
-      disabled: {
-        light: 'gray.400',
-        dark: 'gray.500',
-      },
-      link: {
-        light: 'purple.500',
-        dark: 'purple.300',
-      },
-      gold: {
-        light: 'yellow.500',
-        dark: 'yellow.500',
-      },
+      primary: 'white',
+      secondary: 'gray.500',
+      tertiary: 'gray.200',
+      accent: 'purple.800',
+      disabled: 'gray.500',
+      link: 'purple.300',
+      coin: 'yellow.500',
       summaryCard: {
-        revenue: {
-          light: 'green.800',
-          dark: 'white',
-        },
-        expense: {
-          light: 'red.800',
-          dark: 'white',
-        },
+        revenue: 'green.700',
+        expense: 'red.700',
       },
       lastRegistrations: {
-        expense: {
-          light: 'red.500',
-          dark: 'white',
-        },
-        revenue: {
-          light: 'green.500',
-          dark: 'white',
-        },
+        title: 'purple.800',
+        primary: 'black',
+        icon: 'purple.800',
+        neutral: 'gray.500',
+        expense: 'red.500',
+        revenue: 'green.500',
       },
       reports: {
-        light: 'black',
-        dark: 'black',
+        title: 'purple.800',
+        primary: 'purple.600',
+        icon: 'purple.800',
+        neutral: 'gray.500',
+        expense: 'red.500',
+        revenue: 'green.500',
       },
-      header: {
-        light: 'purple.800',
-        dark: 'white',
-      },
+      header: 'white',
       navigation: {
-        light: 'purple.800',
-        dark: 'white',
+        active: 'purple.800',
+        inactive: 'white',
+      },
+      hover: {
+        expense: 'purple.700',
+        revenue: 'purple.700',
+        neutral: 'purple.700',
+        inverse: 'purple.800',
+      },
+      eye: 'purple.500',
+      dateRangeFilter: 'purple.800',
+      profile: {
+        primary: 'purple.800',
+        secondary: 'purple.500',
+        selected: 'white',
       },
     },
     heading: {
       summaryCard: {
-        revenue: {
-          light: 'green.900',
-          dark: 'green.700',
-        },
-        expense: {
-          light: 'red.900',
-          dark: 'red.700',
-        },
+        revenue: 'white',
+        expense: 'white',
       },
     },
     border: {
-      primary: {
-        light: 'purple.200',
-        dark: 'purple.700',
-      },
-      secondary: {
-        light: 'gray.200',
-        dark: 'gray.600',
-      },
-      selected: {
-        light: 'purple.500',
-        dark: 'purple.500',
-      },
-      noSelect: {
-        light: 'gray.200',
-        dark: 'gray.200',
-      },
+      primary: 'purple.700',
+      secondary: 'gray.600',
+      selected: 'purple.500',
+      noSelect: 'gray.200',
       lastRegistrations: {
-        expense: {
-          light: 'red.500',
-          dark: 'red.500',
-        },
-        revenue: {
-          light: 'green.500',
-          dark: 'green.500',
-        },
-        neutral: {
-          light: 'gray.100',
-          dark: 'gray.700',
-        },
+        expense: 'red.500',
+        revenue: 'green.500',
+        neutral: 'gray.700',
       },
       summaryCard: {
-        revenue: {
-          light: 'green.500',
-          dark: 'green.500',
-        },
-        expense: {
-          light: 'red.500',
-          dark: 'red.500',
-        },
+        revenue: 'green.500',
+        expense: 'red.500',
       },
-      reports: {
-        light: 'black',
-        dark: 'black',
-      },
+      reports: 'purple.500',
+      header: 'purple.900',
+      navigation: 'purple.900',
+      coin: 'purple.700',
     },
     status: {
-      success: {
-        light: 'green.500',
-        dark: 'green.300',
-      },
-      error: {
-        light: 'red.500',
-        dark: 'red.300',
-      },
-      warning: {
-        light: 'yellow.500',
-        dark: 'yellow.300',
-      },
-      info: {
-        light: 'purple.500',
-        dark: 'purple.300',
-      },
+      success: 'green.300',
+      error: 'red.300',
+      warning: 'yellow.300',
+      info: 'purple.300',
     },
     button: {
-      primary: {
-        light: 'purple',
-        dark: 'purple',
-      },
-      secondary: {
-        light: 'purple',
-        dark: 'purple',
-      },
-      danger: {
-        light: 'red',
-        dark: 'red',
-      },
-      warning: {
-        light: 'yellow',
-        dark: 'yellow',
-      },
+      primary: 'purple',
+      secondary: 'purple',
+      danger: 'red',
+      warning: 'yellow',
       background: {
-        expense: {
-          light: 'purple.600',
-          dark: 'purple.600',
-        },
-        revenue: {
-          light: 'purple.600',
-          dark: 'purple.600',
-        },
+        primary: 'purple.800',
+        expense: 'purple.500',
+        revenue: 'green.500',
+        neutral: 'purple.500',
+        inverse: 'white',
       },
       text: {
-        expense: {
-          light: 'white',
-          dark: 'white',
-        },
-        revenue: {
-          light: 'white',
-          dark: 'white',
-        },
-        primary: {
-          light: 'white',
-          dark: 'white',
-        },
+        primary: 'white',
+        expense: 'white',
+        revenue: 'white',
       },
       border: {
-        expense: {
-          light: 'purple.800',
-          dark: 'purple.800',
+        expense: 'purple.500',
+        revenue: 'green.500',
+        neutral: 'purple.500',
+      },
+      hover: {
+        text: {
+          default: 'white',
+          expense: 'white',
+          revenue: 'white',
+          neutral: 'white',
+          inverse: 'purple.800',
         },
-        revenue: {
-          light: 'purple.800',
-          dark: 'purple.800',
+        background: {
+          default: 'white',
+          expense: 'white',
+          revenue: 'white',
+          neutral: 'purple.800',
+          inverse: 'white',
+        },
+        border: {
+          default: 'purple.800',
+          expense: 'purple.800',
+          revenue: 'green.800',
+          neutral: 'purple.800',
+          inverse: 'purple.800',
         },
       },
     },
     link: {
-      primary: {
-        light: 'blue.300',
-        dark: 'blue.300',
-      },
+      primary: 'blue.300',
     },
     input: {
-      primary: {
-        light: 'white',
-        dark: 'white',
-      },
-      secondary: {
-        light: 'gray.200',
-        dark: 'gray.200',
-      },
-      hover: {
-        light: 'transparent',
-        dark: 'transparent',
-      },
-      focus: {
-        light: 'transparent',
-        dark: 'transparent',
-      },
-      border: {
-        light: 'purple.200',
-        dark: 'white',
-      },
-      focusBorder: {
-        light: 'blue.300',
-        dark: 'blue.600',
-      },
-      background: {
-        light: 'transparent',
-        dark: 'transparent',
-      },
-      backgroundPrimary: {
-        light: 'purple.50',
-        dark: 'purple.600',
-      },
-      backgroundSecondary: {
-        light: 'purple.50',
-        dark: 'purple.700',
-      },
-      focusPrimary: {
-        light: 'purple.500',
-        dark: 'transparent',
-      },
+      primary: 'white',
+      secondary: 'gray.200',
+      hover: 'transparent',
+      focus: 'transparent',
+      border: 'white',
+      background: 'transparent',
+      focusBorder: 'blue.600',
+      backgroundPrimary: 'purple.600',
+      backgroundSecondary: 'purple.700',
+      focusPrimary: 'transparent',
     },
   },
   fonts: {
@@ -883,10 +514,10 @@ export const rpgTheme: VisualTheme = {
     images: {
       logo: '/assets/images/logo-rpg.png',
       background: {
-        login: '/assets/images/login-bg-medieval.png',
-        register: '/assets/images/register-bg-medieval.png',
-        notFound: '/assets/images/notfound-bg-medieval.png',
-        underConstruction: '/assets/images/under-construction-bg-medieval.png',
+        login: '/assets/images/login-bg.png',
+        register: '/assets/images/register-bg.png',
+        notFound: '/assets/images/notfound-bg.png',
+        underConstruction: '/assets/images/under-construction-bg.png',
       },
       coatOfArms: {
         family: '/assets/images/coat_of_arms_family.png',

@@ -2,7 +2,7 @@ import { useTheme } from './useThemeContext';
 import { defaultTheme, rpgTheme } from '../theme/themes';
 
 export function useVisualTheme() {
-  const { currentTheme, isDarkMode } = useTheme();
+  const { currentTheme } = useTheme();
   const theme = currentTheme === 'rpg' ? rpgTheme : defaultTheme;
 
   const getAsset = (path: string) => {
@@ -34,12 +34,6 @@ export function useVisualTheme() {
       current = current[part] as Record<string, unknown>;
     }
     
-    // Se o valor é um objeto com light/dark, retorna o valor apropriado
-    if (typeof current === 'object' && 'light' in current && 'dark' in current) {
-      const colorObj = current as { light: string; dark: string };
-      return isDarkMode ? colorObj.dark : colorObj.light;
-    }
-    
     return typeof current === 'string' ? current : '';
   };
 
@@ -54,4 +48,4 @@ export function useVisualTheme() {
     getColor,
     getFont,
   };
-} 
+}

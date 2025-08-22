@@ -23,7 +23,7 @@ const Dashboard = () => {
         pt={8}
         pb={20}
         px={4}
-        bg={getColor('background.primary')}
+        bg={getColor('background.dashboard')}
       >
         <SimpleGrid columns={1} spacing={6} width="100%" maxW="1200px">
           <PieChartExpenses data={[]} />

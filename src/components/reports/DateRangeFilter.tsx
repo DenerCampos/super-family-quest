@@ -37,7 +37,7 @@ export const DateRangeFilter = ({
       direction={{ base: "column", sm: "row" }} 
       align="center"
       justify="center"
-      bg={getColor('background.quaternary')}
+      bg={getColor('background.dateRangeFilter')}
       p={4}
       borderRadius="md"
       border="1px solid"
@@ -45,7 +45,7 @@ export const DateRangeFilter = ({
       width="100%"
     >
       <Flex align="center" gap={2}>
-        <Text fontSize="sm" color={getColor('text.accent')} whiteSpace="nowrap" fontWeight="medium">
+        <Text fontSize="sm" color={getColor('text.dateRangeFilter')} whiteSpace="nowrap" fontWeight="medium">
           {t('reports.dateRangeFilter.startDate')}
         </Text>
         <Input
@@ -61,7 +61,7 @@ export const DateRangeFilter = ({
         />
       </Flex>
       <Flex align="center" gap={2}>
-        <Text fontSize="sm" color={getColor('text.accent')} whiteSpace="nowrap" fontWeight="medium">
+        <Text fontSize="sm" color={getColor('text.dateRangeFilter')} whiteSpace="nowrap" fontWeight="medium">
           {t('reports.dateRangeFilter.endDate')}
         </Text>
         <Input

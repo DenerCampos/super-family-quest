@@ -20,7 +20,7 @@ export const NavigationBar = () => {
       p={2}
       boxShadow="lg"
       borderTopWidth="1px"
-      borderTopColor={getColor('border.primary')}
+      borderTopColor={getColor('border.navigation')}
     >
       <NavLink to="/home">
         {({ isActive }) => (
@@ -30,7 +30,9 @@ export const NavigationBar = () => {
               aria-label="Home"
               variant="ghost"
               color={
-                isActive ? getColor('text.accent') : getColor('text.navigation')
+                isActive
+                  ? getColor('text.navigation.active')
+                  : getColor('text.navigation.inactive')
               }
               fontSize="24px"
               isActive={isActive}
@@ -42,8 +44,8 @@ export const NavigationBar = () => {
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.navigation')
-                  : getColor('text.navigation')
+                  ? getColor('text.navigation.inactive')
+                  : getColor('text.navigation.inactive')
               }
               fontFamily={getFont('body')}
             >
@@ -61,7 +63,9 @@ export const NavigationBar = () => {
               aria-label="Dashboard"
               variant="ghost"
               color={
-                isActive ? getColor('text.accent') : getColor('text.navigation')
+                isActive
+                  ? getColor('text.navigation.active')
+                  : getColor('text.navigation.inactive')
               }
               fontSize="24px"
               isActive={isActive}
@@ -73,8 +77,8 @@ export const NavigationBar = () => {
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.navigation')
-                  : getColor('text.navigation')
+                  ? getColor('text.navigation.inactive')
+                  : getColor('text.navigation.inactive')
               }
               fontFamily={getFont('body')}
             >
@@ -92,7 +96,9 @@ export const NavigationBar = () => {
               aria-label="Novo recurso"
               variant="ghost"
               color={
-                isActive ? getColor('text.accent') : getColor('text.navigation')
+                isActive
+                  ? getColor('text.navigation.active')
+                  : getColor('text.navigation.inactive')
               }
               fontSize="24px"
               isActive={isActive}
@@ -104,8 +110,8 @@ export const NavigationBar = () => {
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.navigation')
-                  : getColor('text.navigation')
+                  ? getColor('text.navigation.inactive')
+                  : getColor('text.navigation.inactive')
               }
               fontFamily={getFont('body')}
             >
@@ -123,7 +129,9 @@ export const NavigationBar = () => {
               aria-label="Novo desafio"
               variant="ghost"
               color={
-                isActive ? getColor('text.accent') : getColor('text.navigation')
+                isActive
+                  ? getColor('text.navigation.active')
+                  : getColor('text.navigation.inactive')
               }
               fontSize="24px"
               isActive={isActive}
@@ -135,8 +143,8 @@ export const NavigationBar = () => {
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.navigation')
-                  : getColor('text.navigation')
+                  ? getColor('text.navigation.inactive')
+                  : getColor('text.navigation.inactive')
               }
               fontFamily={getFont('body')}
             >
@@ -154,7 +162,9 @@ export const NavigationBar = () => {
               aria-label="Perfil"
               variant="ghost"
               color={
-                isActive ? getColor('text.accent') : getColor('text.navigation')
+                isActive
+                  ? getColor('text.navigation.active')
+                  : getColor('text.navigation.inactive')
               }
               fontSize="24px"
               isActive={isActive}
@@ -166,8 +176,8 @@ export const NavigationBar = () => {
               fontSize="xs"
               color={
                 isActive
-                  ? getColor('text.navigation')
-                  : getColor('text.navigation')
+                  ? getColor('text.navigation.inactive')
+                  : getColor('text.navigation.inactive')
               }
               fontFamily={getFont('body')}
             >

@@ -172,13 +172,13 @@ const NewResources = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh" bg={getColor('background.primary')}>
+    <Flex direction="column" minH="100vh" bg={getColor('background.resources')}>
       <Header />
 
       <Box p={4} mb="70px">
         <Accordion allowMultiple>
           {/* Seção Cadastros */}
-          <ResourceContainer title="Cadastros" colorScheme={getColor('gray')}>
+          <ResourceContainer title="Cadastros" colorScheme={getColor('primary')}>
             <StoreResource
               onEdit={(store) => handleResourceOpen('store', store)}
               onDelete={(id) => handleDelete('store', id)}

@@ -90,7 +90,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
       p={4}
       borderRadius="lg"
       border="2px solid"
-      borderColor={getColor('border.primary')}
+      borderColor={getColor('border.reports')}
       width="100%"
       maxW="600px"
       mx="auto"
@@ -100,7 +100,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
     >
       <Text
         fontSize="xl"
-        color={getColor('primary.500')}
+        color={getColor('text.reports.title')}
         textAlign="center"
         mb={4}
         fontWeight="bold"
@@ -119,11 +119,11 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
         <Flex align="center" justify="center" height="300px">
           <Spinner
             size="xl"
-            color={getColor('text.accent')}
+            color={getColor('text.reports.primary')}
             thickness="4px"
-            emptyColor={getColor('text.accent')}
+            emptyColor={getColor('text.reports.primary')}
           />
-          <Text ml={3} color={getColor('text.accent')}>
+          <Text ml={3} color={getColor('text.reports.primary')}>
             {t('reports.expensesByStore.loading')}
           </Text>
         </Flex>
@@ -150,13 +150,13 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
               />
               <XAxis
                 dataKey="name"
-                stroke={getColor('text.reports')}
+                stroke={getColor('text.reports.primary')}
                 tick={{ fontSize: isMobile ? 12 : 14 }}
               />
               {!isMobile && (
                 <YAxis
                   tickFormatter={(value) => formatCurrency(value)}
-                  stroke={getColor('text.reports')}
+                  stroke={getColor('text.reports.primary')}
                 />
               )}
               <Tooltip
@@ -169,9 +169,9 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
                 }}
                 contentStyle={{
                   background: getColor('background.quaternary'),
-                  borderColor: getColor('border.primary'),
+                  borderColor: getColor('border.reports'),
                   borderRadius: 'md',
-                  color: getColor('text.reports'),
+                  color: getColor('text.reports.primary'),
                 }}
               />
               <Legend
@@ -179,7 +179,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
                   paddingTop: '10px',
                 }}
                 formatter={(value) => (
-                  <span style={{ color: getColor('background.primary') }}>
+                  <span style={{ color: getColor('text.reports.primary') }}>
                     {value}
                   </span>
                 )}
@@ -193,7 +193,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
                   <Cell
                     key={`cell-${index}`}
                     fill={colors[index]}
-                    stroke={getColor('text.reports')}
+                    stroke={getColor('text.reports.primary')}
                     strokeWidth={0.5}
                   />
                 ))}
@@ -202,7 +202,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
           </ResponsiveContainer>
         </Box>
       ) : (
-        <Text color={getColor('text.reports')} py={10} textAlign="center">
+        <Text color={getColor('text.reports.primary')} py={10} textAlign="center">
           {t('reports.expensesByStore.noData')}
         </Text>
       )}

@@ -96,7 +96,7 @@ export const LastRegistrationsList = ({
     return (
       <Box py={4} textAlign="center">
         <Text 
-          color={getColor('text.primary')}
+          color={getColor('text.lastRegistrations.title')}
           fontFamily={getFont('body')}
         >
           {t('lastRegistrationsList.noData')}
@@ -110,7 +110,7 @@ export const LastRegistrationsList = ({
       <Text
         fontSize="lg"
         fontWeight="bold"
-        color={getColor('text.primary')}
+        color={getColor('text.lastRegistrations.title')}
         fontFamily={getFont('heading')}
       >
         {t('lastRegistrationsList.title')}
@@ -144,8 +144,8 @@ export const LastRegistrationsList = ({
           >
             <Flex justify="space-between" align="center">
               <Flex align="center">
-                <Icon as={FaStore} color={getColor('text.primary')} mr={2} />
-                <Text fontWeight="medium" fontFamily={getFont('body')} color={getColor('text.primary')}>
+                <Icon as={FaStore} color={getColor('text.lastRegistrations.icon')} mr={2} />
+                <Text fontWeight="medium" fontFamily={getFont('body')} color={getColor('text.lastRegistrations.title')}>
                   {capitalizeFirstLetter(registration.name) ||
                     'Loja desconhecida'}
                 </Text>
@@ -174,7 +174,7 @@ export const LastRegistrationsList = ({
             <Flex
               mt={2}
               justify="space-between"
-              color={getColor('text.tertiary')}
+              color={getColor('text.lastRegistrations.neutral')}
               fontSize="sm"
               fontFamily={getFont('body')}
             >

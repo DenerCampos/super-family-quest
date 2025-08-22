@@ -315,7 +315,7 @@ export const QRScannerPage = () => {
         leftIcon={<FiArrowLeft />}
         variant="ghost"
         color={getColor('text.primary')}
-        bg={getColor('background.tertiary')}
+        bg={getColor('background.qrScanner')}
         border="1px solid"
         borderColor={getColor('border.primary')}
         _hover={{
@@ -337,7 +337,7 @@ export const QRScannerPage = () => {
           icon={<FiRotateCw />}
           variant="ghost"
           color={getColor('text.primary')}
-          bg={getColor('background.tertiary')}
+          bg={getColor('background.qrScanner')}
           border="1px solid"
           borderColor={getColor('border.primary')}
           _hover={{

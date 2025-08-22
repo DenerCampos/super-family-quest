@@ -155,10 +155,18 @@ const StoreResource = ({
         </Text>
         <Button
           size="sm"
-          bg={getColor('background.tertiary')}
-          color={getColor('text.primary')}
-          _hover={{ bg: getColor('background.tertiary') }}
-          _focus={{ bg: getColor('background.tertiary') }}
+          bg={getColor('button.background.neutral')}
+          color={getColor('button.text.primary')}
+          border="1px solid"
+          borderColor={getColor('button.border.neutral')}
+          _hover={{
+            bg: getColor('button.hover.background.inverse'),
+            color: getColor('button.hover.text.inverse'),
+          }}
+          _focus={{
+            bg: getColor('button.hover.background.neutral'),
+            color: getColor('button.hover.text.neutral'),
+          }}
           leftIcon={<FiPlus />}
           onClick={handleNewStore}
         >

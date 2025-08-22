@@ -1,32 +1,9 @@
 import type { ThemeNamespace } from '../i18n/types';
 
-// Interface para as cores do Chakra (50-950)
-interface ColorScale {
-  50: string;
-  100: string;
-  200: string;
-  300: string;
-  400: string;
-  500: string;
-  600: string;
-  700: string;
-  800: string;
-  900: string;
-  950: string;
-}
-
-// Interface para tokens que têm variantes light/dark
-interface ThemeToken {
-  light: string;
-  dark: string;
-}
 
 export interface ThemeColors {
   // Cores principais do tema
   primary: string;
-  secondary: string;
-  accent: string;
-  gray: string;
   revenue: string;
   expense: string;
 
@@ -47,126 +24,193 @@ export interface ThemeColors {
 
   // Tokens semânticos para background
   background: {
-    primary: ThemeToken;
-    secondary: ThemeToken;
-    tertiary: ThemeToken;
-    quaternary: ThemeToken;
-    selected: ThemeToken;
-    noSelect: ThemeToken;
-    write: ThemeToken;
-    hover: ThemeToken;
-    header: ThemeToken;
-    navigation: ThemeToken;
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    quaternary: string;
+    selected: string;
+    noSelect: string;
+    hover: string;
+    header: string;
+    navigation: string;
     lastRegistrations: {
-      expense: ThemeToken;
-      revenue: ThemeToken;
-      neutral: ThemeToken;
+      expense: string;
+      revenue: string;
+      neutral: string;
       badge: {
-        expense: ThemeToken;
-        revenue: ThemeToken;
+        expense: string;
+        revenue: string;
       };
     };
-    loading: ThemeToken;
+    loading: string;
     summaryCard: {
-      revenue: ThemeToken;
-      expense: ThemeToken;
+      revenue: string;
+      expense: string;
     };
-    login: ThemeToken;
-    reports: ThemeToken;
+    login: string;
+    reports: string;
+    coin: string;
+    home: string;
+    dashboard: string;
+    resources: string;
+    profile: {
+      primary: string;
+      secondary: string;
+      selected: string;
+    };
+    dateRangeFilter: string;
+    qrScanner: string;
   };
 
   // Tokens semânticos para texto
   text: {
-    primary: ThemeToken;
-    secondary: ThemeToken;
-    tertiary: ThemeToken;
-    accent: ThemeToken;
-    disabled: ThemeToken;
-    link: ThemeToken;
-    gold: ThemeToken;
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    accent: string;
+    disabled: string;
+    link: string;
+    coin: string;
     summaryCard: {
-      revenue: ThemeToken;
-      expense: ThemeToken;
+      revenue: string;
+      expense: string;
     };
     lastRegistrations: {
-      expense: ThemeToken;
-      revenue: ThemeToken;
+      title: string;
+      primary: string;
+      icon: string;
+      neutral: string;
+      expense: string;
+      revenue: string;
     };
-    reports: ThemeToken;
-    header: ThemeToken;
-    navigation: ThemeToken;
+    reports: {
+      title: string;
+      primary: string;
+      icon: string;
+      neutral: string;
+      expense: string;
+      revenue: string;
     };
+    header: string;
+    navigation: {
+      active: string;
+      inactive: string;
+    };
+    hover: {
+      expense: string;
+      revenue: string;
+      neutral: string;
+      inverse: string;
+    };
+    eye: string;
+    dateRangeFilter: string;
+    profile: {
+      primary: string;
+      secondary: string;
+      selected: string;
+    };
+  };
 
   // Tokens semânticos para heading
   heading: {
     summaryCard: {
-      revenue: ThemeToken;
-      expense: ThemeToken;
+      revenue: string;
+      expense: string;
     };
   };
 
   // Tokens semânticos para bordas
   border: {
-    primary: ThemeToken;
-    secondary: ThemeToken;
-    selected: ThemeToken;
-    noSelect: ThemeToken;
+    primary: string;
+    secondary: string;
+    selected: string;
+    noSelect: string;
     lastRegistrations: {
-      expense: ThemeToken;
-      revenue: ThemeToken;
-      neutral: ThemeToken;
+      expense: string;
+      revenue: string;
+      neutral: string;
     };
     summaryCard: {
-      revenue: ThemeToken;
-      expense: ThemeToken;
+      revenue: string;
+      expense: string;
     };
-    reports: ThemeToken;
+    reports: string;
+    header: string;
+    navigation: string;
+    coin: string;
   };
 
   // Tokens semânticos para status
   status: {
-    success: ThemeToken;
-    error: ThemeToken;
-    warning: ThemeToken;
-    info: ThemeToken;
+    success: string;
+    error: string;
+    warning: string;
+    info: string;
   };
 
   // Configuração de botões usando cores do Chakra
   button: {
-    primary: ThemeToken;
-    secondary: ThemeToken;
-    danger: ThemeToken;
-    warning: ThemeToken;
+    primary: string;
+    secondary: string;
+    danger: string;
+    warning: string;
     background: {
-      expense: ThemeToken;
-      revenue: ThemeToken;
+      primary: string;
+      expense: string;
+      revenue: string;
+      neutral: string;
+      inverse: string;
     };
     text: {
-      primary: ThemeToken;
-      expense: ThemeToken;
-      revenue: ThemeToken;
+      primary: string;
+      expense: string;
+      revenue: string;
     };
     border: {
-      expense: ThemeToken;
-      revenue: ThemeToken;
+      expense: string;
+      revenue: string;
+      neutral: string;
+    };
+    hover: {
+      text: {
+        default: string;
+        expense: string;
+        revenue: string;
+        neutral: string;
+        inverse: string;
+      };
+      background: {
+        default: string;
+        expense: string;
+        revenue: string;
+        neutral: string;
+        inverse: string;
+      };
+      border: {
+        default: string;
+        expense: string;
+        revenue: string;
+        neutral: string;
+        inverse: string;
+      };
     };
   };
 
   link: {
-    primary: ThemeToken;
+    primary: string;
   };
 
   input: {
-    primary: ThemeToken;
-    secondary: ThemeToken;
-    hover: ThemeToken;
-    focus: ThemeToken;
-    border: ThemeToken;
-    background: ThemeToken;
-    focusBorder: ThemeToken;
-    backgroundPrimary: ThemeToken;
-    backgroundSecondary: ThemeToken;
-    focusPrimary: ThemeToken;
+    primary: string;
+    secondary: string;
+    hover: string;
+    focus: string;
+    border: string;
+    background: string;
+    focusBorder: string;
+    backgroundPrimary: string;
+    backgroundSecondary: string;
+    focusPrimary: string;
   };
 }
 

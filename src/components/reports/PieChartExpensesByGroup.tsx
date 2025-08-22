@@ -80,7 +80,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
       p={4}
       borderRadius="lg"
       border="2px solid"
-      borderColor={getColor('border.primary')}
+      borderColor={getColor('border.reports')}
       width="100%"
       maxW="600px"
       mx="auto"
@@ -90,7 +90,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
     >
       <Text
         fontSize="xl"
-        color={getColor('text.accent')}
+        color={getColor('text.reports.title')}
         textAlign="center"
         mb={4}
         fontWeight="bold"
@@ -109,11 +109,11 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
         <Flex align="center" justify="center" height="300px">
           <Spinner
             size="xl"
-            color={getColor('text.accent')}
+            color={getColor('text.reports.primary')}
             thickness="4px"
-            emptyColor={getColor('text.accent')}
+            emptyColor={getColor('text.reports.primary')}
           />
-          <Text ml={3} color={getColor('text.accent')}>
+          <Text ml={3} color={getColor('text.reports.primary')}>
             {t('reports.expensesByGroup.loading')}
           </Text>
         </Flex>
@@ -164,6 +164,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
                   borderColor: getColor('border.reports'),
                   borderRadius: 'md',
                   padding: '8px',
+                  color: getColor('text.reports.primary'),
                 }}
               />
               {!isMobile && (
@@ -172,7 +173,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
                     paddingTop: '20px',
                   }}
                   formatter={(value) => (
-                    <span style={{ color: getColor('text.reports') }}>
+                    <span style={{ color: getColor('text.reports.primary') }}>
                       {value}
                     </span>
                   )}
@@ -182,7 +183,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
           </ResponsiveContainer>
         </Box>
       ) : (
-        <Text color={getColor('primary.300')} py={10} textAlign="center">
+        <Text color={getColor('text.reports.primary')} py={10} textAlign="center">
           {t('reports.expensesByGroup.noData')}
         </Text>
       )}
@@ -192,7 +193,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
             {chartData.map((entry, index) => (
               <Flex key={`legend-${index}`} align="center" gap={2}>
                 <Box w="12px" h="12px" borderRadius="50%" bg={colors[index]} />
-                <Text color={getColor('text.reports')} fontSize="sm">
+                <Text color={getColor('text.reports.primary')} fontSize="sm">
                   {entry.name}
                 </Text>
               </Flex>

@@ -113,7 +113,7 @@ const Home = () => {
       direction="column"
       minH="100vh"
       pb="70px"
-      bg={getColor('background.secondary')}
+      bg={getColor('background.home')}
     >
       <Header />
 
@@ -127,12 +127,11 @@ const Home = () => {
             top={2}
             size="sm"
             variant="ghost"
-            color={getColor('text.primary')}
+            color={getColor('text.eye')}
             _hover={{
-              bg: getColor('background.selected'),
-              color: getColor('text.accent'),
+              bg: getColor('button.hover.background.inverse'),
+              color: getColor('button.hover.text.inverse'),
             }}
-            colorScheme="gray"
             onClick={toggleShowValues}
             zIndex={1}
           >
@@ -155,16 +154,24 @@ const Home = () => {
           <Menu>
             <MenuButton
               as={Button}
+              role="group"
               color={getColor('button.text.expense')}
               bg={getColor('button.background.expense')}
               border="1px solid"
               borderColor={getColor('button.border.expense')}
               _hover={{
-                bg: getColor('background.selected'),
-                color: getColor('text.accent'),
+                bg: getColor('button.hover.background.expense'),
+                color: getColor('button.hover.text.inverse'),
+                borderColor: getColor('button.hover.border.expense'),
               }}
               size="lg"
-              leftIcon={<Icon as={FiShoppingBag} color={getColor('button.text.expense')} />}
+              leftIcon={
+                <Icon
+                  as={FiShoppingBag}
+                  color={getColor('button.text.expense')}
+                  _groupHover={{ color: getColor('button.hover.text.inverse') }}
+                />
+              }
               w="full"
             >
               {t('home.addExpense')}
@@ -182,16 +189,24 @@ const Home = () => {
           <Menu>
             <MenuButton
               as={Button}
+              role="group"
               color={getColor('button.text.revenue')}
               bg={getColor('button.background.revenue')}
               border="1px solid"
               borderColor={getColor('button.border.revenue')}
               _hover={{
-                bg: getColor('background.selected'),
-                color: getColor('text.accent'),
+                bg: getColor('button.hover.background.revenue'),
+                color: getColor('button.hover.text.inverse'),
+                borderColor: getColor('button.hover.border.revenue'),
               }}
               size="lg"
-              leftIcon={<Icon as={FiDollarSign} color={getColor('button.text.revenue')} />}
+              leftIcon={
+                <Icon
+                  as={FiDollarSign}
+                  color={getColor('button.text.revenue')}
+                  _groupHover={{ color: getColor('button.hover.text.inverse') }}
+                />
+              }
               w="full"
             >
               {t('home.addRevenue')}

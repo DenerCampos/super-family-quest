@@ -89,7 +89,7 @@ export const BarChartExpensesIncome = ({
       p={4}
       borderRadius="lg"
       border="2px solid"
-      borderColor={getColor('border.primary')}
+      borderColor={getColor('border.reports')}
       width="100%"
       maxW="600px"
       mx="auto"
@@ -99,7 +99,7 @@ export const BarChartExpensesIncome = ({
     >
       <Text
         fontSize="xl"
-        color={getColor('text.reports')}
+        color={getColor('text.reports.title')}
         textAlign="center"
         mb={4}
         fontWeight="bold"
@@ -111,9 +111,9 @@ export const BarChartExpensesIncome = ({
         value={selectedYear}
         onChange={handleYearChange}
         mb={4}
-        borderColor={getColor('border.primary')}
-        _hover={{ borderColor: getColor('border.primary') }}
-        _focus={{ borderColor: getColor('border.primary') }}
+        borderColor={getColor('border.reports')}
+        _hover={{ borderColor: getColor('border.reports') }}
+        _focus={{ borderColor: getColor('border.reports') }}
       >
         {getAvailableYears().map((year) => (
           <option key={year} value={year}>
@@ -126,11 +126,11 @@ export const BarChartExpensesIncome = ({
         <Flex align="center" justify="center" height="300px">
           <Spinner
             size="xl"
-            color={getColor('text.accent')}
+            color={getColor('text.reports.primary')}
             thickness="4px"
-            emptyColor={getColor('text.accent')}
+            emptyColor={getColor('text.reports.primary')}
           />
-          <Text ml={3} color={getColor('text.accent')}>
+          <Text ml={3} color={getColor('text.reports.primary')}>
             {t('reports.expensesIncome.loading')}
           </Text>
         </Flex>
@@ -152,24 +152,24 @@ export const BarChartExpensesIncome = ({
             >
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke={getColor('text.accent')}
+                stroke={getColor('text.reports.primary')}
               />
               <XAxis
                 dataKey="month"
-                stroke={getColor('text.accent')}
+                stroke={getColor('text.reports.primary')}
                 tick={{ fontSize: isMobile ? 12 : 14 }}
               />
               {!isMobile && (
                 <YAxis
                   tickFormatter={(value) => formatCurrency(value)}
-                  stroke={getColor('text.accent')}
+                  stroke={getColor('text.reports.primary')}
                 />
               )}
               <Tooltip
                 formatter={(value) => [formatCurrency(Number(value)), '']}
                 contentStyle={{
                   background: getColor('background.reports'),
-                  borderColor: getColor('border.primary'),
+                  borderColor: getColor('border.reports'),
                   borderRadius: 'md',
                   padding: '8px',
                 }}
@@ -199,7 +199,7 @@ export const BarChartExpensesIncome = ({
           </ResponsiveContainer>
         </Box>
       ) : (
-        <Text color={getColor('text.accent')} py={10} textAlign="center">
+        <Text color={getColor('text.reports.primary')} py={10} textAlign="center">
           {t('reports.expensesIncome.noData')}
         </Text>
       )}

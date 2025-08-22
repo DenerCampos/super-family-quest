@@ -34,13 +34,13 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
   return (
     <Flex
       align="center"
-      bg={getColor('background.secondary')}
+      bg={getColor('background.coin')}
       px={3}
       py={1}
       borderRadius="md"
       position="relative"
       borderWidth="1px"
-      borderColor={getColor('border.primary')}
+      borderColor={getColor('border.coin')}
     >
       <Image
         src={gifSrc}
@@ -49,7 +49,7 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
         animation={animate ? `${pulse} 0.5s ease-in-out` : 'none'}
       />
       <Text 
-        color={getColor('text.gold')} 
+        color={getColor('text.coin')} 
         fontWeight="bold"
         fontFamily={getFont('heading')}
       >
