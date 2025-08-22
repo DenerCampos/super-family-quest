@@ -2,42 +2,54 @@
 import { Card, CardBody, Text, Heading } from '@chakra-ui/react';
 import { formatCurrency } from '../utils/formatCurrency';
 import { useAuth } from '../contexts/AuthContext';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 type Props = {
   title: string;
   value: number;
-  colorScheme: 'green' | 'red';
+  type: 'revenue' | 'expense';
 };
 
-export const SummaryCard = ({ title, value, colorScheme }: Props) => {
+export const SummaryCard = ({ title, value, type }: Props) => {
   const { showValues } = useAuth();
+  const { getColor, getFont} = useVisualTheme();
 
   const colors = {
-    green: {
-      bg: 'green.100',
-      border: 'green.500',
-      text: 'green.800',
-      heading: 'green.900',
+    revenue: {
+      bg: getColor('background.summaryCard.revenue'),
+      border: getColor('border.summaryCard.revenue'),
+      text: getColor('text.summaryCard.revenue'),
+      heading: getColor('text.summaryCard.revenue'),
     },
-    red: {
-      bg: 'red.100',
-      border: 'red.500',
-      text: 'red.800',
-      heading: 'red.900',
+    expense: {
+      bg: getColor('background.summaryCard.expense'),
+      border: getColor('border.summaryCard.expense'),
+      text: getColor('text.summaryCard.expense'),
+      heading: getColor('text.summaryCard.expense'),
     },
   };
 
   return (
     <Card
-      bg={colors[colorScheme].bg}
+      bg={colors[type].bg}
       borderLeft="4px solid"
-      borderColor={colors[colorScheme].border}
+      borderColor={colors[type].border}
     >
       <CardBody>
-        <Text fontSize="sm" color={colors[colorScheme].text}>
+        <Text
+          fontSize="md"
+          color={colors[type].text}
+          fontFamily={getFont('body')}
+          fontWeight="bold"
+        >
           {title}
         </Text>
-        <Heading size="lg" color={colors[colorScheme].heading} letterSpacing="2px">
+        <Heading
+          size="lg"
+          color={colors[type].heading}
+          letterSpacing="2px"
+          fontFamily={getFont('mono')}
+        >
           {showValues ? formatCurrency(value) : '••••••••'}
         </Heading>
       </CardBody>

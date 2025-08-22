@@ -24,6 +24,8 @@ import {
   parseBRLCurrency,
 } from '../../utils/formatCurrency';
 import { FiInfo } from 'react-icons/fi';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 type Props = {
   isOpen: boolean;
@@ -38,19 +40,24 @@ type FormData = {
   family: string;
   income: string;
   incomeName: string;
+  date: string;
   repeatMonthly: boolean;
 };
 
 export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
   const toast = useToast();
+  const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
+    mode: 'onChange',
     defaultValues: {
-      repeatMonthly: true,
+      family: '',
+      date: new Date().toISOString().split('T')[0],
     },
   });
 
@@ -69,13 +76,14 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
         family: data.family,
         income: parseBRLCurrency(data.income),
         incomeName: data.incomeName,
+        date: data.date,
         repeatMonthly: data.repeatMonthly,
       });
 
       toast({
-        title: 'Perfil atualizado!',
+        title: t('profile.complete'),
         status: 'success',
-        description: 'Seus dados foram salvos com sucesso',
+        description: t('profile.success'),
         duration: 3000,
       });
 
@@ -83,9 +91,9 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
     } catch (error) {
       console.error(error);
       toast({
-        title: 'Erro',
+        title: t('common.error'),
         status: 'error',
-        description: 'Falha ao salvar dados do perfil',
+        description: t('common.updateError'),
         duration: 3000,
       });
     }
@@ -99,32 +107,32 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent bg="purple.800" color="white">
-        <ModalHeader>Complete seu perfil</ModalHeader>
+      <ModalContent
+        bg={getColor('background.primary')}
+        color={getColor('text.primary')}
+      >
+        <ModalHeader>{t('profile.complete')}</ModalHeader>
 
         <ModalBody pb={6}>
-          <Text mb={4}>
-            Bem-vindo(a) ao nosso sistema! Por favor, complete estas informações
-            para continuar. Você poderá alterá-las depois no seu perfil.
-          </Text>
+          <Text mb={4}>{t('profile.welcome')}</Text>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.family} mb={4}>
-              <FormLabel>Nome da Família</FormLabel>
+              <FormLabel>{t('profile.familyName')}</FormLabel>
               <Input
                 {...register('family', {
-                  required: 'Este campo é obrigatório',
+                  required: t('common.required'),
                 })}
-                placeholder="Digite o nome da sua família"
-                bg="purple.100"
-                color="purple.800"
+                placeholder={t('profile.familyNamePlaceholder')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
                 _focus={{
-                  borderColor: 'purple.500',
-                  boxShadow: '0 0 0 1px purple.500',
+                  borderColor: getColor('border.tertiary'),
+                  boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
                 }}
               />
               {errors.family && (
-                <Text color="red.300" fontSize="sm">
+                <Text color={getColor('status.error')} fontSize="sm">
                   {errors.family.message}
                 </Text>
               )}
@@ -133,63 +141,91 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
             {/* Novo campo: Nome da receita */}
             <FormControl isInvalid={!!errors.incomeName} mb={4}>
               <Flex align="center">
-                <FormLabel>Nome da Receita</FormLabel>
+                <FormLabel>{t('profile.nameRevenue')}</FormLabel>
                 <Tooltip
-                  label="Nome da receita é sua fonte de renda principal"
+                  label={t('profile.nameRevenueTooltip')}
                   placement="top"
                   hasArrow
-                  bg="purple.500"
-                  color="white"
+                  bg={getColor('background.tertiary')}
+                  color={getColor('text.primary')}
                 >
                   <Box ml={1}>
-                    <Icon as={FiInfo} color="purple.300" boxSize={4} />
+                    <Icon
+                      as={FiInfo}
+                      color={getColor('primary.300')}
+                      boxSize={4}
+                    />
                   </Box>
                 </Tooltip>
               </Flex>
               <Input
                 {...register('incomeName', {
-                  required: 'Este campo é obrigatório',
+                  required: t('common.required'),
                 })}
-                placeholder="Ex: Salário, Freelance, etc"
-                bg="purple.100"
-                color="purple.800"
+                placeholder={t('profile.nameRevenuePlaceholder')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
                 _focus={{
-                  borderColor: 'purple.500',
-                  boxShadow: '0 0 0 1px purple.500',
+                  borderColor: getColor('border.tertiary'),
+                  boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
                 }}
               />
               {errors.incomeName && (
-                <Text color="red.300" fontSize="sm">
+                <Text color={getColor('status.error')} fontSize="sm">
                   {errors.incomeName.message}
                 </Text>
               )}
             </FormControl>
 
             <FormControl isInvalid={!!errors.income} mb={4}>
-              <FormLabel>Renda Mensal</FormLabel>
+              <FormLabel>{t('profile.monthlyIncome')}</FormLabel>
               <Input
                 {...register('income', {
-                  required: 'Este campo é obrigatório',
+                  required: t('common.required'),
                   validate: (value) => {
                     const numericValue = parseBRLCurrency(value);
-                    return numericValue > 0 || 'Valor inválido';
+                    return numericValue > 0 || t('common.invalidValue');
                   },
                 })}
                 onChange={(e) => {
                   const formatted = formatCurrencyInputBRL(e.target.value);
                   e.target.value = formatted;
                 }}
-                placeholder="R$ 0,00"
-                bg="purple.100"
-                color="purple.800"
+                placeholder={t('profile.monthlyIncomePlaceholder')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
                 _focus={{
-                  borderColor: 'purple.500',
-                  boxShadow: '0 0 0 1px purple.500',
+                  borderColor: getColor('border.tertiary'),
+                  boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
                 }}
               />
               {errors.income && (
-                <Text color="red.300" fontSize="sm">
+                <Text color={getColor('status.error')} fontSize="sm">
                   {errors.income.message}
+                </Text>
+              )}
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.date} mb={4}>
+              <FormLabel>{t('profile.date')}</FormLabel>
+              <Input
+                type="date"
+                {...register('date', {
+                  required: t('common.required'),
+                })}
+                bg={getColor('input.background')}
+                sx={{
+                  '&::-webkit-calendar-picker-indicator': {
+                    filter: 'invert(1)',
+                    cursor: 'pointer',
+                  },
+                }}
+                color={getColor('text.primary')}
+                isDisabled={isSubmitting}
+              />
+              {errors.date && (
+                <Text color={getColor('status.error')} fontSize="sm" mt={1}>
+                  {errors.date.message}
                 </Text>
               )}
             </FormControl>
@@ -199,19 +235,24 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
               <Checkbox
                 {...register('repeatMonthly')}
                 defaultChecked
-                colorScheme="purple"
+                colorScheme={getColor('chakraColors.green')}
+                size="lg"
               >
                 <Flex align="center">
-                  Repetir para todos os meses
+                  {t('profile.repeatMonthly')}
                   <Tooltip
-                    label="Marcando essa opção, todo mês o sistema irá adicionar esse valor. Pode ser alterado em Recursos -> receita"
+                    label={t('profile.repeatMonthlyTooltip')}
                     placement="top"
                     hasArrow
-                    bg="purple.500"
-                    color="white"
+                    bg={getColor('background.tertiary')}
+                    color={getColor('text.primary')}
                   >
                     <Box ml={1}>
-                      <Icon as={FiInfo} color="purple.300" boxSize={4} />
+                      <Icon
+                        as={FiInfo}
+                        color={getColor('primary.300')}
+                        boxSize={4}
+                      />
                     </Box>
                   </Tooltip>
                 </Flex>
@@ -220,11 +261,19 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
 
             <Button
               type="submit"
-              colorScheme="purple"
+              color={getColor('text.primary')}
+              bg={getColor('background.tertiary')}
+              border="1px solid"
+              borderColor={getColor('border.primary')}
+              _hover={{
+                bg: getColor('background.selected'),
+                color: getColor('text.accent'),
+              }}
               w="full"
               isLoading={isSubmitting}
+              loadingText={t('common.saving')}
             >
-              Salvar e Continuar
+              {t('common.save')}
             </Button>
           </form>
         </ModalBody>

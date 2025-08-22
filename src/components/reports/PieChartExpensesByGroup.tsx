@@ -5,7 +5,8 @@ import type { ExpensesByGroup } from "../../services/reports";
 import { DateRangeFilter, defaultDates } from "./DateRangeFilter";
 import { useState, useEffect } from "react";
 import { api } from '../../services';
-
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 interface PieChartExpensesProps {
   data: ExpensesByGroup[];
   onDataUpdate?: (data: ExpensesByGroup[]) => void;
@@ -33,7 +34,8 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const fetchData = async (start: string, end: string) => {
     setLoading(true);
     try {
@@ -46,7 +48,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
       setError(null);
     } catch (error) {
       console.error('Erro ao buscar dados do gráfico:', error);
-      setError('Erro ao carregar dados das categorias');
+      setError(t('reports.expensesByGroup.error'));
     } finally {
       setLoading(false);
     }
@@ -78,22 +80,22 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
       p={4}
       borderRadius="lg"
       border="2px solid"
-      borderColor="purple.200" // Bordas alinhadas ao tema
+      borderColor={getColor('border.reports')}
       width="100%"
       maxW="600px"
       mx="auto"
       mb={6}
-      bg="transparent" // Garante fundo transparente
+      bg={getColor('background.reports')}
       boxShadow="sm" // Sombra sutil para profundidade
     >
       <Text
         fontSize="xl"
-        color="purple.500" // Cor mais forte para melhor contraste
+        color={getColor('text.reports.title')}
         textAlign="center"
         mb={4}
         fontWeight="bold"
       >
-        Distribuição de Gastos
+        {t('reports.expensesByGroup.title')}
       </Text>
 
       <DateRangeFilter
@@ -107,16 +109,16 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
         <Flex align="center" justify="center" height="300px">
           <Spinner
             size="xl"
-            color="purple.500"
+            color={getColor('text.reports.primary')}
             thickness="4px"
-            emptyColor="purple.100"
+            emptyColor={getColor('text.reports.primary')}
           />
-          <Text ml={3} color="purple.300">
-            Carregando categorias...
+          <Text ml={3} color={getColor('text.reports.primary')}>
+            {t('reports.expensesByGroup.loading')}
           </Text>
         </Flex>
       ) : error ? (
-        <Text color="red.500" textAlign="center" py={10}>
+        <Text color={getColor('status.error')} textAlign="center" py={10}>
           {error}
         </Text>
       ) : data.length > 0 ? (
@@ -132,9 +134,9 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
                 fill="#8884d8"
                 dataKey="value"
                 label={({ name, percent }) =>
-                  isMobile ? 
-                  `${((percent || 0) * 100).toFixed(0)}%` :
-                  `${name}: ${((percent || 0) * 100).toFixed(0)}%`
+                  isMobile
+                    ? `${((percent || 0) * 100).toFixed(0)}%`
+                    : `${name}: ${((percent || 0) * 100).toFixed(0)}%`
                 }
                 animationDuration={500} // Microinteração
               >
@@ -150,14 +152,19 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
               </Pie>
               <Tooltip
                 formatter={(value, name) => [
-                  `${formatCurrency(Number(value))} (${((Number(value) / chartData.reduce((acc, curr) => acc + curr.value, 0)) * 100).toFixed(0)}%)`,
-                  name
+                  `${formatCurrency(Number(value))} (${(
+                    (Number(value) /
+                      chartData.reduce((acc, curr) => acc + curr.value, 0)) *
+                    100
+                  ).toFixed(0)}%)`,
+                  name,
                 ]}
                 contentStyle={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  borderColor: 'purple.200',
+                  background: getColor('background.reports'),
+                  borderColor: getColor('border.reports'),
                   borderRadius: 'md',
                   padding: '8px',
+                  color: getColor('text.reports.primary'),
                 }}
               />
               {!isMobile && (
@@ -166,7 +173,9 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
                     paddingTop: '20px',
                   }}
                   formatter={(value) => (
-                    <span style={{ color: 'purple.700' }}>{value}</span>
+                    <span style={{ color: getColor('text.reports.primary') }}>
+                      {value}
+                    </span>
                   )}
                 />
               )}
@@ -174,8 +183,8 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
           </ResponsiveContainer>
         </Box>
       ) : (
-        <Text color="purple.300" py={10} textAlign="center">
-          Nenhum dado de categorias disponível
+        <Text color={getColor('text.reports.primary')} py={10} textAlign="center">
+          {t('reports.expensesByGroup.noData')}
         </Text>
       )}
       {isMobile && (
@@ -184,7 +193,9 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
             {chartData.map((entry, index) => (
               <Flex key={`legend-${index}`} align="center" gap={2}>
                 <Box w="12px" h="12px" borderRadius="50%" bg={colors[index]} />
-                <Text color="purple.700" fontSize="sm">{entry.name}</Text>
+                <Text color={getColor('text.reports.primary')} fontSize="sm">
+                  {entry.name}
+                </Text>
               </Flex>
             ))}
           </Flex>

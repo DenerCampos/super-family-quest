@@ -1,5 +1,7 @@
-import { Flex, Image, Text, keyframes } from '@chakra-ui/react';
+import { Flex, Image, Text } from '@chakra-ui/react';
+import { keyframes } from '@emotion/react';
 import { useState, useEffect } from 'react';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 const pulse = keyframes`
   0% { transform: scale(1); }
@@ -14,6 +16,7 @@ type CoinDisplayProps = {
 export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
   const [prevCoins, setPrevCoins] = useState(coins);
   const [animate, setAnimate] = useState(false);
+  const { getColor, getAsset, getFont } = useVisualTheme();
 
   useEffect(() => {
     if (coins !== prevCoins) {
@@ -26,16 +29,18 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
     }
   }, [coins]);
 
-  const gifSrc = `/assets/images/gold-coin.gif?t=${new Date().getTime()}`;   
+  const gifSrc = getAsset('images.goldCoin');
 
   return (
     <Flex
       align="center"
-      bg="purple.700"
+      bg={getColor('background.coin')}
       px={3}
       py={1}
       borderRadius="md"
       position="relative"
+      borderWidth="1px"
+      borderColor={getColor('border.coin')}
     >
       <Image
         src={gifSrc}
@@ -43,14 +48,19 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
         mr={2}
         animation={animate ? `${pulse} 0.5s ease-in-out` : 'none'}
       />
-      <Text color="yellow.400" fontWeight="bold">
+      <Text 
+        color={getColor('text.coin')} 
+        fontWeight="bold"
+        fontFamily={getFont('heading')}
+      >
         {coins}
       </Text>
 
       {animate && (
         <Text
-          color="green.300"
+          color={getColor('status.success')}
           fontWeight="bold"
+          fontFamily={getFont('heading')}
           position="absolute"
           right="-20px"
           top="-10px"

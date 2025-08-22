@@ -42,20 +42,8 @@ import {
 import { AutocompleteInput } from '../AutocompleteInput';
 import { useAuth } from '../../contexts/AuthContext';
 import { formatGramsInput, parseGrams } from '../../utils/formatGrams';
-
-const inputStyle = {
-  bgColor: 'purple.100',
-  color: 'purple.800',
-  _focus: {
-    borderColor: 'purple.500',
-    boxShadow: '0 0 0 1px purple.500',
-  },
-};
-
-const smallInputStyle = {
-  ...inputStyle,
-  size: 'sm',
-};
+import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 
 type Props = {
   isOpen: boolean;
@@ -81,12 +69,34 @@ export const ExpenseModal = ({
   handleNewRegistration,
 }: Props) => {
   const { loadProfile } = useAuth();
+  const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [removedItemIds, setRemovedItemIds] = useState<string[]>([]);
   const [expandedItemIndex, setExpandedItemIndex] = useState<number>(0);
   const { isOpen: isItemsCollapsed, onToggle: toggleItemsCollapsed } =
     useDisclosure({ defaultIsOpen: false });
+
+  const inputStyle = {
+    bg: getColor('input.background'),
+    color: getColor('text.primary'),
+    _focus: {
+      borderColor: getColor('input.focus'),
+      boxShadow: `0 0 0 1px ${getColor('input.focusBorder')}`,
+    },
+    sx: {
+      '&::-webkit-calendar-picker-indicator': {
+        filter: 'invert(1)',
+        cursor: 'pointer',
+      },
+    },
+  };
+
+  const smallInputStyle = {
+    ...inputStyle,
+    size: 'sm',
+  };
 
   const defaultItem = {
     code: '1',
@@ -213,9 +223,9 @@ export const ExpenseModal = ({
       await loadProfile();
 
       toast({
-        title: 'Sucesso!',
+        title: t('common.success'),
         status: 'success',
-        description: 'Despesa cadastrada com sucesso',
+        description: t('modals.expense.success'),
         duration: 3000,
       });
 
@@ -227,9 +237,9 @@ export const ExpenseModal = ({
     } catch (error) {
       console.error(error);
       toast({
-        title: 'Erro',
+        title: t('common.error'),
         status: 'error',
-        description: 'Falha ao cadastrar despesa',
+        description: t('common.createError'),
         duration: 3000,
       });
     }
@@ -239,9 +249,9 @@ export const ExpenseModal = ({
     return (
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
-        <ModalContent bg="purple.800" color="white">
-          <LoadingOverlay text="Carregando formulário" />
-          <ModalHeader>🧾 Nova Despesa</ModalHeader>
+        <ModalContent bg={getColor('background.primary')} color={getColor('text.inverted')}>
+          <LoadingOverlay text={t('common.loading')} />
+          <ModalHeader>{t('modals.expense.new')}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={4}>
             <Box minH="300px" />
@@ -254,27 +264,30 @@ export const ExpenseModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
-      <ModalContent bg="purple.800" color="white">
-        {isSubmitting && <LoadingOverlay text="Salvando" />}
+      <ModalContent
+        bg={getColor('background.primary')}
+        color={getColor('text.primary')}
+      >
+        {isSubmitting && <LoadingOverlay text={t('common.saving')} />}
         <ModalHeader>
-          {initialData ? '🧾 Editar Despesa' : '🧾 Nova Despesa'}
+          {initialData ? t('modals.expense.edit') : t('modals.expense.new')}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* Campo Loja */}
             <FormControl isInvalid={!!errors.store?.name} mb={4}>
-              <FormLabel>Loja</FormLabel>
+              <FormLabel>{t('modals.expense.store')}</FormLabel>
               <AutocompleteInput
                 value={watch('store.name') || ''}
                 options={stores.map((store) => store.name)}
                 onChange={(value) =>
                   setValue('store.name', value, { shouldValidate: true })
                 }
-                placeholder="Selecione ou digite uma loja"
+                placeholder={t('modals.expense.storePlaceholder')}
               />
               {errors.store?.name && (
-                <Text color="red.300" fontSize="sm" mt={1}>
+                <Text color={getColor('text.error')} fontSize="sm" mt={1}>
                   {errors.store.name.message}
                 </Text>
               )}
@@ -283,33 +296,33 @@ export const ExpenseModal = ({
             {/* Pagamento e Data */}
             <Grid templateColumns="repeat(2, 1fr)" gap={4} mb={4}>
               <FormControl isInvalid={!!errors.payment?.name}>
-                <FormLabel>Pagamento</FormLabel>
+                <FormLabel>{t('modals.expense.payment')}</FormLabel>
                 <AutocompleteInput
                   value={watch('payment.name') || ''}
                   options={payments.map((payment) => payment.name)}
                   onChange={(value) =>
                     setValue('payment.name', value, { shouldValidate: true })
                   }
-                  placeholder="Selecione uma forma de pagamento"
+                  placeholder={t('modals.expense.paymentPlaceholder')}
                 />
                 {errors.payment?.name && (
-                  <Text color="red.300" fontSize="sm" mt={1}>
+                  <Text color={getColor('text.error')} fontSize="sm" mt={1}>
                     {errors.payment.name.message}
                   </Text>
                 )}
               </FormControl>
 
               <FormControl isInvalid={!!errors.date}>
-                <FormLabel>Data</FormLabel>
+                <FormLabel>{t('modals.expense.date')}</FormLabel>
                 <Input
                   type="date"
                   {...register('date', {
-                    required: 'Campo obrigatório',
+                    required: t('common.required'),
                   })}
                   {...inputStyle}
                 />
                 {errors.date && (
-                  <Text color="red.300" fontSize="sm" mt={1}>
+                  <Text color={getColor('text.error')} fontSize="sm" mt={1}>
                     {errors.date.message}
                   </Text>
                 )}
@@ -318,30 +331,30 @@ export const ExpenseModal = ({
 
             {/* URL da Despesa */}
             <FormControl mb={4}>
-              <FormLabel>URL da Despesa</FormLabel>
+              <FormLabel>{t('modals.expense.url')}</FormLabel>
               <Input
                 {...register('uri')}
                 {...inputStyle}
-                placeholder="URL opcional"
+                placeholder={t('modals.expense.urlPlaceholder')}
               />
             </FormControl>
 
             <FormControl mb={4}>
-              <Checkbox {...register('repeat')} colorScheme="green" size="lg">
-                Repete todo mês?
+              <Checkbox {...register('repeat')} colorScheme={getColor('chakraColors.green')} size="lg">
+                {t('modals.expense.repeat')}
               </Checkbox>
             </FormControl>
 
             {/* Seção de Itens */}
             <FormControl isInvalid={!!errors.items}>
               <Flex justify="space-between" align="center" mb={3}>
-                <FormLabel mb={0}>📋 Itens da despesa</FormLabel>
+                <FormLabel mb={0}>{t('modals.expense.items')}</FormLabel>
                 <Button
                   size="sm"
                   variant="ghost"
-                  color="white"
-                  bg="purple.500"
-                  _hover={{ bg: 'purple.600' }}
+                  color={getColor('text.inverted')}
+                  bg={getColor('background.tertiary')}
+                  _hover={{ bg: getColor('background.button.hover.primary') }}
                   onClick={toggleItemsCollapsed}
                   rightIcon={
                     <Icon
@@ -351,7 +364,9 @@ export const ExpenseModal = ({
                     />
                   }
                 >
-                  {isItemsCollapsed ? 'Ocultar' : 'Mostrar'} Itens
+                  {isItemsCollapsed
+                    ? t('modals.expense.hideItems')
+                    : t('modals.expense.showItems')}
                 </Button>
               </Flex>
 
@@ -366,15 +381,17 @@ export const ExpenseModal = ({
                       <AccordionItem
                         key={field.id}
                         border="1px"
-                        borderColor="purple.600"
+                        borderColor={getColor('border.tertiary')}
                         borderRadius="md"
                         mb={3}
                       >
                         <AccordionButton
-                          bg="purple.700"
-                          _hover={{ bg: 'purple.600' }}
-                          _expanded={{ bg: 'purple.600' }}
-                          color="white"
+                          bg={getColor('background.secondary')}
+                          _hover={{
+                            bg: getColor('background.button.hover.primary'),
+                          }}
+                          _expanded={{ bg: getColor('background.tertiary') }}
+                          color={getColor('text.inverted')}
                           borderRadius="md"
                         >
                           <Box flex="1" textAlign="left">
@@ -382,7 +399,7 @@ export const ExpenseModal = ({
                               Item {index + 1}:{' '}
                               {watch(`items.${index}.name`) || 'Novo item'}
                             </Text>
-                            <Text fontSize="sm" color="purple.200">
+                            <Text fontSize="sm" color={getColor('text.muted')}>
                               {watch(`items.${index}.value`) || '0,00'} •{' '}
                               {watch(`items.${index}.quantity`) || '1'}{' '}
                               {watch(`items.${index}.unit`) || 'Unidade'}
@@ -391,20 +408,25 @@ export const ExpenseModal = ({
                           <AccordionIcon />
                         </AccordionButton>
 
-                        <AccordionPanel bg="purple.700" pb={4}>
+                        <AccordionPanel
+                          bg={getColor('background.secondary')}
+                          pb={4}
+                        >
                           <Flex direction="column" gap={4}>
                             {/* Código e Nome */}
                             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
                               <FormControl
                                 isInvalid={!!errors.items?.[index]?.code}
                               >
-                                <FormLabel fontSize="sm">Código</FormLabel>
+                                <FormLabel fontSize="sm">
+                                  {t('modals.expense.code')}
+                                </FormLabel>
                                 <Input
                                   {...register(`items.${index}.code`, {
-                                    required: 'Código obrigatório',
+                                    required: t('common.required'),
                                     pattern: {
                                       value: /^[a-zA-Z0-9]+$/,
-                                      message: 'Apenas letras e números',
+                                      message: t('common.invalidValue'),
                                     },
                                   })}
                                   {...smallInputStyle}
@@ -420,13 +442,17 @@ export const ExpenseModal = ({
                               <FormControl
                                 isInvalid={!!errors.items?.[index]?.name}
                               >
-                                <FormLabel fontSize="sm">Nome</FormLabel>
+                                <FormLabel fontSize="sm">
+                                  {t('modals.expense.name')}
+                                </FormLabel>
                                 <Input
                                   {...register(`items.${index}.name`, {
-                                    required: 'Nome obrigatório',
+                                    required: t('common.required'),
                                     minLength: {
                                       value: 3,
-                                      message: 'Mínimo 3 caracteres',
+                                      message: t('common.minLength', {
+                                        count: 3,
+                                      }),
                                     },
                                   })}
                                   {...smallInputStyle}
@@ -445,17 +471,19 @@ export const ExpenseModal = ({
                               <FormControl
                                 isInvalid={!!errors.items?.[index]?.quantity}
                               >
-                                <FormLabel fontSize="sm">Quantidade</FormLabel>
+                                <FormLabel fontSize="sm">
+                                  {t('modals.expense.quantity')}
+                                </FormLabel>
                                 <Input
                                   type="text"
                                   {...register(`items.${index}.quantity`, {
-                                    required: 'Campo obrigatório',
+                                    required: t('common.required'),
                                     validate: (value) => {
                                       const numValue = parseGrams(value);
                                       if (isNaN(numValue))
-                                        return 'Valor inválido';
+                                        return t('common.invalidValue');
                                       if (numValue <= 0)
-                                        return 'Deve ser maior que 0';
+                                        return t('common.invalidValue');
                                       return true;
                                     },
                                   })}
@@ -476,7 +504,11 @@ export const ExpenseModal = ({
                                   size="sm"
                                 />
                                 {errors.items?.[index]?.quantity && (
-                                  <Text color="red.300" fontSize="xs" mt={1}>
+                                  <Text
+                                    color={getColor('text.error')}
+                                    fontSize="xs"
+                                    mt={1}
+                                  >
                                     {errors.items[index]?.quantity?.message}
                                   </Text>
                                 )}
@@ -485,16 +517,22 @@ export const ExpenseModal = ({
                               <FormControl
                                 isInvalid={!!errors.items?.[index]?.unit}
                               >
-                                <FormLabel fontSize="sm">Unidade</FormLabel>
+                                <FormLabel fontSize="sm">
+                                  {t('modals.expense.unit')}
+                                </FormLabel>
                                 <Input
                                   {...register(`items.${index}.unit`, {
-                                    required: 'Campo obrigatório',
+                                    required: t('common.required'),
                                   })}
                                   {...smallInputStyle}
                                   size="sm"
                                 />
                                 {errors.items?.[index]?.unit && (
-                                  <Text color="red.300" fontSize="xs" mt={1}>
+                                  <Text
+                                    color={getColor('text.error')}
+                                    fontSize="xs"
+                                    mt={1}
+                                  >
                                     {errors.items[index]?.unit?.message}
                                   </Text>
                                 )}
@@ -504,7 +542,7 @@ export const ExpenseModal = ({
                                 isInvalid={!!errors.items?.[index]?.value}
                               >
                                 <FormLabel fontSize="sm">
-                                  Valor Unitário
+                                  {t('modals.expense.unitValue')}
                                 </FormLabel>
                                 <Input
                                   type="text"
@@ -514,10 +552,10 @@ export const ExpenseModal = ({
                                       const numericValue =
                                         parseBRLCurrency(value);
                                       if (isNaN(numericValue))
-                                        return 'Valor inválido';
+                                        return t('common.invalidValue');
                                       return (
                                         numericValue >= 0.01 ||
-                                        'Valor deve ser maior que 0,00'
+                                        t('common.invalidValue')
                                       );
                                     },
                                   })}
@@ -538,7 +576,11 @@ export const ExpenseModal = ({
                                   size="sm"
                                 />
                                 {errors.items?.[index]?.value && (
-                                  <Text color="red.300" fontSize="xs" mt={1}>
+                                  <Text
+                                    color={getColor('text.error')}
+                                    fontSize="xs"
+                                    mt={1}
+                                  >
                                     {errors.items[index]?.value?.message}
                                   </Text>
                                 )}
@@ -549,7 +591,9 @@ export const ExpenseModal = ({
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.group?.name}
                             >
-                              <FormLabel fontSize="sm">Grupo</FormLabel>
+                              <FormLabel fontSize="sm">
+                                {t('modals.expense.group')}
+                              </FormLabel>
                               <AutocompleteInput
                                 value={watch(`items.${index}.group.name`) || ''}
                                 options={groups.map((group) => group.name)}
@@ -561,7 +605,11 @@ export const ExpenseModal = ({
                                 placeholder="Selecione ou digite um grupo"
                               />
                               {errors.items?.[index]?.group?.name && (
-                                <Text color="red.300" fontSize="xs" mt={1}>
+                                <Text
+                                  color={getColor('text.error')}
+                                  fontSize="xs"
+                                  mt={1}
+                                >
                                   {errors.items[index]?.group?.name?.message}
                                 </Text>
                               )}
@@ -580,11 +628,11 @@ export const ExpenseModal = ({
                                   }
                                   remove(index);
                                 }}
-                                colorScheme="red"
+                                colorScheme={getColor('chakraColors.red')}
                                 size="sm"
                                 isDisabled={fields.length <= 1}
                               >
-                                Remover Item
+                                {t('modals.expense.removeItem')}
                               </Button>
                             </Flex>
                           </Flex>
@@ -595,15 +643,19 @@ export const ExpenseModal = ({
 
                   <Button
                     onClick={handleAddItem}
-                    colorScheme="purple"
                     mt={4}
                     w="full"
                     variant="outline"
-                    borderColor="purple.500"
-                    color="white"
-                    _hover={{ bg: 'purple.600' }}
+                    color={getColor('text.primary')}
+                    bg={getColor('background.tertiary')}
+                    border="1px solid"
+                    borderColor={getColor('border.primary')}
+                    _hover={{
+                      bg: getColor('background.selected'),
+                      color: getColor('text.accent'),
+                    }}
                   >
-                    + Adicionar Item
+                    {t('modals.expense.addItem')}
                   </Button>
                 </Box>
               </Collapse>
@@ -612,15 +664,22 @@ export const ExpenseModal = ({
             {/* Botão Salvar */}
             <Button
               mt={6}
-              colorScheme="purple"
+              color={getColor('text.primary')}
+              bg={getColor('background.tertiary')}
+              border="1px solid"
+              borderColor={getColor('border.primary')}
+              _hover={{
+                bg: getColor('background.selected'),
+                color: getColor('text.accent'),
+              }}
               type="submit"
               w="full"
               size="lg"
               isDisabled={!isValid || isSubmitting}
               isLoading={isSubmitting}
-              loadingText="Salvando..."
+              loadingText={t('common.saving')}
             >
-              Salvar Despesa
+              {initialData ? t('common.update') : t('common.save')}
             </Button>
           </form>
         </ModalBody>

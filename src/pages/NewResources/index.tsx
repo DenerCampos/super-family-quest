@@ -19,8 +19,12 @@ import ExpenseResource from '../../components/resources/ExpenseResource';
 import RevenueResource from '../../components/resources/RevenueResource';
 import { api } from '../../services';
 import type { Expense, Groups, Merchant, Payments, Revenue } from '../../services/resources';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const NewResources = () => {
+  const { getColor } = useVisualTheme();
+  const { t } = useThemedTranslation();
   const [stores, setStores] = useState<Merchant[]>([]);
   const [payments, setPayments] = useState<Payments[]>([]);
   const [groups, setGroups] = useState<Groups[]>([]);
@@ -143,14 +147,14 @@ const NewResources = () => {
       triggerRefresh(type);
 
       toast({
-        title: 'Item excluído com sucesso',
+        title: t('resources.deleteSuccess'),
         status: 'success',
         duration: 2000,
         isClosable: true,
       });
     } catch (error) {
       toast({
-        title: 'Erro ao excluir item',
+        title: t('resources.deleteError'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -168,13 +172,13 @@ const NewResources = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh">
+    <Flex direction="column" minH="100vh" bg={getColor('background.resources')}>
       <Header />
 
       <Box p={4} mb="70px">
         <Accordion allowMultiple>
           {/* Seção Cadastros */}
-          <ResourceContainer title="Cadastros" colorScheme="purple">
+          <ResourceContainer title="Cadastros" colorScheme={getColor('primary')}>
             <StoreResource
               onEdit={(store) => handleResourceOpen('store', store)}
               onDelete={(id) => handleDelete('store', id)}
@@ -195,7 +199,10 @@ const NewResources = () => {
           </ResourceContainer>
 
           {/* Seção Despesas */}
-          <ResourceContainer title="Despesas" colorScheme="red">
+          <ResourceContainer
+            title="Despesas"
+            colorScheme={getColor('expense')}
+          >
             <ExpenseResource
               onEdit={(expense) => handleResourceOpen('expense', expense)}
               onDelete={(id) => handleDelete('expense', id)}
@@ -204,7 +211,10 @@ const NewResources = () => {
           </ResourceContainer>
 
           {/* Seção Receitas */}
-          <ResourceContainer title="Receitas" colorScheme="green">
+          <ResourceContainer
+            title="Receitas"
+            colorScheme={getColor('revenue')}
+          >
             <RevenueResource
               onEdit={(revenue) => handleResourceOpen('revenue', revenue)}
               onDelete={(id) => handleDelete('revenue', id)}

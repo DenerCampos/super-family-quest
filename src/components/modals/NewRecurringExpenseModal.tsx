@@ -3,31 +3,32 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalBody,
-  ModalFooter,
   ModalCloseButton,
-  Button,
-  VStack,
+  ModalBody,
   Text,
   Box,
-  Flex,
-  useToast,
-  Divider,
   Heading,
-  Input,
+  Button,
+  useToast,
+  VStack,
+  Flex,
   Checkbox,
-  HStack,
+  Input,
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Divider,
+  HStack,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
 import { formatCurrencyBRL, formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
 import type { ExpenseComplete } from '../../services/expense';
 import { parseGrams } from '../../utils/formatGrams';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 type ExpenseItem = ExpenseComplete & {
   isSelected: boolean;
@@ -40,6 +41,8 @@ type Props = {
 
 export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast();
+  const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,8 +73,8 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       } catch (error) {
         console.error('Erro ao carregar despesas:', error);
         toast({
-          title: 'Erro',
-          description: 'Não foi possível carregar as despesas repetidas',
+          title: t('common.error'),
+          description: t('common.loadError'),
           status: 'error',
           duration: 3000,
         });
@@ -91,8 +94,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       // Filtrar apenas as despesas selecionadas e remover o campo isSelected      
       const selectedExpenses: ExpenseComplete[] = expenses
         .filter((expense) => expense.isSelected)
-        .map(({ isSelected, ...expense }) => ({
-          // eslint-disable-line @typescript-eslint/no-unused-vars
+        .map(({ isSelected, ...expense }) => ({// eslint-disable-line @typescript-eslint/no-unused-vars
           ...expense,
           store: {
             ...expense.store,
@@ -124,8 +126,8 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       });
 
       toast({
-        title: 'Despesas confirmadas!',
-        description: 'Suas despesas recorrentes foram atualizadas com sucesso',
+        title: t('modals.recurringExpense.confirmed'),
+        description: t('modals.recurringExpense.success'),
         status: 'success',
         duration: 3000,
       });
@@ -134,8 +136,8 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
     } catch (error) {
       console.error('Erro ao confirmar despesas:', error);
       toast({
-        title: 'Erro',
-        description: 'Falha ao confirmar as despesas',
+        title: t('common.error'),
+        description: t('common.updateError'),
         status: 'error',
         duration: 3000,
       });
@@ -212,18 +214,19 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent bg="purple.800" color="white">
-        <ModalHeader>🏰 Tributos do Reino! ⚔️</ModalHeader>
+      <ModalContent
+        bg={getColor('background.primary')}
+        color={getColor('text.primary')}
+      >
+        <ModalHeader>{t('modals.recurringExpense.title')}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text mb={4} fontSize="lg">
-            Nobre Guardião do Tesouro, um novo ciclo lunar se inicia! É hora de
-            revisar os tributos e custos do reino para manter nossa fortaleza
-            próspera. 🏰
+            {t('modals.recurringExpense.description')}
           </Text>
 
-          <Heading size="md" mb={4} color="purple.300">
-            Custos Recorrentes do Reino:
+          <Heading size="md" mb={4} color={getColor('text.primary')}>
+            {t('modals.recurringExpense.expenses')}:
           </Heading>
 
           <Box
@@ -238,21 +241,29 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                 background: 'transparent',
               },
               '&::-webkit-scrollbar-thumb': {
-                background: 'purple.500',
+                background: getColor('background.tertiary'),
                 borderRadius: '4px',
               },
             }}
           >
             {isLoading ? (
               <Text textAlign="center" py={4}>
-                Consultando o Livro de Contas Real... 📚
+                {t('common.loading')}
               </Text>
-            ) : expenses.length > 0 ? (
+            ) : expenses.length === 0 ? (
+              <Text textAlign="center" py={4} color={getColor('text.inverted')}>
+                {t('modals.recurringExpense.noExpensesFound')}
+              </Text>
+            ) : (
               <VStack spacing={3} align="stretch">
                 {expenses.map((expense) => (
                   <Box
                     key={expense.id}
-                    bg={expense.isSelected ? 'purple.700' : 'purple.900'}
+                    bg={
+                      expense.isSelected
+                        ? getColor('background.selected')
+                        : getColor('background.tertiary')
+                    }
                     borderRadius="md"
                     p={3}
                     opacity={expense.isSelected ? 1 : 0.7}
@@ -274,7 +285,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                                 e.target.checked,
                               )
                             }
-                            colorScheme="green"
+                            colorScheme={getColor('chakraColors.green')}
                           />
                           <Input
                             value={expense.name}
@@ -286,9 +297,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                               )
                             }
                             variant="filled"
-                            bg="purple.600"
-                            _hover={{ bg: 'purple.500' }}
-                            _focus={{ bg: 'purple.500' }}
+                            bg={getColor('input.backgroundPrimary')}
+                            _hover={{ bg: getColor('input.backgroundPrimary') }}
+                            _focus={{ bg: getColor('input.backgroundPrimary') }}
                             size="sm"
                             isDisabled={!expense.isSelected}
                           />
@@ -296,9 +307,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                         <Input
                           value={formatCurrencyBRL(expense.value.toString())}
                           variant="filled"
-                          bg="purple.600"
-                          _hover={{ bg: 'purple.500' }}
-                          _focus={{ bg: 'purple.500' }}
+                          bg={getColor('input.backgroundPrimary')}
+                          _hover={{ bg: getColor('input.backgroundPrimary') }}
+                          _focus={{ bg: getColor('input.backgroundPrimary') }}
                           size="sm"
                           width="150px"
                           textAlign="right"
@@ -310,12 +321,12 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                       <Accordion allowToggle>
                         <AccordionItem border="none">
                           <AccordionButton
-                            _hover={{ bg: 'purple.600' }}
+                            _hover={{ bg: getColor('background.selected') }}
                             borderRadius="md"
                             p={2}
                           >
                             <Box flex="1" textAlign="left">
-                              <Text fontSize="sm" color="purple.200">
+                              <Text fontSize="sm" color={getColor('text.primary')}>
                                 Itens ({expense.items.length})
                               </Text>
                             </Box>
@@ -327,7 +338,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                                 <Flex
                                   key={item.id || index}
                                   gap={2}
-                                  bg="purple.600"
+                                  bg={getColor('background.tertiary')}
                                   p={2}
                                   borderRadius="md"
                                 >
@@ -342,9 +353,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                                       )
                                     }
                                     variant="filled"
-                                    bg="purple.500"
-                                    _hover={{ bg: 'purple.400' }}
-                                    _focus={{ bg: 'purple.400' }}
+                                    bg={getColor('input.backgroundSecondary')}
+                                    _hover={{ bg: getColor('input.backgroundSecondary') }}
+                                    _focus={{ bg: getColor('input.backgroundSecondary') }}
                                     size="sm"
                                     flex={1}
                                     isDisabled={!expense.isSelected}
@@ -360,9 +371,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                                       )
                                     }
                                     variant="filled"
-                                    bg="purple.500"
-                                    _hover={{ bg: 'purple.400' }}
-                                    _focus={{ bg: 'purple.400' }}
+                                    bg={getColor('input.backgroundSecondary')}
+                                    _hover={{ bg: getColor('input.backgroundSecondary') }}
+                                    _focus={{ bg: getColor('input.backgroundSecondary') }}
                                     size="sm"
                                     width="120px"
                                     textAlign="right"
@@ -378,32 +389,29 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
                   </Box>
                 ))}
               </VStack>
-            ) : (
-              <Text textAlign="center" py={4} color="gray.400">
-                Nenhum tributo recorrente encontrado no reino 🏰
-              </Text>
             )}
           </Box>
 
-          <Divider my={4} borderColor="purple.600" />
+          <Divider my={4} borderColor={getColor('border.primary')} />
 
-          <Text fontSize="sm" color="purple.200">
-            Ajuste os valores dos tributos conforme necessário e desmarque
-            aqueles que não devem ser mantidos neste ciclo lunar. Um reino
-            próspero depende de uma gestão sábia dos recursos! 🗡️
+          <Text fontSize="sm" color={getColor('text.secondary')}>
+            {t('modals.recurringExpense.reminder')}
           </Text>
-        </ModalBody>
 
-        <ModalFooter>
           <Button
-            colorScheme="green"
+            mt={4}
+            bg={getColor('background.secondary')}
+            color={getColor('text.inverted')}
+            _hover={{ bg: getColor('background.button.hover.primary') }}
+            _focus={{ bg: getColor('background.button.hover.primary') }}
+            w="full"
             onClick={handleConfirm}
             isLoading={isSubmitting}
-            loadingText="Atualizando os Tributos..."
+            loadingText={t('modals.recurringExpense.confirming')}
           >
-            Decretar os Tributos ✨
+            {t('modals.recurringExpense.sealDecree')}
           </Button>
-        </ModalFooter>
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

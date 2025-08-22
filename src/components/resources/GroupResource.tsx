@@ -25,7 +25,8 @@ import {
 import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { api } from '../../services';
 import type { Groups, PaginationResponse } from '../../services/resources';
-
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 const ITEMS_PER_PAGE = 5;
 
 interface GroupResourceProps {
@@ -45,7 +46,8 @@ const GroupResource = ({
   const [loading, setLoading] = useState(true);
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-
+  const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const loadGroups = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {
@@ -57,7 +59,7 @@ const GroupResource = ({
       setGroups(groupsData);
     } catch (error) {
       toast({
-        title: 'Erro ao carregar grupos',
+        title: t('resources.group.error'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -112,13 +114,13 @@ const GroupResource = ({
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja excluir este grupo?')) {
+    if (window.confirm(t('resources.group.deleteConfirm'))) {
       try {
         await onDelete(id);
         // Recarregar dados após exclusão
         loadGroups(page, search);
         toast({
-          title: 'Grupo excluído com sucesso',
+          title: t('resources.group.deleteSuccess'),
           status: 'success',
           duration: 2000,
           isClosable: true,
@@ -126,7 +128,7 @@ const GroupResource = ({
       } catch (error) {
         console.error(error);
         toast({
-          title: 'Erro ao excluir grupo',
+          title: t('resources.group.deleteError'),
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -148,24 +150,33 @@ const GroupResource = ({
     <Box mb={6}>
       <Flex justify="space-between" align="center" mb={4}>
         <Text fontSize="lg" fontWeight="medium">
-          Grupos
+          {t('resources.group.title')}
         </Text>
         <Button
           size="sm"
-          colorScheme="purple"
+          bg={getColor('button.background.neutral')}
+          color={getColor('button.text.primary')}
+          border="1px solid"
+          borderColor={getColor('button.border.neutral')}
+          _hover={{
+            bg: getColor('button.hover.background.inverse'),
+            color: getColor('button.hover.text.inverse'),
+          }}
+          _focus={{ bg: getColor('button.hover.background.neutral'),
+            color: getColor('button.hover.text.neutral'), }}
           leftIcon={<FiPlus />}
           onClick={handleNewGroup}
         >
-          Novo Grupo
+          {t('resources.group.new')}
         </Button>
       </Flex>
 
       <InputGroup mb={4}>
         <InputLeftElement pointerEvents="none">
-          <Icon as={FiSearch} color="gray.300" />
+          <Icon as={FiSearch} color={getColor('gray.300')} />
         </InputLeftElement>
         <Input
-          placeholder="Buscar grupos..."
+          placeholder={t('resources.group.searchPlaceholder')}
           value={search}
           onChange={handleSearch}
         />
@@ -173,25 +184,25 @@ const GroupResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color="purple.500" />
+          <Spinner color={getColor('text.accent')} />
         </Flex>
       ) : groups?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
-          Nenhum grupo encontrado
+          {t('resources.group.noData')}
         </Text>
       ) : (
         <>
           <Box
             overflowX="auto"
             border="1px"
-            borderColor="gray.200"
+            borderColor={getColor('gray.200')}
             borderRadius="md"
           >
             <Table variant="simple" minW="400px">
               <Thead>
                 <Tr>
-                  <Th>Nome</Th>
-                  <Th>Ações</Th>
+                  <Th>{t('resources.group.name')}</Th>
+                  <Th>{t('resources.group.actions')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -201,21 +212,21 @@ const GroupResource = ({
                     <Td>
                       <Menu>
                         <MenuButton as={Button} size="sm" variant="outline">
-                          Ações
+                          {t('resources.group.actions')}
                         </MenuButton>
                         <MenuList>
                           <MenuItem
                             icon={<FiEdit />}
                             onClick={() => handleEdit(group)}
                           >
-                            Editar
+                            {t('resources.group.edit')}
                           </MenuItem>
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(group.id as string)}
-                            color="red.500"
+                            color={getColor('chakraColors.red')}
                           >
-                            Excluir
+                            {t('resources.group.delete')}
                           </MenuItem>
                         </MenuList>
                       </Menu>
@@ -234,7 +245,7 @@ const GroupResource = ({
                   onClick={() => handlePageChange(page - 1)}
                   isDisabled={page === 1}
                 >
-                  Anterior
+                  {t('resources.group.previous')}
                 </Button>
                 <Button size="sm" variant="outline">
                   {page} / {groups.meta.totalPages}
@@ -244,7 +255,7 @@ const GroupResource = ({
                   onClick={() => handlePageChange(page + 1)}
                   isDisabled={page === groups.meta.totalPages}
                 >
-                  Próxima
+                  {t('resources.group.next')}
                 </Button>
               </Stack>
             </Flex>

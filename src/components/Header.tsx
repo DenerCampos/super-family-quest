@@ -2,28 +2,38 @@ import { Flex, Image, Heading, IconButton } from '@chakra-ui/react';
 import { FiLogOut } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import { CoinDisplay } from './CoinDisplay';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 export const Header = () => {
   const { logout, profile } = useAuth();
+  const { getColor, getFont } = useVisualTheme();
 
   return (
     <Flex
-      bg="purple.800"
+      bg={getColor('background.header')}
+      borderBottomWidth="1px"
+      borderBottomColor={getColor('border.header')}
       p={4}
       justify="space-between"
       align="center"
-      // mb={6}
-      boxShadow="md"
+      boxShadow="lg"
     >
       {/* Lado Esquerdo - Brasão e Nome */}
       <Flex align="center" gap={3}>
         <Image
-          src="/assets/images/coat_of_arms_solare.png"
+          src={profile?.user.coatOfArms}
           boxSize="40px"
           objectFit="contain"
           alt="Brasão da Família"
+          borderRadius="full"
+          borderWidth="2px"
+          p={1}
         />
-        <Heading size="md" color="white" fontFamily="Press Start 2P">
+        <Heading
+          size="md"
+          color={getColor('text.header')}
+          fontFamily={getFont('heading')}
+        >
           {profile?.user.family}
         </Heading>
       </Flex>
@@ -31,13 +41,16 @@ export const Header = () => {
       {/* Lado Direito - Moedas e Logout */}
       <Flex align="center" gap={4}>
         <CoinDisplay coins={profile?.coins || 0} />
-
         <IconButton
           icon={<FiLogOut />}
           aria-label="Sair"
-          colorScheme="purple"
           variant="ghost"
-          color="white"
+          bg={getColor('button.background.primary')}
+          color={getColor('text.header')}
+          _hover={{
+            bg: getColor('button.hover.background.inverse'),
+            color: getColor('button.hover.text.inverse')
+          }}
           onClick={logout}
         />
       </Flex>

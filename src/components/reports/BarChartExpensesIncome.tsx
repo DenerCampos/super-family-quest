@@ -12,6 +12,8 @@ import {
 import { formatCurrency } from '../../utils/formatCurrency';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 interface ExpenseIncomeData {
   month: string;
@@ -45,7 +47,8 @@ export const BarChartExpensesIncome = ({
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const fetchData = async (year: string) => {
     setLoading(true);
     try {
@@ -57,7 +60,7 @@ export const BarChartExpensesIncome = ({
       setError(null);
     } catch (error) {
       console.error('Erro ao buscar dados do gráfico:', error);
-      setError('Erro ao carregar dados de receitas e despesas');
+      setError(t('reports.expensesIncome.error'));
     } finally {
       setLoading(false);
     }
@@ -86,33 +89,33 @@ export const BarChartExpensesIncome = ({
       p={4}
       borderRadius="lg"
       border="2px solid"
-      borderColor="purple.200"
+      borderColor={getColor('border.reports')}
       width="100%"
       maxW="600px"
       mx="auto"
       mb={6}
-      bg="transparent"
+      bg={getColor('background.reports')}
       boxShadow="sm"
     >
       <Text
         fontSize="xl"
-        color="purple.500"
+        color={getColor('text.reports.title')}
         textAlign="center"
         mb={4}
         fontWeight="bold"
       >
-        Comparativo Mensal de Receitas e Despesas
+        {t('reports.expensesIncome.title')}
       </Text>
 
       <Select
         value={selectedYear}
         onChange={handleYearChange}
         mb={4}
-        borderColor="purple.200"
-        _hover={{ borderColor: 'purple.300' }}
-        _focus={{ borderColor: 'purple.400' }}
+        borderColor={getColor('border.reports')}
+        _hover={{ borderColor: getColor('border.reports') }}
+        _focus={{ borderColor: getColor('border.reports') }}
       >
-        {getAvailableYears().map(year => (
+        {getAvailableYears().map((year) => (
           <option key={year} value={year}>
             {year}
           </option>
@@ -123,16 +126,16 @@ export const BarChartExpensesIncome = ({
         <Flex align="center" justify="center" height="300px">
           <Spinner
             size="xl"
-            color="purple.500"
+            color={getColor('text.reports.primary')}
             thickness="4px"
-            emptyColor="purple.100"
+            emptyColor={getColor('text.reports.primary')}
           />
-          <Text ml={3} color="purple.300">
-            Carregando dados...
+          <Text ml={3} color={getColor('text.reports.primary')}>
+            {t('reports.expensesIncome.loading')}
           </Text>
         </Flex>
       ) : error ? (
-        <Text color="red.500" textAlign="center" py={10}>
+        <Text color={getColor('status.error')} textAlign="center" py={10}>
           {error}
         </Text>
       ) : data.length > 0 ? (
@@ -147,23 +150,26 @@ export const BarChartExpensesIncome = ({
                 bottom: 5,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="purple.100" />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke={getColor('text.reports.primary')}
+              />
               <XAxis
                 dataKey="month"
-                stroke="purple.500"
+                stroke={getColor('text.reports.primary')}
                 tick={{ fontSize: isMobile ? 12 : 14 }}
               />
               {!isMobile && (
                 <YAxis
                   tickFormatter={(value) => formatCurrency(value)}
-                  stroke="purple.500"
+                  stroke={getColor('text.reports.primary')}
                 />
               )}
               <Tooltip
                 formatter={(value) => [formatCurrency(Number(value)), '']}
                 contentStyle={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  borderColor: 'purple.200',
+                  background: getColor('background.reports'),
+                  borderColor: getColor('border.reports'),
                   borderRadius: 'md',
                   padding: '8px',
                 }}
@@ -193,8 +199,8 @@ export const BarChartExpensesIncome = ({
           </ResponsiveContainer>
         </Box>
       ) : (
-        <Text color="purple.300" py={10} textAlign="center">
-          Nenhum dado disponível para o ano selecionado
+        <Text color={getColor('text.reports.primary')} py={10} textAlign="center">
+          {t('reports.expensesIncome.noData')}
         </Text>
       )}
     </Flex>

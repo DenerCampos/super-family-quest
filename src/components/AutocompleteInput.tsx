@@ -7,6 +7,7 @@ import {
   Portal,
   useOutsideClick,
 } from '@chakra-ui/react';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 type AutocompleteInputProps = {
   value: string;
@@ -26,6 +27,7 @@ export const AutocompleteInput = ({
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { getColor, getFont } = useVisualTheme();
 
   useEffect(() => {
     setInputValue(value);
@@ -79,11 +81,12 @@ export const AutocompleteInput = ({
         onChange={handleInputChange}
         placeholder={placeholder}
         autoComplete="off"
-        bg="purple.100"
-        color="purple.800"
+        bg={getColor('input.background')}
+        color={getColor('text.primary')}
+        fontFamily={getFont('body')}
+        borderColor={getColor('input.border')}
         _focus={{
-          borderColor: 'purple.500',
-          boxShadow: '0 0 0 1px purple.500',
+          borderColor: getColor('input.focus'),
         }}
       />
 
@@ -91,12 +94,12 @@ export const AutocompleteInput = ({
         <Portal>
           <Box ref={dropdownRef} style={dropdownStyles}>
             <List
-              bg="white"
+              bg={getColor('input.primary')}
               boxShadow="md"
               maxH="200px"
               overflowY="auto"
               border="1px solid"
-              borderColor="gray.200"
+              borderColor={getColor('background.tertiary')}
               borderRadius="md"
             >
               {filteredOptions.map((option, index) => (
@@ -105,8 +108,12 @@ export const AutocompleteInput = ({
                   px={4}
                   py={2}
                   cursor="pointer"
-                  color="gray.800"
-                  _hover={{ bg: 'gray.100', color: 'gray.900' }}
+                  color={getColor('text.default')}
+                  fontFamily={getFont('body')}
+                  _hover={{
+                    bg: getColor('input.hover'),
+                    color: getColor('text.accent'),
+                  }}
                   onClick={() => handleSelectOption(option)}
                 >
                   {option}

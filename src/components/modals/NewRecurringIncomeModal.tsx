@@ -23,6 +23,8 @@ import { api } from '../../services';
 import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
 import type { Revenue } from '../../services/revenue';
 import type { RevenueItem } from '../../types/revenue';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 type Props = {
   isOpen: boolean;
@@ -31,6 +33,8 @@ type Props = {
 
 export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast();
+  const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const [incomes, setIncomes] = useState<RevenueItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,8 +58,8 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
       } catch (error) {
         console.error('Erro ao carregar receitas:', error);
         toast({
-          title: 'Erro',
-          description: 'Não foi possível carregar as receitas repetidas',
+          title: t('common.error'),
+          description: t('common.loadError'),
           status: 'error',
           duration: 3000,
         });
@@ -88,8 +92,8 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
       });
 
       toast({
-        title: 'Receitas confirmadas!',
-        description: 'Seu novo mês foi iniciado com sucesso',
+        title: t('modals.recurringIncome.confirmed'),
+        description: t('modals.recurringIncome.success'),
         status: 'success',
         duration: 3000,
       });
@@ -98,8 +102,8 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
     } catch (error) {
       console.error('Erro ao confirmar receitas:', error);
       toast({
-        title: 'Erro',
-        description: 'Falha ao confirmar as receitas',
+        title: t('common.error'),
+        description: t('common.updateError'),
         status: 'error',
         duration: 3000,
       });
@@ -144,16 +148,19 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
       isCentered
     >
       <ModalOverlay />
-      <ModalContent bg="purple.800" color="white">
-        <ModalHeader>🏰 Nova Fase da Jornada! 🌟</ModalHeader>
+      <ModalContent
+        bg={getColor('background.primary')}
+        color={getColor('text.primary')}
+      >
+        <ModalHeader>{t('modals.recurringIncome.title')}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text mb={4} fontSize="lg">
-            Saudações, Nobre Guardião do Tesouro Familiar! Um novo ciclo lunar se inicia, e com ele, as fontes de ouro do reino precisam ser revisadas.
+            {t('modals.recurringIncome.description')}
           </Text>
 
-          <Heading size="md" mb={4} color="purple.300">
-            Fontes de Ouro Recorrentes:
+          <Heading size="md" mb={4} color={getColor('text.primary')}>
+            {t('modals.recurringIncome.sources')}:
           </Heading>
 
           <Box
@@ -168,21 +175,25 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                 background: 'transparent',
               },
               '&::-webkit-scrollbar-thumb': {
-                background: 'purple.500',
+                background: getColor('background.tertiary'),
                 borderRadius: '4px',
               },
             }}
           >
             {isLoading ? (
               <Text textAlign="center" py={4}>
-                Consultando o Grimório Real... 📚
+                {t('common.loading')}
               </Text>
             ) : incomes.length > 0 ? (
               <VStack spacing={3} align="stretch">
                 {incomes.map((income) => (
                   <Box
                     key={income.id}
-                    bg={income.isSelected ? 'purple.700' : 'purple.900'}
+                    bg={
+                      income.isSelected
+                        ? getColor('background.selected')
+                        : getColor('background.tertiary')
+                    }
                     borderRadius="md"
                     p={3}
                     opacity={income.isSelected ? 1 : 0.7}
@@ -191,14 +202,19 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                     display="flex"
                     alignItems="center"
                   >
-                    <Flex justify="space-between" align="center" gap={2} w="100%">
+                    <Flex
+                      justify="space-between"
+                      align="center"
+                      gap={2}
+                      w="100%"
+                    >
                       <HStack spacing={2} flex={1}>
                         <Checkbox
                           isChecked={income.isSelected}
                           onChange={(e) =>
                             handleSelectionChange(income.id, e.target.checked)
                           }
-                          colorScheme="green"
+                          colorScheme={getColor('chakraColors.green')}
                         />
                         <Input
                           value={income.name}
@@ -206,13 +222,15 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                             handleIncomeChange(
                               income.id,
                               'name',
-                              e.target.value
+                              e.target.value,
                             )
                           }
                           variant="filled"
-                          bg="purple.600"
-                          _hover={{ bg: 'purple.500' }}
-                          _focus={{ bg: 'purple.500' }}
+                          bg={getColor('input.backgroundPrimary')}
+                          color={getColor('text.primary')}
+                          _hover={{
+                            bg: getColor('input.backgroundPrimary'),
+                          }}
                           size="sm"
                           isDisabled={!income.isSelected}
                         />
@@ -223,9 +241,11 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
                           handleIncomeChange(income.id, 'value', e.target.value)
                         }
                         variant="filled"
-                        bg="purple.600"
-                        _hover={{ bg: 'purple.500' }}
-                        _focus={{ bg: 'purple.500' }}
+                        bg={getColor('input.backgroundPrimary')}
+                        _hover={{
+                          bg: getColor('input.backgroundPrimary'),
+                        }}
+                        color={getColor('text.primary')}
                         size="sm"
                         width="150px"
                         textAlign="right"
@@ -237,26 +257,33 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
               </VStack>
             ) : (
               <Text textAlign="center" py={4} color="gray.400">
-                Nenhuma fonte de ouro recorrente encontrada no reino 🏰
+                {t('modals.recurringIncome.noSourcesFound')}
               </Text>
             )}
           </Box>
 
-          <Divider my={4} borderColor="purple.600" />
+          <Divider my={4} borderColor={getColor('border.primary')} />
 
-          <Text fontSize="sm" color="purple.200">
-            Ajuste os valores do tesouro conforme necessário e desmarque as fontes de ouro que não devem ser mantidas neste ciclo lunar. Lembre-se: um bom guardião sempre mantém suas finanças em ordem! ⚔️
+          <Text fontSize="sm" color={getColor('text.secondary')}>
+            {t('modals.recurringIncome.reminder')}
           </Text>
         </ModalBody>
 
         <ModalFooter>
           <Button
-            colorScheme="green"
+            bg={getColor('background.tertiary')}
+            color={getColor('text.primary')}
+            border="1px solid"
+            borderColor={getColor('border.primary')}
+            _hover={{
+              bg: getColor('background.selected'),
+              color: getColor('text.accent'),
+            }}
             onClick={handleConfirm}
             isLoading={isSubmitting}
-            loadingText="Atualizando o Tesouro..."
+            loadingText={t('modals.recurringIncome.confirming')}
           >
-            Selar o Decreto Real ✨
+            {t('modals.recurringIncome.sealDecree')}
           </Button>
         </ModalFooter>
       </ModalContent>

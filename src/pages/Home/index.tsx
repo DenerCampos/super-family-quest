@@ -24,9 +24,12 @@ import { SummaryCard } from '../../components/SummaryCard';
 import { NewRecurringIncomeModal } from '../../components/modals/NewRecurringIncomeModal';
 import { LastRegistrationsList } from '../../components/LastRegistrationsList';
 import { NewRecurringExpenseModal } from '../../components/modals/NewRecurringExpenseModal';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const Home = () => {
-  const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
+  const { profile, loadProfile, showValues, toggleShowValues } = useAuth();  
+  const { getColor } = useVisualTheme();
   const { isOpen: isExpenseOpen, onOpen: onExpenseOpen, onClose: onExpenseClose } = useDisclosure();
   const { isOpen: isRevenueOpen, onOpen: onRevenueOpen, onClose: onRevenueClose } = useDisclosure();
   const [stores, setStores] = useState<Merchant[]>([]);
@@ -40,7 +43,7 @@ const Home = () => {
   const [showRecurringExpensesModal, setShowRecurringExpensesModal] = useState(false);
   const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
   const navigate = useNavigate();
-
+  const { t } = useThemedTranslation();
   // Carregar dados para o modal
   useEffect(() => {
     const loadData = async () => {
@@ -106,7 +109,12 @@ const Home = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh" pb="70px" bg="purple.50">
+    <Flex
+      direction="column"
+      minH="100vh"
+      pb="70px"
+      bg={getColor('background.home')}
+    >
       <Header />
 
       {/* Conteúdo Principal */}
@@ -119,22 +127,25 @@ const Home = () => {
             top={2}
             size="sm"
             variant="ghost"
-            colorScheme="purple"
+            color={getColor('text.eye')}
+            _hover={{
+              bg: getColor('button.hover.background.inverse'),
+              color: getColor('button.hover.text.inverse'),
+            }}
             onClick={toggleShowValues}
             zIndex={1}
-            _hover={{ bg: 'purple.100' }}
           >
             <Icon as={showValues ? FiEyeOff : FiEye} />
           </Button>
           <SummaryCard
-            title="Receitas do Mês"
+            title={t('home.summary.income')}
             value={profile?.income || 0}
-            colorScheme="green"
+            type="revenue"
           />
           <SummaryCard
-            title="Despesas do Mês"
+            title={t('home.summary.expenses')}
             value={profile?.expenses || 0}
-            colorScheme="red"
+            type="expense"
           />
         </Flex>
 
@@ -143,19 +154,34 @@ const Home = () => {
           <Menu>
             <MenuButton
               as={Button}
-              colorScheme="purple"
+              role="group"
+              color={getColor('button.text.expense')}
+              bg={getColor('button.background.expense')}
+              border="1px solid"
+              borderColor={getColor('button.border.expense')}
+              _hover={{
+                bg: getColor('button.hover.background.expense'),
+                color: getColor('button.hover.text.inverse'),
+                borderColor: getColor('button.hover.border.expense'),
+              }}
               size="lg"
-              leftIcon={<Icon as={FiShoppingBag} />}
+              leftIcon={
+                <Icon
+                  as={FiShoppingBag}
+                  color={getColor('button.text.expense')}
+                  _groupHover={{ color: getColor('button.hover.text.inverse') }}
+                />
+              }
               w="full"
             >
-              Adicionar Despesa
+              {t('home.addExpense')}
             </MenuButton>
             <MenuList>
               <MenuItem icon={<FiPlus />} onClick={onExpenseOpen}>
-                Nova Despesa
+                {t('home.newExpense')}
               </MenuItem>
               <MenuItem icon={<FiCamera />} onClick={() => navigate('/scan')}>
-                Ler QR Code
+                {t('home.scanQRCode')}
               </MenuItem>
             </MenuList>
           </Menu>
@@ -163,16 +189,31 @@ const Home = () => {
           <Menu>
             <MenuButton
               as={Button}
-              colorScheme="green"
+              role="group"
+              color={getColor('button.text.revenue')}
+              bg={getColor('button.background.revenue')}
+              border="1px solid"
+              borderColor={getColor('button.border.revenue')}
+              _hover={{
+                bg: getColor('button.hover.background.revenue'),
+                color: getColor('button.hover.text.inverse'),
+                borderColor: getColor('button.hover.border.revenue'),
+              }}
               size="lg"
-              leftIcon={<Icon as={FiDollarSign} />}
+              leftIcon={
+                <Icon
+                  as={FiDollarSign}
+                  color={getColor('button.text.revenue')}
+                  _groupHover={{ color: getColor('button.hover.text.inverse') }}
+                />
+              }
               w="full"
             >
-              Adicionar Receita
+              {t('home.addRevenue')}
             </MenuButton>
             <MenuList>
               <MenuItem icon={<FiPlus />} onClick={onRevenueOpen}>
-                Nova Receita
+                {t('home.newRevenue')}
               </MenuItem>
             </MenuList>
           </Menu>

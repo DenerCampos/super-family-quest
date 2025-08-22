@@ -15,6 +15,8 @@ import { fillMonthDays, formatDateToBR } from '../../utils/formatDate';
 import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 interface LineChartExpensesProps {
   data: ExpensesByDate[];
@@ -43,7 +45,8 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const fetchData = async (start: string, end: string) => {
     setLoading(true);
     try {
@@ -56,7 +59,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
       setError(null);
     } catch (error) {
       console.error('Erro ao buscar dados do gráfico:', error);
-      setError('Erro ao carregar dados das despesas');
+      setError(t('reports.expensesByDate.error'));
     } finally {
       setLoading(false);
     }
@@ -99,22 +102,22 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
       p={4}
       borderRadius="lg"
       border="2px solid"
-      borderColor="purple.200"
+      borderColor={getColor('border.reports')}
       width="100%"
       maxW="600px"
       mx="auto"
       mb={6}
-      bg="transparent"
+      bg={getColor('background.reports')}
       boxShadow="sm"
     >
       <Text
         fontSize="xl"
-        color="purple.500"
+        color={getColor('text.reports.title')}
         textAlign="center"
         mb={4}
         fontWeight="bold"
       >
-        Despesas por Data
+        {t('reports.expensesByDate.title')}
       </Text>
 
       <DateRangeFilter
@@ -128,16 +131,16 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
         <Flex align="center" justify="center" height="300px">
           <Spinner
             size="xl"
-            color="purple.500"
+            color={getColor('text.reports.primary')}
             thickness="4px"
-            emptyColor="purple.100"
+            emptyColor={getColor('text.reports.primary')}
           />
-          <Text ml={3} color="purple.300">
-            Carregando despesas...
+          <Text ml={3} color={getColor('text.reports.primary')}>
+            {t('reports.expensesByDate.loading')}
           </Text>
         </Flex>
       ) : error ? (
-        <Text color="red.500" textAlign="center" py={10}>
+        <Text color={getColor('status.error')} textAlign="center" py={10}>
           {error}
         </Text>
       ) : chartData.length > 0 ? (
@@ -152,16 +155,16 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
                 bottom: 5,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="purple.100" />
+              <CartesianGrid strokeDasharray="3 3" stroke={getColor('text.reports.primary')} />
               <XAxis
                 dataKey={isMobile ? "formattedDateMobile" : "formattedDateDesktop"}
-                stroke="purple.500"
+                stroke={getColor('text.reports.primary')}
                 tick={{ fontSize: isMobile ? 12 : 14 }}
               />
               {!isMobile && (
                 <YAxis
                   tickFormatter={(value) => formatCurrency(value)}
-                  stroke="purple.500"
+                  stroke={getColor('text.reports.primary')}
                 />
               )}
               <Tooltip
@@ -173,8 +176,8 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
                   return fullDate ? formatDateToBR(fullDate) : value;
                 }}
                 contentStyle={{
-                  background: 'rgba(255, 255, 255, 0.9)',
-                  borderColor: 'purple.200',
+                  background: getColor('background.reports'),
+                  borderColor: getColor('border.reports'),
                   borderRadius: 'md',
                   padding: '8px',
                 }}
@@ -206,8 +209,8 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
           </ResponsiveContainer>
         </Box>
       ) : (
-        <Text color="purple.300" py={10} textAlign="center">
-          Nenhum dado de despesas disponível
+        <Text color={getColor('text.reports.primary')} py={10} textAlign="center">
+          {t('reports.expensesByDate.noData')}
         </Text>
       )}
     </Flex>

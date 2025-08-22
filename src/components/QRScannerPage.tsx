@@ -6,8 +6,11 @@ import { LoadingOverlay } from '../components/LoadingOverlay';
 import { FiArrowLeft, FiRotateCw } from 'react-icons/fi';
 import { api } from '../services';
 import { parseNFCeQRCode } from '../utils/qrCode';
+import { useThemeTranslation } from '../hooks/useThemeTranslation';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 export const QRScannerPage = () => {
+  const { getColor, getFont } = useVisualTheme();
   const [loading, setLoading] = useState(true);
   const [loadingRead, setLoadingRead] = useState(false);
   const [error, setError] = useState('');
@@ -16,7 +19,7 @@ export const QRScannerPage = () => {
   );
   const [currentDeviceIndex, setCurrentDeviceIndex] = useState(0);
   const navigate = useNavigate();
-
+  const { t } = useThemeTranslation();
   // Usar useRef para manter referências estáveis
   const controlsRef = useRef<IScannerControls | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -292,8 +295,8 @@ export const QRScannerPage = () => {
       align="center"
       justify="center"
       height="100vh"
-      bg="purple.800"
-      color="white"
+      bg={getColor('background.primary')}
+      color={getColor('text.primary')}
       p={4}
     >
       {loading && (
@@ -311,10 +314,17 @@ export const QRScannerPage = () => {
         onClick={handleBack}
         leftIcon={<FiArrowLeft />}
         variant="ghost"
-        colorScheme="whiteAlpha"
+        color={getColor('text.primary')}
+        bg={getColor('background.qrScanner')}
+        border="1px solid"
+        borderColor={getColor('border.primary')}
+        _hover={{
+          bg: getColor('background.selected'),
+          color: getColor('text.accent'),
+        }}
         zIndex={10}
       >
-        Voltar
+        {t('qrScannerPage.back')}
       </Button>
 
       {/* Botão para trocar câmera - só aparece se houver mais de uma */}
@@ -326,14 +336,27 @@ export const QRScannerPage = () => {
           onClick={switchCamera}
           icon={<FiRotateCw />}
           variant="ghost"
-          colorScheme="whiteAlpha"
+          color={getColor('text.primary')}
+          bg={getColor('background.qrScanner')}
+          border="1px solid"
+          borderColor={getColor('border.primary')}
+          _hover={{
+            bg: getColor('background.selected'),
+            color: getColor('text.accent'),
+          }}
           aria-label="Trocar câmera"
           zIndex={10}
           isDisabled={loading || isInitializingRef.current}
         />
       )}
 
-      <Heading mb={4}>Posicione o QR Code</Heading>
+      <Heading
+        mb={4}
+        color={getColor('text.primary')}
+        fontFamily={getFont('heading')}
+      >
+        {t('qrScannerPage.title')}
+      </Heading>
 
       <Box
         id="scanner-container"
@@ -341,14 +364,14 @@ export const QRScannerPage = () => {
         maxWidth="600px"
         height="400px"
         border="2px solid"
-        borderColor="purple.500"
+        borderColor={getColor('border.primary')}
         borderRadius="md"
         overflow="hidden"
         position="relative"
       >
         {error && (
           <Flex height="100%" align="center" justify="center">
-            <Text color="red.300" textAlign="center" p={4}>
+            <Text color={getColor('status.error')} textAlign="center" p={4}>
               {error}
             </Text>
           </Flex>
@@ -356,14 +379,28 @@ export const QRScannerPage = () => {
       </Box>
 
       <Flex direction="column" align="center" mt={4}>
-        <Text textAlign="center">
-          Aponte a câmera para o QR Code do cupom fiscal
+        <Text
+          textAlign="center"
+          color={getColor('text.primary')}
+          fontFamily={getFont('body')}
+        >
+          {t('qrScannerPage.instructions')}
         </Text>
 
         {availableDevices.length > 1 && (
-          <Text fontSize="sm" color="purple.200" mt={2}>
-            Câmera: {availableDevices[currentDeviceIndex]?.label || 'Padrão'}(
-            {currentDeviceIndex + 1}/{availableDevices.length})
+          <Text
+            fontSize="sm"
+            color={getColor('text.secondary')}
+            mt={2}
+            fontFamily={getFont('body')}
+          >
+            {t('qrScannerPage.camera', {
+              name:
+                availableDevices[currentDeviceIndex]?.label ||
+                t('qrScannerPage.defaultCamera'),
+              current: currentDeviceIndex + 1,
+              total: availableDevices.length,
+            })}
           </Text>
         )}
       </Flex>

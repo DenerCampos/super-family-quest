@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Flex, Input, Button, Text, useToast } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,7 +11,8 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const toast = useToast();
-
+  const { t } = useThemedTranslation();
+  const { getColor, getFont, getAsset } = useVisualTheme();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -20,8 +23,8 @@ const Login = () => {
       console.error(error);
       
       toast({
-        title: 'Erro no login',
-        description: 'Credenciais inválidas',
+        title: t('login.error'),
+        description: t('login.invalidCredentials'),
         status: 'error',
         duration: 4000,
       });
@@ -33,7 +36,7 @@ const Login = () => {
   return (
     <Flex
       minH="100vh"
-      bgImage="url('/assets/images/login-bg.png')"
+      bgImage={`url(${getAsset('images.background.login')})`}
       bgSize="cover"
       bgPosition="center"
       align="center"
@@ -43,20 +46,20 @@ const Login = () => {
     >
       <Flex
         direction="column"
-        bg="rgba(23, 25, 35, 0.8)"
         p={8}
         borderRadius="lg"
         gap={4}
         w="100%"
         maxW="400px"
         backdropFilter="blur(4px)"
+        bg={getColor('background.login')}
       >
         <Text
           fontSize="2xl"
-          color="purple.300"
+          color={getColor('text.primary')}
           textAlign="center"
           mb={4}
-          fontFamily="Pixelify Sans"
+          fontFamily={getFont('theme')}
         >
           SUPER FAMILY QUEST
         </Text>
@@ -67,6 +70,17 @@ const Login = () => {
           variant="filled"
           onChange={(e) => setEmail(e.target.value)}
           type="email"
+          color={getColor('text.primary')}
+          _hover={{
+            bg: getColor('input.hover'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
 
         <Input
@@ -75,28 +89,36 @@ const Login = () => {
           variant="filled"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          color={getColor('text.primary')}
+          _hover={{
+            bg: getColor('input.hover'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
 
         <Button
           type="submit"
           isLoading={isLoading}
           loadingText="Entrando..."
-          colorScheme="purple"
+          colorScheme={getColor('button.primary')}
           mt={4}
-          _hover={{ transform: 'translateY(-2px)' }}
         >
-          Entrar no Reino
+          {t('login.enter')}
         </Button>
 
         <Button
           as={RouterLink}
           to="/register"
-          color="blue.300"
+          color={getColor('link.primary')}
           variant="link"
           mt={2}
           fontSize="sm"
         >
-          Criar Novo Reino
+          {t('login.create')}
         </Button>
       </Flex>
     </Flex>

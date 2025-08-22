@@ -1,0 +1,362 @@
+{
+  "common": {
+    "welcome": "Saudações, Bravo Aventureiro! Bem-vindo à sua Jornada Financeira! 🏰",
+    "balance": "Tesouro Acumulado",
+    "expenses": "Custos da Jornada",
+    "income": "Recompensas",
+    "savings": "Tesouro Real Guardado",
+    "name": "Nome do Item Mágico",
+    "save": "Forjar",
+    "update": "Aprimorar Encantamento",
+    "loading": "Conjurando Magias...",
+    "saving": "Forjando na Bigorna...",
+    "required": "Item necessário para a jornada",
+    "minLength": "Precisa de pelo menos {{count}} runas antigas",
+    "close": "Fechar Portal Mágico",
+    "error": "Maldição!",
+    "success": "Vitória!",
+    "updated": "Encantamento Aprimorado!",
+    "created": "Item Forjado!",
+    "deleted": "Item Destruído",
+    "invalidValue": "Magia Inválida",
+    "loadError": "Os pergaminhos antigos não puderam ser lidos",
+    "updateError": "A forja mágica falhou",
+    "createError": "Falha na forja",
+    "deleteError": "O item resistiu à destruição"
+  },
+  "auth": {
+    "login": "Entrar no Reino",
+    "register": "Juntar-se à Guilda",
+    "email": "Pergaminho de Contato",
+    "password": "Palavra Secreta",
+    "logout": "Abandonar Reino"
+  },
+  "dashboard": {
+    "totalBalance": "Tesouro Total do Reino",
+    "monthlyExpenses": "Tributos Mensais",
+    "monthlyIncome": "Recompensas Mensais",
+    "savingsGoal": "Meta do Tesouro Real"
+  },
+  "home": {
+    "summary": {
+      "income": "Recompensas do Ciclo Lunar",
+      "expenses": "Tributos do Ciclo Lunar"
+    },
+    "addExpense": "Registrar Tributo",
+    "newExpense": "Novo Tributo",
+    "scanQRCode": "Ler Pergaminho Mágico",
+    "addRevenue": "Registrar Recompensa",
+    "newRevenue": "Nova Recompensa"
+  },
+  "reports": {
+    "dateRangeFilter": {
+      "startDate": "Início do Ciclo",
+      "endDate": "Fim do Ciclo"
+    },
+    "expensesByStore": {
+      "title": "Tributos por Mercador",
+      "loading": "Consultando os Pergaminhos Antigos...",
+      "error": "Os pergaminhos estão ilegíveis!",
+      "noData": "Nenhum tributo encontrado neste ciclo lunar",
+      "value": "Valor em Ouro"
+    },
+    "expensesByGroup": {
+      "title": "Tributos por Categoria Mágica",
+      "loading": "Consultando os Pergaminhos Antigos...",
+      "error": "Os pergaminhos estão ilegíveis!",
+      "noData": "Nenhum tributo encontrado neste ciclo lunar",
+      "value": "Valor em Ouro"
+    },
+    "expensesByDate": {
+      "title": "Tributos por Data",
+      "loading": "Consultando os Pergaminhos Antigos...",
+      "error": "Os pergaminhos estão ilegíveis!",
+      "noData": "Nenhum tributo encontrado neste ciclo lunar",
+      "value": "Valor em Ouro"
+    },
+    "expensesIncome": {
+      "title": "Tributos vs Recompensas",
+      "loading": "Consultando os Pergaminhos Antigos...",
+      "error": "Os pergaminhos estão ilegíveis!",
+      "noData": "Nenhum registro encontrado neste ciclo lunar",
+      "expenses": "Tributos",
+      "income": "Recompensas"
+    },
+    "topProducts": {
+      "title": "Itens Mais Adquiridos",
+      "loading": "Consultando os Pergaminhos Antigos...",
+      "error": "Os pergaminhos estão ilegíveis!",
+      "noData": "Nenhum item encontrado neste ciclo lunar",
+      "value": "Valor em Ouro",
+      "quantity": "Quantidade"
+    }
+  },
+  "resources": {
+    "expense": {
+      "title": "Tributos do Reino",
+      "new": "Novo Tributo",
+      "error": "Erro ao consultar os tributos",
+      "deleteConfirm": "Tem certeza que deseja abolir este tributo?",
+      "deleteSuccess": "Tributo abolido com sucesso",
+      "deleteError": "Erro ao abolir tributo",
+      "searchPlaceholder": "Buscar nos pergaminhos antigos...",
+      "noData": "Nenhum tributo encontrado nos registros",
+      "store": "Mercador",
+      "value": "Valor em Ouro",
+      "payment": "Forma de Pagamento",
+      "date": "Data do Tributo",
+      "actions": "Ações",
+      "edit": "Aprimorar",
+      "delete": "Abolir",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
+    },
+    "revenue": {
+      "title": "Recompensas do Reino",
+      "new": "Nova Recompensa",
+      "error": "Erro ao consultar as recompensas",
+      "deleteConfirm": "Tem certeza que deseja remover esta recompensa?",
+      "deleteSuccess": "Recompensa removida com sucesso",
+      "deleteError": "Erro ao remover recompensa",
+      "searchPlaceholder": "Buscar nos pergaminhos antigos...",
+      "noData": "Nenhuma recompensa encontrada nos registros",
+      "name": "Nome da Recompensa",
+      "value": "Valor em Ouro",
+      "repeat": "Recorrente",
+      "actions": "Ações",
+      "edit": "Aprimorar",
+      "delete": "Remover",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
+    },
+    "group": {
+      "title": "Categorias Mágicas",
+      "new": "Nova Categoria Mágica",
+      "error": "Erro ao consultar as categorias mágicas",
+      "deleteConfirm": "Tem certeza que deseja banir esta categoria mágica?",
+      "deleteSuccess": "Categoria mágica banida com sucesso",
+      "deleteError": "Erro ao banir categoria mágica",
+      "searchPlaceholder": "Buscar nos pergaminhos antigos...",
+      "noData": "Nenhuma categoria mágica encontrada nos registros",
+      "name": "Nome da Categoria",
+      "actions": "Ações",
+      "edit": "Aprimorar",
+      "delete": "Banir",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
+    },
+    "payment": {
+      "title": "Formas de Pagamento do Reino",
+      "new": "Nova Forma de Pagamento",
+      "error": "Erro ao consultar as formas de pagamento",
+      "deleteConfirm": "Tem certeza que deseja banir esta forma de pagamento?",
+      "deleteSuccess": "Forma de pagamento banida com sucesso",
+      "deleteError": "Erro ao banir forma de pagamento",
+      "searchPlaceholder": "Buscar nos pergaminhos antigos...",
+      "noData": "Nenhuma forma de pagamento encontrada nos registros",
+      "name": "Nome da Forma de Pagamento",
+      "actions": "Ações",
+      "edit": "Aprimorar",
+      "delete": "Banir",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
+    },
+    "store": {
+      "title": "Mercadores do Reino",
+      "new": "Novo Mercador",
+      "error": "Erro ao consultar os mercadores",
+      "deleteConfirm": "Tem certeza que deseja banir este mercador do reino?",
+      "deleteSuccess": "Mercador banido com sucesso",
+      "deleteError": "Erro ao banir mercador",
+      "searchPlaceholder": "Buscar nos pergaminhos antigos...",
+      "noData": "Nenhum mercador encontrado nos registros",
+      "name": "Nome do Mercador",
+      "actions": "Ações",
+      "edit": "Aprimorar",
+      "delete": "Banir",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
+    }
+  },
+  "modals": {
+    "revenue": {
+      "new": "💰 Nova Recompensa",
+      "edit": "💰 Aprimorar Recompensa",
+      "namePlaceholder": "Digite o nome da recompensa",
+      "valuePlaceholder": "Digite o valor em ouro",
+      "repeat": "Repetir a cada ciclo lunar",
+      "name": "Nome da Recompensa",
+      "value": "Valor em Ouro",
+      "date": "Data da Conquista"
+
+    },
+    "expense": {
+      "new": "🧾 Novo Tributo",
+      "edit": "🧾 Aprimorar Tributo",
+      "success": "Tributo registrado com sucesso no livro do reino! ⚔️",
+      "storePlaceholder": "Digite o nome do mercador",
+      "paymentPlaceholder": "Selecione a forma de pagamento",
+      "urlPlaceholder": "URL do pergaminho mágico (opcional)",
+      "repeat": "Repetir a cada ciclo lunar",
+      "items": "📋 Itens Mágicos",
+      "showItems": "Revelar Itens",
+      "hideItems": "Ocultar Itens",
+      "store": "Mercador",
+      "payment": "Forma de Pagamento",
+      "date": "Data do Tributo",
+      "url": "Pergaminho Mágico",
+      "code": "Runa",
+      "name": "Nome do Item",
+      "quantity": "Quantidade",
+      "unit": "Medida",
+      "unitValue": "Valor em Ouro",
+      "group": "Categoria Mágica",
+      "groupPlaceholder": "Selecione ou digite uma categoria",
+      "removeItem": "Destruir Item",
+      "addItem": "Adicionar Item Mágico",
+      "newItem": "Novo item mágico"
+    },
+    "recurringIncome": {
+      "title": "🏰 Nova Fase da Jornada! 🌟",
+      "description": "Saudações, Nobre Guardião do Tesouro! Um novo ciclo lunar se inicia, e com ele, as fontes de ouro do reino precisam ser revisadas.",
+      "sources": "Fontes de Ouro Recorrentes",
+      "noSourcesFound": "Nenhuma fonte de ouro recorrente encontrada no reino 🏰",
+      "reminder": "Ajuste os valores do tesouro conforme necessário e desmarque as fontes de ouro que não devem ser mantidas neste ciclo lunar. Lembre-se: um bom guardião sempre mantém suas finanças em ordem! ⚔️",
+      "confirming": "Atualizando o Tesouro Real...",
+      "sealDecree": "Selar o Decreto Real ✨",
+      "deleteConfirm": "Tem certeza que deseja banir esta fonte de ouro do reino?",
+      "confirmed": "Tesouro Real Atualizado! ✨",
+      "success": "As fontes de ouro do reino foram atualizadas com sucesso! 🏰"
+    },
+    "recurringExpense": {
+      "title": "🏰 Tributos do Reino! ⚔️",
+      "description": "Nobre Guardião do Tesouro, um novo ciclo lunar se inicia! É hora de revisar os tributos e custos do reino para manter nossa fortaleza próspera.",
+      "expenses": "Custos Recorrentes do Reino",
+      "noExpensesFound": "Nenhum tributo recorrente encontrado no reino 🏰",
+      "reminder": "Ajuste os valores dos tributos conforme necessário e desmarque os custos que não devem ser mantidos neste ciclo lunar. Um reino próspero é um reino bem administrado! ⚔️",
+      "confirming": "Atualizando o Tesouro Real...",
+      "sealDecree": "Selar o Decreto Real ⚔️",
+      "deleteConfirm": "Tem certeza que deseja abolir este tributo do reino?",
+      "confirmed": "Tributos Atualizados! ⚔️",
+      "success": "Os tributos do reino foram atualizados com sucesso! 🏰"
+    },
+    "simpleResource": {
+      "enterName": "Nomeie seu item mágico",
+      "deleteConfirm": "Tem certeza que deseja destruir este item mágico?"
+    }
+  },
+  "navigationBar": {
+    "home": "Salão Principal",
+    "dashboard": "Sala do Tesouro",
+    "resources": "Arsenal",
+    "challenges": "Missões",
+    "profile": "Grimório"
+  },
+  "qrScannerPage": {
+    "back": "Retornar",
+    "instructions": "Use sua Lente Mágica para revelar o conteúdo do pergaminho",
+    "title": "Posicione a Lente Mágica",
+    "camera": "Lente Mágica: {{name}} ({{current}}/{{total}})",
+    "defaultCamera": "Lente Padrão"
+  },
+  "lastRegistrationsList": {
+    "title": "Registros do Escriba",
+    "noData": "Nenhuma despesa registrada nos pergaminhos",
+    "error": "O escriba falhou ao ler os registros antigos"
+  },
+  "loadingOverlay": {
+    "loading": "Conjurando..."
+  },
+  "login": {
+    "error": "Falha na entrada do Reino",
+    "invalidCredentials": "Pergaminho ou palavra secreta inválidos",
+    "enter": "Entrar no Reino",
+    "create": "Forjar",
+    "loading": "Adentrando o Reino...",
+    "emailPlaceholder": "Pergaminho de Contato",
+    "passwordPlaceholder": "Palavra Secreta",
+    "title": "SUPER FAMILY QUEST"
+  },
+  "register": {
+    "error": "Falha ao fundar reino",
+    "passwordsDoNotMatch": "As palavras secretas não coincidem",
+    "familyNameMustBeAtLeast3Characters": "O nome da linhagem deve ter pelo menos 3 runas",
+    "errorCreatingRealm": "Falha ao fundar reino",
+    "realmCreated": "Reino Fundado! 👑",
+    "realmCreatedSuccessfully": "Seu reino foi fundado com sucesso",
+    "errorCreatingRealmUserAlreadyExists": "Falha ao fundar reino, este aventureiro já existe",
+    "createNewRealm": "Fundar Novo Reino",
+    "fullName": "Nome do Aventureiro",
+    "email": "Pergaminho de Contato",
+    "password": "Palavra Secreta",
+    "confirmPassword": "Confirmar Palavra Secreta",
+    "createRealm": "Fundar Reino",
+    "alreadyHaveRealm": "Já tem um reino? Entre aqui",
+    "funding": "Fundando Reino..."
+  },
+  "profile": {
+    "invalidEmail": "Pergaminho inválido",
+    "passwordsDoNotMatch": "As palavras secretas não coincidem",
+    "enterPasswordFirst": "Digite a palavra secreta primeiro",
+    "passwordMustBeAtLeast6Characters": "A palavra secreta deve ter pelo menos 6 runas",
+    "profileUpdated": "Grimório Atualizado!",
+    "errorUpdatingProfile": "Falha ao atualizar grimório",
+    "pleaseTryAgain": "Tente novamente, bravo aventureiro",
+    "name": "Nome do Aventureiro",
+    "email": "Pergaminho de Contato",
+    "familyName": "Nome da Linhagem",
+    "newPassword": "Nova Palavra Secreta",
+    "confirmNewPassword": "Confirmar Nova Palavra Secreta",
+    "hidePassword": "Ocultar palavra secreta",
+    "showPassword": "Revelar palavra secreta",
+    "saveChanges": "Selar Alterações",
+    "selectCoatOfArms": "Escolha o Brasão de sua Família",
+    "chooseCoatOfArms": "Selecione um brasão para representar sua nobre linhagem",
+    "complete": "Forje sua Identidade",
+    "welcome": "Saudações, Nobre Aventureiro! Antes de iniciar sua jornada, precisamos conhecer sua linhagem. Estas informações poderão ser alteradas em seu grimório pessoal.",
+    "familyNamePlaceholder": "Digite o nome de sua nobre linhagem",
+    "nameRevenue": "Nome da Recompensa",
+    "nameRevenueTooltip": "Nome da recompensa é sua fonte de renda principal",
+    "nameRevenuePlaceholder": "Ex: Salário, Freelance, etc",
+    "monthlyIncome": "Renda Mensal",
+    "monthlyIncomePlaceholder": "R$ 0,00",
+    "monthlyIncomeTooltip": "Renda mensal é a soma de todas as recompensas mensais da sua família",
+    "monthlyIncomeError": "Renda mensal deve ser maior que 0",
+    "monthlyIncomeRequired": "Renda mensal é obrigatória",
+    "repeatMonthly": "Repetir mensalmente",
+    "repeatMonthlyTooltip": "Se você repetir mensalmente, a recompensa será adicionada automaticamente todos os meses",
+    "date": "Data",
+    "editProfile": "Editar Grimório",
+    "minimum6Characters": "Mínimo 6 runas antigas",
+    "repeatNewPassword": "Repita a palavra secreta",
+    "saving": "Forjando alterações...",
+    "themeChanged": "O reino mudou sua aparência!",
+    "themes": {
+      "title": "Temas",
+      "available": "Temas Disponíveis",
+      "unlocked": "Desbloqueado",
+      "locked": "Bloqueado",
+      "select": "Selecionar Tema",
+      "loading": "Carregando temas...",
+      "requires": "Requer {{count}} moedas"
+    }
+  },
+  "newChallenge": {
+    "development": "Os magos ainda estão trabalhando nisso..."
+  },
+  "newResources": {
+    "deleteSuccess": "Item destruído com sucesso",
+    "deleteError": "Falha ao destruir item"
+  },
+  "notFoundPage": {
+    "lost": "Pergaminho Perdido! 📜",
+    "secretPath": "Você encontrou um caminho secreto... que não existe! Volte para o reino principal antes que os slimes financeiros te encontrem! 🐉",
+    "back": "Voltar para a Segurança do Reino"
+  },
+  "header": {
+    "themeToggle": {
+      "rpgMode": "Modo Aventura",
+      "defaultMode": "Modo Normal"
+    }
+  }
+} 

@@ -1,11 +1,13 @@
-import { Flex, IconButton, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, IconButton, Text } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 import { FiHome, FiPieChart, FiPlusSquare, FiUser } from 'react-icons/fi';
 import { GrResources } from 'react-icons/gr';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 export const NavigationBar = () => {
-  const activeColor = useColorModeValue('purple.500', 'purple.200');
-  const inactiveColor = useColorModeValue('gray.600', 'gray.400');
+  const { t } = useThemedTranslation();
+  const { getColor, getFont } = useVisualTheme();
 
   return (
     <Flex
@@ -14,11 +16,11 @@ export const NavigationBar = () => {
       bottom={0}
       left={0}
       right={0}
-      bg="purple.900"
+      bg={getColor('background.navigation')}
       p={2}
       boxShadow="lg"
       borderTopWidth="1px"
-      borderTopColor="purple.700"
+      borderTopColor={getColor('border.navigation')}
     >
       <NavLink to="/home">
         {({ isActive }) => (
@@ -27,12 +29,27 @@ export const NavigationBar = () => {
               icon={<FiHome />}
               aria-label="Home"
               variant="ghost"
-              color={isActive ? activeColor : inactiveColor}
+              color={
+                isActive
+                  ? getColor('text.navigation.active')
+                  : getColor('text.navigation.inactive')
+              }
               fontSize="24px"
               isActive={isActive}
+              _hover={{
+                color: getColor('text.link'),
+              }}
             />
-            <Text fontSize="xs" color={isActive ? activeColor : inactiveColor}>
-              Início
+            <Text
+              fontSize="xs"
+              color={
+                isActive
+                  ? getColor('text.navigation.inactive')
+                  : getColor('text.navigation.inactive')
+              }
+              fontFamily={getFont('body')}
+            >
+              {t('navigationBar.home')}
             </Text>
           </Flex>
         )}
@@ -45,12 +62,27 @@ export const NavigationBar = () => {
               icon={<FiPieChart />}
               aria-label="Dashboard"
               variant="ghost"
-              color={isActive ? activeColor : inactiveColor}
+              color={
+                isActive
+                  ? getColor('text.navigation.active')
+                  : getColor('text.navigation.inactive')
+              }
               fontSize="24px"
               isActive={isActive}
+              _hover={{
+                color: getColor('text.link'),
+              }}
             />
-            <Text fontSize="xs" color={isActive ? activeColor : inactiveColor}>
-              Dashboard
+            <Text
+              fontSize="xs"
+              color={
+                isActive
+                  ? getColor('text.navigation.inactive')
+                  : getColor('text.navigation.inactive')
+              }
+              fontFamily={getFont('body')}
+            >
+              {t('navigationBar.dashboard')}
             </Text>
           </Flex>
         )}
@@ -63,12 +95,27 @@ export const NavigationBar = () => {
               icon={<GrResources />}
               aria-label="Novo recurso"
               variant="ghost"
-              color={isActive ? activeColor : inactiveColor}
+              color={
+                isActive
+                  ? getColor('text.navigation.active')
+                  : getColor('text.navigation.inactive')
+              }
               fontSize="24px"
               isActive={isActive}
+              _hover={{
+                color: getColor('text.link'),
+              }}
             />
-            <Text fontSize="xs" color={isActive ? activeColor : inactiveColor}>
-              Recursos
+            <Text
+              fontSize="xs"
+              color={
+                isActive
+                  ? getColor('text.navigation.inactive')
+                  : getColor('text.navigation.inactive')
+              }
+              fontFamily={getFont('body')}
+            >
+              {t('navigationBar.resources')}
             </Text>
           </Flex>
         )}
@@ -81,12 +128,27 @@ export const NavigationBar = () => {
               icon={<FiPlusSquare />}
               aria-label="Novo desafio"
               variant="ghost"
-              color={isActive ? activeColor : inactiveColor}
+              color={
+                isActive
+                  ? getColor('text.navigation.active')
+                  : getColor('text.navigation.inactive')
+              }
               fontSize="24px"
               isActive={isActive}
+              _hover={{
+                color: getColor('text.link'),
+              }}
             />
-            <Text fontSize="xs" color={isActive ? activeColor : inactiveColor}>
-              Desafios
+            <Text
+              fontSize="xs"
+              color={
+                isActive
+                  ? getColor('text.navigation.inactive')
+                  : getColor('text.navigation.inactive')
+              }
+              fontFamily={getFont('body')}
+            >
+              {t('navigationBar.challenges')}
             </Text>
           </Flex>
         )}
@@ -99,12 +161,27 @@ export const NavigationBar = () => {
               icon={<FiUser />}
               aria-label="Perfil"
               variant="ghost"
-              color={isActive ? activeColor : inactiveColor}
+              color={
+                isActive
+                  ? getColor('text.navigation.active')
+                  : getColor('text.navigation.inactive')
+              }
               fontSize="24px"
               isActive={isActive}
+              _hover={{
+                color: getColor('text.link'),
+              }}
             />
-            <Text fontSize="xs" color={isActive ? activeColor : inactiveColor}>
-              Perfil
+            <Text
+              fontSize="xs"
+              color={
+                isActive
+                  ? getColor('text.navigation.inactive')
+                  : getColor('text.navigation.inactive')
+              }
+              fontFamily={getFont('body')}
+            >
+              {t('navigationBar.profile')}
             </Text>
           </Flex>
         )}

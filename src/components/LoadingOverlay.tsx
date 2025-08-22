@@ -1,59 +1,67 @@
-import { Box, AbsoluteCenter, Image, Text, keyframes } from '@chakra-ui/react';
+import { Box, AbsoluteCenter, Image, Text } from '@chakra-ui/react';
+import { keyframes } from '@emotion/react';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 // Animação dos pontos
-const dotsAnimation = keyframes`
-  0%, 20% { content: '.'; }
-  40% { content: '..'; }
-  60%, 100% { content: '...'; }
+const loadingAnimation = keyframes`
+  0% { content: ""; }
+  25% { content: "."; }
+  50% { content: ".."; }
+  75% { content: "..."; }
+  100% { content: ""; }
 `;
 
-const gifAnimation = {
-  save: '/assets/images/knigth-loading.gif',
-  read: '/assets/images/knigth-solare.gif',
-  open: '/assets/images/bonfire.gif',
-};
-
-export type LoadingState = 'save' | 'read' | 'open';
+type LoadingState = 'save' | 'loading' | 'open' | 'read';
 
 export const LoadingOverlay = ({ typeLoading = 'save', text = 'Carregando' }: { typeLoading?: LoadingState, text?: string }) => {
-  const gifLoading =  gifAnimation[typeLoading];
+  const { getColor, getFont, getAsset } = useVisualTheme();
+  const gifLoading = getAsset(`animations.loading.${typeLoading}`);
+
   return (
     <Box
-      position="fixed"
+      position="absolute"
       top={0}
       left={0}
-      w="100vw"
-      h="100vh"
-      bg="blackAlpha.600"
-      backdropFilter="blur(4px)"
-      zIndex="overlay"
+      right={0}
+      bottom={0}
+      zIndex={9999}
+      borderRadius="md"
+      _before={{
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        bg: getColor('background.loading'),
+        opacity: 0.8,
+        borderRadius: 'md',
+        zIndex: -1,
+      }}
     >
-      <AbsoluteCenter
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        gap={4}
-      >
-        <Image
-          src={gifLoading}
-          boxSize="150px"
-          alt="Carregando"
-          ignoreFallback
-        />
-        <Text
-          fontSize="xl"
-          color="white"
-          fontFamily="Press Start 2P"
-          _after={{
-            content: '"..."',
-            animation: `${dotsAnimation} 1.5s infinite`,
-            display: 'inline-block',
-            width: '20px',
-            textAlign: 'left',
-          }}
-        >
-          { text }
-        </Text>
+      <AbsoluteCenter>
+        <Box textAlign="center">
+          <Image
+            src={gifLoading}
+            alt="Loading"
+            boxSize="100px"
+            mx="auto"
+            mb={4}
+          />
+          <Text
+            color={getColor('text.primary')}
+            fontSize="xl"
+            fontWeight="bold"
+            fontFamily={getFont('heading')}
+            _after={{
+              content: '""',
+              animation: `${loadingAnimation} 1s infinite`,
+              color: getColor('text.primary'),
+            }}
+          >
+            {text}
+          </Text>
+        </Box>
       </AbsoluteCenter>
     </Box>
   );

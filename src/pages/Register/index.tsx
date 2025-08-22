@@ -1,8 +1,39 @@
 // src/pages/Cadastro/index.tsx
 import { useState } from 'react';
-import { Flex, Input, Button, Text, useToast } from '@chakra-ui/react';
+import {
+  Flex,
+  Input,
+  Button,
+  Text,
+  useToast,
+  // defineStyle,
+} from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { api } from '../../services';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
+
+// const floatingStyles = defineStyle({
+//   pos: 'absolute',
+//   bg: 'bg',
+//   px: '0.5',
+//   top: '-3',
+//   insetStart: '2',
+//   fontWeight: 'normal',
+//   pointerEvents: 'none',
+//   transition: 'position',
+//   _peerPlaceholderShown: {
+//     color: 'fg.muted',
+//     top: '2.5',
+//     insetStart: '3',
+//   },
+//   _peerFocusVisible: {
+//     color: 'fg',
+//     top: '-3',
+//     insetStart: '2',
+//   },
+// });
+
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -12,12 +43,13 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
-
+  const { t } = useThemedTranslation();
+  const { getAsset, getColor, getFont } = useVisualTheme();
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       toast({
-        title: 'Erro',
-        description: 'As senhas não coincidem',
+        title: t('register.error'),
+        description: t('register.passwordsDoNotMatch'),
         status: 'error',
         duration: 3000,
       });
@@ -27,7 +59,7 @@ const Register = () => {
     if (!email || email.length < 3) {
       toast({
         title: 'Erro',
-        description: 'Nome da família deve ter pelo menos 3 caracteres',
+        description: t('register.familyNameMustBeAtLeast3Characters'),
         status: 'error',
         duration: 3000,
       });
@@ -44,12 +76,12 @@ const Register = () => {
       });
 
       if (!response) {
-        throw new Error('Erro ao criar reino');
+        throw new Error(t('register.errorCreatingRealm'));
       }
 
       toast({
-        title: 'Reino Fundado!',
-        description: 'Seu reino foi criado com sucesso',
+        title: t('register.realmCreated'),
+        description: t('register.realmCreatedSuccessfully'),
         status: 'success',
         duration: 3000,
       });
@@ -58,17 +90,17 @@ const Register = () => {
     } catch (error: any) {
       console.error(error);
 
-      let errorMessage = 'Erro ao criar reino';
+      let errorMessage = t('register.errorCreatingRealm');
       
       if (error.message) {
         errorMessage = error.message;
       }
       if (error.status === 400) {
-        errorMessage = 'Falha ao criar o reuino, usuário já existe';
+        errorMessage = t('register.errorCreatingRealmUserAlreadyExists');
       }
 
       toast({
-        title: 'Erro',
+        title: t('register.error'),
         description: errorMessage,
         status: 'error',
         duration: 4000,
@@ -81,14 +113,14 @@ const Register = () => {
   return (
     <Flex
       minH="100vh"
-      bgImage="url('/assets/images/register-bg.png')"
+      bgImage={`url(${getAsset('images.background.register')})`}
       bgSize="cover"
       align="center"
       justify="center"
     >
       <Flex
         direction="column"
-        bg="rgba(23, 25, 35, 0.8)"
+        bg={getColor('background.login')}
         p={8}
         borderRadius="lg"
         gap={4}
@@ -98,68 +130,113 @@ const Register = () => {
       >
         <Text
           fontSize="2xl"
-          color="purple.300"
+          color={getColor('text.primary')}
           textAlign="center"
           mb={4}
-          fontFamily="Pixelify Sans"
+          fontFamily={getFont('theme')}
         >
-          Criar Novo Reino
+          {t('register.createNewRealm')}
         </Text>
 
         <Input
-          placeholder="Nome completo"
+          placeholder={t('register.fullName')}
           variant="filled"
-          focusBorderColor="purple.500"
+          focusBorderColor={getColor('border.primary')}
           value={name}
           onChange={(e) => setName(e.target.value)}
+          color={getColor('text.primary')}
           isDisabled={isLoading}
+          _hover={{
+            bg: getColor('input.hover'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
         <Input
-          placeholder="E-mail"
+          placeholder={t('register.email')}
           type="email"
           variant="filled"
+          focusBorderColor={getColor('border.primary')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          color={getColor('text.primary')}
           isDisabled={isLoading}
+          _hover={{
+            bg: getColor('input.hover'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
         <Input
-          placeholder="Senha"
+          placeholder={t('register.password')}
           type="password"
           variant="filled"
+          focusBorderColor={getColor('border.primary')}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          color={getColor('text.primary')}
           isDisabled={isLoading}
+          _hover={{
+            bg: getColor('input.hover'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
         <Input
-          placeholder="Confirmar Senha"
+          placeholder={t('register.confirmPassword')}
           type="password"
           variant="filled"
+          focusBorderColor={getColor('border.primary')}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          color={getColor('text.primary')}
           isDisabled={isLoading}
+          _hover={{
+            bg: getColor('input.hover'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          _focus={{
+            bg: getColor('input.focus'),
+            borderColor: getColor('input.focusBorder'),
+          }}
+          borderColor={getColor('input.border')}
+          bg={getColor('input.background')}
         />
 
         <Button
-          colorScheme="purple"
+          colorScheme={getColor('button.primary')}
           mt={4}
           onClick={handleRegister}
           isLoading={isLoading}
-          loadingText="Fundando..."
+          loadingText={t('register.funding')}
           isDisabled={isLoading}
         >
-          Criar reino
+          {t('register.createRealm')}
         </Button>
 
         <Button
           as={RouterLink}
           to="/login"
           variant="link"
-          color="blue.300"
+          color={getColor('link.primary')}
           mt={2}
           fontSize="sm"
           isDisabled={isLoading}
         >
-          Já tem um reino? Entre aqui
+          {t('register.alreadyHaveRealm')}
         </Button>
       </Flex>
     </Flex>

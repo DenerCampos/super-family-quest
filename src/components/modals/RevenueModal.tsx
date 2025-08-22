@@ -19,6 +19,8 @@ import { useForm } from 'react-hook-form';
 import { api } from '../../services';
 import { LoadingOverlay } from '../LoadingOverlay';
 import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 type RevenueModalProps = {
   isOpen: boolean;
@@ -41,7 +43,9 @@ export const RevenueModal = ({
   handleNewRegistration,
   initialData,
 }: RevenueModalProps) => {
+  const { getColor } = useVisualTheme();
   const toast = useToast();
+  const { t } = useThemedTranslation();
   const {
     register,
     handleSubmit,
@@ -86,14 +90,14 @@ export const RevenueModal = ({
       if (initialData?.id) {
         await api.updateRevenue(initialData.id, payload);
         toast({
-          title: 'Receita atualizada!',
+          title: t('common.updated'),
           status: 'success',
           duration: 3000,
         });
       } else {
         await api.createRevenue(payload);
         toast({
-          title: 'Receita criada!',
+          title: t('common.created'),
           status: 'success',
           duration: 3000,
         });
@@ -105,8 +109,8 @@ export const RevenueModal = ({
       onClose();
     } catch (error) {
       toast({
-        title: 'Erro',
-        description: initialData ? 'Falha ao atualizar' : 'Falha ao cadastrar',
+        title: t('common.error'),
+        description: initialData ? t('common.updateError') : t('common.createError'),
         status: 'error',
         duration: 3000,
       });
@@ -123,11 +127,14 @@ export const RevenueModal = ({
     >
       <ModalOverlay />
 
-      <ModalContent bg="purple.800" color="white">
+      <ModalContent
+        bg={getColor('background.primary')}
+        color={getColor('text.primary')}
+      >
         {isSubmitting && <LoadingOverlay />}
 
         <ModalHeader>
-          {initialData ? '🧾 Editar Receita' : '🧾 Nova Receita'}
+          {initialData ? t('modals.revenue.edit') : t('modals.revenue.new')}
         </ModalHeader>
 
         <ModalCloseButton isDisabled={isSubmitting} />
@@ -135,39 +142,37 @@ export const RevenueModal = ({
         <ModalBody pb={4} opacity={isSubmitting ? 0.5 : 1}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.name} mb={4}>
-              <FormLabel>Nome</FormLabel>
+              <FormLabel>{t('modals.revenue.name')}</FormLabel>
               <Input
                 {...register('name', {
-                  required: 'Campo obrigatório',
+                  required: t('common.required'),
                   minLength: {
                     value: 3,
-                    message: 'Mínimo 3 caracteres',
+                    message: t('common.minLength', { count: 3 }),
                   },
                 })}
-                bg="white"
-                color="black"
-                placeholder="Nome da receita"
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
+                placeholder={t('modals.revenue.namePlaceholder')}
                 isDisabled={isSubmitting}
               />
               {errors.name && (
-                <Text color="red.300" fontSize="sm" mt={1}>
+                <Text color={getColor('status.error')} fontSize="sm" mt={1}>
                   {errors.name.message}
                 </Text>
               )}
             </FormControl>
 
             <FormControl isInvalid={!!errors.value} mb={4}>
-              <FormLabel>Valor</FormLabel>
+              <FormLabel>{t('modals.revenue.value')}</FormLabel>
               <Input
                 value={watch('value')}
                 {...register('value', {
-                  required: 'Campo obrigatório',
+                  required: t('common.required'),
                   validate: (value) => {
                     const numericValue = parseBRLCurrency(value);
-                    if (isNaN(numericValue)) return 'Valor inválido';
-                    return (
-                      numericValue >= 0.01 || 'Valor deve ser maior que 0,00'
-                    );
+                    if (isNaN(numericValue)) return t('common.invalidValue');
+                    return numericValue >= 0.01 || t('common.invalidValue');
                   },
                 })}
                 onChange={(e) => {
@@ -177,51 +182,68 @@ export const RevenueModal = ({
                     shouldDirty: true,
                   });
                 }}
-                bg="white"
-                color="black"
-                placeholder="0,00"
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
+                placeholder={t('modals.revenue.valuePlaceholder')}
                 isDisabled={isSubmitting}
               />
               {errors.value && (
-                <Text color="red.300" fontSize="sm" mt={1}>
+                <Text color={getColor('status.error')} fontSize="sm" mt={1}>
                   {errors.value.message}
                 </Text>
               )}
             </FormControl>
 
             <FormControl isInvalid={!!errors.date} mb={4}>
-              <FormLabel>Data</FormLabel>
+              <FormLabel>{t('modals.revenue.date')}</FormLabel>
               <Input
                 type="date"
                 {...register('date', {
-                  required: 'Campo obrigatório',
+                  required: t('common.required'),
                 })}
-                bg="white"
-                color="black"
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
+                sx={{
+                  '&::-webkit-calendar-picker-indicator': {
+                    filter: 'invert(1)',
+                    cursor: 'pointer',
+                  },
+                }}
                 isDisabled={isSubmitting}
               />
               {errors.date && (
-                <Text color="red.300" fontSize="sm" mt={1}>
+                <Text color={getColor('status.error')} fontSize="sm" mt={1}>
                   {errors.date.message}
                 </Text>
               )}
             </FormControl>
 
             <FormControl mb={4}>
-              <Checkbox {...register('repeat')} colorScheme="green" size="lg">
-                Repete todo mês?
+              <Checkbox
+                {...register('repeat')}
+                colorScheme={getColor('chakraColors.green')}
+                size="lg"
+              >
+                {t('modals.revenue.repeat')}
               </Checkbox>
             </FormControl>
 
             <Flex justify="flex-end">
               <Button
-                colorScheme="purple"
+                color={getColor('text.primary')}
+                bg={getColor('background.tertiary')}
+                border="1px solid"
+                borderColor={getColor('border.primary')}
+                _hover={{
+                  bg: getColor('background.selected'),
+                  color: getColor('text.accent'),
+                }}
                 type="submit"
                 isDisabled={!isValid || isSubmitting}
                 isLoading={isSubmitting}
-                loadingText="Salvando..."
+                loadingText={t('common.saving')}
               >
-                {initialData ? 'Atualizar' : 'Salvar'}
+                {initialData ? t('common.update') : t('common.save')}
               </Button>
             </Flex>
           </form>

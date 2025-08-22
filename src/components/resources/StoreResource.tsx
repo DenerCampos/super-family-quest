@@ -25,6 +25,8 @@ import {
 import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { api } from '../../services';
 import type { Merchant, PaginationResponse } from '../../services/resources';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -45,7 +47,8 @@ const StoreResource = ({
   const [loading, setLoading] = useState(true);
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-
+  const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   const loadStores = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {
@@ -57,7 +60,7 @@ const StoreResource = ({
       setStores(storesData);
     } catch (error) {
       toast({
-        title: 'Erro ao carregar lojas',
+        title: t('resources.store.error'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -112,13 +115,13 @@ const StoreResource = ({
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja excluir esta loja?')) {
+    if (window.confirm(t('resources.store.deleteConfirm'))) {
       try {
         await onDelete(id);
         // Recarregar dados após exclusão
         loadStores(page, search);
         toast({
-          title: 'Loja excluída com sucesso',
+          title: t('resources.store.deleteSuccess'),
           status: 'success',
           duration: 2000,
           isClosable: true,
@@ -126,7 +129,7 @@ const StoreResource = ({
       } catch (error) {
         console.error(error);
         toast({
-          title: 'Erro ao excluir loja',
+          title: t('resources.store.deleteError'),
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -148,24 +151,35 @@ const StoreResource = ({
     <Box mb={6}>
       <Flex justify="space-between" align="center" mb={4}>
         <Text fontSize="lg" fontWeight="medium">
-          Lojas
+          {t('resources.store.title')}
         </Text>
         <Button
           size="sm"
-          colorScheme="purple"
+          bg={getColor('button.background.neutral')}
+          color={getColor('button.text.primary')}
+          border="1px solid"
+          borderColor={getColor('button.border.neutral')}
+          _hover={{
+            bg: getColor('button.hover.background.inverse'),
+            color: getColor('button.hover.text.inverse'),
+          }}
+          _focus={{
+            bg: getColor('button.hover.background.neutral'),
+            color: getColor('button.hover.text.neutral'),
+          }}
           leftIcon={<FiPlus />}
           onClick={handleNewStore}
         >
-          Nova Loja
+          {t('resources.store.new')}
         </Button>
       </Flex>
 
       <InputGroup mb={4}>
         <InputLeftElement pointerEvents="none">
-          <Icon as={FiSearch} color="gray.300" />
+          <Icon as={FiSearch} color={getColor('gray.300')} />
         </InputLeftElement>
         <Input
-          placeholder="Buscar lojas..."
+          placeholder={t('resources.store.searchPlaceholder')}
           value={search}
           onChange={handleSearch}
         />
@@ -173,25 +187,25 @@ const StoreResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color="purple.500" />
+          <Spinner color={getColor('text.accent')} />
         </Flex>
       ) : stores?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
-          Nenhuma loja encontrada
+          {t('resources.store.noData')}
         </Text>
       ) : (
         <>
           <Box
             overflowX="auto"
             border="1px"
-            borderColor="gray.200"
+            borderColor={getColor('gray.500')}
             borderRadius="md"
           >
             <Table variant="simple" minW="400px">
               <Thead>
                 <Tr>
-                  <Th>Nome</Th>
-                  <Th>Ações</Th>
+                  <Th>{t('resources.store.name')}</Th>
+                  <Th>{t('resources.store.actions')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -201,21 +215,21 @@ const StoreResource = ({
                     <Td>
                       <Menu>
                         <MenuButton as={Button} size="sm" variant="outline">
-                          Ações
+                          {t('resources.store.actions')}
                         </MenuButton>
                         <MenuList>
                           <MenuItem
                             icon={<FiEdit />}
                             onClick={() => handleEdit(store)}
                           >
-                            Editar
+                            {t('resources.store.edit')}
                           </MenuItem>
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(store.id as string)}
-                            color="red.500"
+                            color={getColor('chakraColors.red')}
                           >
-                            Excluir
+                            {t('resources.store.delete')}
                           </MenuItem>
                         </MenuList>
                       </Menu>
@@ -234,7 +248,7 @@ const StoreResource = ({
                   onClick={() => handlePageChange(page - 1)}
                   isDisabled={page === 1}
                 >
-                  Anterior
+                  {t('resources.store.previous')}
                 </Button>
                 <Button size="sm" variant="outline">
                   {page} / {stores.meta.totalPages}
@@ -244,7 +258,7 @@ const StoreResource = ({
                   onClick={() => handlePageChange(page + 1)}
                   isDisabled={page === stores.meta.totalPages}
                 >
-                  Próxima
+                  {t('resources.store.next')}
                 </Button>
               </Stack>
             </Flex>

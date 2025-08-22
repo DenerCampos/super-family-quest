@@ -1,4 +1,6 @@
 import { Flex, Input, Text } from "@chakra-ui/react";
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 interface DateRangeFilterProps {
   startDate: string;
@@ -26,6 +28,8 @@ export const DateRangeFilter = ({
   onStartDateChange,
   onEndDateChange,
 }: DateRangeFilterProps) => {
+  const { t } = useThemedTranslation();
+  const { getColor } = useVisualTheme();
   return (
     <Flex 
       gap={4} 
@@ -33,14 +37,16 @@ export const DateRangeFilter = ({
       direction={{ base: "column", sm: "row" }} 
       align="center"
       justify="center"
-      bg="purple.50"
+      bg={getColor('background.dateRangeFilter')}
       p={4}
       borderRadius="md"
+      border="1px solid"
+      borderColor={getColor('border.primary')}
       width="100%"
     >
       <Flex align="center" gap={2}>
-        <Text fontSize="sm" color="purple.700" whiteSpace="nowrap" fontWeight="medium">
-          Data Inicial:
+        <Text fontSize="sm" color={getColor('text.dateRangeFilter')} whiteSpace="nowrap" fontWeight="medium">
+          {t('reports.dateRangeFilter.startDate')}
         </Text>
         <Input
           type="date"
@@ -48,15 +54,15 @@ export const DateRangeFilter = ({
           onChange={(e) => onStartDateChange(e.target.value)}
           size="sm"
           w="auto"
-          borderColor="purple.200"
-          _hover={{ borderColor: "purple.300" }}
-          _focus={{ borderColor: "purple.400", boxShadow: "0 0 0 1px var(--chakra-colors-purple-400)" }}
-          bg="white"
+          borderColor={getColor('border.primary')}
+          _hover={{ borderColor: getColor('border.primary') }}
+          _focus={{ borderColor: getColor('border.primary')}}
+          bg={getColor('background.quaternary')}
         />
       </Flex>
       <Flex align="center" gap={2}>
-        <Text fontSize="sm" color="purple.700" whiteSpace="nowrap" fontWeight="medium">
-          Data Final:
+        <Text fontSize="sm" color={getColor('text.dateRangeFilter')} whiteSpace="nowrap" fontWeight="medium">
+          {t('reports.dateRangeFilter.endDate')}
         </Text>
         <Input
           type="date"
@@ -64,10 +70,10 @@ export const DateRangeFilter = ({
           onChange={(e) => onEndDateChange(e.target.value)}
           size="sm"
           w="auto"
-          borderColor="purple.200"
-          _hover={{ borderColor: "purple.300" }}
-          _focus={{ borderColor: "purple.400", boxShadow: "0 0 0 1px var(--chakra-colors-purple-400)" }}
-          bg="white"
+          borderColor={getColor('border.primary')}
+          _hover={{ borderColor: getColor('border.primary') }}
+          _focus={{ borderColor: getColor('border.primary')}}
+          bg={getColor('background.quaternary')}
         />
       </Flex>
     </Flex>

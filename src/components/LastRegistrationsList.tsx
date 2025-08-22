@@ -7,7 +7,7 @@ import {
   VStack,
   Badge,
   Icon,
-  useColorModeValue,
+
 } from '@chakra-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCoins, FaStore } from 'react-icons/fa';
@@ -17,6 +17,8 @@ import { formatDateToBR } from '../utils/formatDate';
 import { capitalizeFirstLetter } from '../utils/formatString';
 import type { Registration } from '../services/profile';
 import { useAuth } from '../contexts/AuthContext';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
+import { useVisualTheme } from '../hooks/useVisualTheme';
 
 const MotionBox = motion(Box);
 
@@ -31,9 +33,11 @@ export const LastRegistrationsList = ({
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { t } = useThemedTranslation();
+  const { getColor, getFont } = useVisualTheme();
 
-  const bgColorExpense = useColorModeValue('red.50', 'gray.700');
-  const bgColorRevenue = useColorModeValue('green.50', 'gray.700');
+  const bgColorExpense = getColor('background.lastRegistrations.expense');
+  const bgColorRevenue = getColor('background.lastRegistrations.revenue');
 
   const fetchLastRegistrations = async () => {
     try {
@@ -41,7 +45,7 @@ export const LastRegistrationsList = ({
       const data = await api.getLatestRegistrations();
       setRegistrations(data);
     } catch (err) {
-      setError('Erro ao carregar despesas recentes');
+      setError(t('lastRegistrationsList.error'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -65,12 +69,12 @@ export const LastRegistrationsList = ({
 
       return () => clearTimeout(timer);
     }
-  }, [newRegistrationAdded]);
+  }, [newRegistrationAdded, fetchLastRegistrations, setNewRegistrationAdded]);
 
   if (loading) {
     return (
       <Flex justify="center" py={6}>
-        <Spinner color="purple.500" />
+        <Spinner color={getColor('text.primary')} />
       </Flex>
     );
   }
@@ -78,7 +82,12 @@ export const LastRegistrationsList = ({
   if (error) {
     return (
       <Box py={4} textAlign="center">
-        <Text color="red.500">{error}</Text>
+        <Text 
+          color={getColor('status.error')}
+          fontFamily={getFont('body')}
+        >
+          {error}
+        </Text>
       </Box>
     );
   }
@@ -86,15 +95,25 @@ export const LastRegistrationsList = ({
   if (registrations.length === 0) {
     return (
       <Box py={4} textAlign="center">
-        <Text color="gray.500">Nenhuma despasa cadastrada ainda</Text>
+        <Text 
+          color={getColor('text.lastRegistrations.title')}
+          fontFamily={getFont('body')}
+        >
+          {t('lastRegistrationsList.noData')}
+        </Text>
       </Box>
     );
   }
 
   return (
     <VStack spacing={3} align="stretch" mt={4}>
-      <Text fontSize="lg" fontWeight="bold" color="purple.800">
-        Últimos registros
+      <Text
+        fontSize="lg"
+        fontWeight="bold"
+        color={getColor('text.lastRegistrations.title')}
+        fontFamily={getFont('heading')}
+      >
+        {t('lastRegistrationsList.title')}
       </Text>
 
       <AnimatePresence>
@@ -112,7 +131,9 @@ export const LastRegistrationsList = ({
             }}
             borderLeftWidth="4px"
             borderLeftColor={
-              registration.type === 'expense' ? 'red.400' : 'green.400'
+              registration.type === 'expense'
+                ? getColor('border.lastRegistrations.expense')
+                : getColor('border.lastRegistrations.revenue')
             }
             bg={
               registration.type === 'expense' ? bgColorExpense : bgColorRevenue
@@ -123,23 +144,40 @@ export const LastRegistrationsList = ({
           >
             <Flex justify="space-between" align="center">
               <Flex align="center">
-                <Icon as={FaStore} color="purple.500" mr={2} />
-                <Text fontWeight="medium">
+                <Icon as={FaStore} color={getColor('text.lastRegistrations.icon')} mr={2} />
+                <Text fontWeight="medium" fontFamily={getFont('body')} color={getColor('text.lastRegistrations.title')}>
                   {capitalizeFirstLetter(registration.name) ||
                     'Loja desconhecida'}
                 </Text>
               </Flex>
 
               <Badge
-                colorScheme={registration.type === 'expense' ? 'red' : 'green'}
+                color={
+                  registration.type === 'expense'
+                    ? getColor('text.lastRegistrations.expense')
+                    : getColor('text.lastRegistrations.revenue')
+                }
+                bg={
+                  registration.type === 'expense'
+                    ? getColor('background.lastRegistrations.badge.expense')
+                    : getColor('background.lastRegistrations.badge.revenue')
+                }
+                borderRadius="md"
                 fontSize="sm"
+                fontFamily={getFont('body')}
               >
                 {registration.type === 'expense' ? '-' : '+'}{' '}
-                {showValues ? formatCurrencyBRL(registration.value) : '••••••••'}
+                {showValues ? formatCurrencyBRL(registration.value) : '••••••'}
               </Badge>
             </Flex>
 
-            <Flex mt={2} justify="space-between" color="gray.500" fontSize="sm">
+            <Flex
+              mt={2}
+              justify="space-between"
+              color={getColor('text.lastRegistrations.neutral')}
+              fontSize="sm"
+              fontFamily={getFont('body')}
+            >
               <Text>{formatDateToBR(registration.date)}</Text>
               <Flex align="center">
                 <Icon as={FaCoins} mr={1} />
