@@ -4,7 +4,7 @@ export interface I18nTheme {
   translations: TranslationKeys;
 }
 
-export type ThemeNamespace = 'default' | 'rpg';
+export type ThemeNamespace = 'default' | 'rpg' | 'cyberpunk';
 
 // Tipagem para as chaves de tradução
 export interface TranslationKeys {
