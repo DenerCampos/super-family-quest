@@ -1,4 +1,4 @@
-import { Box, AbsoluteCenter, Image, Text } from '@chakra-ui/react';
+import { Box, Image, Text } from '@chakra-ui/react';
 import { keyframes } from '@emotion/react';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 
@@ -19,13 +19,17 @@ export const LoadingOverlay = ({ typeLoading = 'save', text = 'Carregando' }: { 
 
   return (
     <Box
-      position="absolute"
+      position="fixed"
       top={0}
       left={0}
       right={0}
       bottom={0}
+      width="100vw"
+      height="100vh"
       zIndex={9999}
-      borderRadius="md"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
       _before={{
         content: '""',
         position: 'absolute',
@@ -39,30 +43,28 @@ export const LoadingOverlay = ({ typeLoading = 'save', text = 'Carregando' }: { 
         zIndex: -1,
       }}
     >
-      <AbsoluteCenter>
-        <Box textAlign="center">
-          <Image
-            src={gifLoading}
-            alt="Loading"
-            boxSize="100px"
-            mx="auto"
-            mb={4}
-          />
-          <Text
-            color={getColor('text.primary')}
-            fontSize="xl"
-            fontWeight="bold"
-            fontFamily={getFont('heading')}
-            _after={{
-              content: '""',
-              animation: `${loadingAnimation} 1s infinite`,
-              color: getColor('text.primary'),
-            }}
-          >
-            {text}
-          </Text>
-        </Box>
-      </AbsoluteCenter>
+      <Box textAlign="center">
+        <Image
+          src={gifLoading}
+          alt="Loading"
+          boxSize="100px"
+          mx="auto"
+          mb={4}
+        />
+        <Text
+          color={getColor('text.primary')}
+          fontSize="xl"
+          fontWeight="bold"
+          fontFamily={getFont('heading')}
+          _after={{
+            content: '""',
+            animation: `${loadingAnimation} 1s infinite`,
+            color: getColor('text.primary'),
+          }}
+        >
+          {text}
+        </Text>
+      </Box>
     </Box>
   );
 };
