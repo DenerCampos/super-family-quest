@@ -44,8 +44,12 @@ import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 // Lista de brasões pré-definidos
 const predefinedCoatOfArms = [
-  '/assets/images/coat_of_arms_family.png',
-  '/assets/images/coat_of_arms_solare.png',
+  '/assets/images/brasao/brasao-1.png',
+  '/assets/images/brasao/brasao-2.png',
+  '/assets/images/brasao/brasao-3.png',
+  '/assets/images/brasao/brasao-4.png',
+  '/assets/images/brasao/brasao-5.png',
+  '/assets/images/brasao/brasao-6.png',
 ];
 
 const Profile = () => {
@@ -237,7 +241,11 @@ const Profile = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh" bg={getColor('background.profile.primary')}>
+    <Flex
+      direction="column"
+      minH="100vh"
+      bg={getColor('background.profile.primary')}
+    >
       <Header />
       <Tabs isFitted>
         <TabList>
@@ -423,7 +431,9 @@ const Profile = () => {
                           }
                           _focus={{
                             borderColor: getColor('border.tertiary'),
-                            boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
+                            boxShadow: `0 0 0 1px ${getColor(
+                              'border.tertiary',
+                            )}`,
                           }}
                         />
                         <InputRightElement>
@@ -467,7 +477,9 @@ const Profile = () => {
                           }
                           _focus={{
                             borderColor: getColor('border.tertiary'),
-                            boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
+                            boxShadow: `0 0 0 1px ${getColor(
+                              'border.tertiary',
+                            )}`,
                           }}
                         />
                         <InputRightElement>
@@ -536,13 +548,27 @@ const Profile = () => {
                           ? getColor('background.quaternary')
                           : getColor('chakraColors.white')
                       }
+                      position="relative"
+                      _before={{
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0,
+                        backgroundImage: `url(${theme.background})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        opacity: 0.6,
+                        zIndex: 0,
+                        borderRadius: 'lg',
+                      }}
                       borderColor={
                         currentTheme === theme.id
                           ? getColor('border.selected')
                           : getColor('border.noSelect')
                       }
                       opacity={theme.isUnlocked ? 1 : 0.6}
-                      position="relative"
                       transition="all 0.2s"
                       _hover={{
                         transform: theme.isUnlocked
@@ -551,7 +577,13 @@ const Profile = () => {
                         shadow: theme.isUnlocked ? 'md' : 'none',
                       }}
                     >
-                      <Flex justify="space-between" align="center" mb={2}>
+                      <Flex
+                        justify="space-between"
+                        align="center"
+                        mb={2}
+                        position="relative"
+                        zIndex={1}
+                      >
                         <Text fontSize="lg" fontWeight="bold">
                           {theme.name}
                         </Text>
@@ -559,14 +591,18 @@ const Profile = () => {
                           <Icon
                             as={FiCheck}
                             color={getColor('chakraColors.green')}
-                            boxSize={5}
+                            boxSize={10}
+                            bg={getColor('chakraColors.white')}
+                            borderRadius="full"
+                            p={3}
                           />
                         )}
                       </Flex>
 
                       {!theme.isUnlocked && (
                         <Flex
-                          position="absolute"
+                          position="relative"
+                          zIndex={1}
                           top={0}
                           right={0}
                           bottom={0}
@@ -579,7 +615,7 @@ const Profile = () => {
                           <Text
                             fontSize="md"
                             fontWeight="medium"
-                            color={getColor('chakraColors.gray')}
+                            color={getColor('chakraColors.white')}
                           >
                             {t('profile.themes.requires', {
                               count: theme.requiredCoins,

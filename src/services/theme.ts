@@ -10,6 +10,7 @@ export interface ThemeConfig {
   description?: string;
   isUnlocked: boolean;
   unlockedAt?: string;
+  background?: string;
 }
 
 export const themeService = {
@@ -31,6 +32,7 @@ export const themeService = {
         theme: defaultTheme,
         description: 'Tema profissional para gestão financeira',
         isUnlocked: true,
+        background: '/assets/images/background-theme-default.png',
       },
       {
         id: 'rpg',
@@ -39,6 +41,7 @@ export const themeService = {
         requiredCoins: 1000,
         description: 'Tema medieval com elementos de RPG',
         isUnlocked: true,
+        background: '/assets/images/background-theme-medieval.png',
       },
       {
         id: 'cyberpunk', // Adicionar esse id em ThemeNamespace
@@ -47,6 +50,7 @@ export const themeService = {
         requiredCoins: 2000,
         description: 'Tema futurista com elementos neon',
         isUnlocked: false,
+        background: '/assets/images/background-theme-default.png',
       },
       // Para adicionar um novo tema, basta adicionar aqui:
       // {

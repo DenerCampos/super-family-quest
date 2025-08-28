@@ -359,13 +359,13 @@ export const defaultTheme: VisualTheme = {
         family: '/assets/images/coat_of_arms_family.png',
         solare: '/assets/images/coat_of_arms_solare.png',
       },
-      goldCoin: '/assets/images/gold-coin.gif',
+      goldCoin: '/assets/images/3d-coin.gif',
     },
     animations: {
       loading: {
-        save: '/assets/images/loading-save.gif',
-        read: '/assets/images/loading-read.gif',
-        open: '/assets/images/loading-open.gif',
+        save: '/assets/images/wallet-animation.gif',
+        read: '/assets/images/wallet-money-added.gif',
+        open: '/assets/images/wallet-money-added.gif',
       },
     },
   },
