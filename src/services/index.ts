@@ -9,7 +9,12 @@ import { themeService } from "./theme";
 import { UserService } from "./user";
 
 export const api = {
-  getAvailableThemes: themeService.mockGetAvailableThemes,
+  getAvailableThemes: themeService.getAvailableThemes,
+  getActiveTheme: themeService.getActiveTheme,
+  changeTheme: themeService.changeTheme,
+  createDefaultTheme: themeService.createDefaultTheme,
+  getAllowedThemes: themeService.getAllowedThemes,
+  
   profile: ProfileService.profile,
   completeProfile: ProfileService.completeProfile,
   getLatestRegistrations: (limit?: number) =>
@@ -121,11 +126,8 @@ export const api = {
     startDate: string;
     endDate: string;
   }) => ReportsService.getMostPurchasedItems({ startDate, endDate }),
-  getExpensesIncomeComparison: ({
-    year,
-  }: {
-    year: string;
-  }) => ReportsService.getExpensesIncomeComparison({ year }),
+  getExpensesIncomeComparison: ({ year }: { year: string }) =>
+    ReportsService.getExpensesIncomeComparison({ year }),
   recurringExpenseConfirm: (expenses: ExpenseRecurring) =>
     ExpenseService.postRecurringConfirm(expenses),
   getExpenseRecurring: ExpenseService.getRecurring,

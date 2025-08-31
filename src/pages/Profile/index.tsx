@@ -38,7 +38,6 @@ import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useTheme } from '../../hooks/useThemeContext';
-import type { ThemeNamespace } from '../../i18n/types';
 import type { ThemeConfig } from '../../services/theme';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 
@@ -85,9 +84,31 @@ const Profile = () => {
     profile?.user.coatOfArms || predefinedCoatOfArms[0],
   );
 
-  // Estados para temas
+  // Estados para temas disponíveis para compra
   const [availableThemes, setAvailableThemes] = useState<ThemeConfig[]>([]);
   const [isLoadingThemes, setIsLoadingThemes] = useState(true);
+
+  // Carrega os temas disponíveis
+  useEffect(() => {
+    const loadThemes = async () => {
+      try {
+        const themes = await api.getAvailableThemes();
+        setAvailableThemes(themes);
+      } catch (error) {
+        console.error('Erro ao carregar temas:', error);
+        toast({
+          title: t('common.error'),
+          description: t('profile.themes.loadError'),
+          status: 'error',
+          duration: 3000,
+        });
+      } finally {
+        setIsLoadingThemes(false);
+      }
+    };
+
+    loadThemes();
+  }, [toast, t]);
 
   // Validação de e-mail em tempo real
   useEffect(() => {
@@ -115,27 +136,7 @@ const Profile = () => {
     }
   }, [password, confirmPassword]);
 
-  // Carrega os temas disponíveis
-  useEffect(() => {
-    const loadThemes = async () => {
-      try {
-        const themes = await api.getAvailableThemes();
-        setAvailableThemes(themes);
-      } catch (error) {
-        console.error('Erro ao carregar temas:', error);
-        toast({
-          title: t('common.error'),
-          description: 'Erro ao carregar temas disponíveis',
-          status: 'error',
-          duration: 3000,
-        });
-      } finally {
-        setIsLoadingThemes(false);
-      }
-    };
 
-    loadThemes();
-  }, [toast, t]);
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -149,7 +150,7 @@ const Profile = () => {
   };
 
   // Função para mudar o tema
-  const handleThemeChange = (themeId: ThemeNamespace) => {
+  const handleThemeChange = (themeId: string) => {
     const theme = availableThemes.find(t => t.id === themeId);
     
     if (!theme) return;
@@ -544,7 +545,7 @@ const Profile = () => {
                       cursor={theme.isUnlocked ? 'pointer' : 'not-allowed'}
                       onClick={() => handleThemeChange(theme.id)}
                       bg={
-                        currentTheme === theme.id
+                        currentTheme === theme.theme
                           ? getColor('background.quaternary')
                           : getColor('chakraColors.white')
                       }
@@ -556,7 +557,7 @@ const Profile = () => {
                         right: 0,
                         bottom: 0,
                         left: 0,
-                        backgroundImage: `url(${theme.background})`,
+                        backgroundImage: `url(/assets/images/${theme.background})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         opacity: 0.6,
@@ -564,7 +565,7 @@ const Profile = () => {
                         borderRadius: 'lg',
                       }}
                       borderColor={
-                        currentTheme === theme.id
+                        currentTheme === theme.theme
                           ? getColor('border.selected')
                           : getColor('border.noSelect')
                       }
@@ -587,7 +588,7 @@ const Profile = () => {
                         <Text fontSize="lg" fontWeight="bold">
                           {theme.name}
                         </Text>
-                        {currentTheme === theme.id && (
+                        {currentTheme === theme.theme && (
                           <Icon
                             as={FiCheck}
                             color={getColor('chakraColors.green')}

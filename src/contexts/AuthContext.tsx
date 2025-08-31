@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services';
 import { LOCAL_STORAGE_KEYS } from '../utils/constants';
@@ -38,7 +38,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     return savedShowValues ? JSON.parse(savedShowValues) : true;
   });
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (token && !profile) {
@@ -47,55 +47,90 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         navigate('/login');
       });
     }
-  }, []);
+  }, [profile, navigate]);
 
-  const loadProfile = async () => {   
+  const loadProfile = useCallback(async () => {   
     try {
       const profile = await api.profile();
       
-      setProfile((prev) => ({
-        ...prev,
-        ...profile,
-      }));
+      setProfile(profile);
     } catch (error) {
       console.error('Failed to load profile:', error);
       throw error;
     }
-  };
+  }, []);
 
-  const login = async (email: string, password: string) => {
+  const waitForThemeLoad = useCallback(async () => {
+    return new Promise<void>((resolve) => {
+      const startTime = Date.now();
+      const maxWaitTime = 5000; // 5 segundos de timeout
+
+      const checkTheme = () => {
+        // Verifica se o tema foi carregado no ThemeContext
+        const themeContext = document.querySelector('[data-theme-loaded="true"]');
+        if (themeContext) {
+          resolve();
+        } else if (Date.now() - startTime > maxWaitTime) {
+          // Se passar do timeout, continua mesmo assim
+          resolve();
+        } else {
+          setTimeout(checkTheme, 100); // Verifica a cada 100ms
+        }
+      };
+      checkTheme();
+    });
+  }, []);
+
+  const login = useCallback(async (email: string, password: string) => {
     try {
       const { accessToken } = await api.login({ email, password });
       localStorage.setItem('accessToken', accessToken);
       
       await loadProfile();
+      await waitForThemeLoad(); // Aguarda o tema ser carregado
 
-      navigate('/home');
+      // Garante que o state foi atualizado antes de navegar
+      setTimeout(() => navigate('/home'), 0);
     } catch (error) {
       console.error('Login failed:', error);
       throw error;
     }
-  };
+  }, [loadProfile, navigate, waitForThemeLoad]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('accessToken');
     setProfile(null);
     navigate('/login');
-  };
+  }, [navigate]);
 
-  const toggleShowValues = () => {
+  const toggleShowValues = useCallback(() => {
     setShowValues((prev: boolean) => {
       const newValue = !prev;
       localStorage.setItem(LOCAL_STORAGE_KEYS.SHOW_VALUES, JSON.stringify(newValue));
       return newValue;
     });
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    profile,
+    login,
+    logout,
+    loadProfile,
+    showValues,
+    toggleShowValues
+  }), [profile, login, logout, loadProfile, showValues, toggleShowValues]);
 
   return (
-    <AuthContext.Provider value={{ profile, login, logout, loadProfile, showValues, toggleShowValues }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

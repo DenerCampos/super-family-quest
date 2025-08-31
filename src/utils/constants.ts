@@ -1,5 +1,6 @@
 export const LOCAL_STORAGE_KEYS = {
   SHOW_VALUES: '@SuperFamilyQuest:showValues',
+  USER_THEME: '@SuperFamilyQuest:userTheme',
 } as const;
 
 // Namespace para outras constantes que possam ser adicionadas no futuro

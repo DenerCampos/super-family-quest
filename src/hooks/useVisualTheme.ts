@@ -1,9 +1,10 @@
 import { useTheme } from './useThemeContext';
 import { defaultTheme, rpgTheme } from '../theme/themes';
 
-export function useVisualTheme() {
+export function useVisualTheme(overrideTheme?: string) {
   const { currentTheme } = useTheme();
-  const theme = currentTheme === 'rpg' ? rpgTheme : defaultTheme;
+  const themeId = overrideTheme || currentTheme;
+  const theme = themeId === 'rpg' ? rpgTheme : defaultTheme;
 
   const getAsset = (path: string) => {
     if (!theme) return '';
