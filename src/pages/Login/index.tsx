@@ -4,15 +4,18 @@ import { Flex, Input, Button, Text, useToast } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { useLoginTheme } from '../../hooks/useLoginTheme';
+import { LoginThemeProvider } from '../../components/LoginThemeProvider';
 
-const Login = () => {
+const LoginContent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const toast = useToast();
   const { t } = useThemedTranslation();
-  const { getColor, getFont, getAsset } = useVisualTheme();
+  const loginTheme = useLoginTheme();
+  const { getColor, getFont, getAsset } = useVisualTheme(loginTheme);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -122,6 +125,16 @@ const Login = () => {
         </Button>
       </Flex>
     </Flex>
+  );
+};
+
+const Login = () => {
+  const loginTheme = useLoginTheme();
+
+  return (
+    <LoginThemeProvider themeId={loginTheme}>
+      <LoginContent />
+    </LoginThemeProvider>
   );
 };
 

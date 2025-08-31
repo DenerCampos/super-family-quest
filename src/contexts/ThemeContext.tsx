@@ -2,8 +2,8 @@ import React, { createContext, useState, useEffect, useMemo, useCallback } from 
 import type { ThemeConfig } from '../services/theme';
 
 import { api } from '../services';
-
 import { useAuth } from './AuthContext';
+import { LOCAL_STORAGE_KEYS } from '../utils/constants';
 
 
 
@@ -53,19 +53,33 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
   // const [activeThemeId, setActiveThemeId] = useState<string | null>(null);
 
   // Função para trocar o tema
+  const saveUserTheme = useCallback((userId: string, themeId: string) => {
+    localStorage.setItem(LOCAL_STORAGE_KEYS.USER_THEME, JSON.stringify({ userId, themeId }));
+  }, []);
+
   const changeTheme = useCallback(async (themeId: string) => {
     try {
-      await api.changeTheme(themeId);
+      // Encontra o tema pelo tipo (rpg/default)
+      const theme = availableThemes.find(t => t.theme === themeId);
+      if (!theme) {
+        console.error('Tema não encontrado:', themeId);
+        return;
+      }
+
+      await api.changeTheme(theme.id);
       
       const activeTheme = await api.getActiveTheme();
       
       if (activeTheme) {
         setCurrentTheme(activeTheme.theme);
+        if (userId) {
+          saveUserTheme(userId, activeTheme.theme);
+        }
       }
     } catch (error) {
       console.error('Erro ao trocar tema:', error);
     }
-  }, []);
+  }, [userId, saveUserTheme, availableThemes]);
 
   // Carrega os temas disponíveis
   useEffect(() => {
@@ -79,13 +93,31 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
 
       try {
         // Busca apenas os temas que o usuário tem acesso
-        const activeTheme = await api.getActiveTheme();
-        const unlockedThemes = await api.getAllowedThemes();
+        const [activeTheme, unlockedThemes] = await Promise.all([
+          api.getActiveTheme(),
+          api.getAllowedThemes()
+        ]);
 
         setAvailableThemes(unlockedThemes);
 
+        // Verifica se há um tema salvo no localStorage para este usuário
+        const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_THEME);
+        if (savedTheme) {
+          const { userId: savedUserId, themeId } = JSON.parse(savedTheme);
+          
+          // Verifica se o tema salvo pertence ao usuário atual e está disponível
+          // Encontra o tema pelo tipo (rpg/default)
+          const savedThemeConfig = unlockedThemes.find(theme => theme.theme === themeId);
+          if (savedUserId === userId && savedThemeConfig) {
+            setCurrentTheme(themeId);
+            return;
+          }
+        }
+
+        // Se não houver tema salvo ou válido, usa o tema ativo
         if (activeTheme) {
           setCurrentTheme(activeTheme.theme);
+          saveUserTheme(userId, activeTheme.theme);
         }
       } catch (error) {
         console.error('Erro ao carregar temas:', error);
@@ -96,7 +128,7 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
     };
 
     loadThemes();
-  }, [userId, resetThemeState]); // Recarrega os temas quando o ID do usuário mudar
+  }, [userId, resetThemeState, saveUserTheme]); // Recarrega os temas quando o ID do usuário mudar
 
   const contextValue = useMemo(() => ({
     currentTheme,
