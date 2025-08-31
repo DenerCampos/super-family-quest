@@ -60,12 +60,34 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     }
   }, []);
 
+  const waitForThemeLoad = useCallback(async () => {
+    return new Promise<void>((resolve) => {
+      const startTime = Date.now();
+      const maxWaitTime = 5000; // 5 segundos de timeout
+
+      const checkTheme = () => {
+        // Verifica se o tema foi carregado no ThemeContext
+        const themeContext = document.querySelector('[data-theme-loaded="true"]');
+        if (themeContext) {
+          resolve();
+        } else if (Date.now() - startTime > maxWaitTime) {
+          // Se passar do timeout, continua mesmo assim
+          resolve();
+        } else {
+          setTimeout(checkTheme, 100); // Verifica a cada 100ms
+        }
+      };
+      checkTheme();
+    });
+  }, []);
+
   const login = useCallback(async (email: string, password: string) => {
     try {
       const { accessToken } = await api.login({ email, password });
       localStorage.setItem('accessToken', accessToken);
       
       await loadProfile();
+      await waitForThemeLoad(); // Aguarda o tema ser carregado
 
       // Garante que o state foi atualizado antes de navegar
       setTimeout(() => navigate('/home'), 0);
@@ -73,7 +95,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       console.error('Login failed:', error);
       throw error;
     }
-  }, [loadProfile, navigate]);
+  }, [loadProfile, navigate, waitForThemeLoad]);
 
   const logout = useCallback(() => {
     localStorage.removeItem('accessToken');

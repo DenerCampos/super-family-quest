@@ -12,6 +12,7 @@ interface ThemeContextData {
   changeTheme: (themeId: string) => void;
   availableThemes: ThemeConfig[];
   isLoadingThemes: boolean;
+  isThemeLoaded: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextData>({} as ThemeContextData);
@@ -41,12 +42,14 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
   // Estado para armazenar os temas disponíveis
   const [availableThemes, setAvailableThemes] = useState<ThemeConfig[]>([]);
   const [isLoadingThemes, setIsLoadingThemes] = useState(true);
+  const [isThemeLoaded, setIsThemeLoaded] = useState(false);
 
   // Limpa o estado quando não há perfil
   const resetThemeState = useCallback(() => {
     setCurrentTheme('default');
     setAvailableThemes([]);
     setIsLoadingThemes(false);
+    setIsThemeLoaded(false);
   }, []);
 
   // Estado para armazenar o ID do tema ativo no backend
@@ -110,6 +113,7 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
           const savedThemeConfig = unlockedThemes.find(theme => theme.theme === themeId);
           if (savedUserId === userId && savedThemeConfig) {
             setCurrentTheme(themeId);
+            setIsThemeLoaded(true);
             return;
           }
         }
@@ -118,6 +122,7 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
         if (activeTheme) {
           setCurrentTheme(activeTheme.theme);
           saveUserTheme(userId, activeTheme.theme);
+          setIsThemeLoaded(true);
         }
       } catch (error) {
         console.error('Erro ao carregar temas:', error);
@@ -134,12 +139,15 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
     currentTheme,
     changeTheme,
     availableThemes,
-    isLoadingThemes
-  }), [currentTheme, changeTheme, availableThemes, isLoadingThemes]);
+    isLoadingThemes,
+    isThemeLoaded
+  }), [currentTheme, changeTheme, availableThemes, isLoadingThemes, isThemeLoaded]);
 
   return (
     <ThemeContext.Provider value={contextValue}>
-      {children}
+      <div data-theme-loaded={isThemeLoaded}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 };
