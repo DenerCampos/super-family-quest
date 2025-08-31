@@ -83,14 +83,14 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const changeTheme = useCallback(async (themeId: string) => {
     try {
-      // Encontra o tema pelo tipo (rpg/default)
-      const theme = availableThemes.find(t => t.theme === themeId);
+      // Encontra o tema pelo ID (UUID)
+      const theme = availableThemes.find(t => t.id === themeId);
       if (!theme) {
         console.error('Tema não encontrado:', themeId);
         return;
       }
 
-      await api.changeTheme(theme.id);
+      await api.changeTheme(themeId);
       
       const activeTheme = await api.getActiveTheme();
       
