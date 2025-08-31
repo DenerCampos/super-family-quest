@@ -1,65 +1,42 @@
-// import { api } from './api';
-import type { ThemeNamespace } from '../i18n/types';
-import { defaultTheme, rpgTheme } from '../theme/themes';
+import api from './api';
 
 export interface ThemeConfig {
-  id: ThemeNamespace;
+  id: string;
   name: string;
-  theme: typeof defaultTheme;
-  requiredCoins?: number;
-  description?: string;
+  theme: string;
+  description: string;
+  requiredCoins: number;
+  background: string;
+  createdAt: string;
+  updatedAt: string;
   isUnlocked: boolean;
-  unlockedAt?: string;
-  background?: string;
 }
 
 export const themeService = {
   // Busca os temas disponíveis para o usuário
-//   async getAvailableThemes(): Promise<AvailableTheme[]> {
-//     const response = await api.get<AvailableTheme[]>('/themes/available');
-//     return response.data;
-//   },
+  async getAvailableThemes(): Promise<ThemeConfig[]> {
+    const response = await api.get<ThemeConfig[]>('/theme/available');
 
-  // Simula a resposta da API enquanto não implementamos o backend
-  async mockGetAvailableThemes(): Promise<ThemeConfig[]> {
-    // Simula delay da rede
-    await new Promise(resolve => setTimeout(resolve, 500));
+    return response.data;
+  },
 
-    return [
-      {
-        id: 'default',
-        name: 'Modo Padrão',
-        theme: defaultTheme,
-        description: 'Tema profissional para gestão financeira',
-        isUnlocked: true,
-        background: '/assets/images/background-theme-default.png',
-      },
-      {
-        id: 'rpg',
-        name: 'RPG Medieval',
-        theme: rpgTheme,
-        requiredCoins: 1000,
-        description: 'Tema medieval com elementos de RPG',
-        isUnlocked: true,
-        background: '/assets/images/background-theme-medieval.png',
-      },
-      {
-        id: 'cyberpunk', // Adicionar esse id em ThemeNamespace
-        name: 'Cyberpunk',
-        theme: rpgTheme, // Criar o tema em themes.ts
-        requiredCoins: 2000,
-        description: 'Tema futurista com elementos neon',
-        isUnlocked: false,
-        background: '/assets/images/background-theme-default.png',
-      },
-      // Para adicionar um novo tema, basta adicionar aqui:
-      // {
-      //   id: 'cyberpunk', // Adicionar esse id em ThemeNamespace
-      //   name: 'Cyberpunk',
-      //   theme: cyberpunkTheme, // Criar o tema em themes.ts
-      //   requiredCoins: 2000,
-      //   description: 'Tema futurista com elementos neon',
-      // },
-    ];
+  async getActiveTheme(): Promise<ThemeConfig> {
+    const response = await api.get<ThemeConfig>('/theme/active');
+
+    return response.data;
+  },
+
+  async changeTheme(themeId: string): Promise<void> {
+    await api.patch(`/theme/active/update/${themeId}`);
+  },
+
+  async createDefaultTheme(userId: string): Promise<void> {
+    await api.post(`/theme/create-default-theme/${userId}`);
+  },
+
+  async getAllowedThemes(): Promise<ThemeConfig[]> {
+    const response = await api.get<ThemeConfig[]>('/theme/allowed');
+
+    return response.data;
   },
 }; 
