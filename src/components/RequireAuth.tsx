@@ -21,7 +21,7 @@ export function RequireAuth({ children }: Readonly<{ children: JSX.Element }>) {
   }, [profile, hasToken]);
 
   if (isVerifying) {
-    return <LoadingOverlay />;
+    return <LoadingOverlay typeLoading="read" />;
   }
 
   if (!hasToken || !profile) {

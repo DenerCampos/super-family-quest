@@ -37,7 +37,22 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
 
 
   // Estado do tema visual
-  const [currentTheme, setCurrentTheme] = useState<string>('default');
+  // Inicializa com o tema salvo no localStorage ou default
+  const [currentTheme, setCurrentTheme] = useState<string>(() => {
+    try {
+      const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_THEME);
+      if (savedTheme) {
+        const { themeId, timestamp } = JSON.parse(savedTheme);
+        // Verifica se o tema salvo não é muito antigo (24 horas)
+        if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
+          return themeId;
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao carregar tema inicial:', error);
+    }
+    return 'default';
+  });
 
   // Estado para armazenar os temas disponíveis
   const [availableThemes, setAvailableThemes] = useState<ThemeConfig[]>([]);
@@ -50,6 +65,8 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
     setAvailableThemes([]);
     setIsLoadingThemes(false);
     setIsThemeLoaded(false);
+    // Limpa o tema salvo no localStorage
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_THEME);
   }, []);
 
   // Estado para armazenar o ID do tema ativo no backend
@@ -57,7 +74,11 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Função para trocar o tema
   const saveUserTheme = useCallback((userId: string, themeId: string) => {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.USER_THEME, JSON.stringify({ userId, themeId }));
+    localStorage.setItem(LOCAL_STORAGE_KEYS.USER_THEME, JSON.stringify({ 
+      userId, 
+      themeId,
+      timestamp: Date.now() // Adicionamos um timestamp para validação
+    }));
   }, []);
 
   const changeTheme = useCallback(async (themeId: string) => {
