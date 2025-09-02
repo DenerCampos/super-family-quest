@@ -12,6 +12,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { useAuth } from '../../contexts/AuthContext';
 
 // const floatingStyles = defineStyle({
 //   pos: 'absolute',
@@ -45,6 +46,7 @@ const Register = () => {
   const navigate = useNavigate();
   const { t } = useThemedTranslation();
   const { getAsset, getColor, getFont } = useVisualTheme();
+  const { login } = useAuth();
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       toast({
@@ -69,13 +71,13 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.register({
+      const userData = await api.register({
         name,
         email,
         password,
       });
 
-      if (!response) {
+      if (!userData) {
         throw new Error(t('register.errorCreatingRealm'));
       }
 
@@ -86,7 +88,11 @@ const Register = () => {
         duration: 3000,
       });
 
-      navigate('/login');
+      // Aguarda 3 segundos antes de fazer o login automático
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      // Faz o login automaticamente após o registro
+      await login(email, password);
     } catch (error: any) {
       let errorMessage = t('register.errorCreatingRealm');
       
