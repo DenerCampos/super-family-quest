@@ -285,6 +285,7 @@
     "realmCreated": "Reino Fundado! 👑",
     "realmCreatedSuccessfully": "Seu reino foi fundado com sucesso",
     "errorCreatingRealmUserAlreadyExists": "Falha ao fundar reino, este aventureiro já existe",
+    "errorCreatingRealmUserLimitUsers": "Que bom que você se interessou pelo produto! Infelizmente as licenças acabaram. Me envie uma mensagem via WhatsApp que irei providenciar seu login.",
     "createNewRealm": "Fundar Novo Reino",
     "fullName": "Nome do Aventureiro",
     "email": "Pergaminho de Contato",

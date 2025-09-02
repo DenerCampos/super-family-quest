@@ -88,10 +88,21 @@ const Register = () => {
 
       navigate('/login');
     } catch (error: any) {
-      console.error(error);
-
       let errorMessage = t('register.errorCreatingRealm');
       
+      // Verifica se é um erro 409 (Conflict)
+      if (error.response?.status === 409) {
+        toast({
+          title: t('common.success'), // Usamos success para dar um tom positivo
+          description: t('register.errorCreatingRealmUserLimitUsers'),
+          status: 'info', // Usamos info ao invés de error
+          duration: 12000, // Aumentamos o tempo para dar tempo de ler
+          isClosable: true,
+        });
+        return; // Retorna aqui para não mostrar o toast de erro
+      }
+
+      // Para outros erros, mantém o comportamento padrão
       if (error.message) {
         errorMessage = error.message;
       }

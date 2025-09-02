@@ -284,6 +284,7 @@
     "realmCreated": "Conta Criada",
     "realmCreatedSuccessfully": "Sua conta foi criada com sucesso",
     "errorCreatingRealmUserAlreadyExists": "Falha ao criar conta, usuário já existe",
+    "errorCreatingRealmUserLimitUsers": "Que bom que você se interessou pelo produto! Infelizmente as licenças acabaram. Me envie uma mensagem via WhatsApp que irei providenciar seu login.",
     "createNewRealm": "Criar Nova Conta",
     "fullName": "Nome completo",
     "email": "E-mail",
@@ -346,7 +347,8 @@
       "purchaseError": "Erro ao comprar tema",
       "cancel": "Cancelar",
       "buying": "Comprando...",
-      "changeError": "Erro ao trocar tema"
+      "changeError": "Erro ao trocar tema",
+      "noLicenses": "Que bom que você se interessou pelo produto! Infelizmente as licenças acabaram. Me envie uma mensagem via WhatsApp que irei providenciar seu login."
     }
   },
   "newChallenge": {
