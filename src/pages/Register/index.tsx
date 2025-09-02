@@ -8,10 +8,11 @@ import {
   useToast,
   // defineStyle,
 } from '@chakra-ui/react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { useAuth } from '../../contexts/AuthContext';
 
 // const floatingStyles = defineStyle({
 //   pos: 'absolute',
@@ -42,9 +43,9 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
-  const navigate = useNavigate();
   const { t } = useThemedTranslation();
   const { getAsset, getColor, getFont } = useVisualTheme();
+  const { login } = useAuth();
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       toast({
@@ -69,13 +70,13 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.register({
+      const userData = await api.register({
         name,
         email,
         password,
       });
 
-      if (!response) {
+      if (!userData) {
         throw new Error(t('register.errorCreatingRealm'));
       }
 
@@ -86,12 +87,27 @@ const Register = () => {
         duration: 3000,
       });
 
-      navigate('/login');
+      // Aguarda 3 segundos antes de fazer o login automático
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      // Faz o login automaticamente após o registro
+      await login(email, password);
     } catch (error: any) {
-      console.error(error);
-
       let errorMessage = t('register.errorCreatingRealm');
       
+      // Verifica se é um erro 409 (Conflict)
+      if (error.response?.status === 409) {
+        toast({
+          title: t('common.success'), // Usamos success para dar um tom positivo
+          description: t('register.errorCreatingRealmUserLimitUsers'),
+          status: 'info', // Usamos info ao invés de error
+          duration: 12000, // Aumentamos o tempo para dar tempo de ler
+          isClosable: true,
+        });
+        return; // Retorna aqui para não mostrar o toast de erro
+      }
+
+      // Para outros erros, mantém o comportamento padrão
       if (error.message) {
         errorMessage = error.message;
       }

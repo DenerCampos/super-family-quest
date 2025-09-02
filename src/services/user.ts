@@ -18,7 +18,15 @@ export const UserService = {
     name: string;
     email: string;
     password: string;
-  }): Promise<{ accessToken: string }> => {
+  }): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    family: string;
+    coatOfArms: string;
+    createdAt: string;
+    updatedAt: string;
+  }> => {
     const response = await api.post('/user', {
       name,
       email,
