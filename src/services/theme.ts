@@ -39,4 +39,12 @@ export const themeService = {
 
     return response.data;
   },
+
+  async buyTheme(themeId: string): Promise<void> {
+    const response = await api.post(`/theme/buy`, { id: themeId });
+    
+    if (response.status !== 201) {
+      throw new Error(`Erro ao comprar tema. Status: ${response.status}`);
+    }
+  },
 }; 
