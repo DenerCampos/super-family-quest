@@ -338,7 +338,16 @@
       "locked": "Bloqueado",
       "select": "Selecionar Tema",
       "loading": "Carregando temas...",
-      "requires": "Requer {{count}} moedas"
+      "requires": "Requer {{count}} moedas",
+      "buyTheme": "Comprar Tema",
+      "buyButton": "Comprar",
+      "buy": "Comprar",
+      "cost": "Custo: {{count}} moedas",
+      "purchaseSuccess": "Tema comprado com sucesso",
+      "purchaseError": "Erro ao comprar tema",
+      "cancel": "Cancelar",
+      "buying": "Comprando...",
+      "changeError": "Erro ao trocar tema"
     }
   },
   "newChallenge": {

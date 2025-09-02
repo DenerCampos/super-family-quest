@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
+import { BuyThemeModal } from '../../components/modals/BuyThemeModal';
 import {
   Flex,
   VStack,
@@ -40,6 +41,7 @@ import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useTheme } from '../../hooks/useThemeContext';
 import type { ThemeConfig } from '../../services/theme';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import type { BalanceCoin } from '../../services/coin';
 
 // Lista de brasões pré-definidos
 const predefinedCoatOfArms = [
@@ -55,7 +57,7 @@ const Profile = () => {
   const { profile, loadProfile } = useAuth();
   const toast = useToast();
   const { t } = useThemedTranslation();
-  const { currentTheme, changeTheme } = useTheme();
+  const { currentTheme, changeTheme, reloadThemes } = useTheme();
   const { getColor } = useVisualTheme();
   // Estados para edição de perfil
   const [name, setName] = useState(profile?.user.name || '');
@@ -87,13 +89,62 @@ const Profile = () => {
   // Estados para temas disponíveis para compra
   const [availableThemes, setAvailableThemes] = useState<ThemeConfig[]>([]);
   const [isLoadingThemes, setIsLoadingThemes] = useState(true);
+  const [balanceCoin, setBalanceCoin] = useState<BalanceCoin>({ balance: 0 });
+  const [selectedThemeToBuy, setSelectedThemeToBuy] = useState<ThemeConfig | null>(null);
+
+  const handleBuyTheme = async (theme: ThemeConfig) => {
+    try {
+      await api.buyTheme(theme.id);
+      
+      // Recarrega os temas no ThemeContext e atualiza o saldo
+      const [themes, balanceCoin] = await Promise.all([
+        api.getAvailableThemes(),
+        api.getBalanceCoin()
+      ]);
+      
+      setAvailableThemes(themes);
+      setBalanceCoin(balanceCoin);
+
+      // Recarrega os temas no ThemeContext
+      await reloadThemes();
+
+      toast({
+        title: t('common.success'),
+        description: t('profile.themes.purchaseSuccess'),
+        status: 'success',
+        duration: 3000,
+      });
+
+      return true; // Retorna true para indicar sucesso
+    } catch (error: any) {
+      console.error('Erro ao comprar tema:', error);
+      toast({
+        title: t('common.error'),
+        description: error.message || t('profile.themes.purchaseError'),
+        status: 'error',
+        duration: 3000,
+      });
+
+      return false; // Retorna false para indicar erro
+    } finally {
+      // Recarrega o profile para manter os dados sincronizados
+      loadProfile();
+    }
+  };
 
   // Carrega os temas disponíveis
   useEffect(() => {
     const loadThemes = async () => {
       try {
-        const themes = await api.getAvailableThemes();
+        // Recarrega os temas no ThemeContext e atualiza o saldo
+        await reloadThemes();
+        const [themes, balanceCoin] = await Promise.all([
+          api.getAvailableThemes(),
+          api.getBalanceCoin()
+        ]);
+
         setAvailableThemes(themes);
+        setBalanceCoin(balanceCoin);
       } catch (error) {
         console.error('Erro ao carregar temas:', error);
         toast({
@@ -108,7 +159,7 @@ const Profile = () => {
     };
 
     loadThemes();
-  }, [toast, t]);
+  }, [toast, t, reloadThemes]);
 
   // Validação de e-mail em tempo real
   useEffect(() => {
@@ -137,7 +188,6 @@ const Profile = () => {
   }, [password, confirmPassword]);
 
 
-
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -150,7 +200,7 @@ const Profile = () => {
   };
 
   // Função para mudar o tema
-  const handleThemeChange = (themeId: string) => {
+  const handleThemeChange = async (themeId: string) => {
     const theme = availableThemes.find(t => t.id === themeId);
     
     if (!theme) return;
@@ -165,13 +215,27 @@ const Profile = () => {
       return;
     }
 
-    changeTheme(themeId);
-    toast({
-      title: t('common.success'),
-      description: t('profile.themeChanged'),
-      status: 'success',
-      duration: 3000,
-    });
+    try {
+      // Recarrega os temas no ThemeContext
+      await reloadThemes();
+
+      await changeTheme(themeId);
+      
+      toast({
+        title: t('common.success'),
+        description: t('profile.themeChanged'),
+        status: 'success',
+        duration: 3000,
+      });
+    } catch (error: any) {
+      console.error('Erro ao trocar tema:', error);
+      toast({
+        title: t('common.error'),
+        description: error.message || t('profile.themes.changeError'),
+        status: 'error',
+        duration: 3000,
+      });
+    }
   };
 
   const handleSave = async () => {
@@ -560,7 +624,11 @@ const Profile = () => {
                         backgroundImage: `url(/assets/images/${theme.background})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
-                        opacity: 0.6,
+                        opacity:
+                          !theme.isUnlocked &&
+                          balanceCoin.balance >= theme.requiredCoins
+                            ? 1
+                            : 0.6,
                         zIndex: 0,
                         borderRadius: 'lg',
                       }}
@@ -569,7 +637,12 @@ const Profile = () => {
                           ? getColor('border.selected')
                           : getColor('border.noSelect')
                       }
-                      opacity={theme.isUnlocked ? 1 : 0.6}
+                      // opacity={
+                      //   theme.isUnlocked &&
+                      //   balanceCoin.balance >= theme.requiredCoins
+                      //     ? 1
+                      //     : 0.6
+                      // }
                       transition="all 0.2s"
                       _hover={{
                         transform: theme.isUnlocked
@@ -585,7 +658,7 @@ const Profile = () => {
                         position="relative"
                         zIndex={1}
                       >
-                        <Text fontSize="lg" fontWeight="bold">
+                        <Text fontSize="lg" fontWeight="bold" color={getColor('chakraColors.white')}>
                           {theme.name}
                         </Text>
                         {currentTheme === theme.theme && (
@@ -611,17 +684,31 @@ const Profile = () => {
                           bg="blackAlpha.50"
                           justify="center"
                           align="center"
+                          direction="column"
+                          gap={4}
                           borderRadius="lg"
                         >
                           <Text
                             fontSize="md"
-                            fontWeight="medium"
-                            color={getColor('chakraColors.white')}
+                            fontWeight="bold"
+                            color={getColor('text.coin')}
                           >
                             {t('profile.themes.requires', {
                               count: theme.requiredCoins,
                             })}
                           </Text>
+                          {balanceCoin.balance >= theme.requiredCoins && (
+                            <Button
+                              colorScheme="green"
+                              size="lg"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedThemeToBuy(theme);
+                              }}
+                            >
+                              {t('profile.themes.buyButton')}
+                            </Button>
+                          )}
                         </Flex>
                       )}
                     </Box>
@@ -687,6 +774,18 @@ const Profile = () => {
       </Modal>
 
       <NavigationBar />
+
+      {/* Modal de compra de tema */}
+      {selectedThemeToBuy && (
+        <BuyThemeModal
+          isOpen={!!selectedThemeToBuy}
+          onClose={() => setSelectedThemeToBuy(null)}
+          theme={selectedThemeToBuy}
+          onConfirm={async () => {
+            return handleBuyTheme(selectedThemeToBuy);
+          }}
+        />
+      )}
     </Flex>
   );
 };

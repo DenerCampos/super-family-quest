@@ -1,4 +1,5 @@
 import { AuthService } from "./auth";
+import { CoinService } from "./coin";
 import { CouponReaderService } from './couponReader';
 import { ExpenseService, type ExpenseRecurring } from "./expense";
 import { ProfileService } from "./profile";
@@ -14,6 +15,7 @@ export const api = {
   changeTheme: themeService.changeTheme,
   createDefaultTheme: themeService.createDefaultTheme,
   getAllowedThemes: themeService.getAllowedThemes,
+  buyTheme: themeService.buyTheme,
   
   profile: ProfileService.profile,
   completeProfile: ProfileService.completeProfile,
@@ -131,4 +133,6 @@ export const api = {
   recurringExpenseConfirm: (expenses: ExpenseRecurring) =>
     ExpenseService.postRecurringConfirm(expenses),
   getExpenseRecurring: ExpenseService.getRecurring,
+
+  getBalanceCoin: CoinService.getBalanceCoin,
 };

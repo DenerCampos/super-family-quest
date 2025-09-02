@@ -13,6 +13,7 @@ interface ThemeContextData {
   availableThemes: ThemeConfig[];
   isLoadingThemes: boolean;
   isThemeLoaded: boolean;
+  reloadThemes: () => Promise<void>;
 }
 
 const ThemeContext = createContext<ThemeContextData>({} as ThemeContextData);
@@ -90,9 +91,15 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
         return;
       }
 
-      await api.changeTheme(themeId);
+      await api.changeTheme(theme.id);
       
-      const activeTheme = await api.getActiveTheme();
+      // Recarrega os temas para ter certeza que temos os dados mais atuais
+      const [activeTheme, unlockedThemes] = await Promise.all([
+        api.getActiveTheme(),
+        api.getAllowedThemes()
+      ]);
+      
+      setAvailableThemes(unlockedThemes);
       
       if (activeTheme) {
         setCurrentTheme(activeTheme.theme);
@@ -105,64 +112,66 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [userId, saveUserTheme, availableThemes]);
 
-  // Carrega os temas disponíveis
-  useEffect(() => {
-    const loadThemes = async () => {
-      setIsLoadingThemes(true);
-      
-      if (!userId) {
-        resetThemeState();
-        return;
-      }
+  // Função para carregar os temas
+  const loadThemes = useCallback(async () => {
+    setIsLoadingThemes(true);
+    
+    if (!userId) {
+      resetThemeState();
+      return;
+    }
 
-      try {
-        // Busca apenas os temas que o usuário tem acesso
-        const [activeTheme, unlockedThemes] = await Promise.all([
-          api.getActiveTheme(),
-          api.getAllowedThemes()
-        ]);
+    try {
+      // Busca apenas os temas que o usuário tem acesso
+      const [activeTheme, unlockedThemes] = await Promise.all([
+        api.getActiveTheme(),
+        api.getAllowedThemes()
+      ]);
 
-        setAvailableThemes(unlockedThemes);
+      setAvailableThemes(unlockedThemes);
 
-        // Verifica se há um tema salvo no localStorage para este usuário
-        const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_THEME);
-        if (savedTheme) {
-          const { userId: savedUserId, themeId } = JSON.parse(savedTheme);
-          
-          // Verifica se o tema salvo pertence ao usuário atual e está disponível
-          // Encontra o tema pelo tipo (rpg/default)
-          const savedThemeConfig = unlockedThemes.find(theme => theme.theme === themeId);
-          if (savedUserId === userId && savedThemeConfig) {
-            setCurrentTheme(themeId);
-            setIsThemeLoaded(true);
-            return;
-          }
-        }
-
-        // Se não houver tema salvo ou válido, usa o tema ativo
-        if (activeTheme) {
-          setCurrentTheme(activeTheme.theme);
-          saveUserTheme(userId, activeTheme.theme);
+      // Verifica se há um tema salvo no localStorage para este usuário
+      const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_THEME);
+      if (savedTheme) {
+        const { userId: savedUserId, themeId } = JSON.parse(savedTheme);
+        
+        // Verifica se o tema salvo pertence ao usuário atual e está disponível
+        // Encontra o tema pelo tipo (rpg/default)
+        const savedThemeConfig = unlockedThemes.find(theme => theme.theme === themeId);
+        if (savedUserId === userId && savedThemeConfig) {
+          setCurrentTheme(themeId);
           setIsThemeLoaded(true);
+          return;
         }
-      } catch (error) {
-        console.error('Erro ao carregar temas:', error);
-        resetThemeState();
-      } finally {
-        setIsLoadingThemes(false);
       }
-    };
 
+      // Se não houver tema salvo ou válido, usa o tema ativo
+      if (activeTheme) {
+        setCurrentTheme(activeTheme.theme);
+        saveUserTheme(userId, activeTheme.theme);
+        setIsThemeLoaded(true);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar temas:', error);
+      resetThemeState();
+    } finally {
+      setIsLoadingThemes(false);
+    }
+  }, [userId, resetThemeState, saveUserTheme]);
+
+  // Carrega os temas quando o componente monta ou o usuário muda
+  useEffect(() => {
     loadThemes();
-  }, [userId, resetThemeState, saveUserTheme]); // Recarrega os temas quando o ID do usuário mudar
+  }, [loadThemes]); // Recarrega os temas quando o ID do usuário mudar
 
   const contextValue = useMemo(() => ({
     currentTheme,
     changeTheme,
     availableThemes,
     isLoadingThemes,
-    isThemeLoaded
-  }), [currentTheme, changeTheme, availableThemes, isLoadingThemes, isThemeLoaded]);
+    isThemeLoaded,
+    reloadThemes: loadThemes
+  }), [currentTheme, changeTheme, availableThemes, isLoadingThemes, isThemeLoaded, loadThemes]);
 
   return (
     <ThemeContext.Provider value={contextValue}>
