@@ -8,7 +8,7 @@ import {
   useToast,
   // defineStyle,
 } from '@chakra-ui/react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -43,7 +43,6 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
-  const navigate = useNavigate();
   const { t } = useThemedTranslation();
   const { getAsset, getColor, getFont } = useVisualTheme();
   const { login } = useAuth();
