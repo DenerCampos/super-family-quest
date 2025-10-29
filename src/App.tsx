@@ -1,14 +1,15 @@
-import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import NotFoundPage from './pages/NotFoundPage';
-import { RequireAuth } from './components/RequireAuth';
-import Profile from './pages/Profile';
-import Dashboard from './pages/Dashboard';
-import NewChallenge from './pages/NewChallenge';
-import NewResources from './pages/NewResources';
-import { QRScannerPage } from './components/QRScannerPage';
+import { Route, Routes } from "react-router-dom";
+import { QRScannerPage } from "./components/QRScannerPage";
+import { RequireAuth } from "./components/RequireAuth";
+import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import NewChallenge from "./pages/NewChallenge";
+import NewResources from "./pages/NewResources";
+import NotFoundPage from "./pages/NotFoundPage";
+import Profile from "./pages/Profile";
+import Register from "./pages/Register";
+import Revenue from "./pages/Revenue";
 
 export default function App() {
   return (
@@ -71,6 +72,14 @@ export default function App() {
         element={
           <RequireAuth>
             <QRScannerPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/revenue/:id?"
+        element={
+          <RequireAuth>
+            <Revenue />
           </RequireAuth>
         }
       />

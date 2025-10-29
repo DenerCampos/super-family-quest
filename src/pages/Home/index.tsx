@@ -1,46 +1,63 @@
-import { useState, useEffect } from 'react';
 import {
-  Flex,
   Button,
-  useDisclosure,
+  Flex,
+  Icon,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  Icon,
-} from '@chakra-ui/react';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
-import { FiCamera, FiPlus, FiDollarSign, FiShoppingBag, FiEye, FiEyeOff } from 'react-icons/fi';
-import { useAuth } from '../../contexts/AuthContext';
-import { ExpenseModal } from '../../components/modals/ExpenseModal';
-import { RevenueModal } from '../../components/modals/RevenueModal';
-import { api } from '../../services';
-import type { Expense, Groups, Merchant, Payments } from '../../services/resources';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { convertQRData } from '../../utils/qrCode';
-import { CompleteProfileModal } from '../../components/modals/CompleteProfileModal';
-import { SummaryCard } from '../../components/SummaryCard';
-import { NewRecurringIncomeModal } from '../../components/modals/NewRecurringIncomeModal';
-import { LastRegistrationsList } from '../../components/LastRegistrationsList';
-import { NewRecurringExpenseModal } from '../../components/modals/NewRecurringExpenseModal';
-import { useThemedTranslation } from '../../hooks/useThemedTranslation';
-import { useVisualTheme } from '../../hooks/useVisualTheme';
+  MenuList,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import {
+  FiCamera,
+  FiDollarSign,
+  FiEye,
+  FiEyeOff,
+  FiPlus,
+  FiShoppingBag,
+} from "react-icons/fi";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Header } from "../../components/Header";
+import { LastRegistrationsList } from "../../components/LastRegistrationsList";
+import { CompleteProfileModal } from "../../components/modals/CompleteProfileModal";
+import { ExpenseModal } from "../../components/modals/ExpenseModal";
+import { NewRecurringExpenseModal } from "../../components/modals/NewRecurringExpenseModal";
+import { NewRecurringIncomeModal } from "../../components/modals/NewRecurringIncomeModal";
+import { NavigationBar } from "../../components/NavigationBar";
+import { SummaryCard } from "../../components/SummaryCard";
+import { useAuth } from "../../contexts/AuthContext";
+import { useThemedTranslation } from "../../hooks/useThemedTranslation";
+import { useVisualTheme } from "../../hooks/useVisualTheme";
+import { api } from "../../services";
+import type {
+  Expense,
+  Groups,
+  Merchant,
+  Payments,
+} from "../../services/resources";
+import { convertQRData } from "../../utils/qrCode";
 
 const Home = () => {
-  const { profile, loadProfile, showValues, toggleShowValues } = useAuth();  
+  const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
   const { getColor } = useVisualTheme();
-  const { isOpen: isExpenseOpen, onOpen: onExpenseOpen, onClose: onExpenseClose } = useDisclosure();
-  const { isOpen: isRevenueOpen, onOpen: onRevenueOpen, onClose: onRevenueClose } = useDisclosure();
+  const {
+    isOpen: isExpenseOpen,
+    onOpen: onExpenseOpen,
+    onClose: onExpenseClose,
+  } = useDisclosure();
+
   const [stores, setStores] = useState<Merchant[]>([]);
   const [payments, setPayments] = useState<Payments[]>([]);
   const [groups, setGroups] = useState<Groups[]>([]);
   const location = useLocation();
   const [scannedData, setScannedData] = useState<Expense | null>(null);
-  const [scanError, setScanError] = useState('');
+  const [scanError, setScanError] = useState("");
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
-  const [showRecurringRevenuesModal, setShowRecurringRevenuesModal] = useState(false);
-  const [showRecurringExpensesModal, setShowRecurringExpensesModal] = useState(false);
+  const [showRecurringRevenuesModal, setShowRecurringRevenuesModal] =
+    useState(false);
+  const [showRecurringExpensesModal, setShowRecurringExpensesModal] =
+    useState(false);
   const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
   const navigate = useNavigate();
   const { t } = useThemedTranslation();
@@ -65,14 +82,13 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (location.state?.scanned && location.state.couponData) {      
+    if (location.state?.scanned && location.state.couponData) {
       setScannedData(convertQRData(location.state.couponData));
       onExpenseOpen();
     }
     if (location.state?.error) {
       setScanError(location.state.error);
       console.error(scanError);
-      
     }
   }, [location.state]);
 
@@ -113,7 +129,7 @@ const Home = () => {
       direction="column"
       minH="100vh"
       pb="70px"
-      bg={getColor('background.home')}
+      bg={getColor("background.home")}
     >
       <Header />
 
@@ -127,10 +143,10 @@ const Home = () => {
             top={2}
             size="sm"
             variant="ghost"
-            color={getColor('text.eye')}
+            color={getColor("text.eye")}
             _hover={{
-              bg: getColor('button.hover.background.inverse'),
-              color: getColor('button.hover.text.inverse'),
+              bg: getColor("button.hover.background.inverse"),
+              color: getColor("button.hover.text.inverse"),
             }}
             onClick={toggleShowValues}
             zIndex={1}
@@ -138,50 +154,50 @@ const Home = () => {
             <Icon as={showValues ? FiEyeOff : FiEye} />
           </Button>
           <SummaryCard
-            title={t('home.summary.income')}
+            title={t("home.summary.income")}
             value={profile?.income || 0}
             type="revenue"
           />
           <SummaryCard
-            title={t('home.summary.expenses')}
+            title={t("home.summary.expenses")}
             value={profile?.expenses || 0}
             type="expense"
           />
         </Flex>
 
         {/* Menus de Ação */}
-        <Flex gap={4} direction={{ base: 'column', md: 'row' }}>
+        <Flex gap={4} direction={{ base: "column", md: "row" }}>
           <Menu>
             <MenuButton
               as={Button}
               role="group"
-              color={getColor('button.text.expense')}
-              bg={getColor('button.background.expense')}
+              color={getColor("button.text.expense")}
+              bg={getColor("button.background.expense")}
               border="1px solid"
-              borderColor={getColor('button.border.expense')}
+              borderColor={getColor("button.border.expense")}
               _hover={{
-                bg: getColor('button.hover.background.expense'),
-                color: getColor('button.hover.text.inverse'),
-                borderColor: getColor('button.hover.border.expense'),
+                bg: getColor("button.hover.background.expense"),
+                color: getColor("button.hover.text.inverse"),
+                borderColor: getColor("button.hover.border.expense"),
               }}
               size="lg"
               leftIcon={
                 <Icon
                   as={FiShoppingBag}
-                  color={getColor('button.text.expense')}
-                  _groupHover={{ color: getColor('button.hover.text.inverse') }}
+                  color={getColor("button.text.expense")}
+                  _groupHover={{ color: getColor("button.hover.text.inverse") }}
                 />
               }
               w="full"
             >
-              {t('home.addExpense')}
+              {t("home.addExpense")}
             </MenuButton>
             <MenuList>
               <MenuItem icon={<FiPlus />} onClick={onExpenseOpen}>
-                {t('home.newExpense')}
+                {t("home.newExpense")}
               </MenuItem>
-              <MenuItem icon={<FiCamera />} onClick={() => navigate('/scan')}>
-                {t('home.scanQRCode')}
+              <MenuItem icon={<FiCamera />} onClick={() => navigate("/scan")}>
+                {t("home.scanQRCode")}
               </MenuItem>
             </MenuList>
           </Menu>
@@ -190,30 +206,30 @@ const Home = () => {
             <MenuButton
               as={Button}
               role="group"
-              color={getColor('button.text.revenue')}
-              bg={getColor('button.background.revenue')}
+              color={getColor("button.text.revenue")}
+              bg={getColor("button.background.revenue")}
               border="1px solid"
-              borderColor={getColor('button.border.revenue')}
+              borderColor={getColor("button.border.revenue")}
               _hover={{
-                bg: getColor('button.hover.background.revenue'),
-                color: getColor('button.hover.text.inverse'),
-                borderColor: getColor('button.hover.border.revenue'),
+                bg: getColor("button.hover.background.revenue"),
+                color: getColor("button.hover.text.inverse"),
+                borderColor: getColor("button.hover.border.revenue"),
               }}
               size="lg"
               leftIcon={
                 <Icon
                   as={FiDollarSign}
-                  color={getColor('button.text.revenue')}
-                  _groupHover={{ color: getColor('button.hover.text.inverse') }}
+                  color={getColor("button.text.revenue")}
+                  _groupHover={{ color: getColor("button.hover.text.inverse") }}
                 />
               }
               w="full"
             >
-              {t('home.addRevenue')}
+              {t("home.addRevenue")}
             </MenuButton>
             <MenuList>
-              <MenuItem icon={<FiPlus />} onClick={onRevenueOpen}>
-                {t('home.newRevenue')}
+              <MenuItem icon={<FiPlus />} onClick={() => navigate("/revenue")}>
+                {t("home.newRevenue")}
               </MenuItem>
             </MenuList>
           </Menu>
@@ -239,20 +255,11 @@ const Home = () => {
         />
       )}
 
-      {isRevenueOpen && (
-        <RevenueModal
-          isOpen={isRevenueOpen}
-          onClose={onRevenueClose}
-          onSuccess={handleSuccess}
-          handleNewRegistration={handleNewRegistration}
-        />
-      )}
-
       <CompleteProfileModal
         isOpen={showCompleteProfile}
         user={{
-          email: profile?.user.email || '',
-          name: profile?.user.name || '',
+          email: profile?.user.email || "",
+          name: profile?.user.name || "",
         }}
         onComplete={() => {
           setShowCompleteProfile(false);

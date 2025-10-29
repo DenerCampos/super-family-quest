@@ -1,11 +1,11 @@
 import { AuthService } from "./auth";
 import { CoinService } from "./coin";
-import { CouponReaderService } from './couponReader';
+import { CouponReaderService } from "./couponReader";
 import { ExpenseService, type ExpenseRecurring } from "./expense";
 import { ProfileService } from "./profile";
 import { ReportsService } from "./reports";
-import { ResourcesService, type UpdateExpense } from './resources';
-import { RevenueService, type RevenueRecurring } from './revenue';
+import { ResourcesService, type UpdateExpense } from "./resources";
+import { RevenueService, type RevenueRecurring } from "./revenue";
 import { themeService } from "./theme";
 import { UserService } from "./user";
 
@@ -16,7 +16,7 @@ export const api = {
   createDefaultTheme: themeService.createDefaultTheme,
   getAllowedThemes: themeService.getAllowedThemes,
   buyTheme: themeService.buyTheme,
-  
+
   profile: ProfileService.profile,
   completeProfile: ProfileService.completeProfile,
   getLatestRegistrations: (limit?: number) =>
@@ -135,4 +135,6 @@ export const api = {
   getExpenseRecurring: ExpenseService.getRecurring,
 
   getBalanceCoin: CoinService.getBalanceCoin,
+
+  getRevenueById: (id: string) => RevenueService.getRevenueById(id),
 };

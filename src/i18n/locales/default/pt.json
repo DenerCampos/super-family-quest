@@ -13,6 +13,7 @@
     "required": "Campo obrigatório",
     "minLength": "Mínimo {{count}} caracteres",
     "close": "Fechar",
+    "confirm": "Confirmar",
     "error": "Erro",
     "success": "Sucesso",
     "updated": "Atualizado com sucesso",
@@ -127,7 +128,8 @@
       "edit": "Editar",
       "delete": "Excluir",
       "previous": "Anterior",
-      "next": "Próximo"
+      "next": "Próximo",
+      "editTitle": "Editar Receita"
     },
     "group": {
       "title": "Categorias",
@@ -180,6 +182,8 @@
   },
   "modals": {
     "revenue": {
+      "confirm": "Deseja continuar?",
+      "confirmDescription": "Se você continuar, as informações alteradas serão perdidas.",
       "new": "Nova Receita",
       "edit": "Editar Receita",
       "namePlaceholder": "Digite o nome da receita",

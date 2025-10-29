@@ -6,7 +6,7 @@ export type Revenue = {
   value: number;
   repeat: boolean;
   date: string;
-}
+};
 
 export type RevenueRecurring = {
   revenues: Revenue[];
@@ -22,6 +22,12 @@ export const RevenueService = {
 
   getRecurring: async (): Promise<Revenue[]> => {
     const response = await api.get(`/revenue/recurring/current-month`);
+
+    return response.data;
+  },
+
+  getRevenueById: async (id: string): Promise<Revenue> => {
+    const response = await api.get(`/revenue/${id}`);
 
     return response.data;
   },

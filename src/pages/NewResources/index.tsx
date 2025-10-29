@@ -1,26 +1,31 @@
-import { useState, useEffect } from 'react';
 import {
-  Flex,
+  Accordion,
   Box,
+  Flex,
   useDisclosure,
   useToast,
-  Accordion,
-} from '@chakra-ui/react';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
-import { SimpleResourceModal } from '../../components/modals/SimpleResourceModal';
-import { ExpenseModal } from '../../components/modals/ExpenseModal';
-import { RevenueModal } from '../../components/modals/RevenueModal';
-import ResourceContainer from '../../components/resources/ResourceContainer';
-import StoreResource from '../../components/resources/StoreResource';
-import PaymentResource from '../../components/resources/PaymentResource';
-import GroupResource from '../../components/resources/GroupResource';
-import ExpenseResource from '../../components/resources/ExpenseResource';
-import RevenueResource from '../../components/resources/RevenueResource';
-import { api } from '../../services';
-import type { Expense, Groups, Merchant, Payments, Revenue } from '../../services/resources';
-import { useThemedTranslation } from '../../hooks/useThemedTranslation';
-import { useVisualTheme } from '../../hooks/useVisualTheme';
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Header } from "../../components/Header";
+import { NavigationBar } from "../../components/NavigationBar";
+import { ExpenseModal } from "../../components/modals/ExpenseModal";
+import { SimpleResourceModal } from "../../components/modals/SimpleResourceModal";
+import ExpenseResource from "../../components/resources/ExpenseResource";
+import GroupResource from "../../components/resources/GroupResource";
+import PaymentResource from "../../components/resources/PaymentResource";
+import ResourceContainer from "../../components/resources/ResourceContainer";
+import RevenueResource from "../../components/resources/RevenueResource";
+import StoreResource from "../../components/resources/StoreResource";
+import { useThemedTranslation } from "../../hooks/useThemedTranslation";
+import { useVisualTheme } from "../../hooks/useVisualTheme";
+import { api } from "../../services";
+import type {
+  Expense,
+  Groups,
+  Merchant,
+  Payments,
+  Revenue,
+} from "../../services/resources";
 
 const NewResources = () => {
   const { getColor } = useVisualTheme();
@@ -30,7 +35,7 @@ const NewResources = () => {
   const [groups, setGroups] = useState<Groups[]>([]);
 
   const [editingResource, setEditingResource] = useState<{
-    type: 'store' | 'payment' | 'group' | 'expense' | 'revenue';
+    type: "store" | "payment" | "group" | "expense" | "revenue";
     data: any;
   } | null>(null);
 
@@ -53,14 +58,10 @@ const NewResources = () => {
     onOpen: onExpenseOpen,
     onClose: onExpenseClose,
   } = useDisclosure();
-  const {
-    isOpen: isRevenueOpen,
-    onOpen: onRevenueOpen,
-    onClose: onRevenueClose,
-  } = useDisclosure();
+
   const [currentResource, setCurrentResource] = useState<
-    'store' | 'payment' | 'group'
-  >('store');
+    "store" | "payment" | "group"
+  >("store");
   const toast = useToast();
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const NewResources = () => {
       const paginate = {
         page: 1,
         limit: 100,
-      }
+      };
       const [storesData, paymentsData, groupsData] = await Promise.all([
         api.getStores(paginate),
         api.getPayments(paginate),
@@ -76,7 +77,7 @@ const NewResources = () => {
       ]);
       setStores(storesData.data);
       setPayments(paymentsData.data);
-      setGroups(groupsData.data);      
+      setGroups(groupsData.data);
     };
 
     loadData();
@@ -84,7 +85,7 @@ const NewResources = () => {
 
   // Função para atualizar o trigger de refresh de um recurso específico
   const triggerRefresh = (
-    resourceType: 'store' | 'payment' | 'group' | 'expense' | 'revenue',
+    resourceType: "store" | "payment" | "group" | "expense" | "revenue"
   ) => {
     setRefreshTriggers((prev) => ({
       ...prev,
@@ -93,8 +94,8 @@ const NewResources = () => {
   };
 
   const handleResourceOpen = (
-    resource: 'store' | 'payment' | 'group' | 'expense' | 'revenue',
-    itemToEdit?: Merchant | Payments | Groups | Expense | Revenue | null,
+    resource: "store" | "payment" | "group" | "expense" | "revenue",
+    itemToEdit?: Merchant | Payments | Groups | Expense | Revenue | null
   ) => {
     // Fechar todos os modais primeiro
     onSimpleClose();
@@ -109,9 +110,9 @@ const NewResources = () => {
     }
 
     // Abrir o modal apropriado
-    if (resource === 'expense') {
+    if (resource === "expense") {
       onExpenseOpen();
-    } else if (resource === 'revenue') {
+    } else if (resource === "revenue") {
       onRevenueOpen();
     } else {
       setCurrentResource(resource);
@@ -120,25 +121,25 @@ const NewResources = () => {
   };
 
   const handleDelete = async (
-    type: 'store' | 'payment' | 'group' | 'expense' | 'revenue',
-    id: string,
+    type: "store" | "payment" | "group" | "expense" | "revenue",
+    id: string
   ) => {
     try {
       // Implementar chamadas específicas para cada tipo
       switch (type) {
-        case 'store':
+        case "store":
           await api.deleteStore({ id });
           break;
-        case 'payment':
+        case "payment":
           await api.deletePayment({ id });
           break;
-        case 'group':
+        case "group":
           await api.deleteGroup({ id });
           break;
-        case 'expense':
+        case "expense":
           await api.deleteExpense({ id });
           break;
-        case 'revenue':
+        case "revenue":
           await api.deleteRevenue({ id });
           break;
       }
@@ -147,15 +148,15 @@ const NewResources = () => {
       triggerRefresh(type);
 
       toast({
-        title: t('resources.deleteSuccess'),
-        status: 'success',
+        title: t("resources.deleteSuccess"),
+        status: "success",
         duration: 2000,
         isClosable: true,
       });
     } catch (error) {
       toast({
-        title: t('resources.deleteError'),
-        status: 'error',
+        title: t("resources.deleteError"),
+        status: "error",
         duration: 3000,
         isClosable: true,
       });
@@ -165,59 +166,55 @@ const NewResources = () => {
 
   // Função chamada quando um modal é fechado com sucesso
   const handleModalSuccess = (
-    resourceType: 'store' | 'payment' | 'group' | 'expense' | 'revenue',
+    resourceType: "store" | "payment" | "group" | "expense" | "revenue"
   ) => {
     setEditingResource(null);
     triggerRefresh(resourceType);
   };
 
   return (
-    <Flex direction="column" minH="100vh" bg={getColor('background.resources')}>
+    <Flex direction="column" minH="100vh" bg={getColor("background.resources")}>
       <Header />
 
       <Box p={4} mb="70px">
         <Accordion allowMultiple>
           {/* Seção Cadastros */}
-          <ResourceContainer title="Cadastros" colorScheme={getColor('primary')}>
+          <ResourceContainer
+            title="Cadastros"
+            colorScheme={getColor("primary")}
+          >
             <StoreResource
-              onEdit={(store) => handleResourceOpen('store', store)}
-              onDelete={(id) => handleDelete('store', id)}
+              onEdit={(store) => handleResourceOpen("store", store)}
+              onDelete={(id) => handleDelete("store", id)}
               refreshTrigger={refreshTriggers.store}
             />
 
             <PaymentResource
-              onEdit={(payment) => handleResourceOpen('payment', payment)}
-              onDelete={(id) => handleDelete('payment', id)}
+              onEdit={(payment) => handleResourceOpen("payment", payment)}
+              onDelete={(id) => handleDelete("payment", id)}
               refreshTrigger={refreshTriggers.payment}
             />
 
             <GroupResource
-              onEdit={(group) => handleResourceOpen('group', group)}
-              onDelete={(id) => handleDelete('group', id)}
+              onEdit={(group) => handleResourceOpen("group", group)}
+              onDelete={(id) => handleDelete("group", id)}
               refreshTrigger={refreshTriggers.group}
             />
           </ResourceContainer>
 
           {/* Seção Despesas */}
-          <ResourceContainer
-            title="Despesas"
-            colorScheme={getColor('expense')}
-          >
+          <ResourceContainer title="Despesas" colorScheme={getColor("expense")}>
             <ExpenseResource
-              onEdit={(expense) => handleResourceOpen('expense', expense)}
-              onDelete={(id) => handleDelete('expense', id)}
+              onEdit={(expense) => handleResourceOpen("expense", expense)}
+              onDelete={(id) => handleDelete("expense", id)}
               refreshTrigger={refreshTriggers.expense}
             />
           </ResourceContainer>
 
           {/* Seção Receitas */}
-          <ResourceContainer
-            title="Receitas"
-            colorScheme={getColor('revenue')}
-          >
+          <ResourceContainer title="Receitas" colorScheme={getColor("revenue")}>
             <RevenueResource
-              onEdit={(revenue) => handleResourceOpen('revenue', revenue)}
-              onDelete={(id) => handleDelete('revenue', id)}
+              onDelete={(id) => handleDelete("revenue", id)}
               refreshTrigger={refreshTriggers.revenue}
             />
           </ResourceContainer>
@@ -250,27 +247,12 @@ const NewResources = () => {
             onExpenseClose();
             setEditingResource(null);
           }}
-          onSuccess={() => handleModalSuccess('expense')}
+          onSuccess={() => handleModalSuccess("expense")}
           stores={stores || []}
           payments={payments || []}
           groups={groups || []}
           initialData={
-            editingResource?.type === 'expense' ? editingResource.data : null
-          }
-        />
-      )}
-
-      {/* Modal para receitas */}
-      {isRevenueOpen && (
-        <RevenueModal
-          isOpen={isRevenueOpen}
-          onClose={() => {
-            onRevenueClose();
-            setEditingResource(null);
-          }}
-          onSuccess={() => handleModalSuccess('revenue')}
-          initialData={
-            editingResource?.type === 'revenue' ? editingResource.data : null
+            editingResource?.type === "expense" ? editingResource.data : null
           }
         />
       )}
