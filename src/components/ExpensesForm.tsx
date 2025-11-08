@@ -149,7 +149,9 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
       <Flex direction="column" flex="1">
         {/* Campo Loja */}
         <FormControl isInvalid={!!errors.store?.name} mb={4}>
-          <FormLabel>{t("modals.expense.store")}</FormLabel>
+          <FormLabel color={getColor("text.primary")}>
+            {t("modals.expense.store")}
+          </FormLabel>
           <AutocompleteInput
             value={watch("store.name") || ""}
             options={stores.map((store) => store.name)}
@@ -168,7 +170,9 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
         {/* Pagamento e Data */}
         <Grid templateColumns="repeat(2, 1fr)" gap={4} mb={4}>
           <FormControl isInvalid={!!errors.payment?.name}>
-            <FormLabel>{t("modals.expense.payment")}</FormLabel>
+            <FormLabel color={getColor("text.primary")}>
+              {t("modals.expense.payment")}
+            </FormLabel>
             <AutocompleteInput
               value={watch("payment.name") || ""}
               options={payments.map((payment) => payment.name)}
@@ -185,7 +189,9 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
           </FormControl>
 
           <FormControl isInvalid={!!errors.date}>
-            <FormLabel>{t("modals.expense.date")}</FormLabel>
+            <FormLabel color={getColor("text.primary")}>
+              {t("modals.expense.date")}
+            </FormLabel>
             <Input
               type="date"
               {...register("date", {
@@ -207,6 +213,7 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
             defaultChecked={watch("repeat") || false}
             colorScheme={getColor("chakraColors.green")}
             size="lg"
+            color={getColor("text.primary")}
           >
             {t("modals.expense.repeat")}
           </Checkbox>
@@ -215,7 +222,9 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
         {/* Seção de Itens */}
         <FormControl isInvalid={!!errors.items}>
           <Flex justify="space-between" align="center" mb={3}>
-            <FormLabel mb={0}>{t("modals.expense.items")}</FormLabel>
+            <FormLabel color={getColor("text.primary")} mb={0}>
+              {t("modals.expense.items")}
+            </FormLabel>
             <Button
               size="sm"
               variant="ghost"
@@ -288,7 +297,10 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.code}
                             >
-                              <FormLabel fontSize="sm">
+                              <FormLabel
+                                color={getColor("text.primary")}
+                                fontSize="sm"
+                              >
                                 {t("modals.expense.code")}
                               </FormLabel>
                               <Input
@@ -312,7 +324,10 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.name}
                             >
-                              <FormLabel fontSize="sm">
+                              <FormLabel
+                                color={getColor("text.primary")}
+                                fontSize="sm"
+                              >
                                 {t("modals.expense.name")}
                               </FormLabel>
                               <Input
@@ -341,7 +356,10 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.quantity}
                             >
-                              <FormLabel fontSize="sm">
+                              <FormLabel
+                                color={getColor("text.primary")}
+                                fontSize="sm"
+                              >
                                 {t("modals.expense.quantity")}
                               </FormLabel>
                               <Input
@@ -387,7 +405,10 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.unit}
                             >
-                              <FormLabel fontSize="sm">
+                              <FormLabel
+                                color={getColor("text.primary")}
+                                fontSize="sm"
+                              >
                                 {t("modals.expense.unit")}
                               </FormLabel>
                               <Input
@@ -411,7 +432,10 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.value}
                             >
-                              <FormLabel fontSize="sm">
+                              <FormLabel
+                                color={getColor("text.primary")}
+                                fontSize="sm"
+                              >
                                 {t("modals.expense.unitValue")}
                               </FormLabel>
                               <Input
@@ -457,7 +481,10 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                           <FormControl
                             isInvalid={!!errors.items?.[index]?.group?.name}
                           >
-                            <FormLabel fontSize="sm">
+                            <FormLabel
+                              color={getColor("text.primary")}
+                              fontSize="sm"
+                            >
                               {t("modals.expense.group")}
                             </FormLabel>
                             <AutocompleteInput
