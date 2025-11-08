@@ -136,7 +136,7 @@
     },
     "group": {
       "title": "Categorias",
-      "new": "Nova Categoria",
+      "new": "Adicionar",
       "error": "Erro ao carregar categorias",
       "deleteConfirm": "Tem certeza que deseja excluir esta categoria?",
       "deleteSuccess": "Categoria excluída com sucesso",
@@ -152,7 +152,7 @@
     },
     "payment": {
       "title": "Formas de Pagamento",
-      "new": "Nova Forma de Pagamento",
+      "new": "Adicionar",
       "error": "Erro ao carregar formas de pagamento",
       "deleteConfirm": "Tem certeza que deseja excluir esta forma de pagamento?",
       "deleteSuccess": "Forma de pagamento excluída com sucesso",
@@ -168,7 +168,7 @@
     },
     "store": {
       "title": "Estabelecimentos",
-      "new": "Novo Estabelecimento",
+      "new": "Adicionar",
       "error": "Erro ao carregar estabelecimentos",
       "deleteConfirm": "Tem certeza que deseja excluir este estabelecimento?",
       "deleteSuccess": "Estabelecimento excluído com sucesso",

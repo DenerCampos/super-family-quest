@@ -153,7 +153,7 @@ export const SimpleResourceModal = ({
       isOpen={isOpen}
       onClose={isSubmitting ? () => {} : onClose}
       closeOnOverlayClick={!isSubmitting}
-      size="md"
+      size="sm"
     >
       <ModalOverlay />
       <ModalContent

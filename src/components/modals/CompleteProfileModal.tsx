@@ -102,6 +102,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
   return (
     <Modal
       isOpen={isOpen}
+      size="sm"
       onClose={() => {}} // Impede o fechamento
       closeOnOverlayClick={false} // Impede fechar clicando fora
       isCentered
