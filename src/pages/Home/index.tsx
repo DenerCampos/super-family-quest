@@ -6,7 +6,6 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
@@ -21,7 +20,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Header } from "../../components/Header";
 import { LastRegistrationsList } from "../../components/LastRegistrationsList";
 import { CompleteProfileModal } from "../../components/modals/CompleteProfileModal";
-import { ExpenseModal } from "../../components/modals/ExpenseModal";
 import { NewRecurringExpenseModal } from "../../components/modals/NewRecurringExpenseModal";
 import { NewRecurringIncomeModal } from "../../components/modals/NewRecurringIncomeModal";
 import { NavigationBar } from "../../components/NavigationBar";
@@ -29,29 +27,21 @@ import { SummaryCard } from "../../components/SummaryCard";
 import { useAuth } from "../../contexts/AuthContext";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
-import { api } from "../../services";
-import type {
-  Expense,
-  Groups,
-  Merchant,
-  Payments,
-} from "../../services/resources";
-import { convertQRData } from "../../utils/qrCode";
 
 const Home = () => {
   const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
   const { getColor } = useVisualTheme();
-  const {
-    isOpen: isExpenseOpen,
-    onOpen: onExpenseOpen,
-    onClose: onExpenseClose,
-  } = useDisclosure();
+  // const {
+  //   isOpen: isExpenseOpen,
+  //   onOpen: onExpenseOpen,
+  //   onClose: onExpenseClose,
+  // } = useDisclosure();
 
-  const [stores, setStores] = useState<Merchant[]>([]);
-  const [payments, setPayments] = useState<Payments[]>([]);
-  const [groups, setGroups] = useState<Groups[]>([]);
+  // const [stores, setStores] = useState<Merchant[]>([]);
+  // const [payments, setPayments] = useState<Payments[]>([]);
+  // const [groups, setGroups] = useState<Groups[]>([]);
   const location = useLocation();
-  const [scannedData, setScannedData] = useState<Expense | null>(null);
+  // const [scannedData, setScannedData] = useState<Expense | null>(null);
   const [scanError, setScanError] = useState("");
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
   const [showRecurringRevenuesModal, setShowRecurringRevenuesModal] =
@@ -62,30 +52,30 @@ const Home = () => {
   const navigate = useNavigate();
   const { t } = useThemedTranslation();
   // Carregar dados para o modal
-  useEffect(() => {
-    const loadData = async () => {
-      const paginate = {
-        page: 1,
-        limit: 100,
-      };
-      const [storesData, paymentsData, groupsData] = await Promise.all([
-        api.getStores(paginate),
-        api.getPayments(paginate),
-        api.getGroups(paginate),
-      ]);
-      setStores(storesData.data);
-      setPayments(paymentsData.data);
-      setGroups(groupsData.data);
-    };
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     const paginate = {
+  //       page: 1,
+  //       limit: 100,
+  //     };
+  //     const [storesData, paymentsData, groupsData] = await Promise.all([
+  //       api.getStores(paginate),
+  //       api.getPayments(paginate),
+  //       api.getGroups(paginate),
+  //     ]);
+  //     setStores(storesData.data);
+  //     setPayments(paymentsData.data);
+  //     setGroups(groupsData.data);
+  //   };
 
-    loadData();
-  }, []);
+  //   loadData();
+  // }, []);
 
   useEffect(() => {
-    if (location.state?.scanned && location.state.couponData) {
-      setScannedData(convertQRData(location.state.couponData));
-      onExpenseOpen();
-    }
+    // if (location.state?.scanned && location.state.couponData) {
+    //   setScannedData(convertQRData(location.state.couponData));
+    //   navigate("/expense");
+    // }
     if (location.state?.error) {
       setScanError(location.state.error);
       console.error(scanError);
@@ -106,13 +96,13 @@ const Home = () => {
     }
   }, [profile]);
 
-  const handleNewRegistration = () => {
-    setNewRegistrationAdded(true);
-  };
+  // const handleNewRegistration = () => {
+  //   setNewRegistrationAdded(true);
+  // };
 
-  const handleSuccess = async () => {
-    await loadProfile();
-  };
+  // const handleSuccess = async () => {
+  //   await loadProfile();
+  // };
 
   const handleCloseRecurringExpensesModal = async () => {
     setShowRecurringExpensesModal(false);
@@ -193,7 +183,7 @@ const Home = () => {
               {t("home.addExpense")}
             </MenuButton>
             <MenuList>
-              <MenuItem icon={<FiPlus />} onClick={onExpenseOpen}>
+              <MenuItem icon={<FiPlus />} onClick={() => navigate("/expense")}>
                 {t("home.newExpense")}
               </MenuItem>
               <MenuItem icon={<FiCamera />} onClick={() => navigate("/scan")}>
@@ -241,7 +231,7 @@ const Home = () => {
         />
       </Flex>
 
-      {isExpenseOpen && (
+      {/* {isExpenseOpen && (
         <ExpenseModal
           isOpen={isExpenseOpen}
           onClose={onExpenseClose}
@@ -253,7 +243,7 @@ const Home = () => {
           setScannedData={setScannedData}
           handleNewRegistration={handleNewRegistration}
         />
-      )}
+      )} */}
 
       <CompleteProfileModal
         isOpen={showCompleteProfile}

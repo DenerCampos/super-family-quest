@@ -23,7 +23,9 @@
     "loadError": "Não foi possível carregar os dados",
     "updateError": "Falha ao atualizar",
     "createError": "Falha ao criar",
-    "deleteError": "Falha ao excluir"
+    "deleteError": "Falha ao excluir",
+    "confirmTitle": "Deseja continuar?",
+    "confirmDescription": "Se você continuar, as informações alteradas serão perdidas."
   },
   "auth": {
     "login": "Entrar",
@@ -96,6 +98,7 @@
     "expense": {
       "title": "Despesas",
       "new": "Nova Despesa",
+      "editTitle": "Editar Despesa",
       "error": "Erro ao carregar despesas",
       "deleteConfirm": "Tem certeza que deseja excluir esta despesa?",
       "deleteSuccess": "Despesa excluída com sucesso",
@@ -373,4 +376,4 @@
       "defaultMode": "Modo Padrão"
     }
   }
-} 
+}

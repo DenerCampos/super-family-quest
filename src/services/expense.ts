@@ -71,4 +71,10 @@ export const ExpenseService = {
 
     return response.data;
   },
+
+  getExpenseById: async (id: string): Promise<ExpenseComplete> => {
+    const response = await api.get(`/expense/${id}`);
+
+    return response.data;
+  },
 };

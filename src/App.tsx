@@ -10,6 +10,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Revenue from "./pages/Revenue";
+import { Expenses } from "./pages/Expenses";
 
 export default function App() {
   return (
@@ -80,6 +81,15 @@ export default function App() {
         element={
           <RequireAuth>
             <Revenue />
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/expense/:id?"
+        element={
+          <RequireAuth>
+            <Expenses />
           </RequireAuth>
         }
       />

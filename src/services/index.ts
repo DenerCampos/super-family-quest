@@ -133,6 +133,7 @@ export const api = {
   recurringExpenseConfirm: (expenses: ExpenseRecurring) =>
     ExpenseService.postRecurringConfirm(expenses),
   getExpenseRecurring: ExpenseService.getRecurring,
+  getExpenseById: (id: string) => ExpenseService.getExpenseById(id),
 
   getBalanceCoin: CoinService.getBalanceCoin,
 

@@ -1,58 +1,58 @@
-import { useState, useEffect, useRef } from 'react';
 import {
+  Badge,
   Box,
-  Flex,
-  Text,
   Button,
-  InputGroup,
-  InputLeftElement,
+  Flex,
   Icon,
   Input,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
+  InputGroup,
+  InputLeftElement,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  Stack,
+  MenuList,
   Spinner,
+  Stack,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
   useToast,
-  Badge,
-} from '@chakra-ui/react';
-import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
-import { api } from '../../services';
-import type { Expense, PaginationResponse } from '../../services/resources';
-import { formatCurrency } from '../../utils/formatCurrency';
-import { formatDateToBR } from '../../utils/formatDate';
-import { useThemedTranslation } from '../../hooks/useThemedTranslation';
-import { useVisualTheme } from '../../hooks/useVisualTheme';
+} from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
+import { FiEdit, FiPlus, FiSearch, FiTrash2 } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { useThemedTranslation } from "../../hooks/useThemedTranslation";
+import { useVisualTheme } from "../../hooks/useVisualTheme";
+import { api } from "../../services";
+import type { Expense, PaginationResponse } from "../../services/resources";
+import { formatCurrency } from "../../utils/formatCurrency";
+import { formatDateToBR } from "../../utils/formatDate";
 
 const ITEMS_PER_PAGE = 5;
 
 interface ExpenseResourceProps {
-  onEdit: (expense: Expense | null) => void;
   onDelete: (id: string) => void;
   refreshTrigger?: number;
 }
 
 const ExpenseResource = ({
-  onEdit,
   onDelete,
   refreshTrigger,
 }: ExpenseResourceProps) => {
   const { getColor } = useVisualTheme();
+  const navigate = useNavigate();
   const [expenses, setExpenses] = useState<PaginationResponse<Expense>>();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const toast = useToast();
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const { t } = useThemedTranslation();
-  const loadExpenses = async (page: number = 1, search: string = '') => {
+  const loadExpenses = async (page: number = 1, search: string = "") => {
     setLoading(true);
     try {
       const expensesData = await api.getExpenses({
@@ -63,8 +63,8 @@ const ExpenseResource = ({
       setExpenses(expensesData);
     } catch (error) {
       toast({
-        title: t('resources.expense.error'),
-        status: 'error',
+        title: t("resources.expense.error"),
+        status: "error",
         duration: 3000,
         isClosable: true,
       });
@@ -110,30 +110,26 @@ const ExpenseResource = ({
   };
 
   const handleNewExpense = () => {
-    onEdit(null);
-  };
-
-  const handleEdit = (expense: Expense) => {
-    onEdit(expense);
+    navigate("/expense");
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm(t('resources.expense.deleteConfirm'))) {
+    if (window.confirm(t("resources.expense.deleteConfirm"))) {
       try {
         await onDelete(id);
         // Recarregar dados após exclusão
         loadExpenses(page, search);
         toast({
-          title: t('resources.expense.deleteSuccess'),
-          status: 'success',
+          title: t("resources.expense.deleteSuccess"),
+          status: "success",
           duration: 2000,
           isClosable: true,
         });
       } catch (error) {
         console.error(error);
         toast({
-          title: t('resources.expense.deleteError'),
-          status: 'error',
+          title: t("resources.expense.deleteError"),
+          status: "error",
           duration: 3000,
           isClosable: true,
         });
@@ -154,25 +150,26 @@ const ExpenseResource = ({
     <Box mb={6}>
       <Flex justify="space-between" align="center" mb={4}>
         <Text fontSize="lg" fontWeight="medium">
-          {t('resources.expense.title')}
+          {t("resources.expense.title")}
         </Text>
         <Button
           size="sm"
-          bg={getColor('button.background.neutral')}
-          color={getColor('button.text.primary')}
+          bg={getColor("button.background.neutral")}
+          color={getColor("button.text.primary")}
           border="1px solid"
-          borderColor={getColor('button.border.neutral')}
+          borderColor={getColor("button.border.neutral")}
           _hover={{
-            bg: getColor('button.hover.background.inverse'),
-            color: getColor('button.hover.text.inverse'),
+            bg: getColor("button.hover.background.inverse"),
+            color: getColor("button.hover.text.inverse"),
           }}
-          _focus={{ bg: getColor('button.hover.background.neutral'),
-            color: getColor('button.hover.text.neutral'),
+          _focus={{
+            bg: getColor("button.hover.background.neutral"),
+            color: getColor("button.hover.text.neutral"),
           }}
           leftIcon={<FiPlus />}
           onClick={handleNewExpense}
         >
-          {t('resources.expense.new')}
+          {t("resources.expense.new")}
         </Button>
       </Flex>
 
@@ -181,7 +178,7 @@ const ExpenseResource = ({
           <Icon as={FiSearch} color="gray.300" />
         </InputLeftElement>
         <Input
-          placeholder={t('resources.expense.searchPlaceholder')}
+          placeholder={t("resources.expense.searchPlaceholder")}
           value={search}
           onChange={handleSearch}
         />
@@ -189,59 +186,59 @@ const ExpenseResource = ({
 
       {loading ? (
         <Flex justify="center" py={4}>
-          <Spinner color={getColor('text.accent')} />
+          <Spinner color={getColor("text.accent")} />
         </Flex>
       ) : expenses?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
-          {t('resources.expense.noData')}
+          {t("resources.expense.noData")}
         </Text>
       ) : (
         <>
           <Box
             overflowX="auto"
             border="1px"
-            borderColor={getColor('gray.500')}
+            borderColor={getColor("gray.500")}
             borderRadius="md"
           >
             <Table variant="simple" minW="600px">
               <Thead>
                 <Tr>
-                  <Th>{t('resources.expense.store')}</Th>
-                  <Th>{t('resources.expense.value')}</Th>
-                  <Th>{t('resources.expense.payment')}</Th>
-                  <Th>{t('resources.expense.date')}</Th>
-                  <Th>{t('resources.expense.actions')}</Th>
+                  <Th>{t("resources.expense.store")}</Th>
+                  <Th>{t("resources.expense.value")}</Th>
+                  <Th>{t("resources.expense.payment")}</Th>
+                  <Th>{t("resources.expense.date")}</Th>
+                  <Th>{t("resources.expense.actions")}</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {expenses?.data?.map((expense) => (
                   <Tr key={expense.id}>
-                    <Td>{expense.name || '-'}</Td>
+                    <Td>{expense.name || "-"}</Td>
                     <Td>
-                      <Badge colorScheme={getColor('chakraColors.red')}>
+                      <Badge colorScheme={getColor("chakraColors.red")}>
                         - {formatCurrency(expense.value)}
                       </Badge>
                     </Td>
-                    <Td>{expense.payment?.name || '-'}</Td>
+                    <Td>{expense.payment?.name || "-"}</Td>
                     <Td>{formatDateToBR(expense.date)}</Td>
                     <Td>
                       <Menu>
                         <MenuButton as={Button} size="sm" variant="outline">
-                          {t('resources.expense.actions')}
+                          {t("resources.expense.actions")}
                         </MenuButton>
                         <MenuList>
                           <MenuItem
                             icon={<FiEdit />}
-                            onClick={() => handleEdit(expense)}
+                            onClick={() => navigate(`/expense/${expense.id}`)}
                           >
-                            {t('resources.expense.edit')}
+                            {t("resources.expense.edit")}
                           </MenuItem>
                           <MenuItem
                             icon={<FiTrash2 />}
                             onClick={() => handleDelete(expense.id as string)}
-                            color={getColor('chakraColors.red')}
+                            color={getColor("chakraColors.red")}
                           >
-                            {t('resources.expense.delete')}
+                            {t("resources.expense.delete")}
                           </MenuItem>
                         </MenuList>
                       </Menu>
@@ -260,7 +257,7 @@ const ExpenseResource = ({
                   onClick={() => handlePageChange(page - 1)}
                   isDisabled={page === 1}
                 >
-                  {t('resources.expense.previous')}
+                  {t("resources.expense.previous")}
                 </Button>
                 <Button size="sm" variant="outline">
                   {page} / {expenses.meta.totalPages}
@@ -270,7 +267,7 @@ const ExpenseResource = ({
                   onClick={() => handlePageChange(page + 1)}
                   isDisabled={page === expenses.meta.totalPages}
                 >
-                  {t('resources.expense.next')}
+                  {t("resources.expense.next")}
                 </Button>
               </Stack>
             </Flex>

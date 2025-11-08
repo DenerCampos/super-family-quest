@@ -5,10 +5,9 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Header } from "../../components/Header";
 import { NavigationBar } from "../../components/NavigationBar";
-import { ExpenseModal } from "../../components/modals/ExpenseModal";
 import { SimpleResourceModal } from "../../components/modals/SimpleResourceModal";
 import ExpenseResource from "../../components/resources/ExpenseResource";
 import GroupResource from "../../components/resources/GroupResource";
@@ -30,9 +29,6 @@ import type {
 const NewResources = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
-  const [stores, setStores] = useState<Merchant[]>([]);
-  const [payments, setPayments] = useState<Payments[]>([]);
-  const [groups, setGroups] = useState<Groups[]>([]);
 
   const [editingResource, setEditingResource] = useState<{
     type: "store" | "payment" | "group" | "expense" | "revenue";
@@ -53,35 +49,11 @@ const NewResources = () => {
     onOpen: onSimpleOpen,
     onClose: onSimpleClose,
   } = useDisclosure();
-  const {
-    isOpen: isExpenseOpen,
-    onOpen: onExpenseOpen,
-    onClose: onExpenseClose,
-  } = useDisclosure();
 
   const [currentResource, setCurrentResource] = useState<
     "store" | "payment" | "group"
   >("store");
   const toast = useToast();
-
-  useEffect(() => {
-    const loadData = async () => {
-      const paginate = {
-        page: 1,
-        limit: 100,
-      };
-      const [storesData, paymentsData, groupsData] = await Promise.all([
-        api.getStores(paginate),
-        api.getPayments(paginate),
-        api.getGroups(paginate),
-      ]);
-      setStores(storesData.data);
-      setPayments(paymentsData.data);
-      setGroups(groupsData.data);
-    };
-
-    loadData();
-  }, []);
 
   // Função para atualizar o trigger de refresh de um recurso específico
   const triggerRefresh = (
@@ -99,8 +71,6 @@ const NewResources = () => {
   ) => {
     // Fechar todos os modais primeiro
     onSimpleClose();
-    onExpenseClose();
-    onRevenueClose();
 
     // Configurar dados de edição se existirem
     if (itemToEdit && Object.keys(itemToEdit).length > 0) {
@@ -110,14 +80,8 @@ const NewResources = () => {
     }
 
     // Abrir o modal apropriado
-    if (resource === "expense") {
-      onExpenseOpen();
-    } else if (resource === "revenue") {
-      onRevenueOpen();
-    } else {
-      setCurrentResource(resource);
-      onSimpleOpen();
-    }
+    setCurrentResource(resource);
+    onSimpleOpen();
   };
 
   const handleDelete = async (
@@ -205,7 +169,6 @@ const NewResources = () => {
           {/* Seção Despesas */}
           <ResourceContainer title="Despesas" colorScheme={getColor("expense")}>
             <ExpenseResource
-              onEdit={(expense) => handleResourceOpen("expense", expense)}
               onDelete={(id) => handleDelete("expense", id)}
               refreshTrigger={refreshTriggers.expense}
             />
@@ -235,24 +198,6 @@ const NewResources = () => {
             editingResource?.type === currentResource
               ? editingResource.data
               : null
-          }
-        />
-      )}
-
-      {/* Modal para despesas */}
-      {isExpenseOpen && (
-        <ExpenseModal
-          isOpen={isExpenseOpen}
-          onClose={() => {
-            onExpenseClose();
-            setEditingResource(null);
-          }}
-          onSuccess={() => handleModalSuccess("expense")}
-          stores={stores || []}
-          payments={payments || []}
-          groups={groups || []}
-          initialData={
-            editingResource?.type === "expense" ? editingResource.data : null
           }
         />
       )}

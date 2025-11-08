@@ -5,7 +5,7 @@ import { Flex, Heading, Text, Box, Button, IconButton } from '@chakra-ui/react';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 import { FiArrowLeft, FiRotateCw } from 'react-icons/fi';
 import { api } from '../services';
-import { parseNFCeQRCode } from '../utils/qrCode';
+import { convertQRData, parseNFCeQRCode } from '../utils/qrCode';
 import { useThemeTranslation } from '../hooks/useThemeTranslation';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 
@@ -78,14 +78,17 @@ export const QRScannerPage = () => {
       stopCamera();
 
       const qrCodeData = parseNFCeQRCode(qrData);
+      console.log(qrCodeData)
       const data = await api.couponReader({
         code: qrCodeData?.rawData || '',
       });
 
+      console.log(data)
+
       if (isMountedRef.current) {
-        navigate('/home', {
+        navigate("/expense", {
           state: {
-            couponData: data,
+            couponData: convertQRData(data),
             scanned: true,
           },
         });
