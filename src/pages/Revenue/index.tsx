@@ -167,7 +167,7 @@ const Revenue = () => {
                   reset();
                 }}
               >
-                {t("common.close")}
+                {t("common.closeConfirm")}
               </Button>
               <Button
                 onClick={() => {

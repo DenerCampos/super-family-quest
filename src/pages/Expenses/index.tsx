@@ -127,7 +127,7 @@ export const Expenses = () => {
                   form.reset();
                 }}
               >
-                {t("common.close")}
+                {t("common.closeConfirm")}
               </Button>
               <Button
                 onClick={() => {

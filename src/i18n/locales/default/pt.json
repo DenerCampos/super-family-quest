@@ -25,7 +25,8 @@
     "createError": "Falha ao criar",
     "deleteError": "Falha ao excluir",
     "confirmTitle": "Deseja continuar?",
-    "confirmDescription": "Se você continuar, as informações alteradas serão perdidas."
+    "confirmDescription": "Se você continuar, as informações alteradas serão perdidas.",
+    "closeConfirm": "Fechar"
   },
   "auth": {
     "login": "Entrar",
