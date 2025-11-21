@@ -66,7 +66,7 @@ const NewResources = () => {
   };
 
   const handleResourceOpen = (
-    resource: "store" | "payment" | "group" | "expense" | "revenue",
+    resource: "store" | "payment" | "group",
     itemToEdit?: Merchant | Payments | Groups | Expense | Revenue | null
   ) => {
     // Fechar todos os modais primeiro
