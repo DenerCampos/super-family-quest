@@ -144,7 +144,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
       isOpen={isOpen}
       onClose={() => {}} // Impede o fechamento
       closeOnOverlayClick={false} // Impede fechar clicando fora
-      size="lg"
+      size="sm"
       isCentered
     >
       <ModalOverlay />

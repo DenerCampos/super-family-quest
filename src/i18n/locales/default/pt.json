@@ -13,6 +13,7 @@
     "required": "Campo obrigatório",
     "minLength": "Mínimo {{count}} caracteres",
     "close": "Fechar",
+    "confirm": "Confirmar",
     "error": "Erro",
     "success": "Sucesso",
     "updated": "Atualizado com sucesso",
@@ -22,7 +23,10 @@
     "loadError": "Não foi possível carregar os dados",
     "updateError": "Falha ao atualizar",
     "createError": "Falha ao criar",
-    "deleteError": "Falha ao excluir"
+    "deleteError": "Falha ao excluir",
+    "confirmTitle": "Deseja continuar?",
+    "confirmDescription": "Se você continuar, as informações alteradas serão perdidas.",
+    "closeConfirm": "Fechar"
   },
   "auth": {
     "login": "Entrar",
@@ -95,6 +99,7 @@
     "expense": {
       "title": "Despesas",
       "new": "Nova Despesa",
+      "editTitle": "Editar Despesa",
       "error": "Erro ao carregar despesas",
       "deleteConfirm": "Tem certeza que deseja excluir esta despesa?",
       "deleteSuccess": "Despesa excluída com sucesso",
@@ -127,11 +132,12 @@
       "edit": "Editar",
       "delete": "Excluir",
       "previous": "Anterior",
-      "next": "Próximo"
+      "next": "Próximo",
+      "editTitle": "Editar Receita"
     },
     "group": {
       "title": "Categorias",
-      "new": "Nova Categoria",
+      "new": "Adicionar",
       "error": "Erro ao carregar categorias",
       "deleteConfirm": "Tem certeza que deseja excluir esta categoria?",
       "deleteSuccess": "Categoria excluída com sucesso",
@@ -147,7 +153,7 @@
     },
     "payment": {
       "title": "Formas de Pagamento",
-      "new": "Nova Forma de Pagamento",
+      "new": "Adicionar",
       "error": "Erro ao carregar formas de pagamento",
       "deleteConfirm": "Tem certeza que deseja excluir esta forma de pagamento?",
       "deleteSuccess": "Forma de pagamento excluída com sucesso",
@@ -163,7 +169,7 @@
     },
     "store": {
       "title": "Estabelecimentos",
-      "new": "Novo Estabelecimento",
+      "new": "Adicionar",
       "error": "Erro ao carregar estabelecimentos",
       "deleteConfirm": "Tem certeza que deseja excluir este estabelecimento?",
       "deleteSuccess": "Estabelecimento excluído com sucesso",
@@ -180,6 +186,8 @@
   },
   "modals": {
     "revenue": {
+      "confirm": "Deseja continuar?",
+      "confirmDescription": "Se você continuar, as informações alteradas serão perdidas.",
       "new": "Nova Receita",
       "edit": "Editar Receita",
       "namePlaceholder": "Digite o nome da receita",
@@ -369,4 +377,4 @@
       "defaultMode": "Modo Padrão"
     }
   }
-} 
+}

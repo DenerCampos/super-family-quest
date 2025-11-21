@@ -30,7 +30,7 @@ export const BuyThemeModal = ({ isOpen, onClose, theme, onConfirm }: BuyThemeMod
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="md" isCentered>
+    <Modal isOpen={isOpen} onClose={onClose} size="sm" isCentered>
       <ModalOverlay />
       <ModalContent
         bg={getColor('background.primary')}

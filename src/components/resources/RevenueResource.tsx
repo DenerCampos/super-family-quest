@@ -30,16 +30,15 @@ import type { Revenue, PaginationResponse } from '../../services/resources';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { useNavigate } from 'react-router-dom';
 const ITEMS_PER_PAGE = 5;
 
 interface RevenueResourceProps {
-  onEdit: (revenue: Revenue | null) => void;
   onDelete: (id: string) => void;
   refreshTrigger?: number;
 }
 
 const RevenueResource = ({
-  onEdit,
   onDelete,
   refreshTrigger,
 }: RevenueResourceProps) => {
@@ -51,6 +50,7 @@ const RevenueResource = ({
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
+  const navigate = useNavigate();
   const loadRevenues = async (page: number = 1, search: string = '') => {
     setLoading(true);
     try {
@@ -108,14 +108,6 @@ const RevenueResource = ({
     setPage(newPage);
   };
 
-  const handleNewRevenue = () => {
-    onEdit(null);
-  };
-
-  const handleEdit = (revenue: Revenue) => {
-    onEdit(revenue);
-  };
-
   const handleDelete = async (id: string) => {
     if (window.confirm(t('resources.revenue.deleteConfirm'))) {
       try {
@@ -168,7 +160,7 @@ const RevenueResource = ({
           _focus={{ bg: getColor('button.hover.background.neutral'),
             color: getColor('button.hover.text.neutral'), }}
           leftIcon={<FiPlus />}
-          onClick={handleNewRevenue}
+          onClick={() => navigate('/revenue')}
         >
           {t('resources.revenue.new')}
         </Button>
@@ -230,7 +222,7 @@ const RevenueResource = ({
                         <MenuList>
                           <MenuItem
                             icon={<FiEdit />}
-                            onClick={() => handleEdit(revenue)}
+                            onClick={() => navigate(`/revenue/${revenue.id}`)}
                           >
                             {t('resources.revenue.edit')}
                           </MenuItem>

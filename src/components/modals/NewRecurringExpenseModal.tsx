@@ -210,7 +210,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
       isOpen={isOpen}
       onClose={onClose}
       closeOnOverlayClick={false}
-      size="lg"
+      size="sm"
       isCentered
     >
       <ModalOverlay />

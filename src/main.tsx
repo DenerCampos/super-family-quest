@@ -1,26 +1,31 @@
-import * as React from 'react';
-import ReactDOM from 'react-dom/client';
-import { ChakraProvider } from '@chakra-ui/react';
-import { BrowserRouter } from 'react-router-dom';
-import { I18nextProvider } from 'react-i18next';
-import App from './App';
-import theme from './theme/theme';
-import { AuthProvider } from './contexts/AuthContext';
-import { ThemeProvider } from './contexts/ThemeContext';
-import i18n from './i18n/config';
+import { ChakraProvider } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import * as React from "react";
+import ReactDOM from "react-dom/client";
+import { I18nextProvider } from "react-i18next";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import i18n from "./i18n/config";
+import theme from "./theme/theme";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const queryClient = new QueryClient();
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <I18nextProvider i18n={i18n}>
-        <AuthProvider>
-          <ThemeProvider>
-            <ChakraProvider theme={theme}>
-              <App />
-            </ChakraProvider>
-          </ThemeProvider>
-        </AuthProvider>
-      </I18nextProvider>
+      <QueryClientProvider client={queryClient}>
+        <I18nextProvider i18n={i18n}>
+          <AuthProvider>
+            <ThemeProvider>
+              <ChakraProvider theme={theme}>
+                <App />
+              </ChakraProvider>
+            </ThemeProvider>
+          </AuthProvider>
+        </I18nextProvider>
+      </QueryClientProvider>
     </BrowserRouter>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
