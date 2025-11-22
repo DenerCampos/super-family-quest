@@ -13,6 +13,7 @@ import {
   FiDollarSign,
   FiEye,
   FiEyeOff,
+  FiImage,
   FiPlus,
   FiShoppingBag,
 } from "react-icons/fi";
@@ -188,6 +189,9 @@ const Home = () => {
               </MenuItem>
               <MenuItem icon={<FiCamera />} onClick={() => navigate("/scan")}>
                 {t("home.scanQRCode")}
+              </MenuItem>
+              <MenuItem icon={<FiImage />} onClick={() => navigate("/image-recognition")}>
+                {t("home.scanReceipt")}
               </MenuItem>
             </MenuList>
           </Menu>

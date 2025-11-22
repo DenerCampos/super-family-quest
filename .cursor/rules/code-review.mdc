@@ -292,7 +292,283 @@ src/
 
 ---
 
-## 🌍 Internacionalização
+## 🎨 Sistema de Temas e Cores
+
+### Regras de Cores
+
+#### ✅ SEMPRE Usar Tokens de Tema
+```typescript
+// ✅ CORRETO - Usa tokens do tema
+const { theme } = useVisualTheme();
+<Box bg={theme.colors.background.primary}>
+  <Text color={theme.colors.text.primary}>Conteúdo</Text>
+</Box>
+
+// ❌ ERRADO - Cor hardcoded
+<Box bg="blue.800">
+  <Text color="white">Conteúdo</Text>
+</Box>
+```
+
+#### Tokens de Cor Disponíveis
+
+O sistema possui mais de 100 tokens semânticos organizados em:
+
+**background**:
+- `primary`, `secondary`, `tertiary`, `quaternary`
+- `header`, `navigation`, `login`, `reports`
+- `home`, `dashboard`, `resources`, `profile`
+- `qrScanner`, `dateRangeFilter`, `coin`, `loading`
+- `selected`, `noSelect`, `hover`
+- `lastRegistrations`: { expense, revenue, neutral, badge }
+- `summaryCard`: { revenue, expense }
+
+**text**:
+- `primary`, `secondary`, `tertiary`, `accent`, `disabled`, `link`, `coin`
+- `header`, `eye`, `dateRangeFilter`
+- `navigation`: { active, inactive }
+- `summaryCard`: { revenue, expense }
+- `lastRegistrations`: { title, primary, icon, neutral, expense, revenue }
+- `reports`: { title, primary, icon, neutral, expense, revenue }
+- `hover`: { expense, revenue, neutral, inverse }
+- `profile`: { primary, secondary, selected }
+
+**button**:
+- `primary`, `secondary`, `danger`, `warning`
+- `background`: { primary, expense, revenue, neutral, inverse }
+- `text`: { primary, expense, revenue }
+- `border`: { expense, revenue, neutral }
+- `hover`: { text, background, border } com variações
+
+**input**:
+- `primary`, `secondary`, `hover`, `focus`, `border`
+- `background`, `focusBorder`, `backgroundPrimary`, `backgroundSecondary`
+
+**border**:
+- `primary`, `secondary`, `selected`, `noSelect`, `coin`
+- `header`, `navigation`, `reports`
+- `lastRegistrations`: { expense, revenue, neutral }
+- `summaryCard`: { revenue, expense }
+
+**status**:
+- `success`, `error`, `warning`, `info`
+
+**heading**:
+- `summaryCard`: { revenue, expense }
+
+**link**:
+- `primary`
+
+#### Criando Novos Tokens
+
+Se a tela/componente precisa de cores que não existem:
+
+1. ✅ Adicionar token em **TODOS** os temas (`src/theme/themes.ts`)
+2. ✅ Usar nomenclatura semântica descritiva
+3. ✅ Manter consistência entre temas (default e rpg)
+4. ✅ Documentar o uso do novo token
+
+```typescript
+// ✅ CORRETO - Adicionar em AMBOS os temas
+// em defaultTheme e rpgTheme
+colors: {
+  background: {
+    // ... tokens existentes
+    myNewScreen: 'blue.50',  // default
+  }
+}
+
+// e no rpgTheme
+colors: {
+  background: {
+    // ... tokens existentes
+    myNewScreen: 'purple.50',  // rpg
+  }
+}
+```
+
+---
+
+## 🌍 Sistema de Tradução (i18n) por Tema
+
+### Estrutura de Traduções
+
+**CRÍTICO**: Cada tema tem seu próprio arquivo de traduções!
+
+```
+i18n/locales/
+├── default/
+│   └── pt.json    # Linguagem profissional/financeira
+└── rpg/
+    └── pt.json    # Linguagem medieval/gamificada
+```
+
+### Diferenças entre Temas
+
+**default** (Profissional):
+```json
+{
+  "common": {
+    "expenses": "Despesas",
+    "income": "Receitas",
+    "balance": "Saldo Disponível",
+    "save": "Salvar"
+  }
+}
+```
+
+**rpg** (Medieval):
+```json
+{
+  "common": {
+    "expenses": "Custos da Jornada",
+    "income": "Recompensas",
+    "balance": "Tesouro Acumulado",
+    "save": "Forjar"
+  }
+}
+```
+
+### Regras de Tradução
+
+#### ✅ SEMPRE Usar Traduções
+```typescript
+// ✅ CORRETO - Usa hook de tradução
+const { t } = useThemedTranslation();
+<Text>{t('common.expenses')}</Text>
+
+// ❌ ERRADO - Texto hardcoded
+<Text>Despesas</Text>
+```
+
+#### ✅ SEMPRE Adicionar em AMBOS os Temas
+```json
+// default/pt.json
+{
+  "myFeature": {
+    "title": "Minha Funcionalidade",
+    "description": "Gerencie suas finanças"
+  }
+}
+
+// rpg/pt.json
+{
+  "myFeature": {
+    "title": "Minha Jornada Épica",
+    "description": "Administre seu tesouro"
+  }
+}
+```
+
+#### Categorias de Tradução
+
+Organize as traduções nas categorias corretas:
+
+- `common` - Textos gerais (botões, mensagens, erros)
+- `auth` - Login, registro, logout
+- `dashboard` - Dashboard e gráficos
+- `home` - Página inicial
+- `profile` - Perfil do usuário
+- `resources` - Recursos (grupos, lojas, pagamentos)
+- `reports` - Relatórios
+- `expenses` - Despesas
+- `revenue` - Receitas
+- `navigation` - Menu de navegação
+- `qrScanner` - Scanner de QR Code
+- `theme` - Sistema de temas
+
+### Hooks Corretos
+
+#### useVisualTheme
+Para acessar cores e tema visual:
+```typescript
+import { useVisualTheme } from '@/hooks/useVisualTheme';
+
+const { theme } = useVisualTheme();
+// theme.colors, theme.fonts, theme.assets
+```
+
+#### useThemedTranslation
+Para traduções dependentes do tema:
+```typescript
+import { useThemedTranslation } from '@/hooks/useThemedTranslation';
+
+const { t } = useThemedTranslation();
+// Retorna tradução do tema ativo (default ou rpg)
+```
+
+---
+
+## ✅ Checklist de Temas e Traduções
+
+### Cores
+- [ ] Usa tokens de tema, não cores hardcoded
+- [ ] Não usa cores do Chakra diretamente (blue.800, etc)
+- [ ] Se criou novos tokens, adicionou em TODOS os temas
+- [ ] Nomes dos tokens são semânticos e descritivos
+- [ ] Usa `useVisualTheme()` para acessar cores
+
+### Traduções
+- [ ] Nenhum texto hardcoded no JSX
+- [ ] Usa `useThemedTranslation()` para textos
+- [ ] Adicionou traduções em `default/pt.json`
+- [ ] Adicionou traduções em `rpg/pt.json`
+- [ ] Traduções do tema rpg têm linguagem medieval
+- [ ] Keys organizadas na categoria correta
+- [ ] Usa interpolação para valores dinâmicos: `t('key', { value })`
+
+### Exemplo Completo
+```typescript
+// ✅ PERFEITO - Segue todas as regras
+import { Box, Text, Button } from '@chakra-ui/react';
+import { useVisualTheme } from '@/hooks/useVisualTheme';
+import { useThemedTranslation } from '@/hooks/useThemedTranslation';
+
+export const MyComponent = () => {
+  const { theme } = useVisualTheme();
+  const { t } = useThemedTranslation();
+  
+  return (
+    <Box bg={theme.colors.background.primary}>
+      <Text color={theme.colors.text.primary}>
+        {t('myComponent.title')}
+      </Text>
+      <Button
+        bg={theme.colors.button.background.primary}
+        color={theme.colors.button.text.primary}
+        _hover={{
+          bg: theme.colors.button.hover.background.default,
+        }}
+      >
+        {t('common.save')}
+      </Button>
+    </Box>
+  );
+};
+```
+
+---
+
+## 🎯 Severidade - Temas e Traduções
+
+### 🔴 Crítico
+- Cores hardcoded (blue.800, white, etc)
+- Texto hardcoded no JSX
+- Falta de traduções em um dos temas
+- Uso direto de cores sem tokens
+
+### 🟡 Médio
+- Tokens de cor inconsistentes entre temas
+- Traduções em categoria errada
+- Falta de contexto em traduções
+- Não usa hooks corretos (useVisualTheme, useThemedTranslation)
+
+### 🔵 Baixo
+- Nomenclatura de keys de tradução pode melhorar
+- Tokens de cor poderiam ser mais semânticos
+- Falta de comentários em tokens novos
+
+---
 
 ### i18next
 - ✅ Usar hooks `useThemedTranslation` do projeto

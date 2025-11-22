@@ -49,6 +49,7 @@
     "addExpense": "Adicionar Despesa",
     "newExpense": "Nova Despesa",
     "scanQRCode": "Ler Nota Fiscal",
+    "scanReceipt": "Capturar Comprovante",
     "addRevenue": "Adicionar Receita",
     "newRevenue": "Nova Receita"
   },
@@ -265,6 +266,21 @@
     "title": "Posicione o QR Code",
     "camera": "Câmera: {{name}} ({{current}}/{{total}})",
     "defaultCamera": "Padrão"
+  },
+  "imageRecognitionPage": {
+    "back": "Voltar",
+    "instructions": "Posicione o comprovante na tela e tire uma foto",
+    "title": "Capturar Comprovante",
+    "camera": "Câmera: {{name}} ({{current}}/{{total}})",
+    "defaultCamera": "Padrão",
+    "capture": "Tirar Foto",
+    "loadingCamera": "Carregando câmera",
+    "analyzingImage": "Analisando comprovante",
+    "processingError": "Falha ao processar imagem",
+    "captureError": "Falha ao capturar imagem",
+    "cameraNotFound": "Elemento de câmera não encontrado",
+    "noCameraFound": "Nenhuma câmera encontrada",
+    "switchCamera": "Trocar câmera"
   },
   "lastRegistrationsList": {
     "title": "Últimos Lançamentos",
