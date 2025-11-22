@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import type { ExpenseComplete } from "../services/expense";
 import type { Expense } from "../services/resources";
 import { formatCurrencyInputBRL } from "../utils/formatCurrency";
-import { formatGramsInput } from "../utils/formatGrams";
+import { formatGramsDisplay } from "../utils/formatGrams";
 
 interface AutofillData {
   stores: Array<{ name: string }>;
@@ -92,7 +92,7 @@ export const useExpenseFormAutofill = ({
         items: expenseData.items.map((item) => ({
           ...item,
           value: formatCurrencyInputBRL(item.value.toString()),
-          quantity: formatGramsInput(item.quantity.toString()),
+          quantity: formatGramsDisplay(item.quantity),
           total:
             typeof item.total === "string"
               ? parseFloat(item.total)
@@ -120,7 +120,7 @@ export const useExpenseFormAutofill = ({
         items: couponData.items.map((item) => ({
           code: item.code,
           name: item.name,
-          quantity: formatGramsInput(item.quantity.toString()),
+          quantity: formatGramsDisplay(item.quantity),
           value: formatCurrencyInputBRL(item.value.replace(",", "")),
           unit: item.unit,
           group: { name: item.group.name },

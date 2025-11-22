@@ -45,6 +45,7 @@
     "addExpense": "Registrar Tributo",
     "newExpense": "Novo Tributo",
     "scanQRCode": "Ler Pergaminho Mágico",
+    "scanReceipt": "Capturar Pergaminho Antigo",
     "addRevenue": "Registrar Recompensa",
     "newRevenue": "Nova Recompensa"
   },
@@ -258,6 +259,21 @@
     "title": "Posicione a Lente Mágica",
     "camera": "Lente Mágica: {{name}} ({{current}}/{{total}})",
     "defaultCamera": "Lente Padrão"
+  },
+  "imageRecognitionPage": {
+    "back": "Retornar",
+    "instructions": "Posicione o pergaminho antigo na tela e capture sua essência",
+    "title": "Capturar Pergaminho",
+    "camera": "Lente Mágica: {{name}} ({{current}}/{{total}})",
+    "defaultCamera": "Lente Padrão",
+    "capture": "Capturar Essência",
+    "loadingCamera": "Preparando lente mágica",
+    "analyzingImage": "Decifrando runas antigas",
+    "processingError": "Falha ao decifrar pergaminho",
+    "captureError": "Falha ao capturar essência",
+    "cameraNotFound": "Lente mágica não encontrada",
+    "noCameraFound": "Nenhuma lente mágica encontrada",
+    "switchCamera": "Trocar lente mágica"
   },
   "lastRegistrationsList": {
     "title": "Registros do Escriba",

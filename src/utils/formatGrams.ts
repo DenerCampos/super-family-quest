@@ -31,3 +31,16 @@ export function formatGramsInput(value: string): string {
   // Formata com 3 casas decimais
   return numericValue.toFixed(3);
 }
+
+/**
+ * Formata quantidade que já vem pronta da API ou dados externos
+ * Diferente do formatGramsInput que é para entrada manual do usuário
+ */
+export function formatGramsDisplay(value: string | number): string {
+  if (!value) return '';
+
+  const numericValue = typeof value === 'number' ? value : parseGrams(value);
+
+  // Formata com até 3 casas decimais, removendo zeros desnecessários
+  return numericValue.toFixed(3).replace(/\.?0+$/, '');
+}

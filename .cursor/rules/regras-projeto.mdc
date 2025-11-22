@@ -246,9 +246,217 @@ src/
   - constants
 
 ### Sistema de Temas
-- Suporta múltiplos temas visuais (default, medieval, etc.)
-- Internacionalização integrada com temas
-- Imagens e textos personalizados por tema
+
+O projeto possui um sistema de temas robusto que afeta cores, fontes, assets e traduções.
+
+#### Estrutura de Temas
+
+**Arquivos principais**:
+- `src/theme/themes.ts` - Definição dos temas (defaultTheme, rpgTheme)
+- `src/theme/types.ts` - Tipos TypeScript para temas
+- `src/i18n/locales/[tema]/pt.json` - Traduções por tema
+
+#### Temas Disponíveis
+
+1. **default** - Tema profissional/financeiro
+   - Cor primária: blue
+   - Fontes: Roboto, Poppins
+   - Traduções: `i18n/locales/default/pt.json`
+
+2. **rpg** - Tema medieval/gamificado  
+   - Cor primária: purple
+   - Fontes: Pixelify Sans (tema), Press Start 2P (mono)
+   - Traduções: `i18n/locales/rpg/pt.json`
+
+#### Esquema de Cores
+
+Cada tema possui uma estrutura completa de cores semânticas organizada em:
+
+**Categorias de Cores**:
+```typescript
+colors: {
+  primary: string,           // Cor principal do tema
+  secondary: string,          // Cor secundária
+  accent: string,            // Cor de destaque
+  revenue: string,           // Verde para receitas
+  expense: string,           // Vermelho para despesas
+  
+  // Tokens semânticos (mais de 100 tokens)
+  background: {
+    primary, secondary, tertiary, quaternary,
+    header, navigation, login, reports, home, dashboard,
+    resources, profile, qrScanner, dateRangeFilter,
+    lastRegistrations: { expense, revenue, neutral, badge },
+    summaryCard: { revenue, expense },
+    selected, noSelect, hover, loading, coin
+  },
+  
+  text: {
+    primary, secondary, tertiary, accent, disabled, link, coin,
+    header, eye, dateRangeFilter,
+    navigation: { active, inactive },
+    summaryCard: { revenue, expense },
+    lastRegistrations: { title, primary, icon, neutral, expense, revenue },
+    reports: { title, primary, icon, neutral, expense, revenue },
+    hover: { expense, revenue, neutral, inverse },
+    profile: { primary, secondary, selected }
+  },
+  
+  heading: {
+    summaryCard: { revenue, expense }
+  },
+  
+  border: {
+    primary, secondary, selected, noSelect, coin,
+    header, navigation, reports,
+    lastRegistrations: { expense, revenue, neutral },
+    summaryCard: { revenue, expense }
+  },
+  
+  button: {
+    primary, secondary, danger, warning,
+    background: { primary, expense, revenue, neutral, inverse },
+    text: { primary, expense, revenue },
+    border: { expense, revenue, neutral },
+    hover: {
+      text: { default, expense, revenue, neutral, inverse },
+      background: { default, expense, revenue, neutral, inverse },
+      border: { default, expense, revenue, neutral, inverse }
+    }
+  },
+  
+  input: {
+    primary, secondary, hover, focus, border, background,
+    focusBorder, backgroundPrimary, backgroundSecondary, focusPrimary
+  },
+  
+  status: {
+    success, error, warning, info
+  },
+  
+  link: { primary }
+}
+```
+
+**Paleta Base**: O projeto usa a paleta do Chakra UI estendida com 10 variações (50-950) para cada cor:
+- red, orange, yellow, green, teal, blue, cyan, purple, pink, gray
+
+#### Sistema de Tradução (i18n)
+
+**IMPORTANTE**: Cada tema possui seu próprio arquivo de tradução!
+
+**Estrutura**:
+```
+i18n/locales/
+├── default/
+│   └── pt.json          # Traduções tema profissional
+└── rpg/
+    └── pt.json          # Traduções tema medieval
+```
+
+**Diferenças de Tradução**:
+- **default**: Linguagem profissional/financeira
+  - "Despesas", "Receitas", "Saldo Disponível"
+- **rpg**: Linguagem medieval/gamificada
+  - "Custos da Jornada", "Recompensas", "Tesouro Acumulado"
+
+**Categorias de Tradução**:
+- `common` - Textos gerais (welcome, save, loading, errors)
+- `auth` - Login e autenticação
+- `dashboard` - Dashboard
+- `home` - Página inicial
+- `profile` - Perfil
+- `resources` - Recursos (grupos, lojas, pagamentos)
+- `reports` - Relatórios
+- `expenses` - Despesas
+- `revenue` - Receitas
+- `navigation` - Navegação
+- `qrScanner` - Scanner QR
+- `theme` - Compra de temas
+
+#### ⚠️ REGRAS OBRIGATÓRIAS
+
+**🎨 Ao Criar uma Nova Tela/Componente**:
+
+1. **SEMPRE use tokens de cor do tema**, NUNCA cores hardcoded:
+   ```typescript
+   // ✅ CORRETO
+   bg={theme.colors.background.primary}
+   color={theme.colors.text.primary}
+   
+   // ❌ ERRADO
+   bg="blue.800"
+   color="white"
+   ```
+
+2. **Se precisar de novos tokens de cor**:
+   - Adicione em TODOS os temas em `src/theme/themes.ts`
+   - Use nomes semânticos descritivos
+   - Mantenha consistência entre temas
+
+3. **SEMPRE adicione traduções**:
+   - Adicione as keys em `default/pt.json`
+   - Adicione versão medieval em `rpg/pt.json`
+   - Use `useThemedTranslation()` para acessar
+
+4. **Use o hook correto para tema**:
+   ```typescript
+   import { useVisualTheme } from '@/hooks/useVisualTheme';
+   
+   const { theme } = useVisualTheme();
+   ```
+
+5. **Use o hook correto para traduções**:
+   ```typescript
+   import { useThemedTranslation } from '@/hooks/useThemedTranslation';
+   
+   const { t } = useThemedTranslation();
+   ```
+
+#### Exemplo Completo
+
+```typescript
+// ✅ Componente seguindo as regras
+import { Box, Text, Button } from '@chakra-ui/react';
+import { useVisualTheme } from '@/hooks/useVisualTheme';
+import { useThemedTranslation } from '@/hooks/useThemedTranslation';
+
+export const MyNewComponent = () => {
+  const { theme } = useVisualTheme();
+  const { t } = useThemedTranslation();
+  
+  return (
+    <Box bg={theme.colors.background.primary}>
+      <Text color={theme.colors.text.primary}>
+        {t('myComponent.title')}
+      </Text>
+      <Button
+        bg={theme.colors.button.background.primary}
+        color={theme.colors.button.text.primary}
+      >
+        {t('common.save')}
+      </Button>
+    </Box>
+  );
+};
+```
+
+**Traduções necessárias**:
+```json
+// default/pt.json
+{
+  "myComponent": {
+    "title": "Meu Componente"
+  }
+}
+
+// rpg/pt.json  
+{
+  "myComponent": {
+    "title": "Minha Jornada Épica"
+  }
+}
+```
 
 ### Autenticação
 - Sistema de autenticação com proteção de rotas
