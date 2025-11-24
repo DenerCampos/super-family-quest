@@ -3,6 +3,7 @@ import { CoinService } from "./coin";
 import { CouponReaderService } from "./couponReader";
 import { ExpenseService, type ExpenseRecurring } from "./expense";
 import { ImageRecognitionService } from "./imageRecognition";
+import { AudioRecognitionService } from "./audioRecognition";
 import { ProfileService } from "./profile";
 import { ReportsService } from "./reports";
 import { ResourcesService, type UpdateExpense } from "./resources";
@@ -29,6 +30,7 @@ export const api = {
 
   couponReader: CouponReaderService.read,
   imageRecognition: ImageRecognitionService.analyze,
+  audioRecognition: AudioRecognitionService.analyze,
 
   getStores: ({
     page,

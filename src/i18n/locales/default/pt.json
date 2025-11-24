@@ -50,6 +50,7 @@
     "newExpense": "Nova Despesa",
     "scanQRCode": "Ler Nota Fiscal",
     "scanReceipt": "Capturar Comprovante",
+    "recordAudio": "Gravar por Voz",
     "addRevenue": "Adicionar Receita",
     "newRevenue": "Nova Receita"
   },
@@ -281,6 +282,27 @@
     "cameraNotFound": "Elemento de câmera não encontrado",
     "noCameraFound": "Nenhuma câmera encontrada",
     "switchCamera": "Trocar câmera"
+  },
+  "audioRecognitionPage": {
+    "back": "Voltar",
+    "instructions": "Pressione o botão e fale sobre sua despesa",
+    "title": "Gravar Despesa por Voz",
+    "startRecording": "Iniciar Gravação",
+    "stopRecording": "Parar Gravação",
+    "sendAudio": "Enviar Áudio",
+    "recording": "Gravando...",
+    "processingAudio": "Processando áudio",
+    "analyzingAudio": "Analisando áudio",
+    "processingError": "Falha ao processar áudio",
+    "microphoneError": "Erro ao acessar microfone",
+    "microphoneNotFound": "Microfone não encontrado",
+    "permissionDenied": "Permissão de microfone negada",
+    "recordingTime": "Tempo: {{time}}s",
+    "instructionsDetail": "Diga informações como: loja, valor, itens comprados e forma de pagamento",
+    "cancel": "Cancelar",
+    "recordingComplete": "Gravação concluída!",
+    "playAudio": "Clique para ouvir a gravação",
+    "playing": "Reproduzindo..."
   },
   "lastRegistrationsList": {
     "title": "Últimos Lançamentos",

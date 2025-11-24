@@ -14,6 +14,7 @@ import {
   FiEye,
   FiEyeOff,
   FiImage,
+  FiMic,
   FiPlus,
   FiShoppingBag,
 } from "react-icons/fi";
@@ -192,6 +193,9 @@ const Home = () => {
               </MenuItem>
               <MenuItem icon={<FiImage />} onClick={() => navigate("/image-recognition")}>
                 {t("home.scanReceipt")}
+              </MenuItem>
+              <MenuItem icon={<FiMic />} onClick={() => navigate("/audio-recognition")}>
+                {t("home.recordAudio")}
               </MenuItem>
             </MenuList>
           </Menu>
