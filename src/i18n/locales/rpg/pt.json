@@ -46,6 +46,7 @@
     "newExpense": "Novo Tributo",
     "scanQRCode": "Ler Pergaminho Mágico",
     "scanReceipt": "Capturar Pergaminho Antigo",
+    "recordAudio": "Cristal Vocal",
     "addRevenue": "Registrar Recompensa",
     "newRevenue": "Nova Recompensa"
   },
@@ -274,6 +275,27 @@
     "cameraNotFound": "Lente mágica não encontrada",
     "noCameraFound": "Nenhuma lente mágica encontrada",
     "switchCamera": "Trocar lente mágica"
+  },
+  "audioRecognitionPage": {
+    "back": "Retornar",
+    "instructions": "Pressione o cristal e narre sua jornada",
+    "title": "Cristal de Registro Vocal",
+    "startRecording": "Ativar Cristal",
+    "stopRecording": "Desativar Cristal",
+    "sendAudio": "Enviar Mensagem",
+    "recording": "Cristal Ativo...",
+    "processingAudio": "Processando encantamento",
+    "analyzingAudio": "Decifrando cristal vocal",
+    "processingError": "Falha ao decifrar encantamento",
+    "microphoneError": "Erro ao acessar cristal vocal",
+    "microphoneNotFound": "Cristal vocal não encontrado",
+    "permissionDenied": "Permissão do cristal negada",
+    "recordingTime": "Tempo: {{time}}s",
+    "instructionsDetail": "Narre: mercador visitado, tributo pago, itens adquiridos e forma de pagamento",
+    "cancel": "Cancelar",
+    "recordingComplete": "Mensagem capturada pelo cristal!",
+    "playAudio": "Clique para ouvir a mensagem",
+    "playing": "Reproduzindo mensagem..."
   },
   "lastRegistrationsList": {
     "title": "Registros do Escriba",

@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { ImageRecognitionPage } from "./components/ImageRecognitionPage";
+import { AudioRecognitionPage } from "./components/AudioRecognitionPage";
 import { QRScannerPage } from "./components/QRScannerPage";
 import { RequireAuth } from "./components/RequireAuth";
 import Dashboard from "./pages/Dashboard";
@@ -82,6 +83,14 @@ export default function App() {
         element={
           <RequireAuth>
             <ImageRecognitionPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/audio-recognition"
+        element={
+          <RequireAuth>
+            <AudioRecognitionPage />
           </RequireAuth>
         }
       />
