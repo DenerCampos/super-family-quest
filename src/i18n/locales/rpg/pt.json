@@ -248,8 +248,8 @@
     }
   },
   "navigationBar": {
-    "home": "Salão Principal",
-    "dashboard": "Sala do Tesouro",
+    "home": "Principal",
+    "dashboard": "Tesouro",
     "resources": "Arsenal",
     "challenges": "Missões",
     "profile": "Grimório"
