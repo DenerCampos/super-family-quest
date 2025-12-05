@@ -61,7 +61,7 @@ const Revenue = () => {
     if (data) {
       reset({
         name: data.name,
-        value: formatCurrencyInputBRL(data.value.toFixed(2)),
+        value: formatCurrencyInputBRL(data.value.toString()),
         repeat: data.repeat,
         date: data.date.split("T")[0],
       });
