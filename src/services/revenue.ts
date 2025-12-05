@@ -31,4 +31,30 @@ export const RevenueService = {
 
     return response.data;
   },
+
+  analyzeAudio: async (audioFile: File): Promise<Revenue> => {
+    const formData = new FormData();
+    formData.append('audio', audioFile);
+
+    const response = await api.post('/revenue/analyze-audio', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  },
+
+  analyzeImage: async (imageFile: File): Promise<Revenue> => {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    const response = await api.post('/revenue/analyze-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  },
 };

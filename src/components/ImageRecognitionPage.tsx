@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Flex, Heading, Text, Box, Button, IconButton } from '@chakra-ui/react';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 import { FiArrowLeft, FiRotateCw, FiCamera } from 'react-icons/fi';
@@ -19,7 +19,11 @@ export const ImageRecognitionPage = () => {
   const [currentDeviceIndex, setCurrentDeviceIndex] = useState(0);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useThemeTranslation();
+
+  // Determinar se é para expense ou revenue baseado na navegação
+  const isRevenue = location.state?.from === 'revenue';
   
   const streamRef = useRef<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -63,12 +67,22 @@ export const ImageRecognitionPage = () => {
       setLoadingRead(true);
       stopCamera();
 
-      const data = await api.expenseAnalyzeImage(imageFile);
-
-      if (isMountedRef.current) {
+      let couponData;
+      if (isRevenue) {
+        const data = await api.revenueAnalyzeImage(imageFile);
+        couponData = data;
+        navigate('/revenue', {
+          state: {
+            couponData,
+            scanned: true,
+          },
+        });
+      } else {
+        const data = await api.expenseAnalyzeImage(imageFile);
+        couponData = convertQRData(data);
         navigate('/expense', {
           state: {
-            couponData: convertQRData(data),
+            couponData,
             scanned: true,
           },
         });

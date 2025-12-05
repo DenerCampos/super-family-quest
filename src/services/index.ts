@@ -29,6 +29,8 @@ export const api = {
   couponReader: CouponReaderService.read,
   expenseAnalyzeImage: ExpenseService.analyzeImage,
   expenseAnalyzeAudio: ExpenseService.analyzeAudio,
+  revenueAnalyzeImage: RevenueService.analyzeImage,
+  revenueAnalyzeAudio: RevenueService.analyzeAudio,
 
   getStores: ({
     page,

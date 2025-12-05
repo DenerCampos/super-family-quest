@@ -229,6 +229,12 @@ const Home = () => {
               <MenuItem icon={<FiPlus />} onClick={() => navigate("/revenue")}>
                 {t("home.newRevenue")}
               </MenuItem>
+              <MenuItem icon={<FiImage />} onClick={() => navigate("/image-recognition", { state: { from: 'revenue' } })}>
+                {t("home.scanReceipt")}
+              </MenuItem>
+              <MenuItem icon={<FiMic />} onClick={() => navigate("/audio-recognition", { state: { from: 'revenue' } })}>
+                {t("home.recordAudio")}
+              </MenuItem>
             </MenuList>
           </Menu>
         </Flex>

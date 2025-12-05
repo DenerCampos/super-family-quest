@@ -13,7 +13,7 @@ type RevenuePayload = {
   repeat: boolean;
 };
 
-export const useCreateRevenue = () => {
+export const useCreateRevenue = (redirectPath?: string | number) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const toast = useToast();
@@ -30,9 +30,13 @@ export const useCreateRevenue = () => {
       queryClient.invalidateQueries({
         queryKey: [GET_LAST_REGISTRATION_QUERY_KEY],
       });
-      
-      const previousPath = -1;
-      navigate(previousPath);
+
+      // Se redirectPath for fornecido, usa ele, senão volta para página anterior
+      if (redirectPath !== undefined) {
+        navigate(redirectPath as string);
+      } else {
+        navigate(-1);
+      }
     },
     onError: () => {
       toast({
@@ -45,7 +49,7 @@ export const useCreateRevenue = () => {
   });
 };
 
-export const useUpdateRevenue = () => {
+export const useUpdateRevenue = (redirectPath?: string | number) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const toast = useToast();
@@ -67,8 +71,12 @@ export const useUpdateRevenue = () => {
         queryKey: [REVENUE_QUERY_KEY, variables.id],
       });
 
-      const previousPath = -1;
-      navigate(previousPath);
+      // Se redirectPath for fornecido, usa ele, senão volta para página anterior
+      if (redirectPath !== undefined) {
+        navigate(redirectPath as string);
+      } else {
+        navigate(-1);
+      }
     },
     onError: () => {
       toast({

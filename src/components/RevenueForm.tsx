@@ -14,6 +14,9 @@ import {
   formatCurrencyInputBRL,
   parseBRLCurrency,
 } from "../utils/formatCurrency";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import type { Revenue } from "../services/revenue";
 
 export type RevenueFormData = {
   name: string;
@@ -22,23 +25,37 @@ export type RevenueFormData = {
   repeat: boolean;
 };
 
-interface AvenueFormProps {
+interface RevenueFormProps {
   onSubmit: (data: RevenueFormData) => Promise<void>;
   isEdit?: boolean;
   id?: string;
 }
 
-export const AvenueForm = ({ onSubmit, isEdit, id }: AvenueFormProps) => {
+export const RevenueForm = ({ onSubmit, isEdit, id }: RevenueFormProps) => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
+   const location = useLocation();
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { errors, isSubmitting, isValid, isDirty },
   } = useFormContext<RevenueFormData>();
+
+  useEffect(() => {
+    const couponData = location.state?.couponData as Revenue;
+    if (couponData) {
+      reset({
+        name: couponData.name,
+        value: formatCurrencyInputBRL(couponData.value.toString()),
+        date: couponData.date,
+        repeat: couponData.repeat,
+      })
+    }
+  }, [])
 
   return (
     <form style={{ display: "flex", flexDirection: "column", flex: 1 }}>
