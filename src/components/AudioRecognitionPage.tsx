@@ -112,7 +112,7 @@ export const AudioRecognitionPage = () => {
       setError('');
 
       const audioFile = new File([audioBlob], 'gravacao.webm', { type: 'audio/webm' });
-      const data = await api.audioRecognition(audioFile);
+      const data = await api.expenseAnalyzeAudio(audioFile);
 
       if (isMountedRef.current) {
         navigate('/expense', {

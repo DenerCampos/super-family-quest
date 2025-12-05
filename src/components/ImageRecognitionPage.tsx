@@ -63,7 +63,7 @@ export const ImageRecognitionPage = () => {
       setLoadingRead(true);
       stopCamera();
 
-      const data = await api.imageRecognition(imageFile);
+      const data = await api.expenseAnalyzeImage(imageFile);
 
       if (isMountedRef.current) {
         navigate('/expense', {
