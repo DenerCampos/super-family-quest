@@ -15,36 +15,23 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { FiArrowLeft } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
-import { AvenueForm, type RevenueFormData } from "../../components/AvenueForm";
+import { RevenueForm, type RevenueFormData } from "../../components/RevenueForm";
 import { LoadingOverlay } from "../../components/LoadingOverlay";
-import { AvenueSkeleton } from "../../components/skeletons/Avenue.skeleton";
-import {
-  useCreateRevenue,
-  useUpdateRevenue,
-} from "../../hooks/useRevenueMutations";
+import { RevenueSkeleton } from "../../components/skeletons/Revenue.skeleton";
+import { useRevenueFormSubmit } from "../../hooks/useRevenueFormSubmit";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
 import { api } from "../../services";
-import {
-  formatCurrencyInputBRL,
-  parseBRLCurrency,
-} from "../../utils/formatCurrency";
+import { formatCurrencyInputBRL } from "../../utils/formatCurrency";
 
 export const REVENUE_QUERY_KEY = "revenue";
 const Revenue = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
-
-  const { data, isLoading } = useQuery({
-    queryKey: [REVENUE_QUERY_KEY, id],
-    queryFn: () => api.getRevenueById(id!),
-    enabled: !!id,
-  });
-  const createRevenue = useCreateRevenue();
-  const updateRevenue = useUpdateRevenue();
 
   const isEdit = !!id;
 
@@ -58,11 +45,23 @@ const Revenue = () => {
   });
   const reset = form.reset;
 
+  const { data, isLoading } = useQuery({
+    queryKey: [REVENUE_QUERY_KEY, id],
+    queryFn: () => api.getRevenueById(id!),
+    enabled: !!id,
+  });
+
+  const { onSubmit } = useRevenueFormSubmit({
+    isEdit,
+    id,
+    reset,
+  });
+
   useEffect(() => {
     if (data) {
       reset({
         name: data.name,
-        value: formatCurrencyInputBRL(data.value.toString()),
+        value: formatCurrencyInputBRL(data.value.toFixed(2)),
         repeat: data.repeat,
         date: data.date.split("T")[0],
       });
@@ -70,32 +69,19 @@ const Revenue = () => {
   }, [data, reset]);
 
   if (isLoading) {
-    return <AvenueSkeleton />;
+    return <RevenueSkeleton />;
   }
 
-  const onSubmit = async (data: RevenueFormData) => {
-    const payload = {
-      name: data.name,
-      value: parseBRLCurrency(data.value),
-      date: data.date,
-      repeat: data.repeat,
-    };
-
-    if (!isEdit) {
-      await createRevenue.mutateAsync(payload);
+  const handleSubmit = async (data: RevenueFormData) => {
+    setIsSubmitting(true);
+    try {
+      await onSubmit(data);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    if (isEdit) {
-      await updateRevenue.mutateAsync({
-        id,
-        payload,
-      });
-    }
-
-    reset();
   };
 
-  if (createRevenue.isPending || updateRevenue.isPending) {
+  if (isSubmitting) {
     return <LoadingOverlay text="Salvando" />;
   }
 
@@ -144,7 +130,7 @@ const Revenue = () => {
         </Flex>
 
         <FormProvider {...form}>
-          <AvenueForm onSubmit={onSubmit} isEdit={isEdit} id={id} />
+          <RevenueForm onSubmit={handleSubmit} isEdit={isEdit} id={id} />
         </FormProvider>
       </Flex>
 

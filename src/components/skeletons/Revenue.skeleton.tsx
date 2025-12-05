@@ -1,7 +1,7 @@
 import { Flex, Skeleton, SkeletonCircle, Stack } from "@chakra-ui/react";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
 
-export const AvenueSkeleton = () => {
+export const RevenueSkeleton = () => {
   const { getColor } = useVisualTheme();
 
   return (

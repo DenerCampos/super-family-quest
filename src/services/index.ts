@@ -2,8 +2,6 @@ import { AuthService } from "./auth";
 import { CoinService } from "./coin";
 import { CouponReaderService } from "./couponReader";
 import { ExpenseService, type ExpenseRecurring } from "./expense";
-import { ImageRecognitionService } from "./imageRecognition";
-import { AudioRecognitionService } from "./audioRecognition";
 import { ProfileService } from "./profile";
 import { ReportsService } from "./reports";
 import { ResourcesService, type UpdateExpense } from "./resources";
@@ -29,8 +27,10 @@ export const api = {
   updateUser: UserService.update,
 
   couponReader: CouponReaderService.read,
-  imageRecognition: ImageRecognitionService.analyze,
-  audioRecognition: AudioRecognitionService.analyze,
+  expenseAnalyzeImage: ExpenseService.analyzeImage,
+  expenseAnalyzeAudio: ExpenseService.analyzeAudio,
+  revenueAnalyzeImage: RevenueService.analyzeImage,
+  revenueAnalyzeAudio: RevenueService.analyzeAudio,
 
   getStores: ({
     page,

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Flex, Heading, Text, Box, Button, VStack, IconButton, HStack } from '@chakra-ui/react';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 import { FiArrowLeft, FiMic, FiSquare, FiSend, FiPlay, FiPause } from 'react-icons/fi';
@@ -19,7 +19,11 @@ export const AudioRecognitionPage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useThemeTranslation();
+
+  // Determinar se é para expense ou revenue baseado na navegação
+  const isRevenue = location.state?.from === 'revenue';
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -112,12 +116,22 @@ export const AudioRecognitionPage = () => {
       setError('');
 
       const audioFile = new File([audioBlob], 'gravacao.webm', { type: 'audio/webm' });
-      const data = await api.audioRecognition(audioFile);
-
-      if (isMountedRef.current) {
+      let couponData;
+      if (isRevenue) {
+        const data = await api.revenueAnalyzeAudio(audioFile);
+        couponData = data;
+        navigate('/revenue', {
+          state: {
+            couponData,
+            scanned: true,
+          },
+        });
+      } else {
+        const data = await api.expenseAnalyzeAudio(audioFile);
+        couponData = convertQRData(data);
         navigate('/expense', {
           state: {
-            couponData: convertQRData(data),
+            couponData,
             scanned: true,
           },
         });

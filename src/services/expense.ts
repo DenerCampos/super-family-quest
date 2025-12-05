@@ -1,4 +1,5 @@
 import api from "./api";
+import type { CouponReader } from "./couponReader";
 
 export type Expense = {
   id?: string;
@@ -74,6 +75,32 @@ export const ExpenseService = {
 
   getExpenseById: async (id: string): Promise<ExpenseComplete> => {
     const response = await api.get(`/expense/${id}`);
+
+    return response.data;
+  },
+
+  analyzeAudio: async (audioFile: File): Promise<CouponReader> => {
+    const formData = new FormData();
+    formData.append('audio', audioFile);
+
+    const response = await api.post('/expense/analyze-audio', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data;
+  },
+
+  analyzeImage: async (imageFile: File): Promise<CouponReader> => {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    const response = await api.post('/expense/analyze-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
 
     return response.data;
   },
