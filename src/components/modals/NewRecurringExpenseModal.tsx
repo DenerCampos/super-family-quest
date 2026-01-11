@@ -232,6 +232,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
           <Box
             maxH="300px"
             overflowY="auto"
+            overflowX="hidden"
             pr={2}
             css={{
               '&::-webkit-scrollbar': {
