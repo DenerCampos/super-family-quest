@@ -2,6 +2,7 @@ import { Avatar, Box, Flex, Text, VStack } from '@chakra-ui/react';
 import { FaUsers } from 'react-icons/fa';
 import { useThemedTranslation } from '../hooks/useThemedTranslation';
 import { useVisualTheme } from '../hooks/useVisualTheme';
+import { toDisplayableImageUrl } from '../utils/formatString';
 import type { MemberSummary } from '../types/familyGroup';
 
 type FamilyStoriesProps = {
@@ -115,7 +116,8 @@ export const FamilyStories = ({
               <Avatar
                 size="md"
                 name={member.name}
-                src={member.profileImage || undefined}
+                src={toDisplayableImageUrl(member.profileImage) || undefined}
+                referrerPolicy="no-referrer"
                 border="2px solid"
                 borderColor={getColor('background.familyStories.container')}
               />

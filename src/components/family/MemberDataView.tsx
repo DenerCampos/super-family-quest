@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { toDisplayableImageUrl } from '../../utils/formatString';
 import { formatCurrencyBRL } from '../../utils/formatCurrency';
 import { formatDateToBR } from '../../utils/formatDate';
 import type { MemberDataDto } from '../../types/familyGroup';
@@ -39,7 +40,8 @@ export const MemberDataView = ({ data, isLoading }: MemberDataViewProps) => {
         <Avatar
           size="md"
           name={data.name}
-          src={data.profileImage || undefined}
+          src={toDisplayableImageUrl(data.profileImage) || undefined}
+          referrerPolicy="no-referrer"
         />
         <Box>
           <Text

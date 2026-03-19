@@ -2,6 +2,7 @@ import { Avatar, Flex, Heading, IconButton } from '@chakra-ui/react';
 import { FiLogOut } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import { useThemedTranslation } from '../hooks/useThemedTranslation';
+import { toDisplayableImageUrl } from '../utils/formatString';
 import { CoinDisplay } from './CoinDisplay';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 
@@ -10,7 +11,7 @@ export const Header = () => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
 
-  const avatarSrc = profile?.user.profileImage || profile?.user.coatOfArms;
+  const avatarSrc = toDisplayableImageUrl(profile?.user.profileImage) || profile?.user.coatOfArms;
 
   return (
     <Flex
@@ -27,6 +28,7 @@ export const Header = () => {
           size="sm"
           name={profile?.user.name}
           src={avatarSrc}
+          referrerPolicy="no-referrer"
           borderWidth="2px"
           borderColor={getColor('border.header')}
         />

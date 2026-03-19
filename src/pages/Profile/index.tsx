@@ -41,6 +41,7 @@ import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useTheme } from '../../hooks/useThemeContext';
 import type { ThemeConfig } from '../../services/theme';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { toDisplayableImageUrl } from '../../utils/formatString';
 import type { BalanceCoin } from '../../services/coin';
 
 // Lista de brasões pré-definidos
@@ -396,7 +397,7 @@ const Profile = () => {
                   background: 'transparent',
                 },
                 '&::-webkit-scrollbar-thumb': {
-                  background: 'purple.500',
+                  background: getColor('border.primary'),
                   borderRadius: '4px',
                 },
               }}
@@ -407,7 +408,8 @@ const Profile = () => {
                     <Avatar
                       size="2xl"
                       name={profile?.user.name}
-                      src={profile?.user.profileImage || selectedCoat}
+                      src={toDisplayableImageUrl(profile?.user.profileImage) || selectedCoat}
+                      referrerPolicy="no-referrer"
                       border="3px solid"
                       borderColor={getColor('border.primary')}
                     />

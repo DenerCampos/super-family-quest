@@ -9,6 +9,7 @@ import {
 import { FiTrash2 } from 'react-icons/fi';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { toDisplayableImageUrl } from '../../utils/formatString';
 import type { FamilyGroupResponseDto } from '../../types/familyGroup';
 import { isOwner, canManageRoles } from '../../utils/familyGroupPermissions';
 
@@ -80,7 +81,8 @@ export const MembersList = ({
           <Avatar
             size="sm"
             name={group.owner.name}
-            src={group.owner.profileImage || undefined}
+            src={toDisplayableImageUrl(group.owner.profileImage) || undefined}
+            referrerPolicy="no-referrer"
           />
           <Box>
             <Text fontSize="sm" fontWeight="bold" fontFamily={getFont('body')} color={getColor('text.familyGroup.primary')}>
@@ -115,7 +117,8 @@ export const MembersList = ({
               <Avatar
                 size="sm"
                 name={member.user?.name || member.invitedEmail}
-                src={member.user?.profileImage || undefined}
+                src={toDisplayableImageUrl(member.user?.profileImage) || undefined}
+                referrerPolicy="no-referrer"
               />
               <Box>
                 <Text fontSize="sm" fontWeight="bold" fontFamily={getFont('body')} color={getColor('text.familyGroup.primary')}>
