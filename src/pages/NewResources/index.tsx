@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   Accordion,
   Badge,
-  Box,
   Flex,
   Icon,
   Spinner,
@@ -59,7 +58,7 @@ const NewResources = () => {
   // --- Resources state ---
   const [editingResource, setEditingResource] = useState<{
     type: 'store' | 'payment' | 'group' | 'expense' | 'revenue';
-    data: any;
+    data: Merchant | Payments | Groups | Expense | Revenue;
   } | null>(null);
 
   const [refreshTriggers, setRefreshTriggers] = useState({
@@ -160,9 +159,8 @@ const NewResources = () => {
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const [isLoadingMemberData, setIsLoadingMemberData] = useState(false);
 
-  const now = new Date();
-  const [month, setMonth] = useState(now.getMonth() + 1);
-  const [year, setYear] = useState(now.getFullYear());
+  const [month, setMonth] = useState(() => new Date().getMonth() + 1);
+  const [year, setYear] = useState(() => new Date().getFullYear());
 
   const currentUserId = profile?.user.id || '';
   const userIsAdmin = familyGroup ? isAdmin(familyGroup, currentUserId) : false;
@@ -330,7 +328,7 @@ const NewResources = () => {
           <TabPanel p={4}>
             <Accordion allowMultiple>
               <ResourceContainer
-                title="Cadastros"
+                title={t('resources.registrations')}
                 colorScheme={getColor('primary')}
               >
                 <StoreResource
@@ -350,14 +348,14 @@ const NewResources = () => {
                 />
               </ResourceContainer>
 
-              <ResourceContainer title="Despesas" colorScheme={getColor('expense')}>
+              <ResourceContainer title={t('resources.expense.title')} colorScheme={getColor('expense')}>
                 <ExpenseResource
                   onDelete={(id) => handleDelete('expense', id)}
                   refreshTrigger={refreshTriggers.expense}
                 />
               </ResourceContainer>
 
-              <ResourceContainer title="Receitas" colorScheme={getColor('revenue')}>
+              <ResourceContainer title={t('resources.revenue.title')} colorScheme={getColor('revenue')}>
                 <RevenueResource
                   onDelete={(id) => handleDelete('revenue', id)}
                   refreshTrigger={refreshTriggers.revenue}
@@ -430,9 +428,9 @@ const NewResources = () => {
           resourceType={currentResource}
           onSuccess={() => handleModalSuccess(currentResource)}
           initialData={
-            editingResource?.type === currentResource
-              ? editingResource.data
-              : null
+            editingResource?.type === currentResource && editingResource.data.id
+              ? { id: editingResource.data.id, name: editingResource.data.name }
+              : undefined
           }
         />
       )}

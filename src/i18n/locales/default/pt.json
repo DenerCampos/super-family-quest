@@ -26,7 +26,21 @@
     "deleteError": "Falha ao excluir",
     "confirmTitle": "Deseja continuar?",
     "confirmDescription": "Se você continuar, as informações alteradas serão perdidas.",
-    "closeConfirm": "Fechar"
+    "closeConfirm": "Fechar",
+    "months": {
+      "1": "Janeiro",
+      "2": "Fevereiro",
+      "3": "Março",
+      "4": "Abril",
+      "5": "Maio",
+      "6": "Junho",
+      "7": "Julho",
+      "8": "Agosto",
+      "9": "Setembro",
+      "10": "Outubro",
+      "11": "Novembro",
+      "12": "Dezembro"
+    }
   },
   "auth": {
     "login": "Entrar",
@@ -105,6 +119,7 @@
     }
   },
   "resources": {
+    "registrations": "Cadastros",
     "expense": {
       "title": "Despesas",
       "new": "Nova Despesa",
@@ -314,7 +329,8 @@
   "lastRegistrationsList": {
     "title": "Últimos Lançamentos",
     "noData": "Nenhuma despesa registrada",
-    "error": "Erro ao carregar lançamentos recentes"
+    "error": "Erro ao carregar lançamentos recentes",
+    "noMore": "Sem mais registros"
   },
   "loadingOverlay": {
     "loading": "Carregando..."
@@ -351,6 +367,7 @@
     "uploadPhoto": "Enviar Foto",
     "uploadPhotoError": "Erro ao enviar foto",
     "photoUploaded": "Foto atualizada com sucesso",
+    "maxFileSize": "Tamanho máximo: 5MB",
     "invalidEmail": "E-mail inválido",
     "passwordsDoNotMatch": "As senhas não coincidem",
     "enterPasswordFirst": "Digite a senha primeiro",

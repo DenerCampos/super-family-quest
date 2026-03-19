@@ -9,6 +9,7 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import { FaUsers } from 'react-icons/fa';
+import { isAxiosError } from 'axios';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { api } from '../../services';
@@ -38,9 +39,9 @@ export const CreateGroupForm = ({ onGroupCreated }: CreateGroupFormProps) => {
       });
       setGroupName('');
       onGroupCreated();
-    } catch (error: any) {
+    } catch (error) {
       const description =
-        error?.response?.status === 409
+        isAxiosError(error) && error.response?.status === 409
           ? t('familyGroup.conflictError')
           : t('familyGroup.createError');
       toast({

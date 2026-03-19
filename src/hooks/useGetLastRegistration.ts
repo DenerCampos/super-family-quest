@@ -1,15 +1,35 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../services";
+import type { PaginatedRegistrations } from "../services/profile";
 
 export const GET_LAST_REGISTRATION_QUERY_KEY = "get-last-registration";
 
+const ITEMS_PER_PAGE = 5;
+
 export const useGetLastRegistration = () => {
-  const { data, error, isFetching, isLoading, isError } = useQuery({
+  const queryClient = useQueryClient();
+
+  const {
+    data,
+    error,
+    isFetching,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<PaginatedRegistrations>({
     queryKey: [GET_LAST_REGISTRATION_QUERY_KEY],
-    queryFn: () => api.getLatestRegistrations(),
+    queryFn: ({ pageParam }) =>
+      api.getLatestRegistrationsPaginated(pageParam as number, ITEMS_PER_PAGE),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { currentPage, totalPages } = lastPage.meta;
+      return currentPage < totalPages ? currentPage + 1 : undefined;
+    },
   });
 
-  const queryClient = useQueryClient();
+  const registrations = data?.pages.flatMap((page) => page.data) ?? [];
 
   const refetchLastRegistration = () =>
     queryClient.invalidateQueries({
@@ -17,11 +37,14 @@ export const useGetLastRegistration = () => {
     });
 
   return {
-    data,
+    registrations,
     error,
     isFetching,
     isLoading,
     isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     refetchLastRegistration,
   };
 };

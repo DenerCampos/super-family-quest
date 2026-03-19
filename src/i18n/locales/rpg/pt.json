@@ -22,7 +22,21 @@
     "loadError": "Os pergaminhos antigos não puderam ser lidos",
     "updateError": "A forja mágica falhou",
     "createError": "Falha na forja",
-    "deleteError": "O item resistiu à destruição"
+    "deleteError": "O item resistiu à destruição",
+    "months": {
+      "1": "Janeiro",
+      "2": "Fevereiro",
+      "3": "Março",
+      "4": "Abril",
+      "5": "Maio",
+      "6": "Junho",
+      "7": "Julho",
+      "8": "Agosto",
+      "9": "Setembro",
+      "10": "Outubro",
+      "11": "Novembro",
+      "12": "Dezembro"
+    }
   },
   "auth": {
     "login": "Entrar no Reino",
@@ -101,6 +115,7 @@
     }
   },
   "resources": {
+    "registrations": "Registros do Reino",
     "expense": {
       "title": "Tributos do Reino",
       "new": "Novo Tributo",
@@ -307,7 +322,8 @@
   "lastRegistrationsList": {
     "title": "Registros do Escriba",
     "noData": "Nenhuma despesa registrada nos pergaminhos",
-    "error": "O escriba falhou ao ler os registros antigos"
+    "error": "O escriba falhou ao ler os registros antigos",
+    "noMore": "Os pergaminhos chegaram ao fim"
   },
   "loadingOverlay": {
     "loading": "Conjurando..."
@@ -344,6 +360,7 @@
     "uploadPhoto": "Enviar Retrato",
     "uploadPhotoError": "Falha ao enviar retrato",
     "photoUploaded": "Retrato atualizado com sucesso!",
+    "maxFileSize": "Pergaminho muito pesado! Máximo: 5MB",
     "invalidEmail": "Pergaminho inválido",
     "passwordsDoNotMatch": "As palavras secretas não coincidem",
     "enterPasswordFirst": "Digite a palavra secreta primeiro",

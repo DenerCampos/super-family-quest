@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   VStack,
   Text,
@@ -10,6 +10,12 @@ import {
   useDisclosure,
   useToast,
   Divider,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { FiUserPlus, FiTrash2, FiLogOut } from 'react-icons/fi';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -38,6 +44,11 @@ export const FamilyManagement = ({ group, onRefresh }: FamilyManagementProps) =>
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [confirmDialog, setConfirmDialog] = useState<{
+    message: string;
+    onConfirm: () => Promise<void>;
+  } | null>(null);
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
   const currentUserId = profile?.user.id || '';
   const userIsAdmin = canInvite(group, currentUserId);
@@ -46,10 +57,10 @@ export const FamilyManagement = ({ group, onRefresh }: FamilyManagementProps) =>
   const pendingMembers = group.members.filter((m) => m.status === 'pending');
 
   const handleChangeRole = async (memberId: string, currentRole: string) => {
-    const newRole = currentRole === 'admin' ? 'member' : 'admin';
+    const newRole: 'admin' | 'member' = currentRole === 'admin' ? 'member' : 'admin';
     setProcessingId(memberId);
     try {
-      await api.familyGroupChangeRole(group.id, memberId, newRole as 'admin' | 'member');
+      await api.familyGroupChangeRole(group.id, memberId, newRole);
       toast({
         title: t('common.success'),
         description: t('familyGroup.roleChanged'),
@@ -70,76 +81,88 @@ export const FamilyManagement = ({ group, onRefresh }: FamilyManagementProps) =>
     }
   };
 
-  const handleRemoveMember = async (memberId: string) => {
-    if (!window.confirm(t('familyGroup.removeMemberConfirm'))) return;
-
-    setProcessingId(memberId);
-    try {
-      await api.familyGroupRemoveMember(group.id, memberId);
-      toast({
-        title: t('common.success'),
-        description: t('familyGroup.memberRemoved'),
-        status: 'success',
-        duration: 3000,
-      });
-      onRefresh();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: t('common.error'),
-        description: t('familyGroup.removeMemberError'),
-        status: 'error',
-        duration: 3000,
-      });
-    } finally {
-      setProcessingId(null);
-    }
+  const handleRemoveMember = (memberId: string) => {
+    setConfirmDialog({
+      message: t('familyGroup.removeMemberConfirm'),
+      onConfirm: async () => {
+        setConfirmDialog(null);
+        setProcessingId(memberId);
+        try {
+          await api.familyGroupRemoveMember(group.id, memberId);
+          toast({
+            title: t('common.success'),
+            description: t('familyGroup.memberRemoved'),
+            status: 'success',
+            duration: 3000,
+          });
+          onRefresh();
+        } catch (error) {
+          console.error(error);
+          toast({
+            title: t('common.error'),
+            description: t('familyGroup.removeMemberError'),
+            status: 'error',
+            duration: 3000,
+          });
+        } finally {
+          setProcessingId(null);
+        }
+      },
+    });
   };
 
-  const handleLeaveGroup = async () => {
-    if (!window.confirm(t('familyGroup.leaveGroupConfirm'))) return;
-
-    try {
-      await api.familyGroupLeave(group.id);
-      toast({
-        title: t('common.success'),
-        description: t('familyGroup.leftGroup'),
-        status: 'success',
-        duration: 3000,
-      });
-      onRefresh();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: t('common.error'),
-        description: t('familyGroup.leaveGroupError'),
-        status: 'error',
-        duration: 3000,
-      });
-    }
+  const handleLeaveGroup = () => {
+    setConfirmDialog({
+      message: t('familyGroup.leaveGroupConfirm'),
+      onConfirm: async () => {
+        setConfirmDialog(null);
+        try {
+          await api.familyGroupLeave(group.id);
+          toast({
+            title: t('common.success'),
+            description: t('familyGroup.leftGroup'),
+            status: 'success',
+            duration: 3000,
+          });
+          onRefresh();
+        } catch (error) {
+          console.error(error);
+          toast({
+            title: t('common.error'),
+            description: t('familyGroup.leaveGroupError'),
+            status: 'error',
+            duration: 3000,
+          });
+        }
+      },
+    });
   };
 
-  const handleDeleteGroup = async () => {
-    if (!window.confirm(t('familyGroup.deleteGroupConfirm'))) return;
-
-    try {
-      await api.familyGroupDelete(group.id);
-      toast({
-        title: t('common.success'),
-        description: t('familyGroup.groupDeleted'),
-        status: 'success',
-        duration: 3000,
-      });
-      onRefresh();
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: t('common.error'),
-        description: t('familyGroup.deleteGroupError'),
-        status: 'error',
-        duration: 3000,
-      });
-    }
+  const handleDeleteGroup = () => {
+    setConfirmDialog({
+      message: t('familyGroup.deleteGroupConfirm'),
+      onConfirm: async () => {
+        setConfirmDialog(null);
+        try {
+          await api.familyGroupDelete(group.id);
+          toast({
+            title: t('common.success'),
+            description: t('familyGroup.groupDeleted'),
+            status: 'success',
+            duration: 3000,
+          });
+          onRefresh();
+        } catch (error) {
+          console.error(error);
+          toast({
+            title: t('common.error'),
+            description: t('familyGroup.deleteGroupError'),
+            status: 'error',
+            duration: 3000,
+          });
+        }
+      },
+    });
   };
 
   const getRoleLabel = (memberId: string, role: string) => {
@@ -149,9 +172,9 @@ export const FamilyManagement = ({ group, onRefresh }: FamilyManagementProps) =>
   };
 
   const getRoleColor = (memberId: string, role: string) => {
-    if (isOwner(group, memberId)) return 'purple';
-    if (role === 'admin') return 'blue';
-    return 'gray';
+    if (isOwner(group, memberId)) return getColor('chakraColors.purple');
+    if (role === 'admin') return getColor('chakraColors.blue');
+    return getColor('chakraColors.gray');
   };
 
   return (
@@ -329,6 +352,42 @@ export const FamilyManagement = ({ group, onRefresh }: FamilyManagementProps) =>
         groupId={group.id}
         onInviteSent={onRefresh}
       />
+
+      <AlertDialog
+        isOpen={!!confirmDialog}
+        leastDestructiveRef={cancelRef}
+        onClose={() => setConfirmDialog(null)}
+        isCentered
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent bg={getColor('background.primary')} color={getColor('text.primary')}>
+            <AlertDialogHeader fontFamily={getFont('heading')}>
+              {t('common.confirmTitle')}
+            </AlertDialogHeader>
+            <AlertDialogBody fontFamily={getFont('body')}>
+              {confirmDialog?.message}
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button
+                ref={cancelRef}
+                onClick={() => setConfirmDialog(null)}
+                fontFamily={getFont('body')}
+              >
+                {t('common.close')}
+              </Button>
+              <Button
+                bg={getColor('button.background.expense')}
+                color={getColor('button.text.primary')}
+                onClick={confirmDialog?.onConfirm}
+                ml={3}
+                fontFamily={getFont('body')}
+              >
+                {t('common.confirm')}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </VStack>
   );
 };

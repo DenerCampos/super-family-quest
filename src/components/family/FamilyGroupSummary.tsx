@@ -4,14 +4,13 @@ import {
   Flex,
   Box,
   Spinner,
-  Avatar,
 } from '@chakra-ui/react';
-import { FaUsers } from 'react-icons/fa';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useAuth } from '../../contexts/AuthContext';
 import { formatCurrencyBRL } from '../../utils/formatCurrency';
-import type { FamilyGroupSummaryDto, MemberSummary } from '../../types/familyGroup';
+import { FamilyStories } from '../FamilyStories';
+import type { FamilyGroupSummaryDto } from '../../types/familyGroup';
 
 type FamilyGroupSummaryProps = {
   summary: FamilyGroupSummaryDto | null;
@@ -38,111 +37,14 @@ export const FamilyGroupSummary = ({
     );
   }
 
-  const isAllSelected = selectedMemberId === null;
-
   return (
     <VStack spacing={4} align="stretch">
-      {/* Stories dos membros */}
-      <Flex
-        overflowX="auto"
-        gap={3}
-        py={3}
-        px={1}
-        css={{
-          '&::-webkit-scrollbar': { display: 'none' },
-          scrollbarWidth: 'none',
-        }}
-      >
-        {/* Todos */}
-        <VStack
-          spacing={1}
-          minW="68px"
-          cursor="pointer"
-          onClick={() => onSelectMember(null)}
-        >
-          <Box
-            p="2px"
-            borderRadius="full"
-            bg={
-              isAllSelected
-                ? `linear-gradient(135deg, ${getColor('background.familyStories.selected')}, ${getColor('border.familyStories.selected')})`
-                : 'transparent'
-            }
-            border="2px solid"
-            borderColor={isAllSelected ? 'transparent' : getColor('border.familyStories.default')}
-          >
-            <Flex
-              w="56px"
-              h="56px"
-              borderRadius="full"
-              bg={getColor('background.familyStories.avatar')}
-              border="2px solid"
-              borderColor={getColor('background.familyStories.container')}
-              align="center"
-              justify="center"
-            >
-              <FaUsers size={24} color={getColor('text.familyStories.name')} />
-            </Flex>
-          </Box>
-          <Text
-            fontSize="xs"
-            fontFamily={getFont('body')}
-            fontWeight={isAllSelected ? 'bold' : 'normal'}
-            color={isAllSelected ? getColor('text.familyStories.selectedName') : getColor('text.familyStories.name')}
-            textAlign="center"
-            noOfLines={1}
-            maxW="68px"
-          >
-            {t('home.familyStories.familyLabel')}
-          </Text>
-        </VStack>
+      <FamilyStories
+        members={summary.members}
+        selectedId={selectedMemberId}
+        onSelect={onSelectMember}
+      />
 
-        {summary.members.map((member: MemberSummary) => {
-          const isSelected = selectedMemberId === member.userId;
-          return (
-            <VStack
-              key={member.userId}
-              spacing={1}
-              minW="68px"
-              cursor="pointer"
-              onClick={() => onSelectMember(member.userId)}
-            >
-              <Box
-                p="2px"
-                borderRadius="full"
-                bg={
-                  isSelected
-                    ? `linear-gradient(135deg, ${getColor('background.familyStories.selected')}, ${getColor('border.familyStories.selected')})`
-                    : 'transparent'
-                }
-                border="2px solid"
-                borderColor={isSelected ? 'transparent' : getColor('border.familyStories.default')}
-              >
-                <Avatar
-                  size="md"
-                  name={member.name}
-                  src={member.profileImage || undefined}
-                  border="2px solid"
-                  borderColor={getColor('background.familyStories.container')}
-                />
-              </Box>
-              <Text
-                fontSize="xs"
-                fontFamily={getFont('body')}
-                fontWeight={isSelected ? 'bold' : 'normal'}
-                color={isSelected ? getColor('text.familyStories.selectedName') : getColor('text.familyStories.name')}
-                textAlign="center"
-                noOfLines={1}
-                maxW="68px"
-              >
-                {member.name}
-              </Text>
-            </VStack>
-          );
-        })}
-      </Flex>
-
-      {/* Cards de resumo */}
       <Flex gap={3} direction={{ base: 'column', sm: 'row' }}>
         <Box
           flex={1}
@@ -189,7 +91,7 @@ export const FamilyGroupSummary = ({
         <Text
           fontSize="xl"
           fontWeight="bold"
-          color={summary.balance >= 0 ? 'green.600' : 'red.600'}
+          color={summary.balance >= 0 ? getColor('text.summaryCard.revenue') : getColor('text.summaryCard.expense')}
           fontFamily={getFont('mono')}
         >
           {showValues ? formatCurrencyBRL(summary.balance) : '••••••••'}

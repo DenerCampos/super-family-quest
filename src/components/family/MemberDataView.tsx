@@ -51,10 +51,10 @@ export const MemberDataView = ({ data, isLoading }: MemberDataViewProps) => {
             {data.name}
           </Text>
           <Flex gap={4} fontSize="sm" fontFamily={getFont('body')}>
-            <Text color="green.600">
+            <Text color={getColor('text.summaryCard.revenue')}>
               {t('familyGroup.revenues')}: {showValues ? formatCurrencyBRL(data.totalRevenues) : '••••••'}
             </Text>
-            <Text color="red.600">
+            <Text color={getColor('text.summaryCard.expense')}>
               {t('familyGroup.expenses')}: {showValues ? formatCurrencyBRL(data.totalExpenses) : '••••••'}
             </Text>
           </Flex>

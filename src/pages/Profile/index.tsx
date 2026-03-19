@@ -96,7 +96,7 @@ const Profile = () => {
     if (file.size > maxSize) {
       toast({
         title: t('common.error'),
-        description: 'Max 5MB',
+        description: t('profile.maxFileSize'),
         status: 'error',
         duration: 3000,
       });

@@ -1,12 +1,14 @@
 import { Avatar, Flex, Heading, IconButton } from '@chakra-ui/react';
 import { FiLogOut } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
 import { CoinDisplay } from './CoinDisplay';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 
 export const Header = () => {
   const { logout, profile } = useAuth();
   const { getColor, getFont } = useVisualTheme();
+  const { t } = useThemedTranslation();
 
   const avatarSrc = profile?.user.profileImage || profile?.user.coatOfArms;
 
@@ -42,7 +44,7 @@ export const Header = () => {
         <CoinDisplay coins={profile?.coins || 0} />
         <IconButton
           icon={<FiLogOut />}
-          aria-label="Sair"
+          aria-label={t('auth.logout')}
           variant="ghost"
           bg={getColor('button.background.primary')}
           color={getColor('text.header')}

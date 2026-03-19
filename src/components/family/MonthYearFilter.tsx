@@ -20,21 +20,6 @@ function getYearOptions() {
   return years;
 }
 
-const MONTH_LABELS: Record<number, string> = {
-  1: 'Janeiro',
-  2: 'Fevereiro',
-  3: 'Março',
-  4: 'Abril',
-  5: 'Maio',
-  6: 'Junho',
-  7: 'Julho',
-  8: 'Agosto',
-  9: 'Setembro',
-  10: 'Outubro',
-  11: 'Novembro',
-  12: 'Dezembro',
-};
-
 export const MonthYearFilter = ({
   month,
   year,
@@ -59,7 +44,7 @@ export const MonthYearFilter = ({
       >
         {MONTHS.map((m) => (
           <option key={m} value={m}>
-            {MONTH_LABELS[m]}
+            {t(`common.months.${m}`)}
           </option>
         ))}
       </Select>

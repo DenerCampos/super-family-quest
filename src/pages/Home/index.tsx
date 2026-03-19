@@ -38,40 +38,14 @@ import type { FamilyGroupSummaryDto, MemberSummary } from "../../types/familyGro
 
 const RADIAN = Math.PI / 180;
 
-const renderCustomLabel = (props: Record<string, unknown>) => {
-  const cx = Number(props.cx ?? 0);
-  const cy = Number(props.cy ?? 0);
-  const midAngle = Number(props.midAngle ?? 0);
-  const innerRadius = Number(props.innerRadius ?? 0);
-  const outerRadius = Number(props.outerRadius ?? 0);
-  const percent = Number(props.percent ?? 0);
-
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  if (percent < 0.05) return null;
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor="middle"
-      dominantBaseline="central"
-      fontSize={12}
-      fontWeight="bold"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
-
 type HomePieChartProps = {
   income: number;
   expenses: number;
   revenueColor: string;
   expenseColor: string;
+  emptyFillColor: string;
+  emptyLabelColor: string;
+  labelColor: string;
 };
 
 const HomePieChart = ({
@@ -79,8 +53,41 @@ const HomePieChart = ({
   expenses,
   revenueColor,
   expenseColor,
+  emptyFillColor,
+  emptyLabelColor,
+  labelColor,
 }: HomePieChartProps) => {
   const total = income + expenses;
+
+  const renderLabel = (props: Record<string, unknown>) => {
+    const cx = Number(props.cx ?? 0);
+    const cy = Number(props.cy ?? 0);
+    const midAngle = Number(props.midAngle ?? 0);
+    const innerRadius = Number(props.innerRadius ?? 0);
+    const outerRadius = Number(props.outerRadius ?? 0);
+    const percent = Number(props.percent ?? 0);
+
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    if (percent < 0.05) return null;
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill={labelColor}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={12}
+        fontWeight="bold"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
   if (total === 0) {
     return (
       <ResponsiveContainer width="100%" height={100}>
@@ -92,7 +99,7 @@ const HomePieChart = ({
             cy="50%"
             outerRadius={42}
             innerRadius={18}
-            fill="#E2E8F0"
+            fill={emptyFillColor}
             stroke="none"
           >
             <Label
@@ -100,7 +107,7 @@ const HomePieChart = ({
               position="center"
               fontSize={11}
               fontWeight="bold"
-              fill="#A0AEC0"
+              fill={emptyLabelColor}
             />
           </Pie>
         </PieChart>
@@ -130,7 +137,7 @@ const HomePieChart = ({
           innerRadius={18}
           stroke="none"
           labelLine={false}
-          label={renderCustomLabel}
+          label={renderLabel}
         >
           {data.map((entry) => (
             <Cell key={entry.name} fill={colors[entry.name]} />
@@ -145,10 +152,14 @@ const Home = () => {
   const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
   const { getColor } = useVisualTheme();
 
-  const [revenueHex, expenseHex] = useToken("colors", [
-    getColor("border.summaryCard.revenue"),
-    getColor("border.summaryCard.expense"),
-  ]);
+  const [revenueHex, expenseHex, emptyFillHex, emptyLabelHex, labelHex] =
+    useToken("colors", [
+      getColor("border.summaryCard.revenue"),
+      getColor("border.summaryCard.expense"),
+      getColor("border.noSelect"),
+      getColor("text.disabled"),
+      getColor("text.primary"),
+    ]);
 
   const location = useLocation();
   const [scanError, setScanError] = useState("");
@@ -290,6 +301,9 @@ const Home = () => {
               expenses={displayExpenses}
               revenueColor={revenueHex}
               expenseColor={expenseHex}
+              emptyFillColor={emptyFillHex}
+              emptyLabelColor={emptyLabelHex}
+              labelColor={labelHex}
             />
           </Box>
 

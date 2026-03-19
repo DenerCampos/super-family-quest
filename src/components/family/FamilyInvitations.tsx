@@ -8,6 +8,7 @@ import {
   Box,
   useToast,
 } from '@chakra-ui/react';
+import { isAxiosError } from 'axios';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { api } from '../../services';
@@ -32,6 +33,12 @@ export const FamilyInvitations = ({ onInvitationHandled }: FamilyInvitationsProp
       setInvitations(data);
     } catch (error) {
       console.error(error);
+      toast({
+        title: t('common.error'),
+        description: t('familyGroup.loadError'),
+        status: 'error',
+        duration: 3000,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -53,9 +60,9 @@ export const FamilyInvitations = ({ onInvitationHandled }: FamilyInvitationsProp
       });
       await loadInvitations();
       onInvitationHandled();
-    } catch (error: any) {
+    } catch (error) {
       const description =
-        error?.response?.status === 409
+        isAxiosError(error) && error.response?.status === 409
           ? t('familyGroup.conflictError')
           : t('familyGroup.acceptError');
       toast({

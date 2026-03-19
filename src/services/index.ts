@@ -22,6 +22,8 @@ export const api = {
   completeProfile: ProfileService.completeProfile,
   getLatestRegistrations: (limit?: number) =>
     ProfileService.getLatestRegistrations(limit),
+  getLatestRegistrationsPaginated: (page?: number, limit?: number) =>
+    ProfileService.getLatestRegistrationsPaginated(page, limit),
 
   login: AuthService.login,
   register: UserService.register,
