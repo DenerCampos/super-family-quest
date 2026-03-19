@@ -1,4 +1,4 @@
-import { Flex, Image, Heading, IconButton } from '@chakra-ui/react';
+import { Avatar, Flex, Heading, IconButton } from '@chakra-ui/react';
 import { FiLogOut } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
 import { CoinDisplay } from './CoinDisplay';
@@ -7,6 +7,8 @@ import { useVisualTheme } from '../hooks/useVisualTheme';
 export const Header = () => {
   const { logout, profile } = useAuth();
   const { getColor, getFont } = useVisualTheme();
+
+  const avatarSrc = profile?.user.profileImage || profile?.user.coatOfArms;
 
   return (
     <Flex
@@ -18,16 +20,13 @@ export const Header = () => {
       align="center"
       boxShadow="lg"
     >
-      {/* Lado Esquerdo - Brasão e Nome */}
       <Flex align="center" gap={3}>
-        <Image
-          src={profile?.user.coatOfArms}
-          boxSize="40px"
-          objectFit="contain"
-          alt="Brasão da Família"
-          borderRadius="full"
+        <Avatar
+          size="sm"
+          name={profile?.user.name}
+          src={avatarSrc}
           borderWidth="2px"
-          p={1}
+          borderColor={getColor('border.header')}
         />
         <Heading
           size="md"

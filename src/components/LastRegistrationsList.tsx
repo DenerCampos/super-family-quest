@@ -22,16 +22,20 @@ import { useVisualTheme } from '../hooks/useVisualTheme';
 
 const MotionBox = motion(Box);
 
+type LastRegistrationsListProps = {
+  newRegistrationAdded: boolean;
+  setNewRegistrationAdded: React.Dispatch<React.SetStateAction<boolean>>;
+  externalRegistrations?: Registration[];
+};
+
 export const LastRegistrationsList = ({
   newRegistrationAdded,
   setNewRegistrationAdded,
-}: {
-  newRegistrationAdded: boolean;
-  setNewRegistrationAdded: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+  externalRegistrations,
+}: LastRegistrationsListProps) => {
   const { showValues } = useAuth();
   const [registrations, setRegistrations] = useState<Registration[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!externalRegistrations);
   const [error, setError] = useState('');
   const { t } = useThemedTranslation();
   const { getColor, getFont } = useVisualTheme();
@@ -39,7 +43,10 @@ export const LastRegistrationsList = ({
   const bgColorExpense = getColor('background.lastRegistrations.expense');
   const bgColorRevenue = getColor('background.lastRegistrations.revenue');
 
+  const useExternal = externalRegistrations !== undefined;
+
   const fetchLastRegistrations = async () => {
+    if (useExternal) return;
     try {
       setLoading(true);
       const data = await api.getLatestRegistrations();
@@ -53,23 +60,25 @@ export const LastRegistrationsList = ({
   };
 
   useEffect(() => {
-    fetchLastRegistrations();
-  }, []);
+    if (useExternal) {
+      setRegistrations(externalRegistrations);
+      setLoading(false);
+    } else {
+      fetchLastRegistrations();
+    }
+  }, [externalRegistrations, useExternal]);
 
   useEffect(() => {
-    if (newRegistrationAdded) {
-      // Recarregar cupons
+    if (newRegistrationAdded && !useExternal) {
       fetchLastRegistrations();
       setNewRegistrationAdded(false);
 
-      // Adicionar animação de destaque
       const timer = setTimeout(() => {
-        // Resetar estado
       }, 3000);
 
       return () => clearTimeout(timer);
     }
-  }, [newRegistrationAdded, fetchLastRegistrations, setNewRegistrationAdded]);
+  }, [newRegistrationAdded, fetchLastRegistrations, setNewRegistrationAdded, useExternal]);
 
   if (loading) {
     return (

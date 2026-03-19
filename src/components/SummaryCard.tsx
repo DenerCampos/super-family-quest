@@ -8,9 +8,10 @@ type Props = {
   title: string;
   value: number;
   type: 'revenue' | 'expense';
+  compact?: boolean;
 };
 
-export const SummaryCard = ({ title, value, type }: Props) => {
+export const SummaryCard = ({ title, value, type, compact }: Props) => {
   const { showValues } = useAuth();
   const { getColor, getFont} = useVisualTheme();
 
@@ -35,20 +36,22 @@ export const SummaryCard = ({ title, value, type }: Props) => {
       borderLeft="4px solid"
       borderColor={colors[type].border}
     >
-      <CardBody>
+      <CardBody py={compact ? 2 : undefined} px={compact ? 3 : undefined}>
         <Text
-          fontSize="md"
+          fontSize={compact ? 'xs' : 'md'}
           color={colors[type].text}
           fontFamily={getFont('body')}
           fontWeight="bold"
+          noOfLines={1}
         >
           {title}
         </Text>
         <Heading
-          size="lg"
+          size={compact ? 'md' : 'lg'}
           color={colors[type].heading}
           letterSpacing="2px"
           fontFamily={getFont('mono')}
+          noOfLines={1}
         >
           {showValues ? formatCurrency(value) : '••••••••'}
         </Heading>

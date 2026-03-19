@@ -9,6 +9,7 @@ export type User = {
   name: string;
   family: string;
   coatOfArms: string;
+  profileImage: string | null;
 }
 export type UserProfile = {
   user: User;

@@ -198,6 +198,16 @@ export const defaultTheme: VisualTheme = {
       },
       dateRangeFilter: 'blue.200',
       qrScanner: 'blue.500',
+      familyStories: {
+        container: 'blue.100',
+        avatar: 'blue.50',
+        selected: 'blue.500',
+      },
+      familyGroup: {
+        primary: 'blue.50',
+        card: 'white',
+        memberCard: 'blue.50',
+      },
     },
     text: {
       primary: 'white',
@@ -246,6 +256,15 @@ export const defaultTheme: VisualTheme = {
         secondary: 'blue.500',
         selected: 'white',
       },
+      familyStories: {
+        name: 'blue.700',
+        selectedName: 'blue.800',
+      },
+      familyGroup: {
+        title: 'blue.800',
+        primary: 'blue.700',
+        secondary: 'blue.500',
+      },
     },
     heading: {
       summaryCard: {
@@ -271,6 +290,13 @@ export const defaultTheme: VisualTheme = {
       header: 'blue.900',
       navigation: 'blue.900',
       coin: 'blue.700',
+      familyStories: {
+        default: 'blue.300',
+        selected: 'blue.600',
+      },
+      familyGroup: {
+        card: 'blue.200',
+      },
     },
     status: {
       success: 'green.300',
@@ -434,6 +460,16 @@ export const rpgTheme: VisualTheme = {
       },
       dateRangeFilter: 'purple.200',
       qrScanner: 'purple.500',
+      familyStories: {
+        container: 'purple.100',
+        avatar: 'purple.50',
+        selected: 'purple.500',
+      },
+      familyGroup: {
+        primary: 'purple.50',
+        card: 'white',
+        memberCard: 'purple.50',
+      },
     },
     text: {
       primary: 'white',
@@ -481,6 +517,15 @@ export const rpgTheme: VisualTheme = {
         secondary: 'purple.500',
         selected: 'white',
       },
+      familyStories: {
+        name: 'purple.700',
+        selectedName: 'purple.800',
+      },
+      familyGroup: {
+        title: 'purple.800',
+        primary: 'purple.700',
+        secondary: 'purple.500',
+      },
     },
     heading: {
       summaryCard: {
@@ -506,6 +551,13 @@ export const rpgTheme: VisualTheme = {
       header: 'purple.900',
       navigation: 'purple.900',
       coin: 'purple.700',
+      familyStories: {
+        default: 'purple.300',
+        selected: 'purple.600',
+      },
+      familyGroup: {
+        card: 'purple.200',
+      },
     },
     status: {
       success: 'green.300',

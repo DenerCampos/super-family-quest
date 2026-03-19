@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
 import { BuyThemeModal } from '../../components/modals/BuyThemeModal';
@@ -34,7 +34,7 @@ import {
   Tab,
   TabPanel,
 } from '@chakra-ui/react';
-import { FiEdit2, FiCheck, FiEye, FiEyeOff, FiUser, FiSettings } from 'react-icons/fi';
+import { FiEdit2, FiCheck, FiEye, FiEyeOff, FiUser, FiSettings, FiCamera } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -75,6 +75,8 @@ const Profile = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     isOpen: isCoatModalOpen,
@@ -85,6 +87,45 @@ const Profile = () => {
   const [selectedCoat, setSelectedCoat] = useState(
     profile?.user.coatOfArms || predefinedCoatOfArms[0],
   );
+
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast({
+        title: t('common.error'),
+        description: 'Max 5MB',
+        status: 'error',
+        duration: 3000,
+      });
+      return;
+    }
+
+    setIsUploadingPhoto(true);
+    try {
+      await api.uploadProfileImage(file);
+      await loadProfile();
+      toast({
+        title: t('common.success'),
+        description: t('profile.photoUploaded'),
+        status: 'success',
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: t('common.error'),
+        description: t('profile.uploadPhotoError'),
+        status: 'error',
+        duration: 3000,
+      });
+    } finally {
+      setIsUploadingPhoto(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   // Estados para temas disponíveis para compra
   const [availableThemes, setAvailableThemes] = useState<ThemeConfig[]>([]);
@@ -365,9 +406,29 @@ const Profile = () => {
                   <Box position="relative" mb={4}>
                     <Avatar
                       size="2xl"
-                      src={selectedCoat}
+                      name={profile?.user.name}
+                      src={profile?.user.profileImage || selectedCoat}
                       border="3px solid"
                       borderColor={getColor('border.primary')}
+                    />
+                    <IconButton
+                      aria-label={t('profile.uploadPhoto')}
+                      icon={<FiCamera />}
+                      position="absolute"
+                      bottom={2}
+                      left={2}
+                      colorScheme={getColor('button.primary')}
+                      rounded="full"
+                      size="sm"
+                      isLoading={isUploadingPhoto}
+                      onClick={() => fileInputRef.current?.click()}
+                    />
+                    <Input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/gif,image/webp"
+                      display="none"
+                      onChange={handlePhotoUpload}
                     />
                     <IconButton
                       aria-label="Alterar brasão"
@@ -377,6 +438,7 @@ const Profile = () => {
                       right={2}
                       colorScheme={getColor('button.primary')}
                       rounded="full"
+                      size="sm"
                       onClick={openCoatModal}
                     />
                   </Box>

@@ -2,6 +2,7 @@ import { AuthService } from "./auth";
 import { CoinService } from "./coin";
 import { CouponReaderService } from "./couponReader";
 import { ExpenseService, type ExpenseRecurring } from "./expense";
+import { FamilyGroupService } from "./familyGroup";
 import { ProfileService } from "./profile";
 import { ReportsService } from "./reports";
 import { ResourcesService, type UpdateExpense } from "./resources";
@@ -142,4 +143,37 @@ export const api = {
   getBalanceCoin: CoinService.getBalanceCoin,
 
   getRevenueById: (id: string) => RevenueService.getRevenueById(id),
+
+  uploadProfileImage: (file: File) => ProfileService.uploadImage(file),
+
+  familyGroupCreate: (name: string) => FamilyGroupService.create(name),
+  familyGroupList: () => FamilyGroupService.list(),
+  familyGroupGetById: (id: string) => FamilyGroupService.getById(id),
+  familyGroupUpdate: (id: string, name: string) => FamilyGroupService.update(id, name),
+  familyGroupDelete: (id: string) => FamilyGroupService.delete(id),
+  familyGroupInvite: (groupId: string, email: string) =>
+    FamilyGroupService.invite(groupId, email),
+  familyGroupListInvitations: () => FamilyGroupService.listInvitations(),
+  familyGroupAcceptInvitation: (invitationId: string) =>
+    FamilyGroupService.acceptInvitation(invitationId),
+  familyGroupRejectInvitation: (invitationId: string) =>
+    FamilyGroupService.rejectInvitation(invitationId),
+  familyGroupListMembers: (groupId: string) =>
+    FamilyGroupService.listMembers(groupId),
+  familyGroupChangeRole: (
+    groupId: string,
+    memberId: string,
+    role: 'admin' | 'member',
+  ) => FamilyGroupService.changeRole(groupId, memberId, role),
+  familyGroupRemoveMember: (groupId: string, memberId: string) =>
+    FamilyGroupService.removeMember(groupId, memberId),
+  familyGroupLeave: (groupId: string) => FamilyGroupService.leaveGroup(groupId),
+  familyGroupGetSummary: (groupId: string, month: number, year: number) =>
+    FamilyGroupService.getSummary(groupId, month, year),
+  familyGroupGetMemberData: (
+    groupId: string,
+    memberId: string,
+    month: number,
+    year: number,
+  ) => FamilyGroupService.getMemberData(groupId, memberId, month, year),
 };
