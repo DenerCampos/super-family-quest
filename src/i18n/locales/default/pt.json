@@ -26,7 +26,21 @@
     "deleteError": "Falha ao excluir",
     "confirmTitle": "Deseja continuar?",
     "confirmDescription": "Se você continuar, as informações alteradas serão perdidas.",
-    "closeConfirm": "Fechar"
+    "closeConfirm": "Fechar",
+    "months": {
+      "1": "Janeiro",
+      "2": "Fevereiro",
+      "3": "Março",
+      "4": "Abril",
+      "5": "Maio",
+      "6": "Junho",
+      "7": "Julho",
+      "8": "Agosto",
+      "9": "Setembro",
+      "10": "Outubro",
+      "11": "Novembro",
+      "12": "Dezembro"
+    }
   },
   "auth": {
     "login": "Entrar",
@@ -52,7 +66,14 @@
     "scanReceipt": "Capturar Comprovante",
     "recordAudio": "Gravar por Voz",
     "addRevenue": "Adicionar Receita",
-    "newRevenue": "Nova Receita"
+    "newRevenue": "Nova Receita",
+    "familyStories": {
+      "familyLabel": "Família",
+      "summaryIncome": "Receitas de {{name}}",
+      "summaryExpenses": "Despesas de {{name}}",
+      "familyIncome": "Receitas da Família",
+      "familyExpenses": "Despesas da Família"
+    }
   },
   "reports": {
     "dateRangeFilter": {
@@ -98,6 +119,7 @@
     }
   },
   "resources": {
+    "registrations": "Cadastros",
     "expense": {
       "title": "Despesas",
       "new": "Nova Despesa",
@@ -307,7 +329,8 @@
   "lastRegistrationsList": {
     "title": "Últimos Lançamentos",
     "noData": "Nenhuma despesa registrada",
-    "error": "Erro ao carregar lançamentos recentes"
+    "error": "Erro ao carregar lançamentos recentes",
+    "noMore": "Sem mais registros"
   },
   "loadingOverlay": {
     "loading": "Carregando..."
@@ -341,6 +364,11 @@
     "funding": "Criando conta..."
   },
   "profile": {
+    "uploadPhoto": "Enviar Foto",
+    "uploadPhotoError": "Erro ao enviar foto",
+    "photoUploaded": "Foto atualizada com sucesso",
+    "maxFileSize": "Tamanho máximo: 5MB",
+    "changeCoatOfArms": "Alterar brasão",
     "invalidEmail": "E-mail inválido",
     "passwordsDoNotMatch": "As senhas não coincidem",
     "enterPasswordFirst": "Digite a senha primeiro",
@@ -399,6 +427,69 @@
   },
   "newChallenge": {
     "development": "Em desenvolvimento"
+  },
+  "familyGroup": {
+    "title": "Grupo Familiar",
+    "createGroup": "Criar Grupo Familiar",
+    "groupName": "Nome do Grupo",
+    "groupNamePlaceholder": "Ex: Família Silva",
+    "creating": "Criando...",
+    "created": "Grupo criado com sucesso",
+    "createError": "Erro ao criar grupo",
+    "noGroup": "Você ainda não faz parte de um grupo familiar",
+    "noGroupDescription": "Crie um grupo e convide os membros da sua família para acompanhar as finanças juntos.",
+    "summary": "Resumo do Grupo",
+    "totalRevenues": "Receitas Totais",
+    "totalExpenses": "Despesas Totais",
+    "balance": "Saldo",
+    "members": "Membros",
+    "invite": "Convidar Membro",
+    "inviteEmail": "E-mail do convidado",
+    "inviteEmailPlaceholder": "email@exemplo.com",
+    "inviting": "Convidando...",
+    "inviteSent": "Convite enviado com sucesso",
+    "inviteError": "Erro ao enviar convite",
+    "invitations": "Convites",
+    "pendingInvitations": "Convites Pendentes",
+    "noInvitations": "Nenhum convite pendente",
+    "invitedBy": "Convidado por",
+    "accept": "Aceitar",
+    "reject": "Rejeitar",
+    "accepting": "Aceitando...",
+    "rejecting": "Rejeitando...",
+    "accepted": "Convite aceito",
+    "rejected": "Convite rejeitado",
+    "acceptError": "Erro ao aceitar convite",
+    "rejectError": "Erro ao rejeitar convite",
+    "admin": "Administrador",
+    "member": "Membro",
+    "owner": "Proprietário",
+    "pending": "Pendente",
+    "changeRole": "Alterar Função",
+    "roleChanged": "Função alterada com sucesso",
+    "roleChangeError": "Erro ao alterar função",
+    "removeMember": "Remover Membro",
+    "removeMemberConfirm": "Tem certeza que deseja remover este membro?",
+    "memberRemoved": "Membro removido com sucesso",
+    "removeMemberError": "Erro ao remover membro",
+    "leaveGroup": "Sair do Grupo",
+    "leaveGroupConfirm": "Tem certeza que deseja sair do grupo?",
+    "leftGroup": "Você saiu do grupo",
+    "leaveGroupError": "Erro ao sair do grupo",
+    "deleteGroup": "Excluir Grupo",
+    "deleteGroupConfirm": "Tem certeza que deseja excluir o grupo? Esta ação não pode ser desfeita.",
+    "groupDeleted": "Grupo excluído com sucesso",
+    "deleteGroupError": "Erro ao excluir grupo",
+    "management": "Gerenciamento",
+    "memberData": "Dados do Membro",
+    "revenues": "Receitas",
+    "expenses": "Despesas",
+    "noData": "Nenhum dado encontrado",
+    "month": "Mês",
+    "year": "Ano",
+    "filter": "Filtrar",
+    "loadError": "Erro ao carregar dados do grupo",
+    "conflictError": "Você já faz parte de um grupo familiar"
   },
   "newResources": {
     "deleteSuccess": "Item excluído com sucesso",

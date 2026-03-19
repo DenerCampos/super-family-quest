@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Flex,
   Icon,
@@ -6,8 +7,9 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useToken,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FiCamera,
   FiDollarSign,
@@ -19,7 +21,9 @@ import {
   FiShoppingBag,
 } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router-dom";
+import { FamilyStories } from "../../components/FamilyStories";
 import { Header } from "../../components/Header";
+import { HomePieChart } from "../../components/HomePieChart";
 import { LastRegistrationsList } from "../../components/LastRegistrationsList";
 import { CompleteProfileModal } from "../../components/modals/CompleteProfileModal";
 import { NewRecurringExpenseModal } from "../../components/modals/NewRecurringExpenseModal";
@@ -27,23 +31,26 @@ import { NewRecurringIncomeModal } from "../../components/modals/NewRecurringInc
 import { NavigationBar } from "../../components/NavigationBar";
 import { SummaryCard } from "../../components/SummaryCard";
 import { useAuth } from "../../contexts/AuthContext";
+import { useFamilyGroup } from "../../hooks/useFamilyGroup";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
 
 const Home = () => {
   const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
   const { getColor } = useVisualTheme();
-  // const {
-  //   isOpen: isExpenseOpen,
-  //   onOpen: onExpenseOpen,
-  //   onClose: onExpenseClose,
-  // } = useDisclosure();
+  const { t } = useThemedTranslation();
 
-  // const [stores, setStores] = useState<Merchant[]>([]);
-  // const [payments, setPayments] = useState<Payments[]>([]);
-  // const [groups, setGroups] = useState<Groups[]>([]);
+  const [revenueHex, expenseHex, emptyFillHex, emptyLabelHex, labelHex] =
+    useToken("colors", [
+      getColor("border.summaryCard.revenue"),
+      getColor("border.summaryCard.expense"),
+      getColor("border.noSelect"),
+      getColor("text.disabled"),
+      getColor("text.primary"),
+    ]);
+
   const location = useLocation();
-  // const [scannedData, setScannedData] = useState<Expense | null>(null);
+  const navigate = useNavigate();
   const [scanError, setScanError] = useState("");
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
   const [showRecurringRevenuesModal, setShowRecurringRevenuesModal] =
@@ -51,33 +58,49 @@ const Home = () => {
   const [showRecurringExpensesModal, setShowRecurringExpensesModal] =
     useState(false);
   const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
-  const navigate = useNavigate();
-  const { t } = useThemedTranslation();
-  // Carregar dados para o modal
-  // useEffect(() => {
-  //   const loadData = async () => {
-  //     const paginate = {
-  //       page: 1,
-  //       limit: 100,
-  //     };
-  //     const [storesData, paymentsData, groupsData] = await Promise.all([
-  //       api.getStores(paginate),
-  //       api.getPayments(paginate),
-  //       api.getGroups(paginate),
-  //     ]);
-  //     setStores(storesData.data);
-  //     setPayments(paymentsData.data);
-  //     setGroups(groupsData.data);
-  //   };
 
-  //   loadData();
-  // }, []);
+  const {
+    hasGroup,
+    familyMembers,
+    selectedMember,
+    selectedMemberId,
+    setSelectedMemberId,
+    summary,
+  } = useFamilyGroup();
+
+  const displayIncome = useMemo(() => {
+    if (!hasGroup) return profile?.income ?? 0;
+    if (selectedMember) return selectedMember.totalRevenues;
+    return summary?.totalRevenues ?? 0;
+  }, [hasGroup, selectedMember, summary, profile]);
+
+  const displayExpenses = useMemo(() => {
+    if (!hasGroup) return profile?.expenses ?? 0;
+    if (selectedMember) return selectedMember.totalExpenses;
+    return summary?.totalExpenses ?? 0;
+  }, [hasGroup, selectedMember, summary, profile]);
+
+  const incomeLabel = useMemo(() => {
+    if (!hasGroup) return t("home.familyStories.familyIncome");
+    if (selectedMember) {
+      return t("home.familyStories.summaryIncome", {
+        name: selectedMember.name,
+      });
+    }
+    return t("home.familyStories.familyIncome");
+  }, [hasGroup, selectedMember, t]);
+
+  const expensesLabel = useMemo(() => {
+    if (!hasGroup) return t("home.familyStories.familyExpenses");
+    if (selectedMember) {
+      return t("home.familyStories.summaryExpenses", {
+        name: selectedMember.name,
+      });
+    }
+    return t("home.familyStories.familyExpenses");
+  }, [hasGroup, selectedMember, t]);
 
   useEffect(() => {
-    // if (location.state?.scanned && location.state.couponData) {
-    //   setScannedData(convertQRData(location.state.couponData));
-    //   navigate("/expense");
-    // }
     if (location.state?.error) {
       setScanError(location.state.error);
       console.error(scanError);
@@ -98,14 +121,6 @@ const Home = () => {
     }
   }, [profile]);
 
-  // const handleNewRegistration = () => {
-  //   setNewRegistrationAdded(true);
-  // };
-
-  // const handleSuccess = async () => {
-  //   await loadProfile();
-  // };
-
   const handleCloseRecurringExpensesModal = async () => {
     setShowRecurringExpensesModal(false);
     await loadProfile();
@@ -125,39 +140,62 @@ const Home = () => {
     >
       <Header />
 
-      {/* Conteúdo Principal */}
+      {hasGroup && (
+        <FamilyStories
+          members={familyMembers}
+          selectedId={selectedMemberId}
+          onSelect={setSelectedMemberId}
+        />
+      )}
+
       <Flex direction="column" p={4} gap={4}>
-        {/* Cards de Resumo */}
-        <Flex direction="column" gap={4} position="relative">
-          <Button
-            position="absolute"
-            right={2}
-            top={2}
-            size="sm"
-            variant="ghost"
-            color={getColor("text.eye")}
-            _hover={{
-              bg: getColor("button.hover.background.inverse"),
-              color: getColor("button.hover.text.inverse"),
-            }}
-            onClick={toggleShowValues}
-            zIndex={1}
-          >
-            <Icon as={showValues ? FiEyeOff : FiEye} />
-          </Button>
-          <SummaryCard
-            title={t("home.summary.income")}
-            value={profile?.income || 0}
-            type="revenue"
-          />
-          <SummaryCard
-            title={t("home.summary.expenses")}
-            value={profile?.expenses || 0}
-            type="expense"
-          />
+        <Flex gap={2} align="center">
+          <Box w="28%" minW="90px" flexShrink={0}>
+            <HomePieChart
+              income={displayIncome}
+              expenses={displayExpenses}
+              revenueColor={revenueHex}
+              expenseColor={expenseHex}
+              emptyFillColor={emptyFillHex}
+              emptyLabelColor={emptyLabelHex}
+              labelColor={labelHex}
+            />
+          </Box>
+
+          <Flex direction="column" gap={2} flex={1} minW={0} position="relative">
+            <Button
+              position="absolute"
+              right={0}
+              top={0}
+              size="xs"
+              variant="ghost"
+              color={getColor("text.eye")}
+              _hover={{
+                bg: getColor("button.hover.background.inverse"),
+                color: getColor("button.hover.text.inverse"),
+              }}
+              onClick={toggleShowValues}
+              zIndex={1}
+              minW="auto"
+              p={1}
+            >
+              <Icon as={showValues ? FiEyeOff : FiEye} />
+            </Button>
+            <SummaryCard
+              title={incomeLabel}
+              value={displayIncome}
+              type="revenue"
+              compact
+            />
+            <SummaryCard
+              title={expensesLabel}
+              value={displayExpenses}
+              type="expense"
+              compact
+            />
+          </Flex>
         </Flex>
 
-        {/* Menus de Ação */}
         <Flex gap={4} direction={{ base: "column", md: "row" }}>
           <Menu>
             <MenuButton
@@ -191,10 +229,16 @@ const Home = () => {
               <MenuItem icon={<FiCamera />} onClick={() => navigate("/scan")}>
                 {t("home.scanQRCode")}
               </MenuItem>
-              <MenuItem icon={<FiImage />} onClick={() => navigate("/image-recognition")}>
+              <MenuItem
+                icon={<FiImage />}
+                onClick={() => navigate("/image-recognition")}
+              >
                 {t("home.scanReceipt")}
               </MenuItem>
-              <MenuItem icon={<FiMic />} onClick={() => navigate("/audio-recognition")}>
+              <MenuItem
+                icon={<FiMic />}
+                onClick={() => navigate("/audio-recognition")}
+              >
                 {t("home.recordAudio")}
               </MenuItem>
             </MenuList>
@@ -229,10 +273,24 @@ const Home = () => {
               <MenuItem icon={<FiPlus />} onClick={() => navigate("/revenue")}>
                 {t("home.newRevenue")}
               </MenuItem>
-              <MenuItem icon={<FiImage />} onClick={() => navigate("/image-recognition", { state: { from: 'revenue' } })}>
+              <MenuItem
+                icon={<FiImage />}
+                onClick={() =>
+                  navigate("/image-recognition", {
+                    state: { from: "revenue" },
+                  })
+                }
+              >
                 {t("home.scanReceipt")}
               </MenuItem>
-              <MenuItem icon={<FiMic />} onClick={() => navigate("/audio-recognition", { state: { from: 'revenue' } })}>
+              <MenuItem
+                icon={<FiMic />}
+                onClick={() =>
+                  navigate("/audio-recognition", {
+                    state: { from: "revenue" },
+                  })
+                }
+              >
                 {t("home.recordAudio")}
               </MenuItem>
             </MenuList>
@@ -244,20 +302,6 @@ const Home = () => {
           setNewRegistrationAdded={setNewRegistrationAdded}
         />
       </Flex>
-
-      {/* {isExpenseOpen && (
-        <ExpenseModal
-          isOpen={isExpenseOpen}
-          onClose={onExpenseClose}
-          stores={stores}
-          payments={payments}
-          groups={groups}
-          onSuccess={handleSuccess}
-          initialData={scannedData}
-          setScannedData={setScannedData}
-          handleNewRegistration={handleNewRegistration}
-        />
-      )} */}
 
       <CompleteProfileModal
         isOpen={showCompleteProfile}

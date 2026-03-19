@@ -63,6 +63,23 @@ export interface ThemeColors {
     };
     dateRangeFilter: string;
     qrScanner: string;
+    familyStories: {
+      container: string;
+      avatar: string;
+      selected: string;
+    };
+    familyGroup: {
+      primary: string;
+      card: string;
+      memberCard: string;
+      badge: {
+        owner: string;
+        admin: string;
+        member: string;
+        pending: string;
+        notification: string;
+      };
+    };
   };
 
   // Tokens semânticos para texto
@@ -112,6 +129,22 @@ export interface ThemeColors {
       secondary: string;
       selected: string;
     };
+    familyStories: {
+      name: string;
+      selectedName: string;
+    };
+    familyGroup: {
+      title: string;
+      primary: string;
+      secondary: string;
+      badge: {
+        owner: string;
+        admin: string;
+        member: string;
+        pending: string;
+        notification: string;
+      };
+    };
   };
 
   // Tokens semânticos para heading
@@ -141,6 +174,13 @@ export interface ThemeColors {
     header: string;
     navigation: string;
     coin: string;
+    familyStories: {
+      default: string;
+      selected: string;
+    };
+    familyGroup: {
+      card: string;
+    };
   };
 
   // Tokens semânticos para status
