@@ -207,6 +207,13 @@ export const defaultTheme: VisualTheme = {
         primary: 'blue.50',
         card: 'white',
         memberCard: 'blue.50',
+        badge: {
+          owner: 'purple.100',
+          admin: 'blue.100',
+          member: 'gray.100',
+          pending: 'yellow.100',
+          notification: 'red.100',
+        },
       },
     },
     text: {
@@ -264,6 +271,13 @@ export const defaultTheme: VisualTheme = {
         title: 'blue.800',
         primary: 'blue.700',
         secondary: 'blue.500',
+        badge: {
+          owner: 'purple.700',
+          admin: 'blue.700',
+          member: 'gray.700',
+          pending: 'yellow.700',
+          notification: 'red.700',
+        },
       },
     },
     heading: {
@@ -469,6 +483,13 @@ export const rpgTheme: VisualTheme = {
         primary: 'purple.50',
         card: 'white',
         memberCard: 'purple.50',
+        badge: {
+          owner: 'purple.100',
+          admin: 'purple.100',
+          member: 'gray.100',
+          pending: 'yellow.100',
+          notification: 'red.100',
+        },
       },
     },
     text: {
@@ -525,6 +546,13 @@ export const rpgTheme: VisualTheme = {
         title: 'purple.800',
         primary: 'purple.700',
         secondary: 'purple.500',
+        badge: {
+          owner: 'purple.700',
+          admin: 'purple.700',
+          member: 'gray.700',
+          pending: 'yellow.700',
+          notification: 'red.700',
+        },
       },
     },
     heading: {

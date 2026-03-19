@@ -368,6 +368,7 @@
     "uploadPhotoError": "Erro ao enviar foto",
     "photoUploaded": "Foto atualizada com sucesso",
     "maxFileSize": "Tamanho máximo: 5MB",
+    "changeCoatOfArms": "Alterar brasão",
     "invalidEmail": "E-mail inválido",
     "passwordsDoNotMatch": "As senhas não coincidem",
     "enterPasswordFirst": "Digite a senha primeiro",

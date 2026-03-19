@@ -1,4 +1,3 @@
-import { useState, useEffect, useCallback } from 'react';
 import {
   Accordion,
   Badge,
@@ -15,6 +14,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import { useState } from 'react';
 import { FiPackage, FiUsers, FiMail, FiSettings } from 'react-icons/fi';
 import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
@@ -32,15 +32,11 @@ import { FamilyManagement } from '../../components/family/FamilyManagement';
 import { MemberDataView } from '../../components/family/MemberDataView';
 import { MonthYearFilter } from '../../components/family/MonthYearFilter';
 import { useAuth } from '../../contexts/AuthContext';
+import { useFamilyGroup } from '../../hooks/useFamilyGroup';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { api } from '../../services';
 import { isAdmin } from '../../utils/familyGroupPermissions';
-import type {
-  FamilyGroupResponseDto,
-  FamilyGroupSummaryDto,
-  MemberDataDto,
-} from '../../types/familyGroup';
 import type {
   Expense,
   Groups,
@@ -55,7 +51,6 @@ const NewResources = () => {
   const { profile } = useAuth();
   const toast = useToast();
 
-  // --- Resources state ---
   const [editingResource, setEditingResource] = useState<{
     type: 'store' | 'payment' | 'group' | 'expense' | 'revenue';
     data: Merchant | Payments | Groups | Expense | Revenue;
@@ -78,6 +73,28 @@ const NewResources = () => {
   const [currentResource, setCurrentResource] = useState<
     'store' | 'payment' | 'group'
   >('store');
+
+  const {
+    familyGroup,
+    summary,
+    memberData,
+    selectedMemberId,
+    setSelectedMemberId,
+    pendingCount,
+    isLoadingGroup,
+    isLoadingSummary,
+    isLoadingMemberData,
+    month,
+    year,
+    setMonth,
+    setYear,
+    loadGroup,
+    loadSummary,
+    loadPendingCount,
+  } = useFamilyGroup();
+
+  const currentUserId = profile?.user.id || '';
+  const userIsAdmin = familyGroup ? isAdmin(familyGroup, currentUserId) : false;
 
   const triggerRefresh = (
     resourceType: 'store' | 'payment' | 'group' | 'expense' | 'revenue',
@@ -149,101 +166,6 @@ const NewResources = () => {
     triggerRefresh(resourceType);
   };
 
-  // --- Family Group state ---
-  const [familyGroup, setFamilyGroup] = useState<FamilyGroupResponseDto | null>(null);
-  const [summary, setSummary] = useState<FamilyGroupSummaryDto | null>(null);
-  const [memberData, setMemberData] = useState<MemberDataDto | null>(null);
-  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
-  const [pendingCount, setPendingCount] = useState(0);
-  const [isLoadingGroup, setIsLoadingGroup] = useState(true);
-  const [isLoadingSummary, setIsLoadingSummary] = useState(false);
-  const [isLoadingMemberData, setIsLoadingMemberData] = useState(false);
-
-  const [month, setMonth] = useState(() => new Date().getMonth() + 1);
-  const [year, setYear] = useState(() => new Date().getFullYear());
-
-  const currentUserId = profile?.user.id || '';
-  const userIsAdmin = familyGroup ? isAdmin(familyGroup, currentUserId) : false;
-
-  const loadGroup = useCallback(async () => {
-    setIsLoadingGroup(true);
-    try {
-      const groups = await api.familyGroupList();
-      if (groups.length > 0) {
-        setFamilyGroup(groups[0]);
-      } else {
-        setFamilyGroup(null);
-      }
-    } catch (error) {
-      console.error(error);
-      setFamilyGroup(null);
-    } finally {
-      setIsLoadingGroup(false);
-    }
-  }, []);
-
-  const loadSummary = useCallback(async () => {
-    if (!familyGroup) return;
-    setIsLoadingSummary(true);
-    try {
-      const data = await api.familyGroupGetSummary(familyGroup.id, month, year);
-      setSummary(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoadingSummary(false);
-    }
-  }, [familyGroup, month, year]);
-
-  const loadMemberData = useCallback(
-    async (memberId: string) => {
-      if (!familyGroup) return;
-      setIsLoadingMemberData(true);
-      try {
-        const data = await api.familyGroupGetMemberData(familyGroup.id, memberId, month, year);
-        setMemberData(data);
-      } catch (error) {
-        console.error(error);
-        setMemberData(null);
-      } finally {
-        setIsLoadingMemberData(false);
-      }
-    },
-    [familyGroup, month, year],
-  );
-
-  const loadPendingCount = useCallback(async () => {
-    try {
-      const invitations = await api.familyGroupListInvitations();
-      setPendingCount(invitations.length);
-    } catch {
-      setPendingCount(0);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadGroup();
-    loadPendingCount();
-  }, [loadGroup, loadPendingCount]);
-
-  useEffect(() => {
-    if (familyGroup) {
-      loadSummary();
-    }
-  }, [familyGroup, loadSummary]);
-
-  useEffect(() => {
-    if (selectedMemberId && familyGroup) {
-      loadMemberData(selectedMemberId);
-    } else {
-      setMemberData(null);
-    }
-  }, [selectedMemberId, familyGroup, loadMemberData]);
-
-  const handleSelectMember = (userId: string | null) => {
-    setSelectedMemberId(userId);
-  };
-
   const handleGroupCreated = () => {
     loadGroup();
   };
@@ -258,7 +180,6 @@ const NewResources = () => {
     loadSummary();
   };
 
-  // --- Shared tab styles ---
   const tabSelectedStyle = {
     color: getColor('text.profile.selected'),
     bg: getColor('background.profile.secondary'),
@@ -310,7 +231,13 @@ const NewResources = () => {
             <Icon as={FiMail} mr={1} />
             {t('familyGroup.invitations')}
             {pendingCount > 0 && (
-              <Badge ml={1} colorScheme="red" borderRadius="full" fontSize="xs">
+              <Badge
+                ml={1}
+                bg={getColor('background.familyGroup.badge.notification')}
+                color={getColor('text.familyGroup.badge.notification')}
+                borderRadius="full"
+                fontSize="xs"
+              >
                 {pendingCount}
               </Badge>
             )}
@@ -324,7 +251,6 @@ const NewResources = () => {
         </TabList>
 
         <TabPanels>
-          {/* Tab Recursos */}
           <TabPanel p={4}>
             <Accordion allowMultiple>
               <ResourceContainer
@@ -364,7 +290,6 @@ const NewResources = () => {
             </Accordion>
           </TabPanel>
 
-          {/* Tab Grupo Familiar */}
           <TabPanel p={3}>
             {!familyGroup ? (
               <CreateGroupForm onGroupCreated={handleGroupCreated} />
@@ -391,7 +316,7 @@ const NewResources = () => {
                   summary={summary}
                   isLoading={isLoadingSummary}
                   selectedMemberId={selectedMemberId}
-                  onSelectMember={handleSelectMember}
+                  onSelectMember={setSelectedMemberId}
                 />
 
                 {selectedMemberId && (
@@ -404,12 +329,10 @@ const NewResources = () => {
             )}
           </TabPanel>
 
-          {/* Tab Convites */}
           <TabPanel p={0}>
             <FamilyInvitations onInvitationHandled={handleInvitationHandled} />
           </TabPanel>
 
-          {/* Tab Gerenciamento (admin only) */}
           {familyGroup && userIsAdmin && (
             <TabPanel p={0}>
               <FamilyManagement group={familyGroup} onRefresh={handleRefresh} />

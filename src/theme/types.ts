@@ -72,6 +72,13 @@ export interface ThemeColors {
       primary: string;
       card: string;
       memberCard: string;
+      badge: {
+        owner: string;
+        admin: string;
+        member: string;
+        pending: string;
+        notification: string;
+      };
     };
   };
 
@@ -130,6 +137,13 @@ export interface ThemeColors {
       title: string;
       primary: string;
       secondary: string;
+      badge: {
+        owner: string;
+        admin: string;
+        member: string;
+        pending: string;
+        notification: string;
+      };
     };
   };
 

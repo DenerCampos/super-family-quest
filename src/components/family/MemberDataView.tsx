@@ -2,7 +2,6 @@ import {
   VStack,
   Text,
   Flex,
-  Badge,
   Box,
   Spinner,
   Avatar,
@@ -92,9 +91,17 @@ export const MemberDataView = ({ data, isLoading }: MemberDataViewProps) => {
                     {formatDateToBR(rev.date)}
                   </Text>
                 </Box>
-                <Badge colorScheme="green" fontSize="sm">
+                <Text
+                  fontSize="sm"
+                  fontWeight="bold"
+                  bg={getColor('background.lastRegistrations.badge.revenue')}
+                  color={getColor('text.lastRegistrations.revenue')}
+                  borderRadius="md"
+                  px={2}
+                  py={0.5}
+                >
                   + {showValues ? formatCurrencyBRL(rev.value) : '••••••'}
-                </Badge>
+                </Text>
               </Flex>
             ))}
           </VStack>
@@ -132,9 +139,17 @@ export const MemberDataView = ({ data, isLoading }: MemberDataViewProps) => {
                     {formatDateToBR(exp.date)}
                   </Text>
                 </Box>
-                <Badge colorScheme="red" fontSize="sm">
+                <Text
+                  fontSize="sm"
+                  fontWeight="bold"
+                  bg={getColor('background.lastRegistrations.badge.expense')}
+                  color={getColor('text.lastRegistrations.expense')}
+                  borderRadius="md"
+                  px={2}
+                  py={0.5}
+                >
                   - {showValues ? formatCurrencyBRL(exp.value) : '••••••'}
-                </Badge>
+                </Text>
               </Flex>
             ))}
           </VStack>

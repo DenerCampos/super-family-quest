@@ -431,7 +431,7 @@ const Profile = () => {
                       onChange={handlePhotoUpload}
                     />
                     <IconButton
-                      aria-label="Alterar brasão"
+                      aria-label={t('profile.changeCoatOfArms')}
                       icon={<FiEdit2 />}
                       position="absolute"
                       bottom={2}

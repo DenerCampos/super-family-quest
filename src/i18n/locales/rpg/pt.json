@@ -361,6 +361,7 @@
     "uploadPhotoError": "Falha ao enviar retrato",
     "photoUploaded": "Retrato atualizado com sucesso!",
     "maxFileSize": "Pergaminho muito pesado! Máximo: 5MB",
+    "changeCoatOfArms": "Alterar brasão do reino",
     "invalidEmail": "Pergaminho inválido",
     "passwordsDoNotMatch": "As palavras secretas não coincidem",
     "enterPasswordFirst": "Digite a palavra secreta primeiro",

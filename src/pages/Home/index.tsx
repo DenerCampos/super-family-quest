@@ -9,7 +9,7 @@ import {
   MenuList,
   useToken,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FiCamera,
   FiDollarSign,
@@ -20,10 +20,10 @@ import {
   FiPlus,
   FiShoppingBag,
 } from "react-icons/fi";
-import { PieChart, Pie, Cell, ResponsiveContainer, Label } from "recharts";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FamilyStories } from "../../components/FamilyStories";
 import { Header } from "../../components/Header";
+import { HomePieChart } from "../../components/HomePieChart";
 import { LastRegistrationsList } from "../../components/LastRegistrationsList";
 import { CompleteProfileModal } from "../../components/modals/CompleteProfileModal";
 import { NewRecurringExpenseModal } from "../../components/modals/NewRecurringExpenseModal";
@@ -31,126 +31,14 @@ import { NewRecurringIncomeModal } from "../../components/modals/NewRecurringInc
 import { NavigationBar } from "../../components/NavigationBar";
 import { SummaryCard } from "../../components/SummaryCard";
 import { useAuth } from "../../contexts/AuthContext";
+import { useFamilyGroup } from "../../hooks/useFamilyGroup";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
-import { api } from "../../services";
-import type { FamilyGroupSummaryDto, MemberSummary } from "../../types/familyGroup";
-
-const RADIAN = Math.PI / 180;
-
-type HomePieChartProps = {
-  income: number;
-  expenses: number;
-  revenueColor: string;
-  expenseColor: string;
-  emptyFillColor: string;
-  emptyLabelColor: string;
-  labelColor: string;
-};
-
-const HomePieChart = ({
-  income,
-  expenses,
-  revenueColor,
-  expenseColor,
-  emptyFillColor,
-  emptyLabelColor,
-  labelColor,
-}: HomePieChartProps) => {
-  const total = income + expenses;
-
-  const renderLabel = (props: Record<string, unknown>) => {
-    const cx = Number(props.cx ?? 0);
-    const cy = Number(props.cy ?? 0);
-    const midAngle = Number(props.midAngle ?? 0);
-    const innerRadius = Number(props.innerRadius ?? 0);
-    const outerRadius = Number(props.outerRadius ?? 0);
-    const percent = Number(props.percent ?? 0);
-
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-    if (percent < 0.05) return null;
-
-    return (
-      <text
-        x={x}
-        y={y}
-        fill={labelColor}
-        textAnchor="middle"
-        dominantBaseline="central"
-        fontSize={12}
-        fontWeight="bold"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
-
-  if (total === 0) {
-    return (
-      <ResponsiveContainer width="100%" height={100}>
-        <PieChart>
-          <Pie
-            data={[{ value: 1 }]}
-            dataKey="value"
-            cx="50%"
-            cy="50%"
-            outerRadius={42}
-            innerRadius={18}
-            fill={emptyFillColor}
-            stroke="none"
-          >
-            <Label
-              value="0%"
-              position="center"
-              fontSize={11}
-              fontWeight="bold"
-              fill={emptyLabelColor}
-            />
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
-    );
-  }
-
-  const data = [
-    { name: "income", value: income },
-    { name: "expenses", value: expenses },
-  ];
-
-  const colors: Record<string, string> = {
-    income: revenueColor,
-    expenses: expenseColor,
-  };
-
-  return (
-    <ResponsiveContainer width="100%" height={100}>
-      <PieChart>
-        <Pie
-          data={data}
-          dataKey="value"
-          cx="50%"
-          cy="50%"
-          outerRadius={42}
-          innerRadius={18}
-          stroke="none"
-          labelLine={false}
-          label={renderLabel}
-        >
-          {data.map((entry) => (
-            <Cell key={entry.name} fill={colors[entry.name]} />
-          ))}
-        </Pie>
-      </PieChart>
-    </ResponsiveContainer>
-  );
-};
 
 const Home = () => {
   const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
   const { getColor } = useVisualTheme();
+  const { t } = useThemedTranslation();
 
   const [revenueHex, expenseHex, emptyFillHex, emptyLabelHex, labelHex] =
     useToken("colors", [
@@ -162,6 +50,7 @@ const Home = () => {
     ]);
 
   const location = useLocation();
+  const navigate = useNavigate();
   const [scanError, setScanError] = useState("");
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
   const [showRecurringRevenuesModal, setShowRecurringRevenuesModal] =
@@ -169,46 +58,15 @@ const Home = () => {
   const [showRecurringExpensesModal, setShowRecurringExpensesModal] =
     useState(false);
   const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
-  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
-  const [summary, setSummary] = useState<FamilyGroupSummaryDto | null>(null);
-  const [hasGroup, setHasGroup] = useState(false);
-  const navigate = useNavigate();
-  const { t } = useThemedTranslation();
 
-  const loadFamilyData = useCallback(async () => {
-    try {
-      const groups = await api.familyGroupList();
-      if (groups.length > 0) {
-        setHasGroup(true);
-        const now = new Date();
-        const data = await api.familyGroupGetSummary(
-          groups[0].id,
-          now.getMonth() + 1,
-          now.getFullYear()
-        );
-        setSummary(data);
-      } else {
-        setHasGroup(false);
-        setSummary(null);
-      }
-    } catch {
-      setHasGroup(false);
-      setSummary(null);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadFamilyData();
-  }, [loadFamilyData]);
-
-  const familyMembers: MemberSummary[] = useMemo(() => {
-    return summary?.members ?? [];
-  }, [summary]);
-
-  const selectedMember = useMemo(
-    () => familyMembers.find((m) => m.userId === selectedMemberId) ?? null,
-    [familyMembers, selectedMemberId]
-  );
+  const {
+    hasGroup,
+    familyMembers,
+    selectedMember,
+    selectedMemberId,
+    setSelectedMemberId,
+    summary,
+  } = useFamilyGroup();
 
   const displayIncome = useMemo(() => {
     if (!hasGroup) return profile?.income ?? 0;
@@ -290,11 +148,8 @@ const Home = () => {
         />
       )}
 
-      {/* Conteúdo Principal */}
       <Flex direction="column" p={4} gap={4}>
-        {/* Cards de Resumo com Pie Chart */}
         <Flex gap={2} align="center">
-          {/* Pie Chart */}
           <Box w="28%" minW="90px" flexShrink={0}>
             <HomePieChart
               income={displayIncome}
@@ -307,7 +162,6 @@ const Home = () => {
             />
           </Box>
 
-          {/* Cards */}
           <Flex direction="column" gap={2} flex={1} minW={0} position="relative">
             <Button
               position="absolute"
@@ -342,7 +196,6 @@ const Home = () => {
           </Flex>
         </Flex>
 
-        {/* Menus de Ação */}
         <Flex gap={4} direction={{ base: "column", md: "row" }}>
           <Menu>
             <MenuButton

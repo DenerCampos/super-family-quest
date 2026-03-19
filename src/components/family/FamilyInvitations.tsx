@@ -24,7 +24,10 @@ export const FamilyInvitations = ({ onInvitationHandled }: FamilyInvitationsProp
   const toast = useToast();
   const [invitations, setInvitations] = useState<FamilyGroupMemberResponseDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [processingId, setProcessingId] = useState<string | null>(null);
+  const [processingAction, setProcessingAction] = useState<{
+    id: string;
+    type: 'accept' | 'reject';
+  } | null>(null);
 
   const loadInvitations = useCallback(async () => {
     try {
@@ -42,14 +45,14 @@ export const FamilyInvitations = ({ onInvitationHandled }: FamilyInvitationsProp
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [toast, t]);
 
   useEffect(() => {
     loadInvitations();
   }, [loadInvitations]);
 
   const handleAccept = async (id: string) => {
-    setProcessingId(id);
+    setProcessingAction({ id, type: 'accept' });
     try {
       await api.familyGroupAcceptInvitation(id);
       toast({
@@ -72,12 +75,12 @@ export const FamilyInvitations = ({ onInvitationHandled }: FamilyInvitationsProp
         duration: 3000,
       });
     } finally {
-      setProcessingId(null);
+      setProcessingAction(null);
     }
   };
 
   const handleReject = async (id: string) => {
-    setProcessingId(id);
+    setProcessingAction({ id, type: 'reject' });
     try {
       await api.familyGroupRejectInvitation(id);
       toast({
@@ -96,7 +99,7 @@ export const FamilyInvitations = ({ onInvitationHandled }: FamilyInvitationsProp
         duration: 3000,
       });
     } finally {
-      setProcessingId(null);
+      setProcessingAction(null);
     }
   };
 
@@ -155,7 +158,8 @@ export const FamilyInvitations = ({ onInvitationHandled }: FamilyInvitationsProp
               bg={getColor('button.background.revenue')}
               color={getColor('button.text.primary')}
               _hover={{ opacity: 0.8 }}
-              isLoading={processingId === invitation.id}
+              isLoading={processingAction?.id === invitation.id && processingAction.type === 'accept'}
+              isDisabled={processingAction?.id === invitation.id && processingAction.type === 'reject'}
               loadingText={t('familyGroup.accepting')}
               onClick={() => handleAccept(invitation.id)}
               fontFamily={getFont('body')}
@@ -168,7 +172,8 @@ export const FamilyInvitations = ({ onInvitationHandled }: FamilyInvitationsProp
               bg={getColor('button.background.expense')}
               color={getColor('button.text.primary')}
               _hover={{ opacity: 0.8 }}
-              isLoading={processingId === invitation.id}
+              isLoading={processingAction?.id === invitation.id && processingAction.type === 'reject'}
+              isDisabled={processingAction?.id === invitation.id && processingAction.type === 'accept'}
               loadingText={t('familyGroup.rejecting')}
               onClick={() => handleReject(invitation.id)}
               fontFamily={getFont('body')}
