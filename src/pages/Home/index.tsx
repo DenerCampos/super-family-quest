@@ -7,6 +7,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useToast,
   useToken,
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
@@ -34,11 +35,13 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useFamilyGroup } from "../../hooks/useFamilyGroup";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
+import { api } from "../../services";
 
 const Home = () => {
   const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
+  const toast = useToast();
 
   const [revenueHex, expenseHex, emptyFillHex, emptyLabelHex, labelHex] =
     useToken("colors", [
@@ -58,6 +61,38 @@ const Home = () => {
   const [showRecurringExpensesModal, setShowRecurringExpensesModal] =
     useState(false);
   const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
+
+  const handleDeleteRegistration = async (
+    id: string,
+    type: "expense" | "revenue",
+  ) => {
+    try {
+      if (type === "expense") {
+        await api.deleteExpense({ id });
+      } else {
+        await api.deleteRevenue({ id });
+      }
+      toast({
+        title:
+          type === "expense"
+            ? t("resources.expense.deleteSuccess")
+            : t("resources.revenue.deleteSuccess"),
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch {
+      toast({
+        title:
+          type === "expense"
+            ? t("resources.expense.deleteError")
+            : t("resources.revenue.deleteError"),
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   const {
     hasGroup,
@@ -300,6 +335,7 @@ const Home = () => {
         <LastRegistrationsList
           newRegistrationAdded={newRegistrationAdded}
           setNewRegistrationAdded={setNewRegistrationAdded}
+          onDelete={handleDeleteRegistration}
         />
       </Flex>
 

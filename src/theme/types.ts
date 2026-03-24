@@ -80,6 +80,10 @@ export interface ThemeColors {
         notification: string;
       };
     };
+    resourceTable: {
+      userBadge: string;
+      panel: string;
+    };
   };
 
   // Tokens semânticos para texto
@@ -144,6 +148,11 @@ export interface ThemeColors {
         pending: string;
         notification: string;
       };
+    };
+    resourceTable: {
+      userBadge: string;
+      searchIcon: string;
+      badgeCount: string;
     };
   };
 

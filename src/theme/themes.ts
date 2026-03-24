@@ -215,6 +215,10 @@ export const defaultTheme: VisualTheme = {
           notification: 'red.100',
         },
       },
+      resourceTable: {
+        userBadge: 'gray.100',
+        panel: 'white',
+      },
     },
     text: {
       primary: 'white',
@@ -266,6 +270,11 @@ export const defaultTheme: VisualTheme = {
       familyStories: {
         name: 'blue.700',
         selectedName: 'blue.800',
+      },
+      resourceTable: {
+        userBadge: 'gray.500',
+        searchIcon: 'gray.300',
+        badgeCount: 'white',
       },
       familyGroup: {
         title: 'blue.800',
@@ -491,6 +500,10 @@ export const rpgTheme: VisualTheme = {
           notification: 'red.100',
         },
       },
+      resourceTable: {
+        userBadge: 'gray.100',
+        panel: 'white',
+      },
     },
     text: {
       primary: 'white',
@@ -541,6 +554,11 @@ export const rpgTheme: VisualTheme = {
       familyStories: {
         name: 'purple.700',
         selectedName: 'purple.800',
+      },
+      resourceTable: {
+        userBadge: 'gray.500',
+        searchIcon: 'gray.300',
+        badgeCount: 'white',
       },
       familyGroup: {
         title: 'purple.800',

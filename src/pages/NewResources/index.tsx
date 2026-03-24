@@ -22,6 +22,8 @@ import { SimpleResourceModal } from '../../components/modals/SimpleResourceModal
 import ExpenseResource from '../../components/resources/ExpenseResource';
 import GroupResource from '../../components/resources/GroupResource';
 import PaymentResource from '../../components/resources/PaymentResource';
+import RecurringExpenseResource from '../../components/resources/RecurringExpenseResource';
+import RecurringRevenueResource from '../../components/resources/RecurringRevenueResource';
 import ResourceContainer from '../../components/resources/ResourceContainer';
 import RevenueResource from '../../components/resources/RevenueResource';
 import StoreResource from '../../components/resources/StoreResource';
@@ -63,6 +65,23 @@ const NewResources = () => {
     expense: 0,
     revenue: 0,
   });
+
+  const [totalCounts, setTotalCounts] = useState({
+    store: null as number | null,
+    payment: null as number | null,
+    group: null as number | null,
+    expense: null as number | null,
+    revenue: null as number | null,
+    recurringExpense: null as number | null,
+    recurringRevenue: null as number | null,
+  });
+
+  const updateCount = (key: keyof typeof totalCounts, value: number) => {
+    setTotalCounts((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const registrationsCount =
+    (totalCounts.store ?? 0) + (totalCounts.payment ?? 0) + (totalCounts.group ?? 0);
 
   const {
     isOpen: isSimpleOpen,
@@ -256,35 +275,73 @@ const NewResources = () => {
               <ResourceContainer
                 title={t('resources.registrations')}
                 colorScheme={getColor('primary')}
+                count={registrationsCount || null}
               >
                 <StoreResource
                   onEdit={(store) => handleResourceOpen('store', store)}
                   onDelete={(id) => handleDelete('store', id)}
                   refreshTrigger={refreshTriggers.store}
+                  onTotalChange={(n) => updateCount('store', n)}
                 />
                 <PaymentResource
                   onEdit={(payment) => handleResourceOpen('payment', payment)}
                   onDelete={(id) => handleDelete('payment', id)}
                   refreshTrigger={refreshTriggers.payment}
+                  onTotalChange={(n) => updateCount('payment', n)}
                 />
                 <GroupResource
                   onEdit={(group) => handleResourceOpen('group', group)}
                   onDelete={(id) => handleDelete('group', id)}
                   refreshTrigger={refreshTriggers.group}
+                  onTotalChange={(n) => updateCount('group', n)}
                 />
               </ResourceContainer>
 
-              <ResourceContainer title={t('resources.expense.title')} colorScheme={getColor('expense')}>
+              <ResourceContainer
+                title={t('resources.expense.title')}
+                colorScheme={getColor('expense')}
+                count={totalCounts.expense}
+              >
                 <ExpenseResource
                   onDelete={(id) => handleDelete('expense', id)}
                   refreshTrigger={refreshTriggers.expense}
+                  onTotalChange={(n) => updateCount('expense', n)}
                 />
               </ResourceContainer>
 
-              <ResourceContainer title={t('resources.revenue.title')} colorScheme={getColor('revenue')}>
+              <ResourceContainer
+                title={t('resources.revenue.title')}
+                colorScheme={getColor('revenue')}
+                count={totalCounts.revenue}
+              >
                 <RevenueResource
                   onDelete={(id) => handleDelete('revenue', id)}
                   refreshTrigger={refreshTriggers.revenue}
+                  onTotalChange={(n) => updateCount('revenue', n)}
+                />
+              </ResourceContainer>
+
+              <ResourceContainer
+                title={t('recurring.expenseTitle')}
+                colorScheme={getColor('expense')}
+                count={totalCounts.recurringExpense}
+              >
+                <RecurringExpenseResource
+                  onDelete={(id) => handleDelete('expense', id)}
+                  refreshTrigger={refreshTriggers.expense}
+                  onTotalChange={(n) => updateCount('recurringExpense', n)}
+                />
+              </ResourceContainer>
+
+              <ResourceContainer
+                title={t('recurring.revenueTitle')}
+                colorScheme={getColor('revenue')}
+                count={totalCounts.recurringRevenue}
+              >
+                <RecurringRevenueResource
+                  onDelete={(id) => handleDelete('revenue', id)}
+                  refreshTrigger={refreshTriggers.revenue}
+                  onTotalChange={(n) => updateCount('recurringRevenue', n)}
                 />
               </ResourceContainer>
             </Accordion>
