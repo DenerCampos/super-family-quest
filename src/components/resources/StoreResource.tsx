@@ -33,13 +33,15 @@ const ITEMS_PER_PAGE = 5;
 interface StoreResourceProps {
   onEdit: (store: Merchant | null) => void;
   onDelete: (id: string) => void;
-  refreshTrigger?: number; // Prop para forçar atualização
+  refreshTrigger?: number;
+  onTotalChange?: (total: number) => void;
 }
 
 const StoreResource = ({
   onEdit,
   onDelete,
   refreshTrigger,
+  onTotalChange,
 }: StoreResourceProps) => {
   const [stores, setStores] = useState<PaginationResponse<Merchant>>();
   const [search, setSearch] = useState('');
@@ -58,6 +60,7 @@ const StoreResource = ({
         search,
       });
       setStores(storesData);
+      onTotalChange?.(storesData.meta.totalItems);
     } catch (error) {
       toast({
         title: t('resources.store.error'),

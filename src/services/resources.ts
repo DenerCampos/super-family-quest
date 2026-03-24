@@ -43,6 +43,12 @@ export type Items = {
   group: Groups;
 };
 
+export type Owner = {
+  id: string;
+  name: string;
+  profileImage: string | null;
+};
+
 export type Expense = {
   id?: string;
   name: string;
@@ -55,6 +61,7 @@ export type Expense = {
   payment: Payments;
   store: Merchant;
   items: Array<Items>;
+  user?: Owner | null;
 };
 
 export type ItemsCreate = {
@@ -104,6 +111,8 @@ export type Revenue = {
   name: string;
   value: number;
   repeat: boolean;
+  date?: string;
+  user?: Owner | null;
 };
 
 export const ResourcesService = {
@@ -183,10 +192,18 @@ export const ResourcesService = {
     page = 1,
     limit = 5,
     search = '',
+    isRecurring,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    isRecurring?: boolean;
   }): Promise<PaginationResponse<Expense>> => {
-    const response = await api.get(
-      `/expense?page=${page}&limit=${limit}&search=${search}`,
-    );
+    let url = `/expense?page=${page}&limit=${limit}&search=${search}`;
+    if (isRecurring !== undefined) {
+      url += `&isRecurring=${isRecurring}`;
+    }
+    const response = await api.get(url);
 
     return response.data;
   },
@@ -267,10 +284,18 @@ export const ResourcesService = {
     page = 1,
     limit = 5,
     search = '',
+    isRecurring,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    isRecurring?: boolean;
   }): Promise<PaginationResponse<Revenue>> => {
-    const response = await api.get(
-      `/revenue?page=${page}&limit=${limit}&search=${search}`,
-    );
+    let url = `/revenue?page=${page}&limit=${limit}&search=${search}`;
+    if (isRecurring !== undefined) {
+      url += `&isRecurring=${isRecurring}`;
+    }
+    const response = await api.get(url);
 
     return response.data;
   },

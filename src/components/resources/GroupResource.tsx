@@ -32,13 +32,15 @@ const ITEMS_PER_PAGE = 5;
 interface GroupResourceProps {
   onEdit: (group: Groups | null) => void;
   onDelete: (id: string) => void;
-  refreshTrigger?: number; // Prop para forçar atualização
+  refreshTrigger?: number;
+  onTotalChange?: (total: number) => void;
 }
 
 const GroupResource = ({
   onEdit,
   onDelete,
   refreshTrigger,
+  onTotalChange,
 }: GroupResourceProps) => {
   const [groups, setGroups] = useState<PaginationResponse<Groups>>();
   const [search, setSearch] = useState('');
@@ -57,6 +59,7 @@ const GroupResource = ({
         search,
       });
       setGroups(groupsData);
+      onTotalChange?.(groupsData.meta.totalItems);
     } catch (error) {
       toast({
         title: t('resources.group.error'),

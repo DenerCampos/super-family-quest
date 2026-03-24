@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Flex,
@@ -21,29 +21,33 @@ import {
   Stack,
   Spinner,
   useToast,
+  Badge,
 } from '@chakra-ui/react';
-import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
-import { api } from '../../services';
-import type { Payments, PaginationResponse } from '../../services/resources';
+import { FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { api } from '../../services';
+import type { Revenue, PaginationResponse } from '../../services/resources';
+import { formatCurrency } from '../../utils/formatCurrency';
+import { formatDateToBR } from '../../utils/formatDate';
+import UserBadge from './UserBadge';
 
 const ITEMS_PER_PAGE = 5;
 
-interface PaymentResourceProps {
-  onEdit: (payment: Payments | null) => void;
-  onDelete: (id: string) => void;
+interface RecurringRevenueResourceProps {
+  onDelete: (id: string) => Promise<void>;
   refreshTrigger?: number;
   onTotalChange?: (total: number) => void;
 }
 
-const PaymentResource = ({
-  onEdit,
+const RecurringRevenueResource = ({
   onDelete,
   refreshTrigger,
   onTotalChange,
-}: PaymentResourceProps) => {
-  const [payments, setPayments] = useState<PaginationResponse<Payments>>();
+}: RecurringRevenueResourceProps) => {
+  const [revenues, setRevenues] = useState<PaginationResponse<Revenue>>();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -51,19 +55,23 @@ const PaymentResource = ({
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
-  const loadPayments = async (page: number = 1, search: string = '') => {
+  const { profile } = useAuth();
+  const navigate = useNavigate();
+
+  const loadRevenues = async (p: number = 1, s: string = '') => {
     setLoading(true);
     try {
-      const paymentsData = await api.getPayments({
-        page,
+      const data = await api.getRevenues({
+        page: p,
         limit: ITEMS_PER_PAGE,
-        search,
+        search: s,
+        isRecurring: true,
       });
-      setPayments(paymentsData);
-      onTotalChange?.(paymentsData.meta.totalItems);
+      setRevenues(data);
+      onTotalChange?.(data.meta.totalItems);
     } catch (error) {
       toast({
-        title: t('resources.payment.error'),
+        title: t('recurring.revenue.error'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -74,33 +82,28 @@ const PaymentResource = ({
     }
   };
 
-  // Função pública para recarregar dados (será chamada pelo componente pai)
-  const refreshData = () => {
-    loadPayments(page, search);
-  };
-
-  // Expor a função refreshData para o componente pai
   useEffect(() => {
     if (refreshTrigger) {
-      refreshData();
+      loadRevenues(page, search);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger]);
 
   useEffect(() => {
-    loadPayments(page, search);
+    loadRevenues(page, search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
 
-    // Debounce da busca para evitar muitas requisições
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
 
     searchTimeoutRef.current = setTimeout(() => {
-      loadPayments(1, value);
+      loadRevenues(1, value);
       setPage(1);
     }, 500);
   };
@@ -109,41 +112,12 @@ const PaymentResource = ({
     setPage(newPage);
   };
 
-  const handleNewPayment = () => {
-    onEdit(null);
-  };
-
-  const handleEdit = (payment: Payments) => {
-    onEdit(payment);
-  };
-
   const handleDelete = async (id: string) => {
-    if (
-      window.confirm(t('resources.payment.deleteConfirm'))
-    ) {
-      try {
-        await onDelete(id);
-        // Recarregar dados após exclusão
-        loadPayments(page, search);
-        toast({
-          title: t('resources.payment.deleteSuccess'),
-          status: 'success',
-          duration: 2000,
-          isClosable: true,
-        });
-      } catch (error) {
-        console.error(error);
-        toast({
-          title: t('resources.payment.deleteError'),
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-      }
+    if (globalThis.confirm(t('recurring.revenue.deleteConfirm'))) {
+      await onDelete(id);
     }
   };
 
-  // Cleanup do timeout
   useEffect(() => {
     return () => {
       if (searchTimeoutRef.current) {
@@ -156,33 +130,16 @@ const PaymentResource = ({
     <Box mb={6}>
       <Flex justify="space-between" align="center" mb={4}>
         <Text fontSize="lg" fontWeight="medium">
-          {t('resources.payment.title')}
+          {t('recurring.revenue.title')}
         </Text>
-        <Button
-          size="sm"
-          bg={getColor('button.background.neutral')}
-          color={getColor('button.text.primary')}
-          border="1px solid"
-          borderColor={getColor('button.border.neutral')}
-          _hover={{
-            bg: getColor('button.hover.background.inverse'),
-            color: getColor('button.hover.text.inverse'),
-          }}
-          _focus={{ bg: getColor('button.hover.background.neutral'),
-            color: getColor('button.hover.text.neutral'), }}
-          leftIcon={<FiPlus />}
-          onClick={handleNewPayment}
-        >
-          {t('resources.payment.new')}
-        </Button>
       </Flex>
 
       <InputGroup mb={4}>
         <InputLeftElement pointerEvents="none">
-          <Icon as={FiSearch} color={getColor('gray.300')} />
+          <Icon as={FiSearch} color={getColor('text.resourceTable.searchIcon')} />
         </InputLeftElement>
         <Input
-          placeholder={t('resources.payment.searchPlaceholder')}
+          placeholder={t('recurring.revenue.searchPlaceholder')}
           value={search}
           onChange={handleSearch}
         />
@@ -192,47 +149,65 @@ const PaymentResource = ({
         <Flex justify="center" py={4}>
           <Spinner color={getColor('text.accent')} />
         </Flex>
-      ) : payments?.data?.length === 0 ? (
+      ) : revenues?.data?.length === 0 ? (
         <Text textAlign="center" py={4}>
-          {t('resources.payment.noData')}
+          {t('recurring.revenue.noData')}
         </Text>
       ) : (
         <>
           <Box
             overflowX="auto"
             border="1px"
-            borderColor={getColor('gray.500')}
+            borderColor={getColor('border.secondary')}
             borderRadius="md"
           >
-            <Table variant="simple" minW="400px">
+            <Table variant="simple" minW="600px">
               <Thead>
                 <Tr>
-                  <Th>{t('resources.payment.name')}</Th>
-                  <Th>{t('resources.payment.actions')}</Th>
+                  <Th>{t('resources.revenue.name')}</Th>
+                  <Th>{t('resources.revenue.value')}</Th>
+                  <Th>{t('resources.expense.date')}</Th>
+                  <Th>{t('resources.revenue.actions')}</Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {payments?.data?.map((payment) => (
-                  <Tr key={payment.id}>
-                    <Td>{payment.name}</Td>
+                {revenues?.data?.map((revenue) => (
+                  <Tr key={revenue.id}>
+                    <Td>
+                      <Flex align="center" gap={2}>
+                        {revenue.name}
+                        {revenue.user &&
+                          revenue.user.id !== profile?.user.id && (
+                            <UserBadge user={revenue.user} />
+                          )}
+                      </Flex>
+                    </Td>
+                    <Td>
+                      <Badge colorScheme={getColor('chakraColors.green')}>
+                        + {formatCurrency(revenue.value)}
+                      </Badge>
+                    </Td>
+                    <Td>{revenue.date ? formatDateToBR(revenue.date) : '-'}</Td>
                     <Td>
                       <Menu>
                         <MenuButton as={Button} size="sm" variant="outline">
-                          {t('resources.payment.actions')}
+                          {t('resources.revenue.actions')}
                         </MenuButton>
                         <MenuList>
                           <MenuItem
                             icon={<FiEdit />}
-                            onClick={() => handleEdit(payment)}
+                            onClick={() =>
+                              navigate(`/revenue/${revenue.id}`)
+                            }
                           >
-                            {t('resources.payment.edit')}
+                            {t('resources.revenue.edit')}
                           </MenuItem>
                           <MenuItem
                             icon={<FiTrash2 />}
-                            onClick={() => handleDelete(payment.id as string)}
+                            onClick={() => handleDelete(revenue.id ?? '')}
                             color={getColor('chakraColors.red')}
                           >
-                            {t('resources.payment.delete')}
+                            {t('resources.revenue.delete')}
                           </MenuItem>
                         </MenuList>
                       </Menu>
@@ -243,7 +218,7 @@ const PaymentResource = ({
             </Table>
           </Box>
 
-          {payments?.meta && payments.meta.totalPages > 1 && (
+          {revenues?.meta && revenues.meta.totalPages > 1 && (
             <Flex justify="flex-end" mt={4}>
               <Stack direction="row" spacing={2}>
                 <Button
@@ -251,17 +226,17 @@ const PaymentResource = ({
                   onClick={() => handlePageChange(page - 1)}
                   isDisabled={page === 1}
                 >
-                  {t('resources.payment.previous')}
+                  {t('resources.revenue.previous')}
                 </Button>
                 <Button size="sm" variant="outline">
-                  {page} / {payments.meta.totalPages}
+                  {page} / {revenues.meta.totalPages}
                 </Button>
                 <Button
                   size="sm"
                   onClick={() => handlePageChange(page + 1)}
-                  isDisabled={page === payments.meta.totalPages}
+                  isDisabled={page === revenues.meta.totalPages}
                 >
-                  {t('resources.payment.next')}
+                  {t('resources.revenue.next')}
                 </Button>
               </Stack>
             </Flex>
@@ -272,4 +247,4 @@ const PaymentResource = ({
   );
 };
 
-export default PaymentResource;
+export default RecurringRevenueResource;

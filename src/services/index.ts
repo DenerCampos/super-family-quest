@@ -72,11 +72,13 @@ export const api = {
     page,
     limit,
     search,
+    isRecurring,
   }: {
     page?: number;
     limit?: number;
     search?: string;
-  }) => ResourcesService.getExpenses({ page, limit, search }),
+    isRecurring?: boolean;
+  }) => ResourcesService.getExpenses({ page, limit, search, isRecurring }),
   updateStore: ({ id, name }: { id: string; name: string }) =>
     ResourcesService.updateStore({ id, name }),
   updatePayment: ({ id, name }: { id: string; name: string }) =>
@@ -94,11 +96,13 @@ export const api = {
     page,
     limit,
     search,
+    isRecurring,
   }: {
     page?: number;
     limit?: number;
     search?: string;
-  }) => ResourcesService.getRevenues({ page, limit, search }),
+    isRecurring?: boolean;
+  }) => ResourcesService.getRevenues({ page, limit, search, isRecurring }),
   updateRevenue: ResourcesService.updateRevenue,
   deleteRevenue: ({ id }: { id: string }) =>
     ResourcesService.deleteRevenue({ id }),

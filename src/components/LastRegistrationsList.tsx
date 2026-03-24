@@ -7,9 +7,12 @@ import {
   VStack,
   Badge,
   Icon,
+  IconButton,
 } from '@chakra-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCoins, FaStore } from 'react-icons/fa';
+import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import { formatCurrencyBRL } from '../utils/formatCurrency';
 import { formatDateToBR } from '../utils/formatDate';
 import { capitalizeFirstLetter } from '../utils/formatString';
@@ -23,15 +26,18 @@ const MotionBox = motion(Box);
 type LastRegistrationsListProps = {
   newRegistrationAdded: boolean;
   setNewRegistrationAdded: React.Dispatch<React.SetStateAction<boolean>>;
+  onDelete: (id: string, type: 'expense' | 'revenue') => Promise<void>;
 };
 
 export const LastRegistrationsList = ({
   newRegistrationAdded,
   setNewRegistrationAdded,
+  onDelete,
 }: LastRegistrationsListProps) => {
   const { showValues } = useAuth();
   const { t } = useThemedTranslation();
   const { getColor, getFont } = useVisualTheme();
+  const navigate = useNavigate();
 
   const {
     registrations,
@@ -42,6 +48,22 @@ export const LastRegistrationsList = ({
     isFetchingNextPage,
     refetchLastRegistration,
   } = useGetLastRegistration();
+
+  const handleEdit = (id: string, type: 'expense' | 'revenue') => {
+    navigate(type === 'expense' ? `/expense/${id}` : `/revenue/${id}`);
+  };
+
+  const handleDelete = async (id: string, type: 'expense' | 'revenue') => {
+    const confirmMsg =
+      type === 'expense'
+        ? t('resources.expense.deleteConfirm')
+        : t('resources.revenue.deleteConfirm');
+
+    if (!globalThis.confirm(confirmMsg)) return;
+
+    await onDelete(id, type);
+    refetchLastRegistration();
+  };
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -195,12 +217,36 @@ export const LastRegistrationsList = ({
                 <Flex
                   mt={2}
                   justify="space-between"
+                  align="center"
                   color={getColor('text.lastRegistrations.neutral')}
                   fontSize="sm"
                   fontFamily={getFont('body')}
                 >
                   <Text>{formatDateToBR(registration.date)}</Text>
-                  <Flex align="center">
+                  <Flex align="center" gap={1}>
+                    <IconButton
+                      aria-label={t('resources.expense.edit')}
+                      icon={<FiEdit />}
+                      size="xs"
+                      variant="ghost"
+                      color={getColor('text.lastRegistrations.icon')}
+                      _hover={{
+                        bg: getColor('button.hover.background.inverse'),
+                        color: getColor('button.hover.text.inverse'),
+                      }}
+                      onClick={() => handleEdit(registration.id, registration.type)}
+                    />
+                    <IconButton
+                      aria-label={t('resources.expense.delete')}
+                      icon={<FiTrash2 />}
+                      size="xs"
+                      variant="ghost"
+                      color={getColor('text.lastRegistrations.expense')}
+                      _hover={{
+                        bg: getColor('background.lastRegistrations.badge.expense'),
+                      }}
+                      onClick={() => handleDelete(registration.id, registration.type)}
+                    />
                     <Icon as={FaCoins} mr={1} />
                     <Text>{registration.coins}</Text>
                   </Flex>

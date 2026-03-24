@@ -326,6 +326,29 @@
     "playAudio": "Clique para ouvir a gravação",
     "playing": "Reproduzindo..."
   },
+  "recurring": {
+    "expenseTitle": "Despesas Fixas",
+    "revenueTitle": "Receitas Fixas",
+    "loadError": "Erro ao carregar lançamentos recorrentes",
+    "deleteSuccess": "Lançamento recorrente excluído com sucesso",
+    "deleteError": "Erro ao excluir lançamento recorrente",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "expense": {
+      "title": "Despesas Fixas",
+      "error": "Erro ao carregar despesas fixas",
+      "deleteConfirm": "Tem certeza que deseja excluir esta despesa recorrente?",
+      "noData": "Nenhuma despesa recorrente encontrada",
+      "searchPlaceholder": "Buscar despesas fixas..."
+    },
+    "revenue": {
+      "title": "Receitas Fixas",
+      "error": "Erro ao carregar receitas fixas",
+      "deleteConfirm": "Tem certeza que deseja excluir esta receita recorrente?",
+      "noData": "Nenhuma receita recorrente encontrada",
+      "searchPlaceholder": "Buscar receitas fixas..."
+    }
+  },
   "lastRegistrationsList": {
     "title": "Últimos Lançamentos",
     "noData": "Nenhuma despesa registrada",

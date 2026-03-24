@@ -25,22 +25,27 @@ import {
   Checkbox,
 } from '@chakra-ui/react';
 import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { api } from '../../services';
 import type { Revenue, PaginationResponse } from '../../services/resources';
 import { formatCurrency } from '../../utils/formatCurrency';
-import { useThemedTranslation } from '../../hooks/useThemedTranslation';
-import { useVisualTheme } from '../../hooks/useVisualTheme';
-import { useNavigate } from 'react-router-dom';
+import UserBadge from './UserBadge';
+
 const ITEMS_PER_PAGE = 5;
 
 interface RevenueResourceProps {
   onDelete: (id: string) => void;
   refreshTrigger?: number;
+  onTotalChange?: (total: number) => void;
 }
 
 const RevenueResource = ({
   onDelete,
   refreshTrigger,
+  onTotalChange,
 }: RevenueResourceProps) => {
   const [revenues, setRevenues] = useState<PaginationResponse<Revenue>>();
   const [search, setSearch] = useState('');
@@ -50,6 +55,7 @@ const RevenueResource = ({
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
+  const { profile } = useAuth();
   const navigate = useNavigate();
   const loadRevenues = async (page: number = 1, search: string = '') => {
     setLoading(true);
@@ -60,6 +66,7 @@ const RevenueResource = ({
         search,
       });
       setRevenues(revenuesData);
+      onTotalChange?.(revenuesData.meta.totalItems);
     } catch (error) {
       toast({
         title: t('resources.revenue.error'),
@@ -205,7 +212,14 @@ const RevenueResource = ({
               <Tbody>
                 {revenues?.data?.map((revenue) => (
                   <Tr key={revenue.id}>
-                    <Td>{revenue.name}</Td>
+                    <Td>
+                      <Flex align="center" gap={2}>
+                        {revenue.name}
+                        {revenue.user && revenue.user.id !== profile?.user.id && (
+                          <UserBadge user={revenue.user} />
+                        )}
+                      </Flex>
+                    </Td>
                     <Td>
                       <Badge colorScheme={getColor('chakraColors.green')}>
                         + {formatCurrency(revenue.value)}

@@ -319,6 +319,29 @@
     "playAudio": "Clique para ouvir a mensagem",
     "playing": "Reproduzindo mensagem..."
   },
+  "recurring": {
+    "expenseTitle": "Tributos Fixos do Reino",
+    "revenueTitle": "Rendas Fixas do Reino",
+    "loadError": "Os pergaminhos de tributos recorrentes não puderam ser lidos",
+    "deleteSuccess": "Lançamento recorrente abolido com sucesso",
+    "deleteError": "O pergaminho resistiu à destruição",
+    "edit": "Aprimorar",
+    "delete": "Abolir",
+    "expense": {
+      "title": "Tributos Fixos do Reino",
+      "error": "Os pergaminhos de tributos fixos não puderam ser lidos",
+      "deleteConfirm": "Tem certeza que deseja abolir este tributo recorrente do reino?",
+      "noData": "Nenhum tributo fixo encontrado nos registros do reino",
+      "searchPlaceholder": "Buscar nos tributos fixos..."
+    },
+    "revenue": {
+      "title": "Rendas Fixas do Reino",
+      "error": "Os pergaminhos de rendas fixas não puderam ser lidos",
+      "deleteConfirm": "Tem certeza que deseja remover esta renda fixa do reino?",
+      "noData": "Nenhuma renda fixa encontrada nos registros do reino",
+      "searchPlaceholder": "Buscar nas rendas fixas..."
+    }
+  },
   "lastRegistrationsList": {
     "title": "Registros do Escriba",
     "noData": "Nenhuma despesa registrada nos pergaminhos",
