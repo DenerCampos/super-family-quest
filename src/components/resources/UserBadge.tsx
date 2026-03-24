@@ -1,9 +1,9 @@
 import { Avatar, Flex, Text } from '@chakra-ui/react';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
-import type { Owner } from '../../services/resources';
+import type { UserSummary } from '../../types/user';
 
 interface UserBadgeProps {
-  user: Owner;
+  user: UserSummary;
 }
 
 const UserBadge = ({ user }: UserBadgeProps) => {

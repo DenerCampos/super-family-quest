@@ -1,4 +1,5 @@
 import type { UserProfile } from "../contexts/AuthContext";
+import type { UserSummary } from '../types/user';
 import api from "./api";
 
 export type RegistrationType = 'expense' | 'revenue';
@@ -10,6 +11,7 @@ export type Registration = {
   coins: number;
   type: RegistrationType;
   date: string;
+  user?: UserSummary | null;
 };
 
 export type PaginationMeta = {

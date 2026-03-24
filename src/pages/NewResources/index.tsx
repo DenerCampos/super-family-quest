@@ -349,7 +349,10 @@ const NewResources = () => {
 
           <TabPanel p={3}>
             {!familyGroup ? (
-              <CreateGroupForm onGroupCreated={handleGroupCreated} />
+              <CreateGroupForm
+                onGroupCreated={handleGroupCreated}
+                defaultGroupName={profile?.user.family}
+              />
             ) : (
               <VStack spacing={4} align="stretch">
                 <Flex justify="space-between" align="center">

@@ -346,7 +346,8 @@
     "title": "Registros do Escriba",
     "noData": "Nenhuma despesa registrada nos pergaminhos",
     "error": "O escriba falhou ao ler os registros antigos",
-    "noMore": "Os pergaminhos chegaram ao fim"
+    "noMore": "Os pergaminhos chegaram ao fim",
+    "unknownStore": "Mercador desconhecido"
   },
   "loadingOverlay": {
     "loading": "Conjurando..."

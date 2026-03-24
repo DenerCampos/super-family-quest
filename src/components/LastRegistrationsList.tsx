@@ -20,6 +20,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useThemedTranslation } from '../hooks/useThemedTranslation';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 import { useGetLastRegistration } from '../hooks/useGetLastRegistration';
+import UserBadge from './resources/UserBadge';
 
 const MotionBox = motion(Box);
 
@@ -34,7 +35,7 @@ export const LastRegistrationsList = ({
   setNewRegistrationAdded,
   onDelete,
 }: LastRegistrationsListProps) => {
-  const { showValues } = useAuth();
+  const { showValues, profile } = useAuth();
   const { t } = useThemedTranslation();
   const { getColor, getFont } = useVisualTheme();
   const navigate = useNavigate();
@@ -187,11 +188,14 @@ export const LastRegistrationsList = ({
                 boxShadow="sm"
               >
                 <Flex justify="space-between" align="center">
-                  <Flex align="center">
-                    <Icon as={FaStore} color={getColor('text.lastRegistrations.icon')} mr={2} />
+                  <Flex align="center" gap={1}>
+                    <Icon as={FaStore} color={getColor('text.lastRegistrations.icon')} mr={1} />
                     <Text fontWeight="medium" fontFamily={getFont('body')} color={getColor('text.lastRegistrations.title')}>
-                      {capitalizeFirstLetter(registration.name) || 'Loja desconhecida'}
+                      {capitalizeFirstLetter(registration.name) || t('lastRegistrationsList.unknownStore')}
                     </Text>
+                    {registration.user && registration.user.id !== profile?.user.id && (
+                      <UserBadge user={registration.user} />
+                    )}
                   </Flex>
 
                   <Badge

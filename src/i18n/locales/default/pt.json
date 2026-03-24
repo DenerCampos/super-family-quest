@@ -353,7 +353,8 @@
     "title": "Últimos Lançamentos",
     "noData": "Nenhuma despesa registrada",
     "error": "Erro ao carregar lançamentos recentes",
-    "noMore": "Sem mais registros"
+    "noMore": "Sem mais registros",
+    "unknownStore": "Loja desconhecida"
   },
   "loadingOverlay": {
     "loading": "Carregando..."

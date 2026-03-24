@@ -16,13 +16,14 @@ import { api } from '../../services';
 
 type CreateGroupFormProps = {
   onGroupCreated: () => void;
+  defaultGroupName?: string;
 };
 
-export const CreateGroupForm = ({ onGroupCreated }: CreateGroupFormProps) => {
+export const CreateGroupForm = ({ onGroupCreated, defaultGroupName = '' }: CreateGroupFormProps) => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
   const toast = useToast();
-  const [groupName, setGroupName] = useState('');
+  const [groupName, setGroupName] = useState(defaultGroupName);
   const [isCreating, setIsCreating] = useState(false);
 
   const handleCreate = async () => {

@@ -10,10 +10,6 @@ export function isAdmin(group: FamilyGroupResponseDto, userId: string): boolean 
   return member?.role === 'admin';
 }
 
-export function canViewAllMembers(group: FamilyGroupResponseDto, userId: string): boolean {
-  return isAdmin(group, userId);
-}
-
 export function canInvite(group: FamilyGroupResponseDto, userId: string): boolean {
   return isAdmin(group, userId);
 }
