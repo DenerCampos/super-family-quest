@@ -43,11 +43,9 @@ export type Items = {
   group: Groups;
 };
 
-export type Owner = {
-  id: string;
-  name: string;
-  profileImage: string | null;
-};
+import type { UserSummary } from '../types/user';
+
+export type Owner = UserSummary;
 
 export type Expense = {
   id?: string;

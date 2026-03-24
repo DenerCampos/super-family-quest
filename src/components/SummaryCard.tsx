@@ -1,4 +1,3 @@
-// components/SummaryCard.tsx
 import { Card, CardBody, Text, Heading } from '@chakra-ui/react';
 import { formatCurrency } from '../utils/formatCurrency';
 import { useAuth } from '../contexts/AuthContext';
@@ -47,9 +46,9 @@ export const SummaryCard = ({ title, value, type, compact }: Props) => {
           {title}
         </Text>
         <Heading
-          size={compact ? 'md' : 'lg'}
+          size={compact ? 'sm' : 'lg'}
           color={colors[type].heading}
-          letterSpacing="2px"
+          letterSpacing={compact ? '1px' : '2px'}
           fontFamily={getFont('mono')}
           noOfLines={1}
         >
