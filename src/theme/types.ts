@@ -54,7 +54,12 @@ export interface ThemeColors {
     reports: string;
     coin: string;
     home: string;
-    dashboard: string;
+    dashboard: {
+      primary: string;
+      tile: string;
+      tileActive: string;
+      filterBar: string;
+    };
     resources: string;
     profile: {
       primary: string;
@@ -128,6 +133,14 @@ export interface ThemeColors {
     };
     eye: string;
     dateRangeFilter: string;
+    dashboard: {
+      title: string;
+      tileTitle: string;
+      tileSubtitle: string;
+      tileIcon: string;
+      tileIconActive: string;
+      filterLabel: string;
+    };
     profile: {
       primary: string;
       secondary: string;
@@ -180,6 +193,10 @@ export interface ThemeColors {
       expense: string;
     };
     reports: string;
+    dashboard: {
+      tile: string;
+      tileActive: string;
+    };
     header: string;
     navigation: string;
     coin: string;

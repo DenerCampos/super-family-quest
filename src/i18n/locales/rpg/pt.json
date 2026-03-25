@@ -23,6 +23,7 @@
     "updateError": "A forja mágica falhou",
     "createError": "Falha na forja",
     "deleteError": "O item resistiu à destruição",
+    "back": "Retornar",
     "months": {
       "1": "Janeiro",
       "2": "Fevereiro",
@@ -49,7 +50,37 @@
     "totalBalance": "Tesouro Total do Reino",
     "monthlyExpenses": "Tributos Mensais",
     "monthlyIncome": "Recompensas Mensais",
-    "savingsGoal": "Meta do Tesouro Real"
+    "savingsGoal": "Meta do Tesouro Real",
+    "title": "Pergaminhos do Tesouro",
+    "selectReport": "Escolha um pergaminho para consultar",
+    "tiles": {
+      "expensesByCategory": {
+        "title": "Por Categoria",
+        "subtitle": "Distribuição de tributos"
+      },
+      "expensesByDate": {
+        "title": "Por Período",
+        "subtitle": "Evolução diária"
+      },
+      "expensesVsIncome": {
+        "title": "Tributos vs Recompensas",
+        "subtitle": "Comparativo anual"
+      },
+      "expensesByStore": {
+        "title": "Por Mercador",
+        "subtitle": "Tributos por mercador"
+      },
+      "topProducts": {
+        "title": "Top Itens",
+        "subtitle": "Mais adquiridos"
+      }
+    },
+    "filters": {
+      "allFamily": "Toda a Guilda",
+      "onlyMe": "Somente Eu",
+      "selectUser": "Filtrar por membro",
+      "customDateRange": "Ciclo personalizado"
+    }
   },
   "home": {
     "summary": {
@@ -95,7 +126,8 @@
       "loading": "Consultando os Pergaminhos Antigos...",
       "error": "Os pergaminhos estão ilegíveis!",
       "noData": "Nenhum tributo encontrado neste ciclo lunar",
-      "value": "Valor em Ouro"
+      "value": "Valor em Ouro",
+      "spentValue": "Ouro Gasto"
     },
     "expensesIncome": {
       "title": "Tributos vs Recompensas",
@@ -111,7 +143,8 @@
       "error": "Os pergaminhos estão ilegíveis!",
       "noData": "Nenhum item encontrado neste ciclo lunar",
       "value": "Valor em Ouro",
-      "quantity": "Quantidade"
+      "quantity": "Quantidade",
+      "totalValue": "Valor Total em Ouro"
     }
   },
   "resources": {
