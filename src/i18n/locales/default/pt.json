@@ -24,6 +24,7 @@
     "updateError": "Falha ao atualizar",
     "createError": "Falha ao criar",
     "deleteError": "Falha ao excluir",
+    "back": "Voltar",
     "confirmTitle": "Deseja continuar?",
     "confirmDescription": "Se você continuar, as informações alteradas serão perdidas.",
     "closeConfirm": "Fechar",
@@ -53,7 +54,37 @@
     "totalBalance": "Saldo Total",
     "monthlyExpenses": "Despesas Mensais",
     "monthlyIncome": "Receitas Mensais",
-    "savingsGoal": "Meta de Economia"
+    "savingsGoal": "Meta de Economia",
+    "title": "Relatórios",
+    "selectReport": "Selecione um relatório para visualizar",
+    "tiles": {
+      "expensesByCategory": {
+        "title": "Por Categoria",
+        "subtitle": "Distribuição de gastos"
+      },
+      "expensesByDate": {
+        "title": "Por Período",
+        "subtitle": "Evolução diária"
+      },
+      "expensesVsIncome": {
+        "title": "Despesas vs Receitas",
+        "subtitle": "Comparativo anual"
+      },
+      "expensesByStore": {
+        "title": "Por Estabelecimento",
+        "subtitle": "Gastos por loja"
+      },
+      "topProducts": {
+        "title": "Top Produtos",
+        "subtitle": "Mais comprados"
+      }
+    },
+    "filters": {
+      "allFamily": "Família Inteira",
+      "onlyMe": "Somente Eu",
+      "selectUser": "Filtrar por membro",
+      "customDateRange": "Período personalizado"
+    }
   },
   "home": {
     "summary": {
@@ -99,7 +130,8 @@
       "loading": "Carregando dados...",
       "error": "Erro ao carregar dados do gráfico",
       "noData": "Nenhuma despesa encontrada no período",
-      "value": "Valor"
+      "value": "Valor",
+      "spentValue": "Valor Gasto"
     },
     "expensesIncome": {
       "title": "Despesas vs Receitas",
@@ -115,7 +147,8 @@
       "error": "Erro ao carregar dados do gráfico",
       "noData": "Nenhum produto encontrado no período",
       "value": "Valor",
-      "quantity": "Quantidade"
+      "quantity": "Quantidade",
+      "totalValue": "Valor Total"
     }
   },
   "resources": {

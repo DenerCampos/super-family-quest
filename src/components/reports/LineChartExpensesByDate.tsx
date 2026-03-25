@@ -12,14 +12,16 @@ import {
 import { formatCurrency } from '../../utils/formatCurrency';
 import type { ExpensesByDate } from '../../services/reports';
 import { fillMonthDays, formatDateToBR } from '../../utils/formatDate';
-import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 interface LineChartExpensesProps {
-  data: ExpensesByDate[];
+  startDate: string;
+  endDate: string;
+  userId?: string;
+  data?: ExpensesByDate[];
   onDataUpdate?: (data: ExpensesByDate[]) => void;
 }
 
@@ -38,36 +40,35 @@ const generateAreaColors = () => {
   };
 };
 
-export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: LineChartExpensesProps) => {
-  const [startDate, setStartDate] = useState(defaultDates.firstDay);
-  const [endDate, setEndDate] = useState(defaultDates.lastDay);
-  const [data, setData] = useState(initialData);
+export const LineChartExpensesByDate = ({ startDate, endDate, userId, data: initialData, onDataUpdate }: LineChartExpensesProps) => {
+  const [data, setData] = useState(initialData ?? []);
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
-  const fetchData = async (start: string, end: string) => {
-    setLoading(true);
-    try {
-      const response = await api.getExpenseByDate({
-        startDate: start,
-        endDate: end,
-      });
-      setData(response);
-      onDataUpdate?.(response);
-      setError(null);
-    } catch (error) {
-      console.error('Erro ao buscar dados do gráfico:', error);
-      setError(t('reports.expensesByDate.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchData(startDate, endDate);
-  }, [startDate, endDate]);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await api.getExpenseByDate({
+          startDate,
+          endDate,
+          userId,
+        });
+        setData(response);
+        onDataUpdate?.(response);
+        setError(null);
+      } catch (err) {
+        console.error('Erro ao buscar dados do gráfico:', err);
+        setError(t('reports.expensesByDate.error'));
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [startDate, endDate, userId]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -84,14 +85,6 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
       setChartData([]);
     }
   }, [data]);
-
-  const handleStartDateChange = (date: string) => {
-    setStartDate(date);
-  };
-
-  const handleEndDateChange = (date: string) => {
-    setEndDate(date);
-  };
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const colors = generateAreaColors();
@@ -119,13 +112,6 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
       >
         {t('reports.expensesByDate.title')}
       </Text>
-
-      <DateRangeFilter
-        startDate={startDate}
-        endDate={endDate}
-        onStartDateChange={handleStartDateChange}
-        onEndDateChange={handleEndDateChange}
-      />
 
       {loading ? (
         <Flex align="center" justify="center" height="300px">
@@ -168,7 +154,7 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
                 />
               )}
               <Tooltip
-                formatter={(value) => [formatCurrency(Number(value)), 'Valor']}
+                formatter={(value) => [formatCurrency(Number(value)), t('reports.expensesByDate.value')]}
                 labelFormatter={(value) => {
                   const fullDate = chartData.find(
                     (item) => item.formattedDate === value,
@@ -194,14 +180,14 @@ export const LineChartExpensesByDate = ({ data: initialData, onDataUpdate }: Lin
               <Area
                 type="monotone"
                 dataKey="value"
-                name="Valor Gasto"
+                name={t('reports.expensesByDate.spentValue')}
                 stroke={colors.stroke}
                 fill={colors.fill}
                 strokeWidth={2}
                 activeDot={{
                   stroke: colors.stroke,
                   strokeWidth: 2,
-                  fill: 'white',
+                  fill: getColor('background.reports'),
                   r: 4,
                 }}
               />

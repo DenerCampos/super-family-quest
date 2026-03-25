@@ -12,68 +12,60 @@ import {
 } from 'recharts';
 import { formatCurrency } from '../../utils/formatCurrency';
 import type { ExpensesByGroup } from '../../services/reports';
-import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 
 interface ColumnChartExpensesProps {
-  data: ExpensesByGroup[];
+  startDate: string;
+  endDate: string;
+  userId?: string;
+  data?: ExpensesByGroup[];
   onDataUpdate?: (data: ExpensesByGroup[]) => void;
 }
 
 const generateBarColors = (count: number) => {
-  // Tons de roxo com variação de luminosidade
   const colors = [];
-  const baseHue = 270; // Tom base de roxo
+  const baseHue = 270;
 
   for (let i = 0; i < count; i++) {
-    const hue = baseHue + ((i * 10) % 30); // Pequena variação de matiz
-    const lightness = 60 + (i % 4) * 5; // Varia entre 60-75%
+    const hue = baseHue + ((i * 10) % 30);
+    const lightness = 60 + (i % 4) * 5;
     colors.push(`hsl(${hue}, 65%, ${lightness}%)`);
   }
 
   return colors;
 };
 
-export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: ColumnChartExpensesProps) => {
-  const [startDate, setStartDate] = useState(defaultDates.firstDay);
-  const [endDate, setEndDate] = useState(defaultDates.lastDay);
-  const [data, setData] = useState(initialData);
+export const BarChartExpensesByStore = ({ startDate, endDate, userId, data: initialData, onDataUpdate }: ColumnChartExpensesProps) => {
+  const [data, setData] = useState(initialData ?? []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
-  const fetchData = async (start: string, end: string) => {
-    setLoading(true);
-    try {
-      const response = await api.getExpenseByStore({
-        startDate: start,
-        endDate: end,
-      });
-      setData(response);
-      onDataUpdate?.(response);
-      setError(null);
-    } catch (error) {
-      console.error('Erro ao buscar dados do gráfico:', error);
-      setError(t('reports.expensesByStore.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchData(startDate, endDate);
-  }, [startDate, endDate]);
-
-  const handleStartDateChange = (date: string) => {
-    setStartDate(date);
-  };
-
-  const handleEndDateChange = (date: string) => {
-    setEndDate(date);
-  };
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await api.getExpenseByStore({
+          startDate,
+          endDate,
+          userId,
+        });
+        setData(response);
+        onDataUpdate?.(response);
+        setError(null);
+      } catch (err) {
+        console.error('Erro ao buscar dados do gráfico:', err);
+        setError(t('reports.expensesByStore.error'));
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [startDate, endDate, userId]);
 
   const chartData = data.map((item) => ({
     name: item.name.length > 10 ? `${item.name.substring(0, 8)}...` : item.name,
@@ -108,13 +100,6 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
         {t('reports.expensesByStore.title')}
       </Text>
 
-      <DateRangeFilter
-        startDate={startDate}
-        endDate={endDate}
-        onStartDateChange={handleStartDateChange}
-        onEndDateChange={handleEndDateChange}
-      />
-
       {loading ? (
         <Flex align="center" justify="center" height="300px">
           <Spinner
@@ -136,7 +121,6 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}
-              // layout="vertical" // Remove esta linha para ter barras verticais
               margin={{
                 top: 5,
                 right: 30,
@@ -160,7 +144,7 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
                 />
               )}
               <Tooltip
-                formatter={(value) => [formatCurrency(Number(value)), 'Valor']}
+                formatter={(value) => [formatCurrency(Number(value)), t('reports.expensesByStore.value')]}
                 labelFormatter={(value) => {
                   const fullName = chartData.find(
                     (item) => item.name === value,
@@ -186,8 +170,8 @@ export const BarChartExpensesByStore = ({ data: initialData, onDataUpdate }: Col
               />
               <Bar
                 dataKey="value"
-                name="Valor"
-                radius={[4, 4, 0, 0]} // Bordas arredondadas só no topo
+                name={t('reports.expensesByStore.value')}
+                radius={[4, 4, 0, 0]}
               >
                 {chartData.map((_, index) => (
                   <Cell

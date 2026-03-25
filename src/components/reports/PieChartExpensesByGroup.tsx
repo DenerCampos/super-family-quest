@@ -2,69 +2,62 @@ import { Flex, Text, Box, useBreakpointValue, Spinner } from "@chakra-ui/react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { formatCurrency } from "../../utils/formatCurrency";
 import type { ExpensesByGroup } from "../../services/reports";
-import { DateRangeFilter, defaultDates } from "./DateRangeFilter";
 import { useState, useEffect } from "react";
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+
 interface PieChartExpensesProps {
-  data: ExpensesByGroup[];
+  startDate: string;
+  endDate: string;
+  userId?: string;
+  data?: ExpensesByGroup[];
   onDataUpdate?: (data: ExpensesByGroup[]) => void;
 }
 
 const generateDistinctColors = (count: number) => {
-  // Cores suaves com variação de matiz, saturação e luminosidade
-  const baseHues = [260, 200, 320, 160, 230, 290]; // Tons de roxo, azul e violeta
+  const baseHues = [260, 200, 320, 160, 230, 290];
   const colors = [];
 
   for (let i = 0; i < count; i++) {
-    const hue = baseHues[i % baseHues.length] + i * 3; // Pequena variação
-    const saturation = 65 + (i % 3) * 10; // Entre 65-85%
-    const lightness = 70 - (i % 2) * 5; // Entre 65-70% (tons pastel)
+    const hue = baseHues[i % baseHues.length] + i * 3;
+    const saturation = 65 + (i % 3) * 10;
+    const lightness = 70 - (i % 2) * 5;
 
-    colors.push(`hsla(${hue}, ${saturation}%, ${lightness}%, 0.8)`); // Com leve transparência
+    colors.push(`hsla(${hue}, ${saturation}%, ${lightness}%, 0.8)`);
   }
 
   return colors;
 };
 
-export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartExpensesProps) => {
-  const [startDate, setStartDate] = useState(defaultDates.firstDay);
-  const [endDate, setEndDate] = useState(defaultDates.lastDay);
-  const [data, setData] = useState(initialData);
+export const PieChartExpenses = ({ startDate, endDate, userId, data: initialData, onDataUpdate }: PieChartExpensesProps) => {
+  const [data, setData] = useState(initialData ?? []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
-  const fetchData = async (start: string, end: string) => {
-    setLoading(true);
-    try {
-      const response = await api.getExpenseByGroup({
-        startDate: start,
-        endDate: end,
-      });
-      setData(response);
-      onDataUpdate?.(response);
-      setError(null);
-    } catch (error) {
-      console.error('Erro ao buscar dados do gráfico:', error);
-      setError(t('reports.expensesByGroup.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchData(startDate, endDate);
-  }, [startDate, endDate]);
-
-  const handleStartDateChange = (date: string) => {
-    setStartDate(date);
-  };
-
-  const handleEndDateChange = (date: string) => {
-    setEndDate(date);
-  };
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await api.getExpenseByGroup({
+          startDate,
+          endDate,
+          userId,
+        });
+        setData(response);
+        onDataUpdate?.(response);
+        setError(null);
+      } catch (err) {
+        console.error('Erro ao buscar dados do gráfico:', err);
+        setError(t('reports.expensesByGroup.error'));
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [startDate, endDate, userId]);
 
   const chartData = data.map((item) => ({
     name: item.name,
@@ -86,7 +79,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
       mx="auto"
       mb={6}
       bg={getColor('background.reports')}
-      boxShadow="sm" // Sombra sutil para profundidade
+      boxShadow="sm"
     >
       <Text
         fontSize="xl"
@@ -97,13 +90,6 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
       >
         {t('reports.expensesByGroup.title')}
       </Text>
-
-      <DateRangeFilter
-        startDate={startDate}
-        endDate={endDate}
-        onStartDateChange={handleStartDateChange}
-        onEndDateChange={handleEndDateChange}
-      />
 
       {loading ? (
         <Flex align="center" justify="center" height="300px">
@@ -131,20 +117,20 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
                 cy="50%"
                 labelLine={false}
                 outerRadius={isMobile ? 80 : 100}
-                fill="#8884d8"
+                fill={getColor('text.reports.primary')}
                 dataKey="value"
                 label={({ name, percent }) =>
                   isMobile
                     ? `${((percent || 0) * 100).toFixed(0)}%`
                     : `${name}: ${((percent || 0) * 100).toFixed(0)}%`
                 }
-                animationDuration={500} // Microinteração
+                animationDuration={500}
               >
                 {chartData.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={colors[index]}
-                    stroke="white" // Bordas brancas suaves
+                    stroke={getColor('background.reports')}
                     strokeWidth={1.5}
                     strokeOpacity={0.6}
                   />
@@ -187,7 +173,7 @@ export const PieChartExpenses = ({ data: initialData, onDataUpdate }: PieChartEx
           {t('reports.expensesByGroup.noData')}
         </Text>
       )}
-      {isMobile && (
+      {isMobile && data.length > 0 && (
         <Box mt={4} maxH="150px" overflowY="auto">
           <Flex direction="column" gap={2}>
             {chartData.map((entry, index) => (

@@ -1,4 +1,4 @@
-import { Flex, Input, Text } from "@chakra-ui/react";
+import { Flex, Box, Input, Text } from "@chakra-ui/react";
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 
@@ -29,23 +29,18 @@ export const DateRangeFilter = ({
   onEndDateChange,
 }: DateRangeFilterProps) => {
   const { t } = useThemedTranslation();
-  const { getColor } = useVisualTheme();
+  const { getColor, getFont } = useVisualTheme();
+
   return (
-    <Flex 
-      gap={4} 
-      mb={4} 
-      direction={{ base: "column", sm: "row" }} 
-      align="center"
-      justify="center"
-      bg={getColor('background.dateRangeFilter')}
-      p={4}
-      borderRadius="md"
-      border="1px solid"
-      borderColor={getColor('border.primary')}
-      width="100%"
-    >
-      <Flex align="center" gap={2}>
-        <Text fontSize="sm" color={getColor('text.dateRangeFilter')} whiteSpace="nowrap" fontWeight="medium">
+    <Flex gap={2} width="100%">
+      <Box flex={1}>
+        <Text
+          fontSize="xs"
+          color={getColor('text.dashboard.filterLabel')}
+          fontWeight="medium"
+          fontFamily={getFont('body')}
+          mb={1}
+        >
           {t('reports.dateRangeFilter.startDate')}
         </Text>
         <Input
@@ -53,15 +48,24 @@ export const DateRangeFilter = ({
           value={startDate}
           onChange={(e) => onStartDateChange(e.target.value)}
           size="sm"
-          w="auto"
-          borderColor={getColor('border.primary')}
-          _hover={{ borderColor: getColor('border.primary') }}
-          _focus={{ borderColor: getColor('border.primary')}}
-          bg={getColor('background.quaternary')}
+          borderRadius="md"
+          fontFamily={getFont('body')}
+          color={getColor('text.dashboard.filterLabel')}
+          borderColor={getColor('border.dashboard.tile')}
+          bg={getColor('background.dashboard.filterBar')}
+          _hover={{ borderColor: getColor('border.dashboard.tileActive') }}
+          _focus={{ borderColor: getColor('border.dashboard.tileActive') }}
+          width="100%"
         />
-      </Flex>
-      <Flex align="center" gap={2}>
-        <Text fontSize="sm" color={getColor('text.dateRangeFilter')} whiteSpace="nowrap" fontWeight="medium">
+      </Box>
+      <Box flex={1}>
+        <Text
+          fontSize="xs"
+          color={getColor('text.dashboard.filterLabel')}
+          fontWeight="medium"
+          fontFamily={getFont('body')}
+          mb={1}
+        >
           {t('reports.dateRangeFilter.endDate')}
         </Text>
         <Input
@@ -69,13 +73,16 @@ export const DateRangeFilter = ({
           value={endDate}
           onChange={(e) => onEndDateChange(e.target.value)}
           size="sm"
-          w="auto"
-          borderColor={getColor('border.primary')}
-          _hover={{ borderColor: getColor('border.primary') }}
-          _focus={{ borderColor: getColor('border.primary')}}
-          bg={getColor('background.quaternary')}
+          borderRadius="md"
+          fontFamily={getFont('body')}
+          color={getColor('text.dashboard.filterLabel')}
+          borderColor={getColor('border.dashboard.tile')}
+          bg={getColor('background.dashboard.filterBar')}
+          _hover={{ borderColor: getColor('border.dashboard.tileActive') }}
+          _focus={{ borderColor: getColor('border.dashboard.tileActive') }}
+          width="100%"
         />
-      </Flex>
+      </Box>
     </Flex>
   );
-}; 
+};

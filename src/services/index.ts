@@ -114,33 +114,46 @@ export const api = {
   getExpenseByGroup: ({
     startDate,
     endDate,
+    userId,
   }: {
     startDate: string;
     endDate: string;
-  }) => ReportsService.getExpenseByGroup({ startDate, endDate }),
+    userId?: string;
+  }) => ReportsService.getExpenseByGroup({ startDate, endDate, userId }),
   getExpenseByStore: ({
     startDate,
     endDate,
+    userId,
   }: {
     startDate: string;
     endDate: string;
-  }) => ReportsService.getExpenseByStore({ startDate, endDate }),
+    userId?: string;
+  }) => ReportsService.getExpenseByStore({ startDate, endDate, userId }),
   getExpenseByDate: ({
     startDate,
     endDate,
+    userId,
   }: {
     startDate: string;
     endDate: string;
-  }) => ReportsService.getExpenseByDate({ startDate, endDate }),
+    userId?: string;
+  }) => ReportsService.getExpenseByDate({ startDate, endDate, userId }),
   getMostPurchasedItems: ({
     startDate,
     endDate,
+    userId,
   }: {
     startDate: string;
     endDate: string;
-  }) => ReportsService.getMostPurchasedItems({ startDate, endDate }),
-  getExpensesIncomeComparison: ({ year }: { year: string }) =>
-    ReportsService.getExpensesIncomeComparison({ year }),
+    userId?: string;
+  }) => ReportsService.getMostPurchasedItems({ startDate, endDate, userId }),
+  getExpensesIncomeComparison: ({
+    year,
+    userId,
+  }: {
+    year: string;
+    userId?: string;
+  }) => ReportsService.getExpensesIncomeComparison({ year, userId }),
   recurringExpenseConfirm: (expenses: ExpenseRecurring) =>
     ExpenseService.postRecurringConfirm(expenses),
   getExpenseRecurring: ExpenseService.getRecurring,

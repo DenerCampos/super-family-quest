@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { formatCurrency } from '../../utils/formatCurrency';
-import { DateRangeFilter, defaultDates } from './DateRangeFilter';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -23,68 +22,65 @@ interface TopProductsData {
 }
 
 interface HorizontalBarChartTopProductsProps {
-  data: TopProductsData[];
+  startDate: string;
+  endDate: string;
+  userId?: string;
+  data?: TopProductsData[];
   onDataUpdate?: (data: TopProductsData[]) => void;
 }
 
 const generateBarColors = () => {
   return {
-    quantity: 'hsl(270, 75%, 60%)', // Roxo para quantidade
-    value: 'hsl(290, 65%, 60%)', // Violeta para valor
+    quantity: 'hsl(270, 75%, 60%)',
+    value: 'hsl(290, 65%, 60%)',
   };
 };
 
-export const HorizontalBarChartTopProducts = ({ 
-  data: initialData, 
-  onDataUpdate 
+export const HorizontalBarChartTopProducts = ({
+  startDate,
+  endDate,
+  userId,
+  data: initialData,
+  onDataUpdate,
 }: HorizontalBarChartTopProductsProps) => {
-  const [startDate, setStartDate] = useState(defaultDates.firstDay);
-  const [endDate, setEndDate] = useState(defaultDates.lastDay);
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState(initialData ?? []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
-  const fetchData = async (start: string, end: string) => {
-    setLoading(true);
-    try {
-      const response = await api.getMostPurchasedItems({
-        startDate: start,
-        endDate: end,
-      });
-      setData(response);
-      onDataUpdate?.(response);
-      setError(null);
-    } catch (error) {
-      console.error('Erro ao buscar dados do gráfico:', error);
-      setError(t('reports.topProducts.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchData(startDate, endDate);
-  }, [startDate, endDate]);
-
-  const handleStartDateChange = (date: string) => {
-    setStartDate(date);
-  };
-
-  const handleEndDateChange = (date: string) => {
-    setEndDate(date);
-  };
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await api.getMostPurchasedItems({
+          startDate,
+          endDate,
+          userId,
+        });
+        setData(response);
+        onDataUpdate?.(response);
+        setError(null);
+      } catch (err) {
+        console.error('Erro ao buscar dados do gráfico:', err);
+        setError(t('reports.topProducts.error'));
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [startDate, endDate, userId]);
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const colors = generateBarColors();
 
-  // Processa os dados para o gráfico
-  const chartData = data.map(item => ({
-    name: isMobile && item.name.length > 15 
-      ? `${item.name.substring(0, 13)}...` 
-      : item.name.length > 30 
-      ? `${item.name.substring(0, 28)}...` 
-      : item.name,
+  const chartData = data.map((item) => ({
+    name:
+      isMobile && item.name.length > 15
+        ? `${item.name.substring(0, 13)}...`
+        : item.name.length > 30
+          ? `${item.name.substring(0, 28)}...`
+          : item.name,
     fullName: item.name,
     quantity: item.quantity,
     value: Number(item.value),
@@ -113,13 +109,6 @@ export const HorizontalBarChartTopProducts = ({
       >
         {t('reports.topProducts.title')}
       </Text>
-
-      <DateRangeFilter
-        startDate={startDate}
-        endDate={endDate}
-        onStartDateChange={handleStartDateChange}
-        onEndDateChange={handleEndDateChange}
-      />
 
       {loading ? (
         <Flex align="center" justify="center" height="300px">
@@ -171,8 +160,8 @@ export const HorizontalBarChartTopProducts = ({
               <Tooltip
                 formatter={(value, name) => {
                   if (name === 'value')
-                    return [formatCurrency(Number(value)), 'Valor Total'];
-                  if (name === 'quantity') return [value, 'Quantidade'];
+                    return [formatCurrency(Number(value)), t('reports.topProducts.totalValue')];
+                  if (name === 'quantity') return [value, t('reports.topProducts.quantity')];
                   return [value, name];
                 }}
                 labelFormatter={(value) => {
@@ -189,14 +178,14 @@ export const HorizontalBarChartTopProducts = ({
               <Legend verticalAlign="top" align="center" />
               <Bar
                 dataKey="quantity"
-                name="Quantidade"
+                name={t('reports.topProducts.quantity')}
                 fill={colors.quantity}
                 radius={[0, 4, 4, 0]}
                 maxBarSize={25}
               />
               <Bar
                 dataKey="value"
-                name="Valor Total"
+                name={t('reports.topProducts.totalValue')}
                 fill={colors.value}
                 radius={[0, 4, 4, 0]}
                 maxBarSize={25}
@@ -211,4 +200,4 @@ export const HorizontalBarChartTopProducts = ({
       )}
     </Flex>
   );
-}; 
+};

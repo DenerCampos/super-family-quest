@@ -1,4 +1,4 @@
-import { Flex, Text, Box, useBreakpointValue, Spinner, Select } from '@chakra-ui/react';
+import { Flex, Text, Box, useBreakpointValue, Spinner } from '@chakra-ui/react';
 import {
   BarChart,
   Bar,
@@ -22,60 +22,53 @@ interface ExpenseIncomeData {
 }
 
 interface BarChartExpensesIncomeProps {
-  data: ExpenseIncomeData[];
+  year: string;
+  userId?: string;
+  data?: ExpenseIncomeData[];
   onDataUpdate?: (data: ExpenseIncomeData[]) => void;
 }
 
 const generateBarColors = () => {
   return {
-    expenses: 'hsl(350, 75%, 60%)', // Vermelho para despesas
-    revenues: 'hsl(120, 75%, 60%)', // Verde para receitas
+    expenses: 'hsl(350, 75%, 60%)',
+    revenues: 'hsl(120, 75%, 60%)',
   };
 };
 
-const getCurrentYear = () => new Date().getFullYear();
-const getAvailableYears = () => {
-  const currentYear = getCurrentYear();
-  return Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
-};
-
-export const BarChartExpensesIncome = ({ 
-  data: initialData, 
-  onDataUpdate 
+export const BarChartExpensesIncome = ({
+  year,
+  userId,
+  data: initialData,
+  onDataUpdate,
 }: BarChartExpensesIncomeProps) => {
-  const [selectedYear, setSelectedYear] = useState(getCurrentYear().toString());
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState(initialData ?? []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
-  const fetchData = async (year: string) => {
-    setLoading(true);
-    try {
-      const response = await api.getExpensesIncomeComparison({
-        year,
-      });
-      setData(response);
-      onDataUpdate?.(response);
-      setError(null);
-    } catch (error) {
-      console.error('Erro ao buscar dados do gráfico:', error);
-      setError(t('reports.expensesIncome.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchData(selectedYear);
-  }, [selectedYear]);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await api.getExpensesIncomeComparison({ year, userId });
+        setData(response);
+        onDataUpdate?.(response);
+        setError(null);
+      } catch (err) {
+        console.error('Erro ao buscar dados do gráfico:', err);
+        setError(t('reports.expensesIncome.error'));
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [year, userId]);
 
-  const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(event.target.value);
-  };
-
-  const chartData = data.map(item => ({
-    month: new Date(item.month + '-01').toLocaleString('pt-BR', { month: 'short' }).toUpperCase(),
+  const chartData = data.map((item) => ({
+    month: new Date(item.month + '-01')
+      .toLocaleString('pt-BR', { month: 'short' })
+      .toUpperCase(),
     expenses: Number(item.totalExpenses),
     revenues: Number(item.totalRevenues),
   }));
@@ -106,21 +99,6 @@ export const BarChartExpensesIncome = ({
       >
         {t('reports.expensesIncome.title')}
       </Text>
-
-      <Select
-        value={selectedYear}
-        onChange={handleYearChange}
-        mb={4}
-        borderColor={getColor('border.reports')}
-        _hover={{ borderColor: getColor('border.reports') }}
-        _focus={{ borderColor: getColor('border.reports') }}
-      >
-        {getAvailableYears().map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
-        ))}
-      </Select>
 
       {loading ? (
         <Flex align="center" justify="center" height="300px">
@@ -183,14 +161,14 @@ export const BarChartExpensesIncome = ({
               />
               <Bar
                 dataKey="expenses"
-                name="Despesas"
+                name={t('reports.expensesIncome.expenses')}
                 fill={colors.expenses}
                 radius={[4, 4, 0, 0]}
                 maxBarSize={25}
               />
               <Bar
                 dataKey="revenues"
-                name="Receitas"
+                name={t('reports.expensesIncome.income')}
                 fill={colors.revenues}
                 radius={[4, 4, 0, 0]}
                 maxBarSize={25}
@@ -205,4 +183,4 @@ export const BarChartExpensesIncome = ({
       )}
     </Flex>
   );
-}; 
+};

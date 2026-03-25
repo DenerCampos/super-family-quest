@@ -189,7 +189,12 @@ export const defaultTheme: VisualTheme = {
       reports: 'blue.50',
       coin: 'blue.700',
       home: 'blue.50',
-      dashboard: 'blue.50',
+      dashboard: {
+        primary: 'blue.50',
+        tile: 'white',
+        tileActive: 'blue.100',
+        filterBar: 'white',
+      },
       resources: 'blue.50',
       profile: {
         primary: 'blue.50',
@@ -262,6 +267,14 @@ export const defaultTheme: VisualTheme = {
       },
       eye: 'blue.500',
       dateRangeFilter: 'blue.800',
+      dashboard: {
+        title: 'blue.800',
+        tileTitle: 'blue.800',
+        tileSubtitle: 'gray.500',
+        tileIcon: 'blue.500',
+        tileIconActive: 'blue.700',
+        filterLabel: 'blue.700',
+      },
       profile: {
         primary: 'blue.800',
         secondary: 'blue.500',
@@ -310,6 +323,10 @@ export const defaultTheme: VisualTheme = {
         expense: 'red.500',
       },
       reports: 'black',
+      dashboard: {
+        tile: 'blue.200',
+        tileActive: 'blue.500',
+      },
       header: 'blue.900',
       navigation: 'blue.900',
       coin: 'blue.700',
@@ -474,7 +491,12 @@ export const rpgTheme: VisualTheme = {
       reports: 'purple.50',
       coin: 'purple.700',
       home: 'purple.50',
-      dashboard: 'purple.50',
+      dashboard: {
+        primary: 'purple.50',
+        tile: 'white',
+        tileActive: 'purple.100',
+        filterBar: 'white',
+      },
       resources: 'purple.50',
       profile: {
         primary: 'purple.50',
@@ -546,6 +568,14 @@ export const rpgTheme: VisualTheme = {
       },
       eye: 'purple.500',
       dateRangeFilter: 'purple.800',
+      dashboard: {
+        title: 'purple.800',
+        tileTitle: 'purple.800',
+        tileSubtitle: 'gray.500',
+        tileIcon: 'purple.500',
+        tileIconActive: 'purple.700',
+        filterLabel: 'purple.700',
+      },
       profile: {
         primary: 'purple.800',
         secondary: 'purple.500',
@@ -594,6 +624,10 @@ export const rpgTheme: VisualTheme = {
         expense: 'red.500',
       },
       reports: 'purple.500',
+      dashboard: {
+        tile: 'purple.200',
+        tileActive: 'purple.500',
+      },
       header: 'purple.900',
       navigation: 'purple.900',
       coin: 'purple.700',

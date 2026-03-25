@@ -4,6 +4,7 @@ import { AudioRecognitionPage } from "./components/AudioRecognitionPage";
 import { QRScannerPage } from "./components/QRScannerPage";
 import { RequireAuth } from "./components/RequireAuth";
 import Dashboard from "./pages/Dashboard";
+import { ReportView } from "./pages/Dashboard/ReportView";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NewChallenge from "./pages/NewChallenge";
@@ -43,6 +44,14 @@ export default function App() {
         element={
           <RequireAuth>
             <Dashboard />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/dashboard/:reportKey"
+        element={
+          <RequireAuth>
+            <ReportView />
           </RequireAuth>
         }
       />
