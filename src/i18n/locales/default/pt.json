@@ -562,5 +562,10 @@
       "rpgMode": "Modo RPG",
       "defaultMode": "Modo Padrão"
     }
+  },
+  "pwa": {
+    "installTitle": "Instalar App",
+    "installDescription": "Adicione à sua tela inicial para acesso rápido",
+    "installButton": "Instalar"
   }
 }

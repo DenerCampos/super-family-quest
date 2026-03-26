@@ -14,13 +14,16 @@ export const NavigationBar = () => {
       justify="space-around"
       position="fixed"
       bottom={0}
-      left={0}
-      right={0}
+      left="50%"
+      transform="translateX(-50%)"
+      w="100%"
+      maxW="480px"
       bg={getColor('background.navigation')}
       p={2}
       boxShadow="lg"
       borderTopWidth="1px"
       borderTopColor={getColor('border.navigation')}
+      zIndex={10}
     >
       <NavLink to="/home">
         {({ isActive }) => (

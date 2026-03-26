@@ -89,6 +89,10 @@ export interface ThemeColors {
       userBadge: string;
       panel: string;
     };
+    shell: {
+      outer: string;
+      inner: string;
+    };
   };
 
   // Tokens semânticos para texto

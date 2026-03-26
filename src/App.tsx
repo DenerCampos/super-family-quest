@@ -1,8 +1,13 @@
+import { Box } from "@chakra-ui/react";
 import { Route, Routes } from "react-router-dom";
 import { ImageRecognitionPage } from "./components/ImageRecognitionPage";
 import { AudioRecognitionPage } from "./components/AudioRecognitionPage";
+import { PWAInstallBanner } from "./components/PWAInstallBanner";
 import { QRScannerPage } from "./components/QRScannerPage";
 import { RequireAuth } from "./components/RequireAuth";
+import { useThemeColor } from "./hooks/useThemeColor";
+import { useVisualTheme } from "./hooks/useVisualTheme";
+import { resolveChakraColor } from "./utils/resolveColor";
 import Dashboard from "./pages/Dashboard";
 import { ReportView } from "./pages/Dashboard/ReportView";
 import Home from "./pages/Home";
@@ -16,110 +21,130 @@ import Revenue from "./pages/Revenue";
 import { Expenses } from "./pages/Expenses";
 
 export default function App() {
+  const { theme } = useVisualTheme();
+  useThemeColor();
+
+  const outerBg = resolveChakraColor(theme.colors.background.shell.outer);
+
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="*" element={<NotFoundPage />} />
+    <Box
+      minH="100vh"
+      bg={outerBg}
+    >
+      <Box
+        maxW="480px"
+        mx="auto"
+        minH="100vh"
+        position="relative"
+        boxShadow={{ base: "none", md: "0 0 20px rgba(0,0,0,0.5)" }}
+        overflow="hidden"
+      >
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={<NotFoundPage />} />
 
-      <Route
-        path="/"
-        element={
-          <RequireAuth>
-            <Home />
-          </RequireAuth>
-        }
-      />
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <Home />
+              </RequireAuth>
+            }
+          />
 
-      <Route
-        path="/home"
-        element={
-          <RequireAuth>
-            <Home />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/dashboard"
-        element={
-          <RequireAuth>
-            <Dashboard />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/dashboard/:reportKey"
-        element={
-          <RequireAuth>
-            <ReportView />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/new-resources"
-        element={
-          <RequireAuth>
-            <NewResources />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/new-challenge"
-        element={
-          <RequireAuth>
-            <NewChallenge />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <RequireAuth>
-            <Profile />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/scan"
-        element={
-          <RequireAuth>
-            <QRScannerPage />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/image-recognition"
-        element={
-          <RequireAuth>
-            <ImageRecognitionPage />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/audio-recognition"
-        element={
-          <RequireAuth>
-            <AudioRecognitionPage />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/revenue/:id?"
-        element={
-          <RequireAuth>
-            <Revenue />
-          </RequireAuth>
-        }
-      />
+          <Route
+            path="/home"
+            element={
+              <RequireAuth>
+                <Home />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <RequireAuth>
+                <Dashboard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/dashboard/:reportKey"
+            element={
+              <RequireAuth>
+                <ReportView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources"
+            element={
+              <RequireAuth>
+                <NewResources />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-challenge"
+            element={
+              <RequireAuth>
+                <NewChallenge />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <Profile />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/scan"
+            element={
+              <RequireAuth>
+                <QRScannerPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/image-recognition"
+            element={
+              <RequireAuth>
+                <ImageRecognitionPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/audio-recognition"
+            element={
+              <RequireAuth>
+                <AudioRecognitionPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/revenue/:id?"
+            element={
+              <RequireAuth>
+                <Revenue />
+              </RequireAuth>
+            }
+          />
 
-      <Route
-        path="/expense/:id?"
-        element={
-          <RequireAuth>
-            <Expenses />
-          </RequireAuth>
-        }
-      />
-    </Routes>
+          <Route
+            path="/expense/:id?"
+            element={
+              <RequireAuth>
+                <Expenses />
+              </RequireAuth>
+            }
+          />
+        </Routes>
+        <PWAInstallBanner />
+      </Box>
+    </Box>
   );
 }
