@@ -554,5 +554,10 @@
       "rpgMode": "Modo Aventura",
       "defaultMode": "Modo Normal"
     }
+  },
+  "pwa": {
+    "installTitle": "Instalar no Arsenal",
+    "installDescription": "Fixe o app na tela do seu dispositivo para acesso rápido à sua jornada",
+    "installButton": "Instalar"
   }
 } 

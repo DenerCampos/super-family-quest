@@ -224,6 +224,10 @@ export const defaultTheme: VisualTheme = {
         userBadge: 'gray.100',
         panel: 'white',
       },
+      shell: {
+        outer: 'gray.900',
+        inner: 'blue.50',
+      },
     },
     text: {
       primary: 'white',
@@ -525,6 +529,10 @@ export const rpgTheme: VisualTheme = {
       resourceTable: {
         userBadge: 'gray.100',
         panel: 'white',
+      },
+      shell: {
+        outer: 'gray.950',
+        inner: 'purple.50',
       },
     },
     text: {
