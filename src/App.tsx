@@ -14,6 +14,10 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NewChallenge from "./pages/NewChallenge";
 import NewResources from "./pages/NewResources";
+import { ResourcesView } from "./pages/NewResources/ResourcesView";
+import { FamilyGroupView } from "./pages/NewResources/FamilyGroupView";
+import { ShoppingListsView } from "./pages/NewResources/ShoppingListsView";
+import { ShoppingListDetailView } from "./pages/NewResources/ShoppingListDetailView";
 import NotFoundPage from "./pages/NotFoundPage";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
@@ -82,6 +86,38 @@ export default function App() {
             element={
               <RequireAuth>
                 <NewResources />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/resources"
+            element={
+              <RequireAuth>
+                <ResourcesView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/family"
+            element={
+              <RequireAuth>
+                <FamilyGroupView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/shopping"
+            element={
+              <RequireAuth>
+                <ShoppingListsView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/shopping/:id"
+            element={
+              <RequireAuth>
+                <ShoppingListDetailView />
               </RequireAuth>
             }
           />

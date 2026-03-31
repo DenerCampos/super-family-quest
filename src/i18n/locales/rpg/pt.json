@@ -542,7 +542,91 @@
   },
   "newResources": {
     "deleteSuccess": "Item destruído com sucesso",
-    "deleteError": "Falha ao destruir item"
+    "deleteError": "Falha ao destruir item",
+    "title": "Arsenal",
+    "subtitle": "Gerencie seu arsenal e ferramentas do reino",
+    "tiles": {
+      "resources": {
+        "title": "Registros do Reino",
+        "subtitle": "Mercadores, pagamentos e categorias"
+      },
+      "familyGroup": {
+        "title": "Guilda Familiar",
+        "subtitle": "Gerencie sua guilda"
+      },
+      "shoppingList": {
+        "title": "Pergaminho de Suprimentos",
+        "subtitle": "Listas mágicas em tempo real"
+      }
+    }
+  },
+  "shoppingList": {
+    "title": "Pergaminhos de Suprimentos",
+    "subtitle": "Gerencie as provisões do reino",
+    "createNew": "Novo Pergaminho",
+    "personalList": "Pergaminho Pessoal",
+    "familyList": "{{name}}",
+    "emptyState": "Nenhum pergaminho de suprimentos encontrado",
+    "emptyStateDescription": "Crie um novo pergaminho para organizar as provisões do reino",
+    "pendingItems": "{{count}} a buscar",
+    "inCartItems": "{{count}} na sacola",
+    "createdBy": "Escrito por {{name}}",
+    "createdByUnknown": "Autor desconhecido",
+    "status": {
+      "active": "Em Andamento",
+      "completed": "Missão Concluída",
+      "archived": "Arquivados"
+    },
+    "detail": {
+      "addItemPlaceholder": "Adicionar provisão... (ex: 2x Poção de Leite)",
+      "searchSuggestions": "Sugestões do Oráculo",
+      "noItems": "Pergaminho vazio",
+      "noItemsDescription": "Adicione provisões usando o campo acima",
+      "uncategorized": "Sem Categoria Mágica",
+      "onlineUsers": "Aventureiros presentes",
+      "finishList": "Concluir Missão de Suprimentos",
+      "finishListConfirm": "Tem certeza que deseja concluir a missão? Todas as provisões pendentes serão marcadas como coletadas.",
+      "listCompleted": "Missão de suprimentos concluída!",
+      "listCompletedError": "Falha ao concluir a missão",
+      "addedBy": "por {{name}}",
+      "checkedBy": "{{addedBy}} → {{checkedBy}}"
+    },
+    "item": {
+      "edit": "Aprimorar Item",
+      "delete": "Remover Provisão",
+      "deleteConfirm": "Tem certeza que deseja remover esta provisão?",
+      "toggleError": "Falha ao alterar estado da provisão",
+      "addError": "Falha ao adicionar provisão",
+      "editError": "Falha ao aprimorar provisão",
+      "deleteError": "Falha ao remover provisão",
+      "name": "Nome da Provisão",
+      "namePlaceholder": "Ex: Poção de cura",
+      "quantity": "Quantidade",
+      "unit": "Medida",
+      "category": "Categoria Mágica",
+      "categoryPlaceholder": "Selecione uma categoria mágica"
+    },
+    "units": {
+      "un": "Unidade(s)",
+      "kg": "Kg",
+      "g": "Gramas",
+      "l": "Litro(s)",
+      "ml": "mL",
+      "pack": "Pacote(s)",
+      "dz": "Dúzia(s)"
+    },
+    "createModal": {
+      "title": "Novo Pergaminho de Suprimentos",
+      "name": "Nome do Pergaminho",
+      "namePlaceholder": "Ex: Suprimentos da Semana",
+      "familyGroup": "Guilda Familiar",
+      "familyGroupNone": "Pergaminho Pessoal",
+      "creating": "Escrevendo pergaminho...",
+      "createError": "Falha ao criar pergaminho"
+    },
+    "deleteList": "Destruir Pergaminho",
+    "deleteListConfirm": "Tem certeza que deseja destruir este pergaminho?",
+    "deleteListError": "Falha ao destruir pergaminho"
   },
   "notFoundPage": {
     "lost": "Pergaminho Perdido! 📜",

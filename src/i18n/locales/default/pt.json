@@ -550,7 +550,91 @@
   },
   "newResources": {
     "deleteSuccess": "Item excluído com sucesso",
-    "deleteError": "Erro ao excluir item"
+    "deleteError": "Erro ao excluir item",
+    "title": "Recursos",
+    "subtitle": "Gerencie seus recursos e funcionalidades",
+    "tiles": {
+      "resources": {
+        "title": "Cadastros",
+        "subtitle": "Lojas, pagamentos e categorias"
+      },
+      "familyGroup": {
+        "title": "Grupo Familiar",
+        "subtitle": "Gerencie sua família"
+      },
+      "shoppingList": {
+        "title": "Lista de Compras",
+        "subtitle": "Listas compartilhadas em tempo real"
+      }
+    }
+  },
+  "shoppingList": {
+    "title": "Listas de Compras",
+    "subtitle": "Gerencie suas listas de compras",
+    "createNew": "Nova Lista",
+    "personalList": "Lista Pessoal",
+    "familyList": "{{name}}",
+    "emptyState": "Nenhuma lista de compras encontrada",
+    "emptyStateDescription": "Crie uma nova lista para começar a organizar suas compras",
+    "pendingItems": "{{count}} pendente(s)",
+    "inCartItems": "{{count}} no carrinho",
+    "createdBy": "Criada por {{name}}",
+    "createdByUnknown": "Criador desconhecido",
+    "status": {
+      "active": "Ativas",
+      "completed": "Finalizadas",
+      "archived": "Arquivadas"
+    },
+    "detail": {
+      "addItemPlaceholder": "Adicionar item... (ex: 2x Leite)",
+      "searchSuggestions": "Sugestões",
+      "noItems": "Lista vazia",
+      "noItemsDescription": "Adicione itens usando o campo acima",
+      "uncategorized": "Sem Categoria",
+      "onlineUsers": "Online agora",
+      "finishList": "Finalizar Lista",
+      "finishListConfirm": "Tem certeza que deseja finalizar a lista? Todos os itens pendentes serão marcados como no carrinho.",
+      "listCompleted": "Lista finalizada com sucesso!",
+      "listCompletedError": "Erro ao finalizar lista",
+      "addedBy": "por {{name}}",
+      "checkedBy": "{{addedBy}} → {{checkedBy}}"
+    },
+    "item": {
+      "edit": "Editar Item",
+      "delete": "Remover Item",
+      "deleteConfirm": "Tem certeza que deseja remover este item?",
+      "toggleError": "Erro ao alterar status do item",
+      "addError": "Erro ao adicionar item",
+      "editError": "Erro ao editar item",
+      "deleteError": "Erro ao remover item",
+      "name": "Nome do Item",
+      "namePlaceholder": "Ex: Arroz integral",
+      "quantity": "Quantidade",
+      "unit": "Unidade",
+      "category": "Categoria",
+      "categoryPlaceholder": "Selecione uma categoria"
+    },
+    "units": {
+      "un": "Unidade(s)",
+      "kg": "Kg",
+      "g": "Gramas",
+      "l": "Litro(s)",
+      "ml": "mL",
+      "pack": "Pacote(s)",
+      "dz": "Dúzia(s)"
+    },
+    "createModal": {
+      "title": "Nova Lista de Compras",
+      "name": "Nome da Lista",
+      "namePlaceholder": "Ex: Compras Semanais",
+      "familyGroup": "Grupo Familiar",
+      "familyGroupNone": "Lista Pessoal",
+      "creating": "Criando...",
+      "createError": "Erro ao criar lista"
+    },
+    "deleteList": "Excluir Lista",
+    "deleteListConfirm": "Tem certeza que deseja excluir esta lista?",
+    "deleteListError": "Erro ao excluir lista"
   },
   "notFoundPage": {
     "lost": "Página não encontrada",
