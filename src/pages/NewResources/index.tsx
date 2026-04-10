@@ -1,5 +1,5 @@
 import { Flex, Grid, Text, Box } from '@chakra-ui/react';
-import { FiPackage, FiUsers, FiShoppingCart } from 'react-icons/fi';
+import { FiPackage, FiUsers, FiShoppingCart, FiSettings } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../../components/Header';
 import { NavigationBar } from '../../components/NavigationBar';
@@ -7,7 +7,7 @@ import { ReportTile } from '../../components/reports/ReportTile';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 
-type TileKey = 'resources' | 'familyGroup' | 'shoppingList';
+type TileKey = 'resources' | 'familyGroup' | 'shoppingList' | 'settings';
 
 const tiles: {
   key: TileKey;
@@ -36,6 +36,13 @@ const tiles: {
     titleKey: 'newResources.tiles.shoppingList.title',
     subtitleKey: 'newResources.tiles.shoppingList.subtitle',
     route: '/new-resources/shopping',
+  },
+  {
+    key: 'settings',
+    icon: FiSettings,
+    titleKey: 'settings.title',
+    subtitleKey: 'settings.subtitle',
+    route: '/settings',
   },
 ];
 

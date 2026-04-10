@@ -568,6 +568,49 @@
       }
     }
   },
+  "settings": {
+    "title": "Configurações do Reino",
+    "subtitle": "Gerencie suas conexões mágicas e preferências do sistema.",
+    "integrations": {
+      "title": "Integrações",
+      "description": "Conecte serviços externos para expandir o poder do reino.",
+      "alexa": {
+        "name": "Alexa",
+        "description": "Adicione itens à lista por voz",
+        "connect": "Vincular",
+        "disconnect": "Desvincular",
+        "synced": "Sincronizado",
+        "statusConnected": "Conectado",
+        "statusDisconnected": "Não conectado",
+        "loadingStatus": "Verificando status...",
+        "loadingConnect": "Abrindo vinculação...",
+        "loadingDisconnect": "Desvinculando...",
+        "howToConnect": "Como vincular sua conta",
+        "howToConnectStep1": "Abra o App da Alexa no seu celular",
+        "howToConnectStep2": "Vá em Skills e Jogos > Suas Skills > Super Family Quest",
+        "howToConnectStep3": "Toque em \"Vincular Conta\" e entre com seu e-mail e senha do app"
+      },
+      "feedback": {
+        "loadError": "Não foi possível carregar o status das integrações",
+        "connectError": "Falha ao iniciar vinculação com a Alexa",
+        "disconnectError": "Falha ao desvincular Alexa",
+        "connectedSuccess": "Alexa vinculada com sucesso",
+        "disconnectedSuccess": "Alexa desvinculada com sucesso"
+      }
+    }
+  },
+  "alexaLogin": {
+    "title": "Vincular à Alexa",
+    "subtitle": "Entre com sua conta para conectar ao Super Family Quest",
+    "email": "E-mail",
+    "password": "Senha",
+    "submit": "Vincular Conta",
+    "loading": "Vinculando...",
+    "error": "Credenciais inválidas",
+    "errorDescription": "Verifique seu e-mail e senha e tente novamente",
+    "invalidSession": "Sessão inválida",
+    "invalidSessionDescription": "O link de vinculação expirou. Tente novamente pelo App da Alexa."
+  },
   "shoppingList": {
     "title": "Listas de Compras",
     "subtitle": "Gerencie suas listas de compras",

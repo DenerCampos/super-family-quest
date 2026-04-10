@@ -1,5 +1,5 @@
 import { Flex, IconButton, Text } from '@chakra-ui/react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { FiHome, FiPieChart, FiPlusSquare, FiUser } from 'react-icons/fi';
 import { GrResources } from 'react-icons/gr';
 import { useThemedTranslation } from '../hooks/useThemedTranslation';
@@ -8,6 +8,13 @@ import { useVisualTheme } from '../hooks/useVisualTheme';
 export const NavigationBar = () => {
   const { t } = useThemedTranslation();
   const { getColor, getFont } = useVisualTheme();
+  const { pathname } = useLocation();
+
+  // Rotas que pertencem ao grupo Arsenal (new-resources + filhas + settings)
+  const isArsenalActive =
+    pathname === '/new-resources' ||
+    pathname.startsWith('/new-resources/') ||
+    pathname === '/settings';
 
   return (
     <Flex
@@ -92,30 +99,26 @@ export const NavigationBar = () => {
       </NavLink>
 
       <NavLink to="/new-resources">
-        {({ isActive }) => (
+        {() => (
           <Flex direction="column" align="center" gap={1} flexGrow={1}>
             <IconButton
               icon={<GrResources />}
               aria-label="Novo recurso"
               variant="ghost"
               color={
-                isActive
+                isArsenalActive
                   ? getColor('text.navigation.active')
                   : getColor('text.navigation.inactive')
               }
               fontSize="24px"
-              isActive={isActive}
+              isActive={isArsenalActive}
               _hover={{
                 color: getColor('text.link'),
               }}
             />
             <Text
               fontSize="xs"
-              color={
-                isActive
-                  ? getColor('text.navigation.inactive')
-                  : getColor('text.navigation.inactive')
-              }
+              color={getColor('text.navigation.inactive')}
               fontFamily={getFont('body')}
             >
               {t('navigationBar.resources')}

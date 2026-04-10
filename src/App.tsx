@@ -22,6 +22,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Revenue from "./pages/Revenue";
+import Settings from "./pages/Settings";
+import AlexaLogin from "./pages/AlexaLogin";
 import { Expenses } from "./pages/Expenses";
 
 export default function App() {
@@ -46,6 +48,7 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/alexa-login" element={<AlexaLogin />} />
           <Route path="*" element={<NotFoundPage />} />
 
           <Route
@@ -126,6 +129,14 @@ export default function App() {
             element={
               <RequireAuth>
                 <NewChallenge />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <RequireAuth>
+                <Settings />
               </RequireAuth>
             }
           />

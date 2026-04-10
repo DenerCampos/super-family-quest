@@ -3,6 +3,7 @@ import { CoinService } from "./coin";
 import { CouponReaderService } from "./couponReader";
 import { ExpenseService, type ExpenseRecurring } from "./expense";
 import { FamilyGroupService } from "./familyGroup";
+import { IntegrationsService } from "./integrations";
 import { ProfileService } from "./profile";
 import { ReportsService } from "./reports";
 import { ResourcesService, type UpdateExpense } from "./resources";
@@ -208,4 +209,8 @@ export const api = {
   toggleShoppingListItem: ShoppingListService.toggleItem,
   removeShoppingListItem: ShoppingListService.removeItem,
   getShoppingListSuggestions: ShoppingListService.getSuggestions,
+
+  getIntegrationsStatus: IntegrationsService.getStatus,
+  alexaOAuthLogin: IntegrationsService.alexaOAuthLogin,
+  unlinkAlexa: IntegrationsService.unlinkAlexa,
 };

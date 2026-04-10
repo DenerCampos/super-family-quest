@@ -61,6 +61,7 @@ export interface ThemeColors {
       filterBar: string;
     };
     resources: string;
+    settings: string;
     profile: {
       primary: string;
       secondary: string;
@@ -102,6 +103,10 @@ export interface ThemeColors {
       categoryHeader: string;
       onlineIndicator: string;
       addInput: string;
+    };
+    integrations: {
+      statusConnected: string;
+      statusDisconnected: string;
     };
   };
 
@@ -196,6 +201,12 @@ export interface ThemeColors {
         inCart: string;
       };
     };
+    integrations: {
+      title: string;
+      description: string;
+      statusConnected: string;
+      statusDisconnected: string;
+    };
   };
 
   // Tokens semânticos para heading
@@ -244,6 +255,11 @@ export interface ThemeColors {
         pending: string;
         inCart: string;
       };
+    };
+    integrations: {
+      card: string;
+      statusConnected: string;
+      statusDisconnected: string;
     };
   };
 
