@@ -61,6 +61,7 @@ export interface ThemeColors {
       filterBar: string;
     };
     resources: string;
+    settings: string;
     profile: {
       primary: string;
       secondary: string;
@@ -92,6 +93,20 @@ export interface ThemeColors {
     shell: {
       outer: string;
       inner: string;
+    };
+    shoppingList: {
+      primary: string;
+      card: string;
+      cardHover: string;
+      itemPending: string;
+      itemInCart: string;
+      categoryHeader: string;
+      onlineIndicator: string;
+      addInput: string;
+    };
+    integrations: {
+      statusConnected: string;
+      statusDisconnected: string;
     };
   };
 
@@ -171,6 +186,27 @@ export interface ThemeColors {
       searchIcon: string;
       badgeCount: string;
     };
+    shoppingList: {
+      title: string;
+      primary: string;
+      secondary: string;
+      itemName: string;
+      itemNameChecked: string;
+      itemMeta: string;
+      categoryTitle: string;
+      onlineDot: string;
+      onlineName: string;
+      badge: {
+        pending: string;
+        inCart: string;
+      };
+    };
+    integrations: {
+      title: string;
+      description: string;
+      statusConnected: string;
+      statusDisconnected: string;
+    };
   };
 
   // Tokens semânticos para heading
@@ -210,6 +246,20 @@ export interface ThemeColors {
     };
     familyGroup: {
       card: string;
+    };
+    shoppingList: {
+      card: string;
+      item: string;
+      categoryHeader: string;
+      checkbox: {
+        pending: string;
+        inCart: string;
+      };
+    };
+    integrations: {
+      card: string;
+      statusConnected: string;
+      statusDisconnected: string;
     };
   };
 

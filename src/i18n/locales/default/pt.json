@@ -550,7 +550,134 @@
   },
   "newResources": {
     "deleteSuccess": "Item excluído com sucesso",
-    "deleteError": "Erro ao excluir item"
+    "deleteError": "Erro ao excluir item",
+    "title": "Recursos",
+    "subtitle": "Gerencie seus recursos e funcionalidades",
+    "tiles": {
+      "resources": {
+        "title": "Cadastros",
+        "subtitle": "Lojas, pagamentos e categorias"
+      },
+      "familyGroup": {
+        "title": "Grupo Familiar",
+        "subtitle": "Gerencie sua família"
+      },
+      "shoppingList": {
+        "title": "Lista de Compras",
+        "subtitle": "Listas compartilhadas em tempo real"
+      }
+    }
+  },
+  "settings": {
+    "title": "Configurações do Reino",
+    "subtitle": "Gerencie suas conexões mágicas e preferências do sistema.",
+    "integrations": {
+      "title": "Integrações",
+      "description": "Conecte serviços externos para expandir o poder do reino.",
+      "alexa": {
+        "name": "Alexa",
+        "description": "Adicione itens à lista por voz",
+        "connect": "Vincular",
+        "disconnect": "Desvincular",
+        "synced": "Sincronizado",
+        "statusConnected": "Conectado",
+        "statusDisconnected": "Não conectado",
+        "loadingStatus": "Verificando status...",
+        "loadingConnect": "Abrindo vinculação...",
+        "loadingDisconnect": "Desvinculando...",
+        "howToConnect": "Como vincular sua conta",
+        "howToConnectStep1": "Abra o App da Alexa no seu celular",
+        "howToConnectStep2": "Vá em Skills e Jogos > Suas Skills > Super Family Quest",
+        "howToConnectStep3": "Toque em \"Vincular Conta\" e entre com seu e-mail e senha do app"
+      },
+      "feedback": {
+        "loadError": "Não foi possível carregar o status das integrações",
+        "connectError": "Falha ao iniciar vinculação com a Alexa",
+        "disconnectError": "Falha ao desvincular Alexa",
+        "connectedSuccess": "Alexa vinculada com sucesso",
+        "disconnectedSuccess": "Alexa desvinculada com sucesso"
+      }
+    }
+  },
+  "alexaLogin": {
+    "title": "Vincular à Alexa",
+    "subtitle": "Entre com sua conta para conectar ao Super Family Quest",
+    "email": "E-mail",
+    "password": "Senha",
+    "submit": "Vincular Conta",
+    "loading": "Vinculando...",
+    "error": "Credenciais inválidas",
+    "errorDescription": "Verifique seu e-mail e senha e tente novamente",
+    "invalidSession": "Sessão inválida",
+    "invalidSessionDescription": "O link de vinculação expirou. Tente novamente pelo App da Alexa."
+  },
+  "shoppingList": {
+    "title": "Listas de Compras",
+    "subtitle": "Gerencie suas listas de compras",
+    "createNew": "Nova Lista",
+    "personalList": "Lista Pessoal",
+    "familyList": "{{name}}",
+    "emptyState": "Nenhuma lista de compras encontrada",
+    "emptyStateDescription": "Crie uma nova lista para começar a organizar suas compras",
+    "pendingItems": "{{count}} pendente(s)",
+    "inCartItems": "{{count}} no carrinho",
+    "createdBy": "Criada por {{name}}",
+    "createdByUnknown": "Criador desconhecido",
+    "status": {
+      "active": "Ativas",
+      "completed": "Finalizadas",
+      "archived": "Arquivadas"
+    },
+    "detail": {
+      "addItemPlaceholder": "Adicionar item... (ex: 2x Leite)",
+      "searchSuggestions": "Sugestões",
+      "noItems": "Lista vazia",
+      "noItemsDescription": "Adicione itens usando o campo acima",
+      "uncategorized": "Sem Categoria",
+      "onlineUsers": "Online agora",
+      "finishList": "Finalizar Lista",
+      "finishListConfirm": "Tem certeza que deseja finalizar a lista? Todos os itens pendentes serão marcados como no carrinho.",
+      "listCompleted": "Lista finalizada com sucesso!",
+      "listCompletedError": "Erro ao finalizar lista",
+      "addedBy": "por {{name}}",
+      "checkedBy": "{{addedBy}} → {{checkedBy}}"
+    },
+    "item": {
+      "edit": "Editar Item",
+      "delete": "Remover Item",
+      "deleteConfirm": "Tem certeza que deseja remover este item?",
+      "toggleError": "Erro ao alterar status do item",
+      "addError": "Erro ao adicionar item",
+      "editError": "Erro ao editar item",
+      "deleteError": "Erro ao remover item",
+      "name": "Nome do Item",
+      "namePlaceholder": "Ex: Arroz integral",
+      "quantity": "Quantidade",
+      "unit": "Unidade",
+      "category": "Categoria",
+      "categoryPlaceholder": "Selecione uma categoria"
+    },
+    "units": {
+      "un": "Unidade(s)",
+      "kg": "Kg",
+      "g": "Gramas",
+      "l": "Litro(s)",
+      "ml": "mL",
+      "pack": "Pacote(s)",
+      "dz": "Dúzia(s)"
+    },
+    "createModal": {
+      "title": "Nova Lista de Compras",
+      "name": "Nome da Lista",
+      "namePlaceholder": "Ex: Compras Semanais",
+      "familyGroup": "Grupo Familiar",
+      "familyGroupNone": "Lista Pessoal",
+      "creating": "Criando...",
+      "createError": "Erro ao criar lista"
+    },
+    "deleteList": "Excluir Lista",
+    "deleteListConfirm": "Tem certeza que deseja excluir esta lista?",
+    "deleteListError": "Erro ao excluir lista"
   },
   "notFoundPage": {
     "lost": "Página não encontrada",

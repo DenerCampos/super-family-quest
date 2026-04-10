@@ -3,10 +3,12 @@ import { CoinService } from "./coin";
 import { CouponReaderService } from "./couponReader";
 import { ExpenseService, type ExpenseRecurring } from "./expense";
 import { FamilyGroupService } from "./familyGroup";
+import { IntegrationsService } from "./integrations";
 import { ProfileService } from "./profile";
 import { ReportsService } from "./reports";
 import { ResourcesService, type UpdateExpense } from "./resources";
 import { RevenueService, type RevenueRecurring } from "./revenue";
+import { ShoppingListService } from "./shoppingList";
 import { themeService } from "./theme";
 import { UserService } from "./user";
 
@@ -195,4 +197,20 @@ export const api = {
     month: number,
     year: number,
   ) => FamilyGroupService.getMemberData(groupId, memberId, month, year),
+
+  getShoppingLists: ShoppingListService.getShoppingLists,
+  createShoppingList: ShoppingListService.createShoppingList,
+  getShoppingListDetail: ShoppingListService.getShoppingListDetail,
+  updateShoppingList: ShoppingListService.updateShoppingList,
+  deleteShoppingList: ShoppingListService.deleteShoppingList,
+  completeShoppingList: ShoppingListService.completeShoppingList,
+  addShoppingListItem: ShoppingListService.addItem,
+  updateShoppingListItem: ShoppingListService.updateItem,
+  toggleShoppingListItem: ShoppingListService.toggleItem,
+  removeShoppingListItem: ShoppingListService.removeItem,
+  getShoppingListSuggestions: ShoppingListService.getSuggestions,
+
+  getIntegrationsStatus: IntegrationsService.getStatus,
+  alexaOAuthLogin: IntegrationsService.alexaOAuthLogin,
+  unlinkAlexa: IntegrationsService.unlinkAlexa,
 };

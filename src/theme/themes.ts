@@ -196,6 +196,7 @@ export const defaultTheme: VisualTheme = {
         filterBar: 'white',
       },
       resources: 'blue.50',
+      settings: 'blue.50',
       profile: {
         primary: 'blue.50',
         secondary: 'blue.600',
@@ -227,6 +228,20 @@ export const defaultTheme: VisualTheme = {
       shell: {
         outer: 'gray.900',
         inner: 'blue.50',
+      },
+      shoppingList: {
+        primary: 'blue.50',
+        card: 'white',
+        cardHover: 'blue.50',
+        itemPending: 'white',
+        itemInCart: 'green.50',
+        categoryHeader: 'blue.100',
+        onlineIndicator: 'green.400',
+        addInput: 'white',
+      },
+      integrations: {
+        statusConnected: 'green.50',
+        statusDisconnected: 'red.50',
       },
     },
     text: {
@@ -305,6 +320,27 @@ export const defaultTheme: VisualTheme = {
           notification: 'red.700',
         },
       },
+      shoppingList: {
+        title: 'blue.800',
+        primary: 'blue.700',
+        secondary: 'blue.500',
+        itemName: 'gray.800',
+        itemNameChecked: 'gray.400',
+        itemMeta: 'gray.500',
+        categoryTitle: 'blue.700',
+        onlineDot: 'green.500',
+        onlineName: 'gray.600',
+        badge: {
+          pending: 'orange.600',
+          inCart: 'green.600',
+        },
+      },
+      integrations: {
+        title: 'blue.800',
+        description: 'gray.600',
+        statusConnected: 'green.700',
+        statusDisconnected: 'red.700',
+      },
     },
     heading: {
       summaryCard: {
@@ -340,6 +376,20 @@ export const defaultTheme: VisualTheme = {
       },
       familyGroup: {
         card: 'blue.200',
+      },
+      shoppingList: {
+        card: 'blue.200',
+        item: 'blue.100',
+        categoryHeader: 'blue.300',
+        checkbox: {
+          pending: 'gray.300',
+          inCart: 'green.500',
+        },
+      },
+      integrations: {
+        card: 'blue.200',
+        statusConnected: 'green.500',
+        statusDisconnected: 'red.500',
       },
     },
     status: {
@@ -502,6 +552,7 @@ export const rpgTheme: VisualTheme = {
         filterBar: 'white',
       },
       resources: 'purple.50',
+      settings: 'purple.50',
       profile: {
         primary: 'purple.50',
         secondary: 'purple.600',
@@ -533,6 +584,20 @@ export const rpgTheme: VisualTheme = {
       shell: {
         outer: 'gray.950',
         inner: 'purple.50',
+      },
+      shoppingList: {
+        primary: 'purple.50',
+        card: 'white',
+        cardHover: 'purple.50',
+        itemPending: 'white',
+        itemInCart: 'green.50',
+        categoryHeader: 'purple.100',
+        onlineIndicator: 'green.400',
+        addInput: 'white',
+      },
+      integrations: {
+        statusConnected: 'green.50',
+        statusDisconnected: 'red.50',
       },
     },
     text: {
@@ -610,6 +675,27 @@ export const rpgTheme: VisualTheme = {
           notification: 'red.700',
         },
       },
+      shoppingList: {
+        title: 'purple.800',
+        primary: 'purple.700',
+        secondary: 'purple.500',
+        itemName: 'gray.800',
+        itemNameChecked: 'gray.400',
+        itemMeta: 'gray.500',
+        categoryTitle: 'purple.700',
+        onlineDot: 'green.500',
+        onlineName: 'gray.600',
+        badge: {
+          pending: 'orange.600',
+          inCart: 'green.600',
+        },
+      },
+      integrations: {
+        title: 'purple.800',
+        description: 'gray.600',
+        statusConnected: 'green.700',
+        statusDisconnected: 'red.700',
+      },
     },
     heading: {
       summaryCard: {
@@ -645,6 +731,20 @@ export const rpgTheme: VisualTheme = {
       },
       familyGroup: {
         card: 'purple.200',
+      },
+      shoppingList: {
+        card: 'purple.200',
+        item: 'purple.100',
+        categoryHeader: 'purple.300',
+        checkbox: {
+          pending: 'gray.300',
+          inCart: 'green.500',
+        },
+      },
+      integrations: {
+        card: 'purple.200',
+        statusConnected: 'green.500',
+        statusDisconnected: 'red.500',
       },
     },
     status: {

@@ -14,10 +14,16 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NewChallenge from "./pages/NewChallenge";
 import NewResources from "./pages/NewResources";
+import { ResourcesView } from "./pages/NewResources/ResourcesView";
+import { FamilyGroupView } from "./pages/NewResources/FamilyGroupView";
+import { ShoppingListsView } from "./pages/NewResources/ShoppingListsView";
+import { ShoppingListDetailView } from "./pages/NewResources/ShoppingListDetailView";
 import NotFoundPage from "./pages/NotFoundPage";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Revenue from "./pages/Revenue";
+import Settings from "./pages/Settings";
+import AlexaLogin from "./pages/AlexaLogin";
 import { Expenses } from "./pages/Expenses";
 
 export default function App() {
@@ -42,6 +48,7 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/alexa-login" element={<AlexaLogin />} />
           <Route path="*" element={<NotFoundPage />} />
 
           <Route
@@ -86,10 +93,50 @@ export default function App() {
             }
           />
           <Route
+            path="/new-resources/resources"
+            element={
+              <RequireAuth>
+                <ResourcesView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/family"
+            element={
+              <RequireAuth>
+                <FamilyGroupView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/shopping"
+            element={
+              <RequireAuth>
+                <ShoppingListsView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/shopping/:id"
+            element={
+              <RequireAuth>
+                <ShoppingListDetailView />
+              </RequireAuth>
+            }
+          />
+          <Route
             path="/new-challenge"
             element={
               <RequireAuth>
                 <NewChallenge />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <RequireAuth>
+                <Settings />
               </RequireAuth>
             }
           />
