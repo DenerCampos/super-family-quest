@@ -49,6 +49,9 @@ export function useShoppingListSocket({
 
     const socket = io(`${API_URL}/shopping-list`, {
       auth: { token },
+      extraHeaders: {
+        'ngrok-skip-browser-warning': 'true',
+      },
     });
 
     socket.on('connect', () => {
