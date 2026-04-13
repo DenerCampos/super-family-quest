@@ -109,7 +109,7 @@ export const ShoppingListsView = () => {
             fontFamily={getFont('heading')}
             color={getColor('text.shoppingList.title')}
           >
-            {t('shoppingList.title') + 'oi'}
+            {t('shoppingList.title')}
           </Text>
         </Flex>
         <IconButton

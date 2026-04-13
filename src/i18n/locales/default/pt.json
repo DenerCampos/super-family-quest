@@ -321,7 +321,20 @@
     "instructions": "Posicione a câmera sobre o QR Code da nota fiscal",
     "title": "Posicione o QR Code",
     "camera": "Câmera: {{name}} ({{current}}/{{total}})",
-    "defaultCamera": "Padrão"
+    "defaultCamera": "Padrão",
+    "switchCamera": "Trocar câmera",
+    "loadingCamera": "Carregando câmera",
+    "loadingCoupon": "Lendo cupom fiscal",
+    "errors": {
+      "processingFailed": "Falha ao processar QR Code",
+      "scannerNotFound": "Elemento de scanner não encontrado",
+      "videoNotFound": "Elemento de vídeo não encontrado",
+      "videoTimeout": "Timeout ao carregar vídeo",
+      "cameraAccess": "Erro ao acessar câmera: {{message}}",
+      "noCamera": "Nenhuma câmera encontrada",
+      "initFailed": "Erro ao inicializar: {{message}}",
+      "unknown": "Erro desconhecido"
+    }
   },
   "imageRecognitionPage": {
     "back": "Voltar",

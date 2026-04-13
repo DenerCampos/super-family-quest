@@ -28,8 +28,8 @@ export type CouponReader = {
 };
 
 export const CouponReaderService = {
-  read: async ({ code }: { code: string }): Promise<CouponReader> => {
-    const response = await api.get(`/coupon-reader/${code}`);
+  read: async ({ url }: { url: string }): Promise<CouponReader> => {
+    const response = await api.post('/coupon-reader', { url });
 
     return response.data;
   },
