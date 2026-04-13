@@ -314,7 +314,20 @@
     "instructions": "Use sua Lente Mágica para revelar o conteúdo do pergaminho",
     "title": "Posicione a Lente Mágica",
     "camera": "Lente Mágica: {{name}} ({{current}}/{{total}})",
-    "defaultCamera": "Lente Padrão"
+    "defaultCamera": "Lente Padrão",
+    "switchCamera": "Alternar Lente",
+    "loadingCamera": "Invocando lente mágica",
+    "loadingCoupon": "Decifrando pergaminho do mercador",
+    "errors": {
+      "processingFailed": "Falha ao decifrar o pergaminho",
+      "scannerNotFound": "Lente mágica não encontrada",
+      "videoNotFound": "Visão mágica não encontrada",
+      "videoTimeout": "A lente mágica demorou demais para invocar",
+      "cameraAccess": "Erro ao invocar a lente: {{message}}",
+      "noCamera": "Nenhuma lente mágica encontrada",
+      "initFailed": "Falha ao invocar a lente: {{message}}",
+      "unknown": "Erro desconhecido"
+    }
   },
   "imageRecognitionPage": {
     "back": "Retornar",
