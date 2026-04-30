@@ -60,6 +60,8 @@ export type Expense = {
   store: Merchant;
   items: Array<Items>;
   user?: Owner | null;
+  /** Moedas ganhas ao registrar esta despesa (quando enviadas pela API). */
+  coins?: number | string;
 };
 
 export type ItemsCreate = {
@@ -111,6 +113,8 @@ export type Revenue = {
   repeat: boolean;
   date?: string;
   user?: Owner | null;
+  /** Moedas ganhas ao registrar esta receita (quando enviadas pela API). */
+  coins?: number | string;
 };
 
 export const ResourcesService = {

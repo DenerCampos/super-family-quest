@@ -1,6 +1,7 @@
 import { Flex, Image, Text } from '@chakra-ui/react';
 import { keyframes } from '@emotion/react';
-import { useState, useEffect } from 'react';
+import { useLayoutEffect, useRef, useState, useEffect } from 'react';
+import { useCoinFlight } from '../contexts/CoinFlightContext';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 
 const pulse = keyframes`
@@ -14,19 +15,23 @@ type CoinDisplayProps = {
 };
 
 export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
-  const [prevCoins, setPrevCoins] = useState(coins);
   const [animate, setAnimate] = useState(false);
+  const { registerCoinTarget } = useCoinFlight();
+  const coinImgRef = useRef<HTMLImageElement | null>(null);
+  const lastCoinsRef = useRef(coins);
   const { getColor, getAsset, getFont } = useVisualTheme();
 
+  useLayoutEffect(() => {
+    registerCoinTarget(coinImgRef.current);
+    return () => registerCoinTarget(null);
+  }, [registerCoinTarget]);
+
   useEffect(() => {
-    if (coins !== prevCoins) {
-      setAnimate(true);
-      const timer = setTimeout(() => setAnimate(false), 3000);
-      setPrevCoins((value) => {      
-        return coins - value;
-      });
-      return () => clearTimeout(timer);
-    }
+    if (coins === lastCoinsRef.current) return;
+    lastCoinsRef.current = coins;
+    setAnimate(true);
+    const timer = setTimeout(() => setAnimate(false), 3000);
+    return () => clearTimeout(timer);
   }, [coins]);
 
   const gifSrc = getAsset('images.goldCoin');
@@ -38,11 +43,11 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
       px={3}
       py={1}
       borderRadius="md"
-      position="relative"
       borderWidth="1px"
       borderColor={getColor('border.coin')}
     >
       <Image
+        ref={coinImgRef}
         src={gifSrc}
         boxSize="25px"
         mr={2}
@@ -55,20 +60,6 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
       >
         {coins}
       </Text>
-
-      {animate && (
-        <Text
-          color={getColor('status.success')}
-          fontWeight="bold"
-          fontFamily={getFont('heading')}
-          position="absolute"
-          right="-20px"
-          top="-10px"
-          animation={`${pulse} 0.5s`}
-        >
-          +{prevCoins}
-        </Text>
-      )}
     </Flex>
   );
 };

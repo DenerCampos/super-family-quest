@@ -1,4 +1,5 @@
 import { Navigate } from 'react-router-dom';
+import { CoinFlightProvider } from '../contexts/CoinFlightContext';
 import { useAuth } from '../contexts/AuthContext';
 import type { JSX } from 'react';
 import { LoadingOverlay } from './LoadingOverlay';
@@ -28,5 +29,5 @@ export function RequireAuth({ children }: Readonly<{ children: JSX.Element }>) {
     return <Navigate to="/login" replace />;
   }
 
-  return children;
+  return <CoinFlightProvider>{children}</CoinFlightProvider>;
 }

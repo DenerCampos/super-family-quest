@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useMemo } 
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services';
 import { LOCAL_STORAGE_KEYS } from '../utils/constants';
+import { normalizeCoinDelta } from '../utils/coinsNumber';
 
 export type User = {
   id: string;
@@ -26,6 +27,8 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   loadProfile: () => Promise<void>;
+  /** Ajuste otimista do saldo (ex.: após animação de moeda voadora). Reconcilie com loadProfile quando fizer sentido. */
+  applyCoinsDelta: (delta: number) => void;
   showValues: boolean;
   toggleShowValues: () => void;
 };
@@ -54,7 +57,10 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     try {
       const profile = await api.profile();
       
-      setProfile(profile);
+      setProfile({
+        ...profile,
+        coins: normalizeCoinDelta(profile.coins) ?? 0,
+      });
     } catch (error) {
       console.error('Failed to load profile:', error);
       throw error;
@@ -112,14 +118,25 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     });
   }, []);
 
+  const applyCoinsDelta = useCallback((delta: number) => {
+    const n = normalizeCoinDelta(delta);
+    if (n == null || n === 0) return;
+    setProfile((p) => {
+      if (!p) return null;
+      const base = normalizeCoinDelta(p.coins) ?? 0;
+      return { ...p, coins: base + n };
+    });
+  }, []);
+
   const contextValue = useMemo(() => ({
     profile,
     login,
     logout,
     loadProfile,
+    applyCoinsDelta,
     showValues,
     toggleShowValues
-  }), [profile, login, logout, loadProfile, showValues, toggleShowValues]);
+  }), [profile, login, logout, loadProfile, applyCoinsDelta, showValues, toggleShowValues]);
 
   return (
     <AuthContext.Provider value={contextValue}>
