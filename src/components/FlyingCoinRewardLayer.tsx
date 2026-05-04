@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 
+/** Tempo parado na posição inicial antes de voar até o alvo (header). */
+export const FLYING_COIN_INITIAL_HOLD_S = 2;
 export const FLYING_COIN_DURATION_S = 0.65;
 
 const EASE: [number, number, number, number] = [0.2, 0.8, 0.2, 1];
@@ -63,7 +65,11 @@ export function FlyingCoinRewardLayer({
         top: endTop,
         scale: 1,
       }}
-      transition={{ duration: FLYING_COIN_DURATION_S, ease: EASE }}
+      transition={{
+        delay: FLYING_COIN_INITIAL_HOLD_S,
+        duration: FLYING_COIN_DURATION_S,
+        ease: EASE,
+      }}
       style={{
         position: 'fixed',
         width: coinW,
