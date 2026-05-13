@@ -682,6 +682,7 @@
     "revenues": "Recompensas",
     "expenses": "Tributos",
     "noData": "Nenhum registro encontrado nos pergaminhos",
+    "dataRestricted": "Você não possui acesso aos registros deste membro da guilda",
     "month": "Ciclo Lunar",
     "year": "Era",
     "filter": "Consultar",

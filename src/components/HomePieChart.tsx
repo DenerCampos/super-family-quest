@@ -6,6 +6,7 @@ const RADIAN = Math.PI / 180;
 type HomePieChartProps = {
   income: number;
   expenses: number;
+  masked?: boolean;
   revenueColor: string;
   expenseColor: string;
   emptyFillColor: string;
@@ -16,6 +17,7 @@ type HomePieChartProps = {
 export const HomePieChart = ({
   income,
   expenses,
+  masked,
   revenueColor,
   expenseColor,
   emptyFillColor,
@@ -53,7 +55,7 @@ export const HomePieChart = ({
     );
   };
 
-  if (total === 0) {
+  if (masked || total === 0) {
     return (
       <ResponsiveContainer width="100%" height={100}>
         <PieChart>
@@ -68,7 +70,7 @@ export const HomePieChart = ({
             stroke="none"
           >
             <Label
-              value="0%"
+              value={masked ? '?' : '0%'}
               position="center"
               fontSize={11}
               fontWeight="bold"

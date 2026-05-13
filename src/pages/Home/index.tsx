@@ -117,6 +117,12 @@ const Home = () => {
     return summary?.totalExpenses ?? 0;
   }, [hasGroup, selectedMember, summary, profile]);
 
+  const displayMasked = useMemo(() => {
+    if (!hasGroup) return false;
+    if (selectedMember) return selectedMember.masked ?? false;
+    return false;
+  }, [hasGroup, selectedMember]);
+
   const incomeLabel = useMemo(() => {
     if (!hasGroup) return t("home.familyStories.familyIncome");
     if (selectedMember) {
@@ -191,6 +197,7 @@ const Home = () => {
             <HomePieChart
               income={displayIncome}
               expenses={displayExpenses}
+              masked={displayMasked}
               revenueColor={revenueHex}
               expenseColor={expenseHex}
               emptyFillColor={emptyFillHex}
@@ -223,12 +230,14 @@ const Home = () => {
               value={displayIncome}
               type="revenue"
               compact
+              masked={displayMasked}
             />
             <SummaryCard
               title={expensesLabel}
               value={displayExpenses}
               type="expense"
               compact
+              masked={displayMasked}
             />
           </Flex>
         </Flex>
