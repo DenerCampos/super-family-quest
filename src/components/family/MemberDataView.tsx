@@ -53,10 +53,10 @@ export const MemberDataView = ({ data, isLoading }: MemberDataViewProps) => {
           </Text>
           <Flex gap={4} fontSize="sm" fontFamily={getFont('body')}>
             <Text color={getColor('text.summaryCard.revenue')}>
-              {t('familyGroup.revenues')}: {showValues ? formatCurrencyBRL(data.totalRevenues) : '••••••'}
+              {t('familyGroup.revenues')}: {data.masked ? '? ? ? ?' : showValues ? formatCurrencyBRL(data.totalRevenues) : '••••••'}
             </Text>
             <Text color={getColor('text.summaryCard.expense')}>
-              {t('familyGroup.expenses')}: {showValues ? formatCurrencyBRL(data.totalExpenses) : '••••••'}
+              {t('familyGroup.expenses')}: {data.masked ? '? ? ? ?' : showValues ? formatCurrencyBRL(data.totalExpenses) : '••••••'}
             </Text>
           </Flex>
         </Box>
@@ -165,7 +165,9 @@ export const MemberDataView = ({ data, isLoading }: MemberDataViewProps) => {
           fontFamily={getFont('body')}
           py={4}
         >
-          {t('familyGroup.noData')}
+          {data.masked
+            ? t('familyGroup.dataRestricted')
+            : t('familyGroup.noData')}
         </Text>
       )}
     </VStack>

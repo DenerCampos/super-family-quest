@@ -8,9 +8,10 @@ type Props = {
   value: number;
   type: 'revenue' | 'expense';
   compact?: boolean;
+  masked?: boolean;
 };
 
-export const SummaryCard = ({ title, value, type, compact }: Props) => {
+export const SummaryCard = ({ title, value, type, compact, masked }: Props) => {
   const { showValues } = useAuth();
   const { getColor, getFont} = useVisualTheme();
 
@@ -52,7 +53,7 @@ export const SummaryCard = ({ title, value, type, compact }: Props) => {
           fontFamily={getFont('mono')}
           noOfLines={1}
         >
-          {showValues ? formatCurrency(value) : '••••••••'}
+          {masked ? '? ? ? ?' : showValues ? formatCurrency(value) : '••••••••'}
         </Heading>
       </CardBody>
     </Card>

@@ -690,6 +690,7 @@
     "revenues": "Receitas",
     "expenses": "Despesas",
     "noData": "Nenhum dado encontrado",
+    "dataRestricted": "Você não tem permissão para ver os dados deste membro",
     "month": "Mês",
     "year": "Ano",
     "filter": "Filtrar",

@@ -31,7 +31,17 @@ export const MembersList = ({
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
 
-  const acceptedMembers = group.members.filter((m) => m.status === 'accepted');
+  const roleOrder = (memberId: string, role: string): number => {
+    if (isOwner(group, memberId)) return 0;
+    if (role === 'admin') return 1;
+    return 2;
+  };
+
+  const acceptedMembers = group.members
+    .filter((m) => m.status === 'accepted' && m.user?.id !== group.owner.id)
+    .sort((a, b) =>
+      roleOrder(a.user?.id || '', a.role) - roleOrder(b.user?.id || '', b.role),
+    );
   const pendingMembers = group.members.filter((m) => m.status === 'pending');
 
   const getRoleLabel = (memberId: string, role: string) => {
