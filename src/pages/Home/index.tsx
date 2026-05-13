@@ -11,6 +11,7 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   FiCamera,
   FiDollarSign,
@@ -42,6 +43,7 @@ const Home = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const [revenueHex, expenseHex, emptyFillHex, emptyLabelHex, labelHex] =
     useToken("colors", [
@@ -347,6 +349,7 @@ const Home = () => {
         }}
         onComplete={() => {
           setShowCompleteProfile(false);
+          queryClient.clear();
           loadProfile();
         }}
       />

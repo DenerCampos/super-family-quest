@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { api } from '../services';
 import { LOCAL_STORAGE_KEYS } from '../utils/constants';
 import { normalizeCoinDelta } from '../utils/coinsNumber';
@@ -42,6 +43,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     return savedShowValues ? JSON.parse(savedShowValues) : true;
   });
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -107,8 +109,9 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const logout = useCallback(() => {
     localStorage.removeItem('accessToken');
     setProfile(null);
+    queryClient.clear();
     navigate('/login');
-  }, [navigate]);
+  }, [navigate, queryClient]);
 
   const toggleShowValues = useCallback(() => {
     setShowValues((prev: boolean) => {
