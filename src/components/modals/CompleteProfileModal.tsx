@@ -61,7 +61,11 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
     },
   });
 
-  // Preencher automaticamente o sobrenome
+  const {
+    onChange: registerIncomeOnChange,
+    ...incomeRegisterRest
+  } = register('income');
+
   useEffect(() => {
     if (user?.name) {
       const names = user.name.split(' ');
@@ -72,12 +76,16 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
 
   const onSubmit = async (data: FormData) => {
     try {
+      const incomeAmount = parseBRLCurrency(data.income);
+      const includeIncome = incomeAmount > 0;
       await api.completeProfile({
         family: data.family,
-        income: parseBRLCurrency(data.income),
-        incomeName: data.incomeName,
-        date: data.date,
-        repeatMonthly: data.repeatMonthly,
+        ...(includeIncome && {
+          income: incomeAmount,
+          incomeName: data.incomeName,
+          date: data.date,
+          repeatMonthly: data.repeatMonthly,
+        }),
       });
 
       toast({
@@ -139,8 +147,26 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
               )}
             </FormControl>
 
-            {/* Novo campo: Nome da receita */}
-            <FormControl isInvalid={!!errors.incomeName} mb={4}>
+            <FormControl mb={4}>
+              <FormLabel>{t('profile.monthlyIncome')}</FormLabel>
+              <Input
+                {...incomeRegisterRest}
+                onChange={(e) => {
+                  const formatted = formatCurrencyInputBRL(e.target.value);
+                  e.target.value = formatted;
+                  void registerIncomeOnChange(e);
+                }}
+                placeholder={t('profile.monthlyIncomePlaceholder')}
+                bg={getColor('input.background')}
+                color={getColor('text.primary')}
+                _focus={{
+                  borderColor: getColor('border.tertiary'),
+                  boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
+                }}
+              />
+            </FormControl>
+
+            <FormControl mb={4}>
               <Flex align="center">
                 <FormLabel>{t('profile.nameRevenue')}</FormLabel>
                 <Tooltip
@@ -160,9 +186,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                 </Tooltip>
               </Flex>
               <Input
-                {...register('incomeName', {
-                  required: t('common.required'),
-                })}
+                {...register('incomeName')}
                 placeholder={t('profile.nameRevenuePlaceholder')}
                 bg={getColor('input.background')}
                 color={getColor('text.primary')}
@@ -171,49 +195,13 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                   boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
                 }}
               />
-              {errors.incomeName && (
-                <Text color={getColor('status.error')} fontSize="sm">
-                  {errors.incomeName.message}
-                </Text>
-              )}
             </FormControl>
 
-            <FormControl isInvalid={!!errors.income} mb={4}>
-              <FormLabel>{t('profile.monthlyIncome')}</FormLabel>
-              <Input
-                {...register('income', {
-                  required: t('common.required'),
-                  validate: (value) => {
-                    const numericValue = parseBRLCurrency(value);
-                    return numericValue > 0 || t('common.invalidValue');
-                  },
-                })}
-                onChange={(e) => {
-                  const formatted = formatCurrencyInputBRL(e.target.value);
-                  e.target.value = formatted;
-                }}
-                placeholder={t('profile.monthlyIncomePlaceholder')}
-                bg={getColor('input.background')}
-                color={getColor('text.primary')}
-                _focus={{
-                  borderColor: getColor('border.tertiary'),
-                  boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
-                }}
-              />
-              {errors.income && (
-                <Text color={getColor('status.error')} fontSize="sm">
-                  {errors.income.message}
-                </Text>
-              )}
-            </FormControl>
-
-            <FormControl isInvalid={!!errors.date} mb={4}>
+            <FormControl mb={4}>
               <FormLabel>{t('profile.date')}</FormLabel>
               <Input
                 type="date"
-                {...register('date', {
-                  required: t('common.required'),
-                })}
+                {...register('date')}
                 bg={getColor('input.background')}
                 sx={{
                   '&::-webkit-calendar-picker-indicator': {
@@ -224,14 +212,8 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                 color={getColor('text.primary')}
                 isDisabled={isSubmitting}
               />
-              {errors.date && (
-                <Text color={getColor('status.error')} fontSize="sm" mt={1}>
-                  {errors.date.message}
-                </Text>
-              )}
             </FormControl>
 
-            {/* Novo campo: Checkbox para repetir mensalmente */}
             <FormControl mb={6}>
               <Checkbox
                 {...register('repeatMonthly')}
