@@ -213,6 +213,8 @@ export const defaultTheme: VisualTheme = {
         primary: 'blue.50',
         card: 'white',
         memberCard: 'blue.50',
+        elevatedShadow:
+          '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
         badge: {
           owner: 'purple.100',
           admin: 'blue.100',
@@ -228,6 +230,7 @@ export const defaultTheme: VisualTheme = {
       shell: {
         outer: 'gray.900',
         inner: 'blue.50',
+        desktopPanelShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
       },
       shoppingList: {
         primary: 'blue.50',
@@ -569,6 +572,8 @@ export const rpgTheme: VisualTheme = {
         primary: 'purple.50',
         card: 'white',
         memberCard: 'purple.50',
+        elevatedShadow:
+          '0 2px 8px rgba(56, 21, 92, 0.18), 0 1px 3px rgba(25, 10, 45, 0.12)',
         badge: {
           owner: 'purple.100',
           admin: 'purple.100',
@@ -584,6 +589,8 @@ export const rpgTheme: VisualTheme = {
       shell: {
         outer: 'gray.950',
         inner: 'purple.50',
+        desktopPanelShadow:
+          '0 0 28px rgba(40, 15, 72, 0.55), 0 0 8px rgba(0, 0, 0, 0.35)',
       },
       shoppingList: {
         primary: 'purple.50',

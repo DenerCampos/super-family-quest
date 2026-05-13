@@ -1,0 +1,239 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { useToast } from '@chakra-ui/react';
+import { useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { api } from '../services';
+import { useAuth } from '../contexts/AuthContext';
+import { useFamilyGroup } from './useFamilyGroup';
+import { choreQueryKeys } from './choreQueryKeys';
+import { useThemedTranslation } from './useThemedTranslation';
+import type { ChoreOccurrenceResponseDto } from '../types/chore';
+import {
+  CHORE_PHOTO_ACCEPT_LIST,
+  CHORE_PHOTO_MAX_BYTES,
+} from '../utils/chore-occurrence-photo-constants';
+
+const isChorePhotoType = (mime: string): boolean =>
+  (CHORE_PHOTO_ACCEPT_LIST as readonly string[]).includes(mime);
+
+export const useQuestOccurrenceDetail = () => {
+  const { occurrenceId } = useParams<{ occurrenceId: string }>();
+  const location = useLocation();
+  const initialOccurrence = (
+    location.state as { occurrence?: ChoreOccurrenceResponseDto } | undefined
+  )?.occurrence;
+  const navigate = useNavigate();
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const { familyGroup, isLoadingGroup } = useFamilyGroup({
+    fetchSummary: false,
+    fetchInvitations: false,
+  });
+  const { profile } = useAuth();
+  const { t } = useThemedTranslation();
+  const groupId = familyGroup?.id;
+  const userId = profile?.user.id;
+
+  const beforeCameraRef = useRef<HTMLInputElement>(null);
+  const beforeGalleryRef = useRef<HTMLInputElement>(null);
+  const afterCameraRef = useRef<HTMLInputElement>(null);
+  const afterGalleryRef = useRef<HTMLInputElement>(null);
+  const [fileBefore, setFileBefore] = useState<File | null>(null);
+  const [fileAfter, setFileAfter] = useState<File | null>(null);
+
+  const detailQuery = useQuery({
+    queryKey: choreQueryKeys.occurrenceDetail(
+      groupId ?? '',
+      occurrenceId ?? '',
+    ),
+    queryFn: () =>
+      api.choreResolveOccurrence(groupId!, occurrenceId!),
+    enabled: !!groupId && !!occurrenceId,
+    initialData: initialOccurrence,
+  });
+
+  const occ = detailQuery.data ?? null;
+
+  const uploadMutation = useMutation({
+    mutationFn: (files: { before?: File; after?: File }) =>
+      api.choreUploadOccurrencePhotos(groupId!, occurrenceId!, files),
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        choreQueryKeys.occurrenceDetail(groupId!, occurrenceId!),
+        data,
+      );
+      queryClient.invalidateQueries({ queryKey: choreQueryKeys.root });
+      setFileBefore(null);
+      setFileAfter(null);
+      if (beforeCameraRef.current) beforeCameraRef.current.value = '';
+      if (beforeGalleryRef.current) beforeGalleryRef.current.value = '';
+      if (afterCameraRef.current) afterCameraRef.current.value = '';
+      if (afterGalleryRef.current) afterGalleryRef.current.value = '';
+      toast({ title: t('chores.photosUploaded'), status: 'success' });
+    },
+    onError: () => {
+      toast({
+        title: t('common.error'),
+        description: t('chores.photoUploadError'),
+        status: 'error',
+      });
+    },
+  });
+
+  const submitMutation = useMutation({
+    mutationFn: () =>
+      api.choreSubmitOccurrence(groupId!, occurrenceId!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: choreQueryKeys.root });
+      toast({ title: t('chores.submittedForApproval'), status: 'success' });
+      navigate('/new-challenge/quests');
+    },
+    onError: (err: unknown) => {
+      const msg = axios.isAxiosError(err)
+        ? parseApiMessage(err.response?.data)
+        : undefined;
+      toast({
+        title: t('common.error'),
+        description: msg ?? t('chores.submitError'),
+        status: 'error',
+      });
+    },
+  });
+
+  const validateFile = (file: File): string | null => {
+    if (file.size > CHORE_PHOTO_MAX_BYTES) return t('chores.photoTooLarge');
+    if (!isChorePhotoType(file.type)) return t('chores.photoInvalidType');
+    return null;
+  };
+
+  const onPickBefore = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) {
+      setFileBefore(null);
+      return;
+    }
+    const err = validateFile(f);
+    if (err) {
+      toast({ title: err, status: 'error' });
+      e.target.value = '';
+      return;
+    }
+    if (e.target === beforeCameraRef.current && beforeGalleryRef.current) {
+      beforeGalleryRef.current.value = '';
+    }
+    if (e.target === beforeGalleryRef.current && beforeCameraRef.current) {
+      beforeCameraRef.current.value = '';
+    }
+    setFileBefore(f);
+  };
+
+  const onPickAfter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) {
+      setFileAfter(null);
+      return;
+    }
+    const err = validateFile(f);
+    if (err) {
+      toast({ title: err, status: 'error' });
+      e.target.value = '';
+      return;
+    }
+    if (e.target === afterCameraRef.current && afterGalleryRef.current) {
+      afterGalleryRef.current.value = '';
+    }
+    if (e.target === afterGalleryRef.current && afterCameraRef.current) {
+      afterCameraRef.current.value = '';
+    }
+    setFileAfter(f);
+  };
+
+  const canActInProgress =
+    occ?.status === 'IN_PROGRESS' && occ.assignedTo?.id === userId;
+
+  const photosReadyForSubmit = occ
+    ? !occ.definition.requirePhoto ||
+      (!!occ.photoBeforeUrl && !!occ.photoAfterUrl)
+    : false;
+
+  const handleUploadPhotos = () => {
+    if (!occ || !groupId || !occurrenceId) return;
+    const req = occ.definition.requirePhoto;
+    const hasUrlBefore = !!occ.photoBeforeUrl;
+    const hasUrlAfter = !!occ.photoAfterUrl;
+
+    if (req) {
+      const willHaveBefore = !!(fileBefore || hasUrlBefore);
+      const willHaveAfter = !!(fileAfter || hasUrlAfter);
+      if (!willHaveBefore || !willHaveAfter) {
+        if (!fileBefore && !hasUrlBefore) {
+          toast({ title: t('chores.needBeforePhoto'), status: 'warning' });
+          return;
+        }
+        if (!fileAfter && !hasUrlAfter) {
+          toast({ title: t('chores.needAfterPhoto'), status: 'warning' });
+          return;
+        }
+      }
+      if (!fileBefore && !fileAfter) {
+        toast({ title: t('chores.selectAtLeastOnePhoto'), status: 'info' });
+        return;
+      }
+      uploadMutation.mutate({
+        before: fileBefore ?? undefined,
+        after: fileAfter ?? undefined,
+      });
+      return;
+    }
+
+    const willHaveBefore = !!(fileBefore || hasUrlBefore);
+    const willHaveAfter = !!(fileAfter || hasUrlAfter);
+    if (!fileBefore && !fileAfter) {
+      toast({ title: t('chores.selectAtLeastOnePhoto'), status: 'warning' });
+      return;
+    }
+    if (!willHaveBefore && fileAfter && !hasUrlBefore) {
+      toast({ title: t('chores.needBeforePhoto'), status: 'warning' });
+      return;
+    }
+    if (!willHaveAfter && fileBefore && !hasUrlAfter) {
+      toast({ title: t('chores.needAfterPhoto'), status: 'warning' });
+      return;
+    }
+    uploadMutation.mutate({
+      before: fileBefore ?? undefined,
+      after: fileAfter ?? undefined,
+    });
+  };
+
+  return {
+    occurrenceId,
+    initialOccurrence,
+    navigate,
+    detailQuery,
+    occ,
+    familyGroup,
+    isLoadingGroup,
+    beforeCameraRef,
+    beforeGalleryRef,
+    afterCameraRef,
+    afterGalleryRef,
+    fileBefore,
+    fileAfter,
+    uploadMutation,
+    submitMutation,
+    canActInProgress,
+    photosReadyForSubmit,
+    onPickBefore,
+    onPickAfter,
+    handleUploadPhotos,
+    t,
+  };
+};
+
+function parseApiMessage(body: unknown): string | undefined {
+  if (!body || typeof body !== 'object') return undefined;
+  const m = (body as Record<string, unknown>).message;
+  return typeof m === 'string' ? m : undefined;
+}

@@ -13,6 +13,13 @@ import { ReportView } from "./pages/Dashboard/ReportView";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NewChallenge from "./pages/NewChallenge";
+import { QuestsListView } from "./pages/NewChallenge/QuestsListView";
+import { QuestOccurrenceDetailView } from "./pages/NewChallenge/QuestOccurrenceDetailView";
+import { DefinitionsListView } from "./pages/NewChallenge/DefinitionsListView";
+import { DefinitionFormView } from "./pages/NewChallenge/DefinitionFormView";
+import { ApprovalsView } from "./pages/NewChallenge/ApprovalsView";
+import { AllowanceView } from "./pages/NewChallenge/AllowanceView";
+import { HistoryView } from "./pages/NewChallenge/HistoryView";
 import NewResources from "./pages/NewResources";
 import { ResourcesView } from "./pages/NewResources/ResourcesView";
 import { FamilyGroupView } from "./pages/NewResources/FamilyGroupView";
@@ -31,6 +38,9 @@ export default function App() {
   useThemeColor();
 
   const outerBg = resolveChakraColor(theme.colors.background.shell.outer);
+  const desktopShadow = resolveChakraColor(
+    theme.colors.background.shell.desktopPanelShadow,
+  );
 
   return (
     <Box
@@ -42,7 +52,7 @@ export default function App() {
         mx="auto"
         minH="100vh"
         position="relative"
-        boxShadow={{ base: "none", md: "0 0 20px rgba(0,0,0,0.5)" }}
+        boxShadow={{ base: 'none', md: desktopShadow }}
         overflow="hidden"
       >
         <Routes>
@@ -129,6 +139,62 @@ export default function App() {
             element={
               <RequireAuth>
                 <NewChallenge />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-challenge/quests/:occurrenceId"
+            element={
+              <RequireAuth>
+                <QuestOccurrenceDetailView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-challenge/quests"
+            element={
+              <RequireAuth>
+                <QuestsListView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-challenge/definitions/:definitionId"
+            element={
+              <RequireAuth>
+                <DefinitionFormView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-challenge/definitions"
+            element={
+              <RequireAuth>
+                <DefinitionsListView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-challenge/approvals"
+            element={
+              <RequireAuth>
+                <ApprovalsView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-challenge/allowance"
+            element={
+              <RequireAuth>
+                <AllowanceView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-challenge/history"
+            element={
+              <RequireAuth>
+                <HistoryView />
               </RequireAuth>
             }
           />

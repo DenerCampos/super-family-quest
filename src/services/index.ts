@@ -11,6 +11,7 @@ import { RevenueService, type RevenueRecurring } from "./revenue";
 import { ShoppingListService } from "./shoppingList";
 import { themeService } from "./theme";
 import { UserService } from "./user";
+import { ChoreService } from "./chore";
 
 export const api = {
   getAvailableThemes: themeService.getAvailableThemes,
@@ -213,4 +214,22 @@ export const api = {
   getIntegrationsStatus: IntegrationsService.getStatus,
   alexaOAuthLogin: IntegrationsService.alexaOAuthLogin,
   unlinkAlexa: IntegrationsService.unlinkAlexa,
+
+  choreListDefinitions: ChoreService.listDefinitions,
+  choreCreateDefinition: ChoreService.createDefinition,
+  choreUpdateDefinition: ChoreService.updateDefinition,
+  choreDeleteDefinition: ChoreService.deleteDefinition,
+  choreListOccurrences: ChoreService.listOccurrences,
+  choreListPendingApproval: ChoreService.listPendingApproval,
+  choreListMine: ChoreService.listMine,
+  choreListHistory: ChoreService.listHistory,
+  choreResolveOccurrence: ChoreService.resolveOccurrence,
+  choreStartOccurrence: ChoreService.startOccurrence,
+  choreUploadOccurrencePhotos: ChoreService.uploadOccurrencePhotos,
+  choreSubmitOccurrence: ChoreService.submitOccurrence,
+  choreApproveOccurrence: ChoreService.approveOccurrence,
+  choreRejectOccurrence: ChoreService.rejectOccurrence,
+  choreGetPayrollSuggestion: ChoreService.getPayrollSuggestion,
+  choreGetPayrollPending: ChoreService.getPayrollPending,
+  choreSettlePayroll: ChoreService.settlePayroll,
 };

@@ -78,6 +78,7 @@ export interface ThemeColors {
       primary: string;
       card: string;
       memberCard: string;
+      elevatedShadow: string;
       badge: {
         owner: string;
         admin: string;
@@ -93,6 +94,8 @@ export interface ThemeColors {
     shell: {
       outer: string;
       inner: string;
+      /** Sombra do painel central em viewports grandes (valor CSS cru) */
+      desktopPanelShadow: string;
     };
     shoppingList: {
       primary: string;

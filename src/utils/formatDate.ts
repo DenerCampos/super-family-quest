@@ -1,3 +1,26 @@
+/**
+ * Formata inteiro YYYYMM (ex.: mesada / API) para data legível no locale.
+ * Ex.: 202605 → "Maio de 2026" em pt-BR.
+ */
+export const formatYearMonthCompact = (
+  ym: number,
+  locale = 'pt-BR',
+): string => {
+  if (!Number.isFinite(ym)) return String(ym);
+  const n = Math.trunc(ym);
+  const year = Math.floor(Math.abs(n) / 100);
+  const month = Math.abs(n) % 100;
+  if (year < 1900 || year > 2100 || month < 1 || month > 12) {
+    return String(ym);
+  }
+  const d = new Date(year, month - 1, 1);
+  const raw = d.toLocaleDateString(locale, {
+    month: 'long',
+    year: 'numeric',
+  });
+  return raw.charAt(0).toUpperCase() + raw.slice(1);
+};
+
 export const formatDateToYYYYMMDD = (dateString: string | Date): string => {
   try {
     const date =
