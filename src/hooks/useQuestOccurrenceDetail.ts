@@ -13,6 +13,7 @@ import {
   CHORE_PHOTO_ACCEPT_LIST,
   CHORE_PHOTO_MAX_BYTES,
 } from '../utils/chore-occurrence-photo-constants';
+import { compressImage } from '../utils/compressImage';
 
 const isChorePhotoType = (mime: string): boolean =>
   (CHORE_PHOTO_ACCEPT_LIST as readonly string[]).includes(mime);
@@ -105,21 +106,14 @@ export const useQuestOccurrenceDetail = () => {
     },
   });
 
-  const validateFile = (file: File): string | null => {
-    if (file.size > CHORE_PHOTO_MAX_BYTES) return t('chores.photoTooLarge');
-    if (!isChorePhotoType(file.type)) return t('chores.photoInvalidType');
-    return null;
-  };
-
-  const onPickBefore = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onPickBefore = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) {
       setFileBefore(null);
       return;
     }
-    const err = validateFile(f);
-    if (err) {
-      toast({ title: err, status: 'error' });
+    if (!isChorePhotoType(f.type)) {
+      toast({ title: t('chores.photoInvalidType'), status: 'error' });
       e.target.value = '';
       return;
     }
@@ -129,18 +123,32 @@ export const useQuestOccurrenceDetail = () => {
     if (e.target === beforeGalleryRef.current && beforeCameraRef.current) {
       beforeCameraRef.current.value = '';
     }
-    setFileBefore(f);
+    try {
+      const compressed = await compressImage(f);
+      if (compressed.size > CHORE_PHOTO_MAX_BYTES) {
+        toast({ title: t('chores.photoTooLarge'), status: 'error' });
+        e.target.value = '';
+        return;
+      }
+      setFileBefore(compressed);
+    } catch {
+      toast({
+        title: t('common.error'),
+        description: t('chores.photoProcessError'),
+        status: 'error',
+      });
+      e.target.value = '';
+    }
   };
 
-  const onPickAfter = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onPickAfter = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) {
       setFileAfter(null);
       return;
     }
-    const err = validateFile(f);
-    if (err) {
-      toast({ title: err, status: 'error' });
+    if (!isChorePhotoType(f.type)) {
+      toast({ title: t('chores.photoInvalidType'), status: 'error' });
       e.target.value = '';
       return;
     }
@@ -150,7 +158,22 @@ export const useQuestOccurrenceDetail = () => {
     if (e.target === afterGalleryRef.current && afterCameraRef.current) {
       afterCameraRef.current.value = '';
     }
-    setFileAfter(f);
+    try {
+      const compressed = await compressImage(f);
+      if (compressed.size > CHORE_PHOTO_MAX_BYTES) {
+        toast({ title: t('chores.photoTooLarge'), status: 'error' });
+        e.target.value = '';
+        return;
+      }
+      setFileAfter(compressed);
+    } catch {
+      toast({
+        title: t('common.error'),
+        description: t('chores.photoProcessError'),
+        status: 'error',
+      });
+      e.target.value = '';
+    }
   };
 
   const canActInProgress =
