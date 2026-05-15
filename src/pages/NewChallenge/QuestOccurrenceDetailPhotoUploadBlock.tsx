@@ -128,7 +128,6 @@ export const QuestOccurrenceDetailPhotoUploadBlock = ({
               bg={getColor('button.background.revenue')}
               color={getColor('button.text.revenue')}
               onClick={handleUploadBefore}
-              isLoading={uploadIsPending}
               isDisabled={uploadIsPending || !fileBefore}
             >
               {t('chores.sendBeforePhoto')}
@@ -202,7 +201,6 @@ export const QuestOccurrenceDetailPhotoUploadBlock = ({
               bg={getColor('button.background.revenue')}
               color={getColor('button.text.revenue')}
               onClick={handleUploadAfter}
-              isLoading={uploadIsPending}
               isDisabled={
                 uploadIsPending || !canUseAfterSection || !fileAfter
               }

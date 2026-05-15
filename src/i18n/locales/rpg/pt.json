@@ -554,6 +554,7 @@
     "sendPhotos": "Enviar imagens",
     "sendBeforePhoto": "Enviar relíquia \"antes\"",
     "sendAfterPhoto": "Enviar relíquia \"depois\"",
+    "photoUploadLoading": "Enviando relíquia ao cofre",
     "needBeforePhotoHint": "Registre a relíquia \"antes\" no cofre antes da \"depois\".",
     "submitForApproval": "Enviar ao conselho",
     "photosUploaded": "Relíquias registradas.",
@@ -776,7 +777,8 @@
       "archived": "Arquivados"
     },
     "detail": {
-      "addItemPlaceholder": "Adicionar provisão... (ex: 2x Poção de Leite)",
+      "addItemPlaceholder": "Adicionar provisão ou lista (ex: leite, poção, 3 ovos)...",
+      "bulkHint": "Dica: vírgula e espaço entre provisões carregam várias de uma vez. Valores como 2,5 kg seguem num só item.",
       "searchSuggestions": "Sugestões do Oráculo",
       "noItems": "Pergaminho vazio",
       "noItemsDescription": "Adicione provisões usando o campo acima",
@@ -795,6 +797,7 @@
       "deleteConfirm": "Tem certeza que deseja remover esta provisão?",
       "toggleError": "Falha ao alterar estado da provisão",
       "addError": "Falha ao adicionar provisão",
+      "bulkAddError": "Falha ao adicionar várias provisões",
       "editError": "Falha ao aprimorar provisão",
       "deleteError": "Falha ao remover provisão",
       "name": "Nome da Provisão",

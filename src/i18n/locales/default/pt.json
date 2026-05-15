@@ -562,6 +562,7 @@
     "sendPhotos": "Enviar fotos",
     "sendBeforePhoto": "Enviar foto do antes",
     "sendAfterPhoto": "Enviar foto do depois",
+    "photoUploadLoading": "Enviando foto",
     "needBeforePhotoHint": "Envie e confirme a foto do antes antes de enviar a do depois.",
     "submitForApproval": "Enviar para aprovação",
     "photosUploaded": "Fotos enviadas.",
@@ -784,7 +785,8 @@
       "archived": "Arquivadas"
     },
     "detail": {
-      "addItemPlaceholder": "Adicionar item... (ex: 2x Leite)",
+      "addItemPlaceholder": "Adicionar item ou lista (ex: leite, arroz, 3 óleos)...",
+      "bulkHint": "Dica: use vírgula seguida de espaço entre itens para adicionar em lote. Ex: leite, 3 ovos, sabão em pó (valores como 2,5 kg continuam em um único item).",
       "searchSuggestions": "Sugestões",
       "noItems": "Lista vazia",
       "noItemsDescription": "Adicione itens usando o campo acima",
@@ -803,6 +805,7 @@
       "deleteConfirm": "Tem certeza que deseja remover este item?",
       "toggleError": "Erro ao alterar status do item",
       "addError": "Erro ao adicionar item",
+      "bulkAddError": "Erro ao adicionar itens em lote",
       "editError": "Erro ao editar item",
       "deleteError": "Erro ao remover item",
       "name": "Nome do Item",

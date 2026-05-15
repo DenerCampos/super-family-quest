@@ -13,6 +13,7 @@ import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { ShoppingListService } from '../../services/shoppingList';
 import { parseQuickAddInput } from '../../hooks/useShoppingListDetail';
+import { isBulkShoppingListInput } from '../../utils/bulkShoppingListInput';
 import type {
   CreateShoppingListItemPayload,
   ItemSuggestionResponse,
@@ -20,10 +21,15 @@ import type {
 
 interface AddItemInputProps {
   onAdd: (payload: CreateShoppingListItemPayload) => Promise<void>;
+  onAddBulk: (text: string) => Promise<void>;
   isDisabled?: boolean;
 }
 
-export const AddItemInput = ({ onAdd, isDisabled = false }: AddItemInputProps) => {
+export const AddItemInput = ({
+  onAdd,
+  onAddBulk,
+  isDisabled = false,
+}: AddItemInputProps) => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
   const [inputValue, setInputValue] = useState('');
@@ -70,8 +76,12 @@ export const AddItemInput = ({ onAdd, isDisabled = false }: AddItemInputProps) =
 
     setIsSubmitting(true);
     try {
-      const { name, quantity } = parseQuickAddInput(text);
-      await onAdd({ name, quantity, useTextRecognition: true });
+      if (isBulkShoppingListInput(text)) {
+        await onAddBulk(text.trim());
+      } else {
+        const { name, quantity } = parseQuickAddInput(text);
+        await onAdd({ name, quantity, useTextRecognition: true });
+      }
       setInputValue('');
       setSuggestions([]);
       setShowSuggestions(false);
@@ -146,6 +156,15 @@ export const AddItemInput = ({ onAdd, isDisabled = false }: AddItemInputProps) =
           size="md"
         />
       </Flex>
+      <Text
+        fontSize="xs"
+        color={getColor('text.shoppingList.itemMeta')}
+        fontFamily={getFont('body')}
+        mt={1.5}
+        lineHeight="short"
+      >
+        {t('shoppingList.detail.bulkHint')}
+      </Text>
 
       {showSuggestions && suggestions.length > 0 && (
         <Box

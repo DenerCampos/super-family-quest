@@ -6,6 +6,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import type React from 'react';
+import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { toDisplayableImageUrl } from '../../utils/formatString';
 import type { ChoreOccurrenceResponseDto } from '../../types/chore';
@@ -63,6 +64,12 @@ export const QuestOccurrenceDetailContent = ({
       title={occ.definition.title}
       backTo="/new-challenge/quests"
     >
+      {uploadIsPending && (
+        <LoadingOverlay
+          typeLoading="save"
+          text={t('chores.photoUploadLoading')}
+        />
+      )}
       <VStack align="stretch" spacing={4} pb={8}>
         <Box
           p={3}
