@@ -58,18 +58,22 @@ export const useQuestOccurrenceDetail = () => {
   const uploadMutation = useMutation({
     mutationFn: (files: { before?: File; after?: File }) =>
       api.choreUploadOccurrencePhotos(groupId!, occurrenceId!, files),
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       queryClient.setQueryData(
         choreQueryKeys.occurrenceDetail(groupId!, occurrenceId!),
         data,
       );
       queryClient.invalidateQueries({ queryKey: choreQueryKeys.root });
-      setFileBefore(null);
-      setFileAfter(null);
-      if (beforeCameraRef.current) beforeCameraRef.current.value = '';
-      if (beforeGalleryRef.current) beforeGalleryRef.current.value = '';
-      if (afterCameraRef.current) afterCameraRef.current.value = '';
-      if (afterGalleryRef.current) afterGalleryRef.current.value = '';
+      if (variables.before) {
+        setFileBefore(null);
+        if (beforeCameraRef.current) beforeCameraRef.current.value = '';
+        if (beforeGalleryRef.current) beforeGalleryRef.current.value = '';
+      }
+      if (variables.after) {
+        setFileAfter(null);
+        if (afterCameraRef.current) afterCameraRef.current.value = '';
+        if (afterGalleryRef.current) afterGalleryRef.current.value = '';
+      }
       toast({ title: t('chores.photosUploaded'), status: 'success' });
     },
     onError: () => {
@@ -157,54 +161,26 @@ export const useQuestOccurrenceDetail = () => {
       (!!occ.photoBeforeUrl && !!occ.photoAfterUrl)
     : false;
 
-  const handleUploadPhotos = () => {
+  const handleUploadBefore = () => {
     if (!occ || !groupId || !occurrenceId) return;
-    const req = occ.definition.requirePhoto;
-    const hasUrlBefore = !!occ.photoBeforeUrl;
-    const hasUrlAfter = !!occ.photoAfterUrl;
-
-    if (req) {
-      const willHaveBefore = !!(fileBefore || hasUrlBefore);
-      const willHaveAfter = !!(fileAfter || hasUrlAfter);
-      if (!willHaveBefore || !willHaveAfter) {
-        if (!fileBefore && !hasUrlBefore) {
-          toast({ title: t('chores.needBeforePhoto'), status: 'warning' });
-          return;
-        }
-        if (!fileAfter && !hasUrlAfter) {
-          toast({ title: t('chores.needAfterPhoto'), status: 'warning' });
-          return;
-        }
-      }
-      if (!fileBefore && !fileAfter) {
-        toast({ title: t('chores.selectAtLeastOnePhoto'), status: 'info' });
-        return;
-      }
-      uploadMutation.mutate({
-        before: fileBefore ?? undefined,
-        after: fileAfter ?? undefined,
-      });
-      return;
-    }
-
-    const willHaveBefore = !!(fileBefore || hasUrlBefore);
-    const willHaveAfter = !!(fileAfter || hasUrlAfter);
-    if (!fileBefore && !fileAfter) {
+    if (!fileBefore) {
       toast({ title: t('chores.selectAtLeastOnePhoto'), status: 'warning' });
       return;
     }
-    if (!willHaveBefore && fileAfter && !hasUrlBefore) {
+    uploadMutation.mutate({ before: fileBefore });
+  };
+
+  const handleUploadAfter = () => {
+    if (!occ || !groupId || !occurrenceId) return;
+    if (!occ.photoBeforeUrl) {
       toast({ title: t('chores.needBeforePhoto'), status: 'warning' });
       return;
     }
-    if (!willHaveAfter && fileBefore && !hasUrlAfter) {
-      toast({ title: t('chores.needAfterPhoto'), status: 'warning' });
+    if (!fileAfter) {
+      toast({ title: t('chores.selectAtLeastOnePhoto'), status: 'warning' });
       return;
     }
-    uploadMutation.mutate({
-      before: fileBefore ?? undefined,
-      after: fileAfter ?? undefined,
-    });
+    uploadMutation.mutate({ after: fileAfter });
   };
 
   return {
@@ -227,7 +203,8 @@ export const useQuestOccurrenceDetail = () => {
     photosReadyForSubmit,
     onPickBefore,
     onPickAfter,
-    handleUploadPhotos,
+    handleUploadBefore,
+    handleUploadAfter,
     t,
   };
 };

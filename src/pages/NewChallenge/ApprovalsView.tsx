@@ -43,6 +43,12 @@ export const ApprovalsView = () => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isImageOpen,
+    onOpen: onImageOpen,
+    onClose: onImageClose,
+  } = useDisclosure();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [rejectTarget, setRejectTarget] = useState<ChoreOccurrenceResponseDto | null>(
     null,
   );
@@ -103,6 +109,12 @@ export const ApprovalsView = () => {
       });
     },
   });
+
+  const openImagePreview = (url: string) => {
+    const display = toDisplayableImageUrl(url) || url;
+    setPreviewUrl(display);
+    onImageOpen();
+  };
 
   const openReject = (item: ChoreOccurrenceResponseDto) => {
     setRejectTarget(item);
@@ -185,28 +197,65 @@ export const ApprovalsView = () => {
                 <Text fontWeight="bold" color={getColor('text.coin')} mb={3}>
                   {formatCurrency(reward)}
                 </Text>
-                <VStack align="stretch" spacing={2}>
+                <VStack align="stretch" spacing={3} mb={3}>
+                  {!item.photoBeforeUrl && !item.photoAfterUrl ? (
+                    <Text fontSize="sm" color={getColor('text.dashboard.tileSubtitle')}>
+                      {t('chores.noApprovalPhotos')}
+                    </Text>
+                  ) : null}
                   {item.photoBeforeUrl ? (
-                    <Image
-                      src={
-                        toDisplayableImageUrl(item.photoBeforeUrl) ||
-                        item.photoBeforeUrl
-                      }
-                      alt=""
-                      maxH="80px"
-                      borderRadius="md"
-                    />
+                    <Box>
+                      <Text
+                        fontSize="sm"
+                        fontWeight="bold"
+                        mb={1}
+                        color={getColor('text.familyGroup.primary')}
+                      >
+                        {t('chores.photoBefore')}
+                      </Text>
+                      <Image
+                        src={
+                          toDisplayableImageUrl(item.photoBeforeUrl) ||
+                          item.photoBeforeUrl
+                        }
+                        alt=""
+                        maxH="200px"
+                        w="100%"
+                        objectFit="contain"
+                        borderRadius="md"
+                        cursor="pointer"
+                        onClick={() =>
+                          openImagePreview(item.photoBeforeUrl as string)
+                        }
+                      />
+                    </Box>
                   ) : null}
                   {item.photoAfterUrl ? (
-                    <Image
-                      src={
-                        toDisplayableImageUrl(item.photoAfterUrl) ||
-                        item.photoAfterUrl
-                      }
-                      alt=""
-                      maxH="80px"
-                      borderRadius="md"
-                    />
+                    <Box>
+                      <Text
+                        fontSize="sm"
+                        fontWeight="bold"
+                        mb={1}
+                        color={getColor('text.familyGroup.primary')}
+                      >
+                        {t('chores.photoAfter')}
+                      </Text>
+                      <Image
+                        src={
+                          toDisplayableImageUrl(item.photoAfterUrl) ||
+                          item.photoAfterUrl
+                        }
+                        alt=""
+                        maxH="200px"
+                        w="100%"
+                        objectFit="contain"
+                        borderRadius="md"
+                        cursor="pointer"
+                        onClick={() =>
+                          openImagePreview(item.photoAfterUrl as string)
+                        }
+                      />
+                    </Box>
                   ) : null}
                 </VStack>
                 <Button
@@ -265,6 +314,32 @@ export const ApprovalsView = () => {
               {t('chores.confirmReject')}
             </Button>
           </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={isImageOpen}
+        onClose={() => {
+          onImageClose();
+          setPreviewUrl(null);
+        }}
+        size="xl"
+      >
+        <ModalOverlay />
+        <ModalContent bg={getColor('background.primary')} maxW="90vw">
+          <ModalCloseButton />
+          <ModalBody p={4}>
+            {previewUrl ? (
+              <Image
+                src={previewUrl}
+                alt=""
+                maxH="85vh"
+                w="100%"
+                objectFit="contain"
+                mx="auto"
+              />
+            ) : null}
+          </ModalBody>
         </ModalContent>
       </Modal>
     </ChallengePageScaffold>

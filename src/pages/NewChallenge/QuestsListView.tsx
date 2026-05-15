@@ -1,8 +1,10 @@
 import { Box, Text, VStack } from '@chakra-ui/react';
+import { useMemo } from 'react';
 import { useChoreQuestLists } from '../../hooks/useChoreQuestLists';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { resolveChakraColor } from '../../utils/resolveColor';
+import { isChoreOccurrenceExpiring } from '../../utils/chore-expiry';
 import { ChallengePageScaffold } from './ChallengePageScaffold';
 import { NoFamilyGroupHint } from './NoFamilyGroupHint';
 import { OccurrenceCarousel } from './QuestOccurrenceCarousel';
@@ -39,7 +41,15 @@ export const QuestsListView = () => {
 
   const openRows = openQuery.data?.data ?? [];
   const mineRows = mineQuery.data?.data ?? [];
-  const inProgressRows = mineRows.filter((r) => r.status === 'IN_PROGRESS');
+  const inProgressRows = useMemo(() => {
+    const rows = mineRows.filter((r) => r.status === 'IN_PROGRESS');
+    return [...rows].sort((a, b) => {
+      const ea = isChoreOccurrenceExpiring(a);
+      const eb = isChoreOccurrenceExpiring(b);
+      if (ea === eb) return 0;
+      return ea ? -1 : 1;
+    });
+  }, [mineRows]);
   const waitingRows = mineRows.filter((r) => r.status === 'WAITING_APPROVAL');
 
   return (
@@ -118,6 +128,7 @@ export const QuestsListView = () => {
               isStarting={false}
               onStart={() => {}}
               onOpen={handleOpen}
+              highlightExpiring
             />
           )}
         </Box>
