@@ -7,6 +7,34 @@ import type {
   UpdateShoppingListItemPayload,
 } from '../types/shoppingList';
 
+function itemExistsInDetail(
+  detail: ShoppingListDetailResponse,
+  itemId: string,
+): boolean {
+  return Object.values(detail.itemsByCategory)
+    .flat()
+    .some((i) => i.id === itemId);
+}
+
+function applyItemAddedToDetail(
+  prev: ShoppingListDetailResponse,
+  item: ShoppingListItemResponse,
+): ShoppingListDetailResponse {
+  const category = item.group?.name || 'Sem categoria';
+  const newItemsByCategory = { ...prev.itemsByCategory };
+  const categoryItems = newItemsByCategory[category]
+    ? [...newItemsByCategory[category]]
+    : [];
+  categoryItems.push(item);
+  newItemsByCategory[category] = categoryItems;
+  return {
+    ...prev,
+    itemsByCategory: newItemsByCategory,
+    itemsCount: prev.itemsCount + 1,
+    pendingCount: prev.pendingCount + 1,
+  };
+}
+
 export function parseQuickAddInput(input: string): {
   name: string;
   quantity: number;
@@ -54,6 +82,21 @@ export function useShoppingListDetail(listId: string) {
     [listId],
   );
 
+  const addBulkItems = useCallback(
+    async (text: string) => {
+      const items = await ShoppingListService.addBulkItems(listId, text);
+      setDetail((prev) => {
+        if (!prev) return prev;
+        return items.reduce((acc, item) => {
+          if (itemExistsInDetail(acc, item.id)) return acc;
+          return applyItemAddedToDetail(acc, item);
+        }, prev);
+      });
+      return items;
+    },
+    [listId],
+  );
+
   const updateItem = useCallback(
     async (itemId: string, payload: UpdateShoppingListItemPayload) => {
       const item = await ShoppingListService.updateItem(itemId, payload);
@@ -79,19 +122,8 @@ export function useShoppingListDetail(listId: string) {
   const handleItemAdded = useCallback((item: ShoppingListItemResponse) => {
     setDetail((prev) => {
       if (!prev) return prev;
-      const category = item.group?.name || 'Sem categoria';
-      const newItemsByCategory = { ...prev.itemsByCategory };
-      const categoryItems = newItemsByCategory[category]
-        ? [...newItemsByCategory[category]]
-        : [];
-      categoryItems.push(item);
-      newItemsByCategory[category] = categoryItems;
-      return {
-        ...prev,
-        itemsByCategory: newItemsByCategory,
-        itemsCount: prev.itemsCount + 1,
-        pendingCount: prev.pendingCount + 1,
-      };
+      if (itemExistsInDetail(prev, item.id)) return prev;
+      return applyItemAddedToDetail(prev, item);
     });
   }, []);
 
@@ -207,6 +239,7 @@ export function useShoppingListDetail(listId: string) {
     error,
     refresh: fetchDetail,
     addItem,
+    addBulkItems,
     updateItem,
     toggleItem,
     removeItem,
