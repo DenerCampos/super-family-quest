@@ -26,7 +26,8 @@ export const QuestOccurrenceDetailView = () => {
     photosReadyForSubmit,
     onPickBefore,
     onPickAfter,
-    handleUploadPhotos,
+    handleUploadBefore,
+    handleUploadAfter,
     t,
   } = useQuestOccurrenceDetail();
 
@@ -101,7 +102,8 @@ export const QuestOccurrenceDetailView = () => {
       fileAfter={fileAfter}
       onPickBefore={onPickBefore}
       onPickAfter={onPickAfter}
-      handleUploadPhotos={handleUploadPhotos}
+      handleUploadBefore={handleUploadBefore}
+      handleUploadAfter={handleUploadAfter}
       uploadIsPending={uploadMutation.isPending}
       submitIsPending={submitMutation.isPending}
       onSubmitForApproval={() => submitMutation.mutate()}

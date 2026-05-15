@@ -8,4 +8,4 @@ export const CHORE_PHOTO_ACCEPT_LIST = [
 
 export const CHORE_PHOTO_ACCEPT_ATTR = CHORE_PHOTO_ACCEPT_LIST.join(',');
 
-export const CHORE_PHOTO_MAX_BYTES = 5 * 1024 * 1024;
+export { IMAGE_COMPRESS_MAX_BYTES as CHORE_PHOTO_MAX_BYTES } from './compressImage';

@@ -42,6 +42,7 @@ import { useTheme } from '../../hooks/useThemeContext';
 import type { ThemeConfig } from '../../services/theme';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { toDisplayableImageUrl } from '../../utils/formatString';
+import { compressImage, IMAGE_COMPRESS_MAX_BYTES } from '../../utils/compressImage';
 import type { BalanceCoin } from '../../services/coin';
 
 // Lista de brasões pré-definidos
@@ -93,20 +94,19 @@ const Profile = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast({
-        title: t('common.error'),
-        description: t('profile.maxFileSize'),
-        status: 'error',
-        duration: 3000,
-      });
-      return;
-    }
-
     setIsUploadingPhoto(true);
     try {
-      await api.uploadProfileImage(file);
+      const compressed = await compressImage(file);
+      if (compressed.size > IMAGE_COMPRESS_MAX_BYTES) {
+        toast({
+          title: t('common.error'),
+          description: t('profile.maxFileSize'),
+          status: 'error',
+          duration: 3000,
+        });
+        return;
+      }
+      await api.uploadProfileImage(compressed);
       await loadProfile();
       toast({
         title: t('common.success'),

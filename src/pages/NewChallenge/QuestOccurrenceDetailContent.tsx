@@ -25,7 +25,8 @@ export type QuestOccurrenceDetailContentProps = {
   fileAfter: File | null;
   onPickBefore: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPickAfter: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleUploadPhotos: () => void;
+  handleUploadBefore: () => void;
+  handleUploadAfter: () => void;
   uploadIsPending: boolean;
   submitIsPending: boolean;
   onSubmitForApproval: () => void;
@@ -46,7 +47,8 @@ export const QuestOccurrenceDetailContent = ({
   fileAfter,
   onPickBefore,
   onPickAfter,
-  handleUploadPhotos,
+  handleUploadBefore,
+  handleUploadAfter,
   uploadIsPending,
   submitIsPending,
   onSubmitForApproval,
@@ -214,7 +216,8 @@ export const QuestOccurrenceDetailContent = ({
           fileAfter={fileAfter}
           onPickBefore={onPickBefore}
           onPickAfter={onPickAfter}
-          handleUploadPhotos={handleUploadPhotos}
+          handleUploadBefore={handleUploadBefore}
+          handleUploadAfter={handleUploadAfter}
           uploadIsPending={uploadIsPending}
           submitIsPending={submitIsPending}
           onSubmitForApproval={onSubmitForApproval}
