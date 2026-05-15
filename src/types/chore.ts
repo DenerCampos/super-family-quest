@@ -57,6 +57,8 @@ export type ChoreOccurrenceResponseDto = {
   submittedAt: string | null;
   approvedAt: string | null;
   completedAt: string | null;
+  createdAt: string;
+  scheduledDate: string | null;
   assignedTo: OwnerResponseDto | null;
   definition: ChoreDefinitionResponseDto;
 };

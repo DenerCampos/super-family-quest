@@ -1,5 +1,6 @@
 import api from "./api";
 import type { CouponReader } from "./couponReader";
+import { compressImage } from "../utils/compressImage";
 
 export type Expense = {
   id?: string;
@@ -93,8 +94,9 @@ export const ExpenseService = {
   },
 
   analyzeImage: async (imageFile: File): Promise<CouponReader> => {
+    const compressed = await compressImage(imageFile);
     const formData = new FormData();
-    formData.append('image', imageFile);
+    formData.append('image', compressed);
 
     const response = await api.post('/expense/analyze-image', formData, {
       headers: {

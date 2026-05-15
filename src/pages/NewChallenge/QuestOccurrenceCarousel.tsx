@@ -14,6 +14,7 @@ import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { resolveChakraColor } from '../../utils/resolveColor';
 import type { ChoreOccurrenceResponseDto } from '../../types/chore';
+import { isChoreOccurrenceExpiring } from '../../utils/chore-expiry';
 
 const OccurrenceCard = ({
   item,
@@ -22,6 +23,7 @@ const OccurrenceCard = ({
   onOpen,
   isStarting,
   inCarousel = false,
+  expiring = false,
 }: {
   item: ChoreOccurrenceResponseDto;
   showStart: boolean;
@@ -29,6 +31,7 @@ const OccurrenceCard = ({
   onOpen: (item: ChoreOccurrenceResponseDto) => void;
   isStarting: boolean;
   inCarousel?: boolean;
+  expiring?: boolean;
 }) => {
   const { getColor, getFont, theme } = useVisualTheme();
   const { t } = useThemedTranslation();
@@ -38,6 +41,9 @@ const OccurrenceCard = ({
     inCarousel === true
       ? resolveChakraColor(theme.colors.background.familyGroup.elevatedShadow)
       : undefined;
+  const cardBg = expiring
+    ? getColor('background.lastRegistrations.expense')
+    : getColor('background.familyGroup.card');
   return (
     <Box
       h="100%"
@@ -45,7 +51,7 @@ const OccurrenceCard = ({
       borderRadius="lg"
       borderWidth="1px"
       borderColor={getColor('border.familyGroup.card')}
-      bg={getColor('background.familyGroup.card')}
+      bg={cardBg}
       onClick={() => onOpen(item)}
       cursor="pointer"
       boxShadow={carouselShadow}
@@ -68,6 +74,15 @@ const OccurrenceCard = ({
         {formatCurrency(reward)}
       </Text>
       <VStack align="stretch" spacing={2}>
+        {expiring && item.status === 'IN_PROGRESS' ? (
+          <Badge
+            w="fit-content"
+            bg={getColor('status.warning')}
+            color={getColor('text.header')}
+          >
+            {t('chores.expiringSoon')}
+          </Badge>
+        ) : null}
         {item.definition.requirePhoto ? (
           <Badge
             w="fit-content"
@@ -144,6 +159,7 @@ export const OccurrenceCarousel = ({
   isStarting,
   onStart,
   onOpen,
+  highlightExpiring = false,
 }: {
   ariaLabel: string;
   rows: ChoreOccurrenceResponseDto[];
@@ -151,6 +167,7 @@ export const OccurrenceCarousel = ({
   isStarting: boolean;
   onStart: (id: string) => void;
   onOpen: (item: ChoreOccurrenceResponseDto) => void;
+  highlightExpiring?: boolean;
 }) => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
@@ -203,6 +220,9 @@ export const OccurrenceCarousel = ({
               isStarting={isStarting}
               onStart={onStart}
               onOpen={onOpen}
+              expiring={
+                highlightExpiring && isChoreOccurrenceExpiring(item)
+              }
             />
           </Box>
         ))}

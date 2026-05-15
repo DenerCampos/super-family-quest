@@ -39,6 +39,7 @@ export type MemberSummary = {
   profileImage: string | null;
   totalExpenses: number;
   totalRevenues: number;
+  masked: boolean;
 };
 
 export type FamilyGroupSummaryDto = {
@@ -63,6 +64,7 @@ export type MemberDataDto = {
   profileImage: string | null;
   totalExpenses: number;
   totalRevenues: number;
+  masked: boolean;
   expenses: MemberTransaction[];
   revenues: MemberTransaction[];
 };

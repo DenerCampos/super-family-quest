@@ -66,6 +66,17 @@ export const ShoppingListService = {
     return data;
   },
 
+  async addBulkItems(
+    listId: string,
+    text: string,
+  ): Promise<ShoppingListItemResponse[]> {
+    const { data } = await api.post(
+      `/shopping-lists/${listId}/items/bulk`,
+      { text },
+    );
+    return data;
+  },
+
   async updateItem(
     itemId: string,
     payload: UpdateShoppingListItemPayload,

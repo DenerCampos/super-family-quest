@@ -6,6 +6,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import type React from 'react';
+import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { toDisplayableImageUrl } from '../../utils/formatString';
 import type { ChoreOccurrenceResponseDto } from '../../types/chore';
@@ -25,7 +26,8 @@ export type QuestOccurrenceDetailContentProps = {
   fileAfter: File | null;
   onPickBefore: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPickAfter: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleUploadPhotos: () => void;
+  handleUploadBefore: () => void;
+  handleUploadAfter: () => void;
   uploadIsPending: boolean;
   submitIsPending: boolean;
   onSubmitForApproval: () => void;
@@ -46,7 +48,8 @@ export const QuestOccurrenceDetailContent = ({
   fileAfter,
   onPickBefore,
   onPickAfter,
-  handleUploadPhotos,
+  handleUploadBefore,
+  handleUploadAfter,
   uploadIsPending,
   submitIsPending,
   onSubmitForApproval,
@@ -61,6 +64,12 @@ export const QuestOccurrenceDetailContent = ({
       title={occ.definition.title}
       backTo="/new-challenge/quests"
     >
+      {uploadIsPending && (
+        <LoadingOverlay
+          typeLoading="save"
+          text={t('chores.photoUploadLoading')}
+        />
+      )}
       <VStack align="stretch" spacing={4} pb={8}>
         <Box
           p={3}
@@ -214,7 +223,8 @@ export const QuestOccurrenceDetailContent = ({
           fileAfter={fileAfter}
           onPickBefore={onPickBefore}
           onPickAfter={onPickAfter}
-          handleUploadPhotos={handleUploadPhotos}
+          handleUploadBefore={handleUploadBefore}
+          handleUploadAfter={handleUploadAfter}
           uploadIsPending={uploadIsPending}
           submitIsPending={submitIsPending}
           onSubmitForApproval={onSubmitForApproval}

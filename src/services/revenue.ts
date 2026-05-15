@@ -1,4 +1,5 @@
 import api from "./api";
+import { compressImage } from "../utils/compressImage";
 
 export type Revenue = {
   id?: string;
@@ -46,8 +47,9 @@ export const RevenueService = {
   },
 
   analyzeImage: async (imageFile: File): Promise<Revenue> => {
+    const compressed = await compressImage(imageFile);
     const formData = new FormData();
-    formData.append('image', imageFile);
+    formData.append('image', compressed);
 
     const response = await api.post('/revenue/analyze-image', formData, {
       headers: {
