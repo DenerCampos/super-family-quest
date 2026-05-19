@@ -20,7 +20,7 @@ import { useFamilyGroup } from './useFamilyGroup';
 import { useThemedTranslation } from './useThemedTranslation';
 import { useVisualTheme } from './useVisualTheme';
 import { isAdmin } from '../utils/familyGroupPermissions';
-import { parseBRLCurrency } from '../utils/formatCurrency';
+import { parseBRLCurrency, numberToBRLCurrencyInputValue } from '../utils/formatCurrency';
 
 export const useChoreDefinitionForm = () => {
   const { definitionId } = useParams<{ definitionId: string }>();
@@ -74,10 +74,7 @@ export const useChoreDefinitionForm = () => {
     reset({
       title: d.title,
       description: d.description ?? '',
-      rewardValue: d.rewardValue.toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }),
+      rewardValue: numberToBRLCurrencyInputValue(Number(d.rewardValue)),
       coinReward: d.coinReward,
       requirePhoto: d.requirePhoto,
       recurrence: d.recurrence,

@@ -36,7 +36,7 @@ import {
   formatCurrencyInputBRL,
   parseBRLCurrency,
 } from "../utils/formatCurrency";
-import { formatGramsInput, parseGrams } from "../utils/formatGrams";
+import { formatGramsInput, parseGrams, formatIntegerQuantityInput, isExpenseDiscreteCountUnit } from "../utils/formatGrams";
 import { AutocompleteInput } from "./AutocompleteInput";
 
 interface IExpensesFormProps {
@@ -81,6 +81,7 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
     handleSubmit,
     watch,
     setValue,
+    getValues,
     register,
     control,
     reset,
@@ -254,6 +255,44 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                 onChange={(index) => setExpandedItemIndex(index as number)}
               >
                 {fields.map((field, index) => {
+                  const itemUnit = watch(`items.${index}.unit`);
+                  const discreteQty = isExpenseDiscreteCountUnit(itemUnit);
+
+                  const unitRegistration = register(`items.${index}.unit`, {
+                    required: t("common.required"),
+                  });
+
+                  const quantityRegistration = register(
+                    `items.${index}.quantity`,
+                    {
+                      required: t("common.required"),
+                      validate: (value) => {
+                        const unitNow = getValues(`items.${index}.unit`);
+                        const numValue = isExpenseDiscreteCountUnit(unitNow)
+                          ? parseInt(
+                              String(value ?? "").replace(/\D/g, ""),
+                              10
+                            )
+                          : parseGrams(value);
+                        if (Number.isNaN(numValue))
+                          return t("common.invalidValue");
+                        if (numValue <= 0) return t("common.invalidValue");
+                        return true;
+                      },
+                    }
+                  );
+
+                  const {
+                    ref: qtyRef,
+                    onChange: _rhfQtyOnChange,
+                    ...qtyRest
+                  } = quantityRegistration;
+
+                  const {
+                    ref: unitRef,
+                    ...unitRest
+                  } = unitRegistration;
+
                   return (
                     <AccordionItem
                       key={field.id}
@@ -278,10 +317,32 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                           </Text>
                           <Text fontSize="sm" color={getColor("text.muted")}>
                             {formatCurrency(
-                              parseFloat(field.value as string)
-                            ) || "0,00"}{" "}
-                            • {parseGrams(field.quantity.toString()) || "1"}{" "}
-                            {field.unit || "Unidade"}
+                              parseBRLCurrency(
+                                watch(`items.${index}.value`) ?? ""
+                              )
+                            )}{" "}
+                            •{" "}
+                            {discreteQty
+                              ? Math.max(
+                                  1,
+                                  Math.round(
+                                    parseGrams(
+                                      String(
+                                        watch(
+                                          `items.${index}.quantity`
+                                        ) ?? "1"
+                                      )
+                                    )
+                                  )
+                                )
+                              : parseGrams(
+                                  watch(
+                                    `items.${index}.quantity`
+                                  )?.toString() ?? ""
+                                ) || 1}{" "}
+                            {watch(`items.${index}.unit`) ||
+                              field.unit ||
+                              "Unidade"}
                           </Text>
                         </Box>
                         <AccordionIcon />
@@ -364,21 +425,21 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                               </FormLabel>
                               <Input
                                 type="text"
-                                {...register(`items.${index}.quantity`, {
-                                  required: t("common.required"),
-                                  validate: (value) => {
-                                    const numValue = parseGrams(value);
-                                    if (isNaN(numValue))
-                                      return t("common.invalidValue");
-                                    if (numValue <= 0)
-                                      return t("common.invalidValue");
-                                    return true;
-                                  },
-                                })}
+                                inputMode={
+                                  discreteQty ? "numeric" : "decimal"
+                                }
+                                ref={qtyRef}
+                                {...qtyRest}
                                 onChange={(e) => {
-                                  const formatted = formatGramsInput(
-                                    e.target.value
+                                  const unitNow = getValues(
+                                    `items.${index}.unit`
                                   );
+                                  const formatted =
+                                    isExpenseDiscreteCountUnit(unitNow)
+                                      ? formatIntegerQuantityInput(
+                                          e.target.value
+                                        )
+                                      : formatGramsInput(e.target.value);
                                   setValue(
                                     `items.${index}.quantity`,
                                     formatted,
@@ -412,9 +473,34 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                                 {t("modals.expense.unit")}
                               </FormLabel>
                               <Input
-                                {...register(`items.${index}.unit`, {
-                                  required: t("common.required"),
-                                })}
+                                ref={unitRef}
+                                {...unitRest}
+                                onChange={(e) => {
+                                  unitRegistration.onChange(e);
+                                  if (
+                                    isExpenseDiscreteCountUnit(e.target.value)
+                                  ) {
+                                    const q = getValues(
+                                      `items.${index}.quantity`
+                                    );
+                                    const coerced = String(
+                                      Math.max(
+                                        1,
+                                        Math.round(
+                                          parseGrams(String(q))
+                                        )
+                                      )
+                                    );
+                                    setValue(
+                                      `items.${index}.quantity`,
+                                      coerced,
+                                      {
+                                        shouldValidate: true,
+                                        shouldDirty: true,
+                                      }
+                                    );
+                                  }
+                                }}
                                 {...smallInputStyle(getColor)}
                                 size="sm"
                               />
