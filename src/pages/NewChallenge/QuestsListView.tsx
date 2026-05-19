@@ -21,6 +21,17 @@ export const QuestsListView = () => {
     handleOpen,
   } = useChoreQuestLists();
 
+  const mineRows = mineQuery.data?.data ?? [];
+  const inProgressRows = useMemo(() => {
+    const rows = mineRows.filter((r) => r.status === 'IN_PROGRESS');
+    return [...rows].sort((a, b) => {
+      const ea = isChoreOccurrenceExpiring(a);
+      const eb = isChoreOccurrenceExpiring(b);
+      if (ea === eb) return 0;
+      return ea ? -1 : 1;
+    });
+  }, [mineRows]);
+
   const sectionShadow = resolveChakraColor(
     theme.colors.background.familyGroup.elevatedShadow,
   );
@@ -40,16 +51,6 @@ export const QuestsListView = () => {
   }
 
   const openRows = openQuery.data?.data ?? [];
-  const mineRows = mineQuery.data?.data ?? [];
-  const inProgressRows = useMemo(() => {
-    const rows = mineRows.filter((r) => r.status === 'IN_PROGRESS');
-    return [...rows].sort((a, b) => {
-      const ea = isChoreOccurrenceExpiring(a);
-      const eb = isChoreOccurrenceExpiring(b);
-      if (ea === eb) return 0;
-      return ea ? -1 : 1;
-    });
-  }, [mineRows]);
   const waitingRows = mineRows.filter((r) => r.status === 'WAITING_APPROVAL');
 
   return (
