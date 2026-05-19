@@ -9,6 +9,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { Controller } from 'react-hook-form';
+import { formatCurrencyInputBRL } from '../../utils/formatCurrency';
 import { useChoreDefinitionForm } from '../../hooks/useChoreDefinitionForm';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { ChallengePageScaffold } from './ChallengePageScaffold';
@@ -104,11 +105,23 @@ export const DefinitionFormView = () => {
           <FormLabel color={getColor('text.familyGroup.title')}>
             {t('chores.fieldRewardValue')}
           </FormLabel>
-          <Input
-            {...register('rewardValue')}
-            borderColor={getColor('border.primary')}
-            color={getColor('text.familyGroup.title')}
-            inputMode="decimal"
+          <Controller
+            name="rewardValue"
+            control={control}
+            render={({ field }) => (
+              <Input
+                borderColor={getColor('border.primary')}
+                color={getColor('text.familyGroup.title')}
+                inputMode="numeric"
+                autoComplete="off"
+                placeholder="0,00"
+                value={field.value}
+                onChange={(e) =>
+                  field.onChange(formatCurrencyInputBRL(e.target.value))
+                }
+                onBlur={field.onBlur}
+              />
+            )}
           />
         </FormControl>
         <FormControl>

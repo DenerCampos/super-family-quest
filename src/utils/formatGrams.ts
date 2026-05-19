@@ -44,3 +44,18 @@ export function formatGramsDisplay(value: string | number): string {
   // Formata com até 3 casas decimais, removendo zeros desnecessários
   return numericValue.toFixed(3).replace(/\.?0+$/, '');
 }
+
+/** Unidades de contagem inteira (não permite fração tipo 0,011 na quantidade). */
+export function isExpenseDiscreteCountUnit(unit: string | undefined): boolean {
+  const u = (unit ?? '').trim().toLowerCase();
+  return u === 'unidade' || u === 'uni' || u === 'u';
+}
+
+/** Máscara para quantidade inteira (somente dígitos). */
+export function formatIntegerQuantityInput(value: string): string {
+  const digits = value.replace(/\D/g, '');
+  if (!digits) return '';
+  const n = parseInt(digits, 10);
+  if (!Number.isFinite(n)) return '';
+  return String(n);
+}
