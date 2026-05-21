@@ -713,8 +713,46 @@
       "shoppingList": {
         "title": "Pergaminho de Suprimentos",
         "subtitle": "Listas mágicas em tempo real"
+      },
+      "recipes": {
+        "title": "Grimório de Receitas",
+        "subtitle": "Feitiços culinários da guilda"
       }
     }
+  },
+  "recipes": {
+    "title": "Grimório de Receitas",
+    "subtitle": "Feitiços culinários da guilda",
+    "shareWithFamily": "Compartilhar pergaminho com a guilda (opcional)",
+    "newRecipe": "Novo feitiço culinário",
+    "editRecipe": "Alterar receita arcana",
+    "deleteRecipe": "Desfazer receita",
+    "deleteConfirm": "Deseja banir esta receita do grimório?",
+    "ingredients": "Componentes",
+    "instructions": "Ritual de preparo",
+    "addIngredient": "Adicionar componente",
+    "generateShoppingList": "Conjurar lista de suprimentos",
+    "generatingShoppingList": "Conjurando lista...",
+    "shoppingListGenerated": "Pergaminho de compras criado!",
+    "photos": "Ilustrações",
+    "uploadPhoto": "Adicionar ilustração",
+    "uploadingPhoto": "Enviando ilustração",
+    "noPhotos": "Sem ilustrações",
+    "emptyState": "Nenhuma receita no grimório",
+    "emptyStateDescription": "Registre seu primeiro feitiço culinário",
+    "addError": "Falha ao gravar receita",
+    "deleteError": "Falha ao banir receita",
+    "notFound": "Receita não encontrada nas crônicas",
+    "fieldTitle": "Nome do feitiço",
+    "fieldDescription": "Descrição (opcional)",
+    "fieldInstructions": "Ritual de preparo",
+    "ingredientName": "Componente",
+    "ingredientQuantity": "Quantidade",
+    "ingredientUnit": "Unidade",
+    "ingredientQuantityPlaceholder": "Quant.",
+    "ingredientsMin": "Inclua ao menos um componente no grimório.",
+    "photosWithLimit": "Ilustrações — limite de {{max}}",
+    "familyGroup": "Guilda familiar"
   },
   "settings": {
     "title": "Sala de Runas do Reino",
