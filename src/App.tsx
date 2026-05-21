@@ -25,6 +25,9 @@ import { ResourcesView } from "./pages/NewResources/ResourcesView";
 import { FamilyGroupView } from "./pages/NewResources/FamilyGroupView";
 import { ShoppingListsView } from "./pages/NewResources/ShoppingListsView";
 import { ShoppingListDetailView } from "./pages/NewResources/ShoppingListDetailView";
+import { RecipesView } from "./pages/NewResources/RecipesView";
+import { RecipeDetailView } from "./pages/NewResources/RecipeDetailView";
+import { RecipeFormView } from "./pages/NewResources/RecipeFormView";
 import NotFoundPage from "./pages/NotFoundPage";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
@@ -131,6 +134,38 @@ export default function App() {
             element={
               <RequireAuth>
                 <ShoppingListDetailView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/recipes/new"
+            element={
+              <RequireAuth>
+                <RecipeFormView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/recipes/:id/edit"
+            element={
+              <RequireAuth>
+                <RecipeFormView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/recipes/:id"
+            element={
+              <RequireAuth>
+                <RecipeDetailView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/recipes"
+            element={
+              <RequireAuth>
+                <RecipesView />
               </RequireAuth>
             }
           />

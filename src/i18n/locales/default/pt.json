@@ -721,8 +721,46 @@
       "shoppingList": {
         "title": "Lista de Compras",
         "subtitle": "Listas compartilhadas em tempo real"
+      },
+      "recipes": {
+        "title": "Livro de Receitas",
+        "subtitle": "Suas receitas favoritas"
       }
     }
+  },
+  "recipes": {
+    "title": "Livro de Receitas",
+    "subtitle": "Suas receitas favoritas",
+    "shareWithFamily": "Compartilhar com grupo familiar (opcional)",
+    "newRecipe": "Nova Receita",
+    "editRecipe": "Editar Receita",
+    "deleteRecipe": "Excluir Receita",
+    "deleteConfirm": "Tem certeza que deseja excluir esta receita?",
+    "ingredients": "Ingredientes",
+    "instructions": "Modo de preparo",
+    "addIngredient": "Adicionar ingrediente",
+    "generateShoppingList": "Gerar lista de compras",
+    "generatingShoppingList": "Gerando lista...",
+    "shoppingListGenerated": "Lista de compras criada com sucesso!",
+    "photos": "Fotos",
+    "uploadPhoto": "Adicionar foto",
+    "uploadingPhoto": "Enviando foto",
+    "noPhotos": "Sem fotos",
+    "emptyState": "Nenhuma receita encontrada",
+    "emptyStateDescription": "Adicione sua primeira receita",
+    "addError": "Erro ao salvar receita",
+    "deleteError": "Erro ao excluir receita",
+    "notFound": "Receita não encontrada",
+    "fieldTitle": "Título",
+    "fieldDescription": "Descrição (opcional)",
+    "fieldInstructions": "Modo de preparo",
+    "ingredientName": "Ingrediente",
+    "ingredientQuantity": "Quantidade",
+    "ingredientUnit": "Unidade",
+    "ingredientQuantityPlaceholder": "Qtd.",
+    "ingredientsMin": "Informe pelo menos um ingrediente.",
+    "photosWithLimit": "Fotos — máximo {{max}}",
+    "familyGroup": "Grupo familiar"
   },
   "settings": {
     "title": "Configurações do Reino",

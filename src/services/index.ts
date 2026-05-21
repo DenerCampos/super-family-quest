@@ -12,6 +12,7 @@ import { ShoppingListService } from "./shoppingList";
 import { themeService } from "./theme";
 import { UserService } from "./user";
 import { ChoreService } from "./chore";
+import { RecipeService } from "./recipe";
 
 export const api = {
   getAvailableThemes: themeService.getAvailableThemes,
@@ -210,6 +211,15 @@ export const api = {
   toggleShoppingListItem: ShoppingListService.toggleItem,
   removeShoppingListItem: ShoppingListService.removeItem,
   getShoppingListSuggestions: ShoppingListService.getSuggestions,
+
+  listRecipes: RecipeService.list,
+  getRecipeById: RecipeService.getById,
+  createRecipe: RecipeService.create,
+  updateRecipe: RecipeService.update,
+  deleteRecipe: RecipeService.remove,
+  uploadRecipePhoto: RecipeService.uploadPhoto,
+  removeRecipePhoto: RecipeService.removePhoto,
+  generateRecipeShoppingList: RecipeService.generateShoppingList,
 
   getIntegrationsStatus: IntegrationsService.getStatus,
   alexaOAuthLogin: IntegrationsService.alexaOAuthLogin,
