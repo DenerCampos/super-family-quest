@@ -92,7 +92,7 @@ export const useQuestOccurrenceDetail = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: choreQueryKeys.root });
       toast({ title: t('chores.submittedForApproval'), status: 'success' });
-      navigate('/new-challenge/quests');
+      navigate('/new-resources/quests/chores');
     },
     onError: (err: unknown) => {
       const msg = axios.isAxiosError(err)

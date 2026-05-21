@@ -5,6 +5,7 @@ import {
   FiShoppingCart,
   FiSettings,
   FiBook,
+  FiCheckSquare,
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../../components/Header';
@@ -18,6 +19,7 @@ type TileKey =
   | 'familyGroup'
   | 'shoppingList'
   | 'recipes'
+  | 'quests'
   | 'settings';
 
 const tiles: {
@@ -54,6 +56,13 @@ const tiles: {
     titleKey: 'newResources.tiles.recipes.title',
     subtitleKey: 'newResources.tiles.recipes.subtitle',
     route: '/new-resources/recipes',
+  },
+  {
+    key: 'quests',
+    icon: FiCheckSquare,
+    titleKey: 'newResources.tiles.quests.title',
+    subtitleKey: 'newResources.tiles.quests.subtitle',
+    route: '/new-resources/quests',
   },
   {
     key: 'settings',

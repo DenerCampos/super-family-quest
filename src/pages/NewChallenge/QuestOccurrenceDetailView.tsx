@@ -36,7 +36,7 @@ export const QuestOccurrenceDetailView = () => {
       <ChallengePageScaffold
         title={t('chores.detailsTitle')}
         isLoading
-        backTo="/new-challenge/quests"
+        backTo="/new-resources/quests/chores"
       />
     );
   }
@@ -45,7 +45,7 @@ export const QuestOccurrenceDetailView = () => {
     return (
       <ChallengePageScaffold
         title={t('chores.detailsTitle')}
-        backTo="/new-challenge/quests"
+        backTo="/new-resources/quests/chores"
       >
         <NoFamilyGroupHint />
       </ChallengePageScaffold>
@@ -57,7 +57,7 @@ export const QuestOccurrenceDetailView = () => {
       <ChallengePageScaffold
         title={t('chores.detailsTitle')}
         isLoading
-        backTo="/new-challenge/quests"
+        backTo="/new-resources/quests/chores"
       />
     );
   }
@@ -66,12 +66,12 @@ export const QuestOccurrenceDetailView = () => {
     return (
       <ChallengePageScaffold
         title={t('chores.detailsTitle')}
-        backTo="/new-challenge/quests"
+        backTo="/new-resources/quests/chores"
       >
         <Text color={getColor('text.dashboard.tileSubtitle')}>
           {t('chores.notFound')}
         </Text>
-        <Button mt={4} onClick={() => navigate('/new-challenge/quests')}>
+        <Button mt={4} onClick={() => navigate('/new-resources/quests/chores')}>
           {t('common.back')}
         </Button>
       </ChallengePageScaffold>
@@ -83,7 +83,7 @@ export const QuestOccurrenceDetailView = () => {
       <ChallengePageScaffold
         title={t('chores.detailsTitle')}
         isLoading
-        backTo="/new-challenge/quests"
+        backTo="/new-resources/quests/chores"
       />
     );
   }

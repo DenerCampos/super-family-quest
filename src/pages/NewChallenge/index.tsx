@@ -1,5 +1,6 @@
-import { Flex, Grid, Text, Box, Spinner } from '@chakra-ui/react';
+import { Flex, Grid, Text, Box, Spinner, IconButton, Icon } from '@chakra-ui/react';
 import {
+  FiArrowLeft,
   FiCheckSquare,
   FiDollarSign,
   FiImage,
@@ -25,34 +26,36 @@ type Tile = {
   route: string;
 };
 
+const BASE_PATH = '/new-resources/quests';
+
 const baseTiles: Tile[] = [
   {
     key: 'quests',
     icon: FiCheckSquare,
     titleKey: 'newChallenge.tiles.quests.title',
     subtitleKey: 'newChallenge.tiles.quests.subtitle',
-    route: '/new-challenge/quests',
+    route: `${BASE_PATH}/chores`,
   },
   {
     key: 'definitions',
     icon: FiList,
     titleKey: 'newChallenge.tiles.definitions.title',
     subtitleKey: 'newChallenge.tiles.definitions.subtitle',
-    route: '/new-challenge/definitions',
+    route: `${BASE_PATH}/definitions`,
   },
   {
     key: 'allowance',
     icon: FiDollarSign,
     titleKey: 'newChallenge.tiles.allowance.title',
     subtitleKey: 'newChallenge.tiles.allowance.subtitle',
-    route: '/new-challenge/allowance',
+    route: `${BASE_PATH}/allowance`,
   },
   {
     key: 'history',
     icon: FiImage,
     titleKey: 'newChallenge.tiles.history.title',
     subtitleKey: 'newChallenge.tiles.history.subtitle',
-    route: '/new-challenge/history',
+    route: `${BASE_PATH}/history`,
   },
 ];
 
@@ -62,7 +65,7 @@ const adminTiles: Tile[] = [
     icon: FiShield,
     titleKey: 'newChallenge.tiles.approvals.title',
     subtitleKey: 'newChallenge.tiles.approvals.subtitle',
-    route: '/new-challenge/approvals',
+    route: `${BASE_PATH}/approvals`,
   },
 ];
 
@@ -130,6 +133,37 @@ const NewChallengeHub = () => {
       <Header />
 
       <Flex
+        align="center"
+        px={3}
+        py={2}
+        gap={1}
+        bg={getColor('background.familyGroup.card')}
+        borderBottomWidth="1px"
+        borderColor={getColor('border.familyGroup.card')}
+      >
+        <IconButton
+          aria-label={t('common.back')}
+          icon={<Icon as={FiArrowLeft} boxSize={5} />}
+          variant="ghost"
+          size="md"
+          flexShrink={0}
+          onClick={() => navigate('/new-resources')}
+          color={getColor('text.dashboard.title')}
+          _hover={{ bg: getColor('background.familyGroup.memberCard') }}
+        />
+        <Text
+          flex={1}
+          fontWeight="bold"
+          fontFamily={getFont('heading')}
+          fontSize="md"
+          color={getColor('text.dashboard.title')}
+          noOfLines={1}
+        >
+          {t('newChallenge.title')}
+        </Text>
+      </Flex>
+
+      <Flex
         flex={1}
         direction="column"
         align="center"
@@ -149,16 +183,6 @@ const NewChallengeHub = () => {
           p={{ base: 4, md: 5 }}
           boxShadow="sm"
         >
-          <Text
-            fontSize="xl"
-            fontWeight="bold"
-            fontFamily={getFont('heading')}
-            color={getColor('text.dashboard.title')}
-            mb={4}
-            textAlign="center"
-          >
-            {t('newChallenge.title')}
-          </Text>
 
           <Text
             color={getColor('text.dashboard.tileSubtitle')}

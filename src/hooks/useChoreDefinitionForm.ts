@@ -85,7 +85,7 @@ export const useChoreDefinitionForm = () => {
   useEffect(() => {
     if (!isLoadingGroup && familyGroup && !userIsAdmin) {
       toast({ title: t('chores.adminOnlyDefinitions'), status: 'warning' });
-      navigate('/new-challenge/definitions', { replace: true });
+      navigate('/new-resources/quests/definitions', { replace: true });
     }
   }, [isLoadingGroup, familyGroup, userIsAdmin, navigate, toast, t]);
 
@@ -95,7 +95,7 @@ export const useChoreDefinitionForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: choreQueryKeys.root });
       toast({ title: t('common.created'), status: 'success' });
-      navigate('/new-challenge/definitions');
+      navigate('/new-resources/quests/definitions');
     },
     onError: () => {
       toast({
@@ -112,7 +112,7 @@ export const useChoreDefinitionForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: choreQueryKeys.root });
       toast({ title: t('common.updated'), status: 'success' });
-      navigate('/new-challenge/definitions');
+      navigate('/new-resources/quests/definitions');
     },
     onError: () => {
       toast({

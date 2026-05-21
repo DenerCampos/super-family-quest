@@ -94,7 +94,7 @@ export const DefinitionsListView = () => {
           <Button
             bg={getColor('button.background.primary')}
             color={getColor('button.text.primary')}
-            onClick={() => navigate('/new-challenge/definitions/new')}
+            onClick={() => navigate('/new-resources/quests/definitions/new')}
           >
             {t('chores.newDefinition')}
           </Button>
@@ -146,7 +146,7 @@ export const DefinitionsListView = () => {
                     borderColor={getColor('border.primary')}
                     color={getColor('text.familyGroup.title')}
                     onClick={() =>
-                      navigate(`/new-challenge/definitions/${d.id}`)
+                      navigate(`/new-resources/quests/definitions/${d.id}`)
                     }
                   >
                     {t('common.update')}

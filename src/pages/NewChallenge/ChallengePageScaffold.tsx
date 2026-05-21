@@ -28,7 +28,7 @@ export const ChallengePageScaffold = ({
   children,
   isLoading = false,
   contentLayout = 'singleCard',
-  backTo = '/new-challenge',
+  backTo = '/new-resources/quests',
 }: ChallengePageScaffoldProps) => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();

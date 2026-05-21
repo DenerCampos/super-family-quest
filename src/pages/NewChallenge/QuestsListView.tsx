@@ -38,13 +38,20 @@ export const QuestsListView = () => {
 
   if (isLoadingGroup) {
     return (
-      <ChallengePageScaffold title={t('newChallenge.tiles.quests.title')} isLoading />
+      <ChallengePageScaffold
+        title={t('newChallenge.tiles.quests.title')}
+        backTo="/new-resources/quests"
+        isLoading
+      />
     );
   }
 
   if (!familyGroup) {
     return (
-      <ChallengePageScaffold title={t('newChallenge.tiles.quests.title')}>
+      <ChallengePageScaffold
+        title={t('newChallenge.tiles.quests.title')}
+        backTo="/new-resources/quests"
+      >
         <NoFamilyGroupHint />
       </ChallengePageScaffold>
     );
@@ -56,6 +63,7 @@ export const QuestsListView = () => {
   return (
     <ChallengePageScaffold
       title={t('newChallenge.tiles.quests.title')}
+      backTo="/new-resources/quests"
       contentLayout="plain"
     >
       <VStack spacing={4} align="stretch" pb={8}>

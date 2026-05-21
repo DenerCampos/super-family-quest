@@ -717,6 +717,10 @@
       "recipes": {
         "title": "Grimório de Receitas",
         "subtitle": "Feitiços culinários da guilda"
+      },
+      "quests": {
+        "title": "Missões",
+        "subtitle": "Tarefas e missões do clã"
       }
     }
   },
