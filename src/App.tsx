@@ -13,6 +13,7 @@ import { ReportView } from "./pages/Dashboard/ReportView";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NewChallenge from "./pages/NewChallenge";
+import { MissionsView } from "./pages/Missions/MissionsView";
 import { QuestsListView } from "./pages/NewChallenge/QuestsListView";
 import { QuestOccurrenceDetailView } from "./pages/NewChallenge/QuestOccurrenceDetailView";
 import { DefinitionsListView } from "./pages/NewChallenge/DefinitionsListView";
@@ -234,12 +235,12 @@ export default function App() {
               </RequireAuth>
             }
           />
-          {/* /new-challenge fica livre para a SP-78 */}
+          {/* SP-78 — Sistema de Missões Dinâmicas */}
           <Route
             path="/new-challenge"
             element={
               <RequireAuth>
-                <NewChallenge />
+                <MissionsView />
               </RequireAuth>
             }
           />
