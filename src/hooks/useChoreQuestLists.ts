@@ -57,7 +57,7 @@ export const useChoreQuestLists = () => {
   });
 
   const handleOpen = (item: ChoreOccurrenceResponseDto) => {
-    navigate(`/new-challenge/quests/${item.id}`, {
+    navigate(`/new-resources/quests/chores/${item.id}`, {
       state: { occurrence: item },
     });
   };

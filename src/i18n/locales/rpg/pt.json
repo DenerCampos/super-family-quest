@@ -717,6 +717,10 @@
       "recipes": {
         "title": "Grimório de Receitas",
         "subtitle": "Feitiços culinários da guilda"
+      },
+      "quests": {
+        "title": "Missões",
+        "subtitle": "Tarefas e missões do clã"
       }
     }
   },
@@ -882,5 +886,25 @@
     "installTitle": "Instalar no Arsenal",
     "installDescription": "Fixe o app na tela do seu dispositivo para acesso rápido à sua jornada",
     "installButton": "Instalar"
+  },
+  "missions": {
+    "title": "Missões do Clã",
+    "subtitle": "Complete missões épicas e colete moedas para o tesouro do clã.",
+    "empty": "Nenhuma missão disponível no momento.",
+    "claim": "Coletar Recompensa",
+    "claimError": "Não foi possível coletar a recompensa da missão.",
+    "claimed": "Recompensa Coletada",
+    "completed": "Missão Concluída",
+    "progress": "{{current}}/{{target}}",
+    "tabs": {
+      "daily": "Diárias",
+      "monthly": "Mensais",
+      "unique": "Feitos Épicos"
+    },
+    "frequency": {
+      "DAILY": "Missão Diária",
+      "MONTHLY": "Missão Mensal",
+      "ONCE": "Feito Épico"
+    }
   }
-} 
+}

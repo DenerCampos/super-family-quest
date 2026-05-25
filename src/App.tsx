@@ -13,6 +13,7 @@ import { ReportView } from "./pages/Dashboard/ReportView";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NewChallenge from "./pages/NewChallenge";
+import { MissionsView } from "./pages/Missions/MissionsView";
 import { QuestsListView } from "./pages/NewChallenge/QuestsListView";
 import { QuestOccurrenceDetailView } from "./pages/NewChallenge/QuestOccurrenceDetailView";
 import { DefinitionsListView } from "./pages/NewChallenge/DefinitionsListView";
@@ -169,8 +170,9 @@ export default function App() {
               </RequireAuth>
             }
           />
+          {/* Hub de quests (antigo new-challenge) */}
           <Route
-            path="/new-challenge"
+            path="/new-resources/quests"
             element={
               <RequireAuth>
                 <NewChallenge />
@@ -178,7 +180,7 @@ export default function App() {
             }
           />
           <Route
-            path="/new-challenge/quests/:occurrenceId"
+            path="/new-resources/quests/chores/:occurrenceId"
             element={
               <RequireAuth>
                 <QuestOccurrenceDetailView />
@@ -186,7 +188,7 @@ export default function App() {
             }
           />
           <Route
-            path="/new-challenge/quests"
+            path="/new-resources/quests/chores"
             element={
               <RequireAuth>
                 <QuestsListView />
@@ -194,7 +196,7 @@ export default function App() {
             }
           />
           <Route
-            path="/new-challenge/definitions/:definitionId"
+            path="/new-resources/quests/definitions/:definitionId"
             element={
               <RequireAuth>
                 <DefinitionFormView />
@@ -202,7 +204,7 @@ export default function App() {
             }
           />
           <Route
-            path="/new-challenge/definitions"
+            path="/new-resources/quests/definitions"
             element={
               <RequireAuth>
                 <DefinitionsListView />
@@ -210,7 +212,7 @@ export default function App() {
             }
           />
           <Route
-            path="/new-challenge/approvals"
+            path="/new-resources/quests/approvals"
             element={
               <RequireAuth>
                 <ApprovalsView />
@@ -218,7 +220,7 @@ export default function App() {
             }
           />
           <Route
-            path="/new-challenge/allowance"
+            path="/new-resources/quests/allowance"
             element={
               <RequireAuth>
                 <AllowanceView />
@@ -226,10 +228,19 @@ export default function App() {
             }
           />
           <Route
-            path="/new-challenge/history"
+            path="/new-resources/quests/history"
             element={
               <RequireAuth>
                 <HistoryView />
+              </RequireAuth>
+            }
+          />
+          {/* SP-78 — Sistema de Missões Dinâmicas */}
+          <Route
+            path="/new-challenge"
+            element={
+              <RequireAuth>
+                <MissionsView />
               </RequireAuth>
             }
           />

@@ -61,7 +61,7 @@ export const ApprovalsView = () => {
   useEffect(() => {
     if (!isLoadingGroup && familyGroup && !userIsAdmin) {
       toast({ title: t('chores.adminOnly'), status: 'warning' });
-      navigate('/new-challenge', { replace: true });
+      navigate('/new-resources/quests', { replace: true });
     }
   }, [isLoadingGroup, familyGroup, userIsAdmin, navigate, toast, t]);
 

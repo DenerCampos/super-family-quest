@@ -246,6 +246,10 @@ export const defaultTheme: VisualTheme = {
         statusConnected: 'green.50',
         statusDisconnected: 'red.50',
       },
+      missions: {
+        card: 'white',
+        tabList: 'white',
+      },
     },
     text: {
       primary: 'white',
@@ -605,6 +609,10 @@ export const rpgTheme: VisualTheme = {
       integrations: {
         statusConnected: 'green.50',
         statusDisconnected: 'red.50',
+      },
+      missions: {
+        card: 'white',
+        tabList: 'white',
       },
     },
     text: {

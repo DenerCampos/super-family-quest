@@ -62,7 +62,7 @@ export const QuestOccurrenceDetailContent = ({
   return (
     <ChallengePageScaffold
       title={occ.definition.title}
-      backTo="/new-challenge/quests"
+      backTo="/new-resources/quests/chores"
     >
       {uploadIsPending && (
         <LoadingOverlay

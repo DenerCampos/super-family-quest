@@ -21,6 +21,8 @@ type ChallengePageScaffoldProps = {
   contentLayout?: 'singleCard' | 'plain';
   /** Rota ao voltar (padrão: hub Objetivos). */
   backTo?: string;
+  /** Oculta o botão de voltar (ex.: páginas que são destino direto da NavigationBar). */
+  hideBack?: boolean;
 };
 
 export const ChallengePageScaffold = ({
@@ -28,7 +30,8 @@ export const ChallengePageScaffold = ({
   children,
   isLoading = false,
   contentLayout = 'singleCard',
-  backTo = '/new-challenge',
+  backTo = '/new-resources/quests',
+  hideBack = false,
 }: ChallengePageScaffoldProps) => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
@@ -46,18 +49,20 @@ export const ChallengePageScaffold = ({
         borderBottomWidth="1px"
         borderColor={getColor('border.familyGroup.card')}
       >
-        <IconButton
-          aria-label={t('common.back')}
-          icon={<Icon as={FiArrowLeft} boxSize={5} />}
-          variant="ghost"
-          size="md"
-          flexShrink={0}
-          onClick={() => navigate(backTo)}
-          color={getColor('text.dashboard.title')}
-          _hover={{
-            bg: getColor('background.familyGroup.memberCard'),
-          }}
-        />
+        {!hideBack && (
+          <IconButton
+            aria-label={t('common.back')}
+            icon={<Icon as={FiArrowLeft} boxSize={5} />}
+            variant="ghost"
+            size="md"
+            flexShrink={0}
+            onClick={() => navigate(backTo)}
+            color={getColor('text.dashboard.title')}
+            _hover={{
+              bg: getColor('background.familyGroup.memberCard'),
+            }}
+          />
+        )}
         <Text
           flex={1}
           fontWeight="bold"

@@ -111,6 +111,10 @@ export interface ThemeColors {
       statusConnected: string;
       statusDisconnected: string;
     };
+    missions: {
+      card: string;
+      tabList: string;
+    };
   };
 
   // Tokens semânticos para texto

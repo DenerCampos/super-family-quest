@@ -13,6 +13,7 @@ import { themeService } from "./theme";
 import { UserService } from "./user";
 import { ChoreService } from "./chore";
 import { RecipeService } from "./recipe";
+import { MissionsService } from "./missions";
 
 export const api = {
   getAvailableThemes: themeService.getAvailableThemes,
@@ -242,4 +243,7 @@ export const api = {
   choreGetPayrollSuggestion: ChoreService.getPayrollSuggestion,
   choreGetPayrollPending: ChoreService.getPayrollPending,
   choreSettlePayroll: ChoreService.settlePayroll,
+
+  missionGetAll: MissionsService.getMissions,
+  missionClaimReward: MissionsService.claimReward,
 };

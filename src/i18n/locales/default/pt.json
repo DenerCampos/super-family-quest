@@ -725,6 +725,10 @@
       "recipes": {
         "title": "Livro de Receitas",
         "subtitle": "Suas receitas favoritas"
+      },
+      "quests": {
+        "title": "Quests",
+        "subtitle": "Tarefas e missões da família"
       }
     }
   },
@@ -890,5 +894,25 @@
     "installTitle": "Instalar App",
     "installDescription": "Adicione à sua tela inicial para acesso rápido",
     "installButton": "Instalar"
+  },
+  "missions": {
+    "title": "Missões",
+    "subtitle": "Complete missões e ganhe moedas para o clã.",
+    "empty": "Nenhuma missão disponível.",
+    "claim": "Resgatar",
+    "claimError": "Não foi possível resgatar a recompensa.",
+    "claimed": "Resgatado",
+    "completed": "Concluída",
+    "progress": "{{current}}/{{target}}",
+    "tabs": {
+      "daily": "Diárias",
+      "monthly": "Mês",
+      "unique": "Conquistas"
+    },
+    "frequency": {
+      "DAILY": "Diária",
+      "MONTHLY": "Mensal",
+      "ONCE": "Conquista"
+    }
   }
 }
