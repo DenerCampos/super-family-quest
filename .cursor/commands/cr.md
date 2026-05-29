@@ -1,189 +1,147 @@
 ---
-description: Code Review seguindo regras do projeto
+description: Code Review (staged ou branches) — React, segurança, tema, i18n e docs
 ---
 
 # Code Review - Super Family Quest
 
-Você é um revisor de código especializado em React + TypeScript. Sua tarefa é fazer um code review detalhado seguindo as regras do arquivo `.cursor/rules/code-review.mdc`.
+Revisor especializado em **React + TypeScript** (mobile-first). Analise **apenas o diff** e gere relatório para review **antes do commit/merge**.
 
-## Instruções
+**Leia e aplique:**
+- `.cursor/rules/code-review.mdc` — checklist completo
+- `.cursor/rules/regra-projeto.mdc` — arquitetura, React Query, tema, i18n
+- `/.cursor/rules/workflow.mdc` — git (`homolog`), docs em `.cursor/docs/`
 
-1. **Identificar arquivos alterados:**
-   - Se não houver parâmetros: analisar arquivos no staged (git diff --cached)
-   - Se staged estiver vazio: comparar branch atual com main
-   - Se houver 2 parâmetros: comparar as branches passadas (ex: feat/SP-75 main)
+**Branch de integração padrão:** `homolog` (fallback `main` se não existir).
 
-2. **Análise dos arquivos:**
-   - Ler cada arquivo alterado
-   - Verificar contra todas as regras de code review
-   - Identificar problemas por severidade: 🔴 Crítico, 🟡 Médio, 🔵 Baixo
+## Modos de operação
 
-3. **Categorias de análise:**
-   - ✅ **Clean Code**: nomenclatura, funções, comentários
-   - ⚛️ **React**: estrutura de componentes, hooks, performance
-   - 📘 **TypeScript**: tipagem correta, sem any, interfaces
-   - 🏗️ **Arquitetura**: camadas corretas, separação de responsabilidades
-   - 🎨 **Temas e Cores**: uso de tokens, não hardcoded
-   - 🌍 **Traduções (i18n)**: usar useThemedTranslation, traduções em ambos os temas
-   - 🔒 **Segurança**: validação, sanitização
-   - 📊 **Formulários**: React Hook Form, validação Yup
-   - 🎨 **Chakra UI**: uso correto dos componentes
+| Comando | Comportamento |
+|---------|----------------|
+| `/cr` | 1) Se houver **staged** → `git diff --cached`. 2) Senão → `git diff homolog...HEAD` |
+| `/cr feat/SP-75 homolog` | Diff entre as duas branches (ignora staged) |
+| `/cr feat/SP-75 main` | Comparar com `main` quando fizer sentido (ex.: antes de promover homolog) |
 
-4. **Regras críticas do projeto:**
-   - 🔴 **NUNCA** cores hardcoded (blue.800, white, etc) - SEMPRE usar tokens do tema
-   - 🔴 **NUNCA** texto hardcoded - SEMPRE usar useThemedTranslation
-   - 🔴 **NUNCA** usar `any` em TypeScript
-   - 🔴 **NUNCA** fazer chamadas de API diretamente em componentes
-   - 🟡 Componentes devem ter no máximo 200 linhas
-   - 🟡 Funções devem ter no máximo 30 linhas
-   - 🟡 Máximo 3 parâmetros por função
+**Formato:** `/cr <branch-origem> <branch-destino>`
 
-5. **Formato do relatório:**
+## Categorias de análise
+
+- ✅ **Clean Code** — nomenclatura, tamanho de funções/componentes
+- ⚛️ **React** — hooks, composição, performance, keys em listas
+- 📘 **TypeScript** — sem `any`, props e retornos tipados
+- 🏗️ **Arquitetura** — pages / components / hooks / services
+- 🎨 **Tema** — `useVisualTheme()`, tokens em `themes.ts` (ambos os temas)
+- 🌍 **i18n** — `useThemedTranslation()`, `default` + `rpg`
+- 📊 **Formulários** — React Hook Form + Yup
+- 🔒 **Segurança** — seção obrigatória abaixo
+- 📡 **Dados** — TanStack Query, `services/`, sem fetch solto em componente
+- 📄 **Docs** — `.cursor/docs/` alinhada ao código
+
+## Regras críticas do projeto
+
+- 🔴 **NUNCA** cores hardcoded — tokens do tema
+- 🔴 **NUNCA** texto hardcoded — i18n nos dois temas
+- 🔴 **NUNCA** `any` sem justificativa documentada
+- 🔴 **NUNCA** chamada HTTP direta em componente (usar `services/` + hooks)
+- 🟡 Componente ≤ ~200 linhas; função ≤ ~30 linhas; ≤ 3 parâmetros
+
+## 🔒 Segurança (seção obrigatória no relatório)
+
+Qualquer 🔴 aqui **bloqueia** aprovação.
+
+### Auth e sessão
+- [ ] Rotas sensíveis com `RequireAuth` em `App.tsx`
+- [ ] Token JWT só via `services/api.ts` (interceptor); não duplicar lógica de auth espalhada
+- [ ] **localStorage** (`accessToken`): consciência de risco XSS — não gravar outros segredos; não logar token
+- [ ] Logout / 401: não deixar usuário em tela protegida com token inválido
+
+### Segredos e config
+- [ ] **Nenhum** secret no código ou commit (API keys, client secrets)
+- [ ] Apenas `import.meta.env.VITE_*` para o que pode ser público no bundle; nunca chave privada de backend no front
+- [ ] `.env` / `.env.local` fora do diff
+
+### Entrada e renderização
+- [ ] Inputs validados (Yup + RHF) antes de enviar à API
+- [ ] **Sem** `dangerouslySetInnerHTML` sem sanitização explícita
+- [ ] URLs/query params: não colocar PII ou tokens na barra de endereço
+- [ ] Upload de imagem/áudio: validar tipo/tamanho no cliente; não confiar só no backend
+
+### API e dados
+- [ ] Não exibir em UI dados de outro usuário/família (confiar na API, mas não renderizar campos “extras” não usados)
+- [ ] Erros da API: mensagem genérica ao usuário; detalhes só em dev/console controlado
+- [ ] React Query: `queryKey` com escopo (user/familyGroup/id); invalidação correta após mutation
+
+### Realtime e integrações
+- [ ] **socket.io**: conectar com credencial/autenticação alinhada ao backend; não assinar salas de outro grupo
+- [ ] **Alexa / OAuth** (`integrations.ts`, Settings): fluxo sem vazar code/state na UI ou logs
+- [ ] QR / links externos: validar origem antes de abrir ou enviar à API
+
+### Privacidade
+- [ ] Sem `console.log` de email, token, payload completo de cupom/família
+- [ ] PWA / cache: não persistir dados sensíveis em `localStorage` além do necessário
+
+Registrar achados em **## 🔒 Segurança** (🔴/🟡/🔵 + arquivo + linha + correção).
+
+## 📄 Documentação e entrega
+
+- [ ] `.cursor/docs/<feature>.md` criada ou atualizada se feature/regra mudou
+- [ ] `regra-projeto.mdc` (Docs de domínio) atualizado
+- [ ] Novas rotas em `App.tsx` + service + types/hooks
+- [ ] `npm run lint` e `npm run build` recomendados no veredito
+
+## Formato do relatório
 
 ```markdown
 # 📋 Code Review Report
 
 ## 📊 Resumo
-- **Branch**: [nome da branch ou staged]
-- **Total de arquivos alterados**: X
-- **Problemas encontrados**: 
-  - 🔴 Críticos: X
-  - 🟡 Médios: X
-  - 🔵 Baixos: X
+- **Modo**: Staged | homolog...HEAD | branch vs branch
+- **Origem / Destino**: feat/SP-XX → homolog
+- **Arquivos**: X alterados (+ novos / removidos)
+- **Issues**: 🔴 X | 🟡 X | 🔵 X
 
----
+## 🔒 Segurança
+[Lista priorizada — obrigatória mesmo se vazia: "Nenhum achado" só se revisado de fato]
 
-## 🔴 Problemas Críticos (Bloqueiam PR)
+## 🔴 Críticos
+[...]
 
-### Arquivo: `caminho/do/arquivo.tsx`
+## 🟡 Médios
+[...]
 
-**Linha X-Y:**
-```typescript
-// código problemático
-```
+## 🔵 Sugestões
+[...]
 
-**Problema:** Descrição do problema
+## ✅ Boas práticas
+[...]
 
-**Solução:**
-```typescript
-// código correto
-```
-
-**Regra violada:** [Referência à regra específica]
-
----
-
-## 🟡 Problemas Médios (Devem ser corrigidos)
-
-### Arquivo: `caminho/do/arquivo.tsx`
-
-[Mesmo formato]
-
----
-
-## 🔵 Sugestões de Melhoria
-
-### Arquivo: `caminho/do/arquivo.tsx`
-
-[Mesmo formato]
-
----
-
-## ✅ Boas Práticas Aplicadas
-
-- Lista de coisas boas encontradas no código
-- Padrões seguidos corretamente
-- Exemplos positivos
-
----
-
-## 📝 Checklist Final
-
-### Estrutura
-- [ ] Arquivos nas pastas corretas
-- [ ] Nomenclatura seguindo convenções
-- [ ] Imports organizados
-
-### Código
-- [ ] Nomenclatura clara
-- [ ] Funções focadas
-- [ ] Sem duplicação
-
-### React
-- [ ] Hooks corretos
-- [ ] Props tipadas
-- [ ] Performance OK
-
-### TypeScript
-- [ ] Tudo tipado
-- [ ] Sem any
-- [ ] Sem ts-ignore
-
-### Temas e Traduções
-- [ ] Usa tokens de tema
-- [ ] Sem cores hardcoded
-- [ ] Sem textos hardcoded
-- [ ] Traduções em ambos temas
-
-### Arquitetura
-- [ ] Camada correta
-- [ ] Separação clara
-- [ ] Reutilização
-
----
+## 📝 Checklist final
+[Marcar itens relevantes: tema, i18n, arquitetura, segurança, docs]
 
 ## 🎯 Veredicto
-
-**Status:** ✅ Aprovado | ⚠️ Aprovado com ressalvas | ❌ Precisa correções
-
-**Justificativa:** [Explicação do veredicto]
-
-**Próximos passos:** [O que deve ser feito]
+**Status:** ✅ Aprovado | ⚠️ Ressalvas | ❌ Correções obrigatórias
+**Próximos passos:** [...]
 ```
 
-## Exemplo de uso
+## Exemplos de uso
 
-### Caso 1: Review do staged
-```
+```bash
+# Revisar o que vai commitar
+git add src/services/missions.ts src/hooks/useMissions.ts
 /cr
-```
-Analisa os arquivos no staged area
 
-### Caso 2: Review branch atual vs main
-```
-/cr
-```
-Se staged estiver vazio, compara branch atual com main
+# Revisar branch da tarefa antes de merge em homolog
+/cr feat/SP-78 homolog
 
-### Caso 3: Review entre duas branches
+# Revisar tudo que homolog levaria para main
+/cr homolog main
 ```
-/cr feat/SP-75 main
-```
-Compara as duas branches especificadas
+
+## Pontos de atenção (tema e i18n)
+
+- `useVisualTheme()` + tokens; novos tokens em **default e rpg** em `themes.ts`
+- `useThemedTranslation()`; novas keys em `i18n/locales/default/pt.json` e `rpg/pt.json`
+- Layout mobile: shell 480px em `App.tsx`
 
 ---
 
-## Pontos de atenção especiais
-
-### 🎨 Sistema de Temas
-- Verificar uso de `useVisualTheme()` para cores
-- Verificar que não há cores hardcoded (blue.800, white, etc)
-- Se novos tokens foram criados, verificar se estão em TODOS os temas
-
-### 🌍 Sistema de Tradução
-- Verificar uso de `useThemedTranslation()` para textos
-- Verificar que não há textos hardcoded
-- Se novas traduções foram adicionadas, verificar se estão em default/pt.json E rpg/pt.json
-- Verificar se traduções do tema rpg têm linguagem medieval apropriada
-
-### 📏 Métricas de Qualidade
-- Componentes: máx 200 linhas
-- Funções: máx 30 linhas
-- Parâmetros: máx 3
-- Complexidade ciclomática: máx 10
-- Níveis de indentação: máx 4
-
----
-
-Comece o code review agora!
-
+Comece o code review agora: obtenha o diff, aplique as seções acima e gere o relatório completo com **🔒 Segurança** sempre preenchida.
