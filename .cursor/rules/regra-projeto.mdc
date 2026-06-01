@@ -185,6 +185,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | Arquivo | Assunto |
 |---------|---------|
 | `lista-de-compras.md` | Listas de compras (UI + realtime) |
+| `missoes.md` | Missões do Clã (UI + cache) |
 | `integracao-alexa.md` | Alexa / settings |
 | `stories.md` | Stories / escopo de produto |
 
