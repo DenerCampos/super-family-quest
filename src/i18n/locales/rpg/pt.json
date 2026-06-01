@@ -284,7 +284,8 @@
       "sealDecree": "Selar o Decreto Real ✨",
       "deleteConfirm": "Tem certeza que deseja banir esta fonte de ouro do reino?",
       "confirmed": "Tesouro Real Atualizado! ✨",
-      "success": "As fontes de ouro do reino foram atualizadas com sucesso! 🏰"
+      "success": "As fontes de ouro do reino foram atualizadas com sucesso! 🏰",
+      "rememberLater": "Lembrar mais tarde (ocultar por 24 horas) ⏳"
     },
     "recurringExpense": {
       "title": "🏰 Tributos do Reino! ⚔️",
@@ -296,7 +297,8 @@
       "sealDecree": "Selar o Decreto Real ⚔️",
       "deleteConfirm": "Tem certeza que deseja abolir este tributo do reino?",
       "confirmed": "Tributos Atualizados! ⚔️",
-      "success": "Os tributos do reino foram atualizados com sucesso! 🏰"
+      "success": "Os tributos do reino foram atualizados com sucesso! 🏰",
+      "rememberLater": "Lembrar mais tarde (ocultar por 24 horas) ⏳"
     },
     "simpleResource": {
       "enterName": "Nomeie seu item mágico",

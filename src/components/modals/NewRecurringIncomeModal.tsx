@@ -4,7 +4,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   ModalCloseButton,
   Button,
   VStack,
@@ -29,15 +28,17 @@ import { useVisualTheme } from '../../hooks/useVisualTheme';
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  onDismiss: (rememberLater: boolean) => void;
 };
 
-export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
+export const NewRecurringIncomeModal = ({ isOpen, onClose, onDismiss }: Props) => {
   const toast = useToast();
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
   const [incomes, setIncomes] = useState<RevenueItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rememberLater, setRememberLater] = useState(false);
 
   // Carregar receitas repetidas
   useEffect(() => {
@@ -139,22 +140,51 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
     );
   };
 
+  const handleDismiss = () => {
+    onDismiss(rememberLater);
+    setRememberLater(false);
+  };
+
   return (
     <Modal
       isOpen={isOpen}
-      onClose={() => {}} // Impede o fechamento
-      closeOnOverlayClick={false} // Impede fechar clicando fora
+      onClose={handleDismiss}
+      closeOnOverlayClick={false}
       size="sm"
       isCentered
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent
         bg={getColor('background.primary')}
         color={getColor('text.primary')}
+        maxH="90dvh"
+        display="flex"
+        flexDirection="column"
+        overflow="hidden"
       >
-        <ModalHeader>{t('modals.recurringIncome.title')}</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+        <ModalHeader flexShrink={0}>{t('modals.recurringIncome.title')}</ModalHeader>
+        <ModalCloseButton onClick={handleDismiss} />
+        <ModalBody
+          overflowY="auto"
+          flex="1"
+          minH={0}
+          pb={6}
+          css={{
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehavior: 'contain',
+            '&::-webkit-scrollbar': {
+              width: '6px',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'transparent',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: getColor('background.tertiary'),
+              borderRadius: '4px',
+            },
+          }}
+        >
           <Text mb={4} fontSize="lg">
             {t('modals.recurringIncome.description')}
           </Text>
@@ -163,23 +193,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
             {t('modals.recurringIncome.sources')}:
           </Heading>
 
-          <Box
-            maxH="200px"
-            overflowY="auto"
-            pr={2}
-            css={{
-              '&::-webkit-scrollbar': {
-                width: '6px',
-              },
-              '&::-webkit-scrollbar-track': {
-                background: 'transparent',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                background: getColor('background.tertiary'),
-                borderRadius: '4px',
-              },
-            }}
-          >
+          <Box>
             {isLoading ? (
               <Text textAlign="center" py={4}>
                 {t('common.loading')}
@@ -267,10 +281,18 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
           <Text fontSize="sm" color={getColor('text.secondary')}>
             {t('modals.recurringIncome.reminder')}
           </Text>
-        </ModalBody>
 
-        <ModalFooter>
+          <Checkbox
+            mt={4}
+            isChecked={rememberLater}
+            onChange={(e) => setRememberLater(e.target.checked)}
+            colorScheme={getColor('chakraColors.green')}
+          >
+            <Text fontSize="sm">{t('modals.recurringIncome.rememberLater')}</Text>
+          </Checkbox>
+
           <Button
+            mt={4}
             bg={getColor('background.tertiary')}
             color={getColor('text.primary')}
             border="1px solid"
@@ -279,13 +301,14 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose }: Props) => {
               bg: getColor('background.selected'),
               color: getColor('text.accent'),
             }}
+            w="full"
             onClick={handleConfirm}
             isLoading={isSubmitting}
             loadingText={t('modals.recurringIncome.confirming')}
           >
             {t('modals.recurringIncome.sealDecree')}
           </Button>
-        </ModalFooter>
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

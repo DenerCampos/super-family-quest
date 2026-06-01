@@ -37,6 +37,10 @@ import { useFamilyGroup } from "../../hooks/useFamilyGroup";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
 import { api } from "../../services";
+import {
+  isRecurringModalSnoozed,
+  snoozeRecurringModal,
+} from "../../utils/recurringModalSnooze";
 
 const Home = () => {
   const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
@@ -155,14 +159,28 @@ const Home = () => {
       setShowCompleteProfile(true);
     }
 
-    if (profile && profile.hasRecurringRevenues) {
+    if (profile && profile.hasRecurringRevenues && !isRecurringModalSnoozed('income')) {
       setShowRecurringRevenuesModal(true);
     }
 
-    if (profile && profile.hasRecurringExpenses) {
+    if (profile && profile.hasRecurringExpenses && !isRecurringModalSnoozed('expense')) {
       setShowRecurringExpensesModal(true);
     }
   }, [profile]);
+
+  const handleDismissRecurringExpensesModal = (rememberLater: boolean) => {
+    if (rememberLater) {
+      snoozeRecurringModal('expense');
+    }
+    setShowRecurringExpensesModal(false);
+  };
+
+  const handleDismissRecurringRevenuesModal = (rememberLater: boolean) => {
+    if (rememberLater) {
+      snoozeRecurringModal('income');
+    }
+    setShowRecurringRevenuesModal(false);
+  };
 
   const handleCloseRecurringExpensesModal = async () => {
     setShowRecurringExpensesModal(false);
@@ -366,11 +384,13 @@ const Home = () => {
       <NewRecurringIncomeModal
         isOpen={showRecurringRevenuesModal}
         onClose={handleCloseRecurringRevenuesModal}
+        onDismiss={handleDismissRecurringRevenuesModal}
       />
 
       <NewRecurringExpenseModal
         isOpen={showRecurringExpensesModal}
         onClose={handleCloseRecurringExpensesModal}
+        onDismiss={handleDismissRecurringExpensesModal}
       />
 
       <NavigationBar />
