@@ -828,8 +828,19 @@
       "onlineUsers": "Aventureiros presentes",
       "finishList": "Concluir Missão de Suprimentos",
       "finishListConfirm": "Tem certeza que deseja concluir a missão? Todas as provisões pendentes serão marcadas como coletadas.",
+      "finishAndCreateRemaining": "Concluir e criar nova com provisões pendentes",
+      "finishAndCreateRemainingConfirm": "Concluir esta missão e criar uma nova com as provisões que ainda não foram coletadas?",
+      "recreateList": "Recriar missão de suprimentos",
+      "recreateListConfirm": "Criar uma nova missão ativa com o mesmo nome e provisões desta missão concluída?",
       "listCompleted": "Missão de suprimentos concluída!",
       "listCompletedError": "Falha ao concluir a missão",
+      "listCompletedWithRemaining": "Missão concluída e nova criada com as provisões pendentes!",
+      "listCompletedWithRemainingError": "Falha ao concluir missão e criar nova",
+      "listRecreated": "Nova missão de suprimentos criada!",
+      "listRecreatedError": "Falha ao recriar missão",
+      "finishingList": "Concluindo missão de suprimentos...",
+      "finishingAndCreatingList": "Concluindo e forjando nova missão...",
+      "recreatingList": "Recriando missão de suprimentos...",
       "addedBy": "por {{name}}",
       "checkedBy": "{{addedBy}} → {{checkedBy}}"
     },
@@ -869,7 +880,9 @@
     },
     "deleteList": "Destruir Pergaminho",
     "deleteListConfirm": "Tem certeza que deseja destruir este pergaminho?",
-    "deleteListError": "Falha ao destruir pergaminho"
+    "deleteListError": "Falha ao destruir pergaminho",
+    "loadingLists": "Consultando pergaminhos de suprimentos...",
+    "deletingList": "Destruindo pergaminho..."
   },
   "notFoundPage": {
     "lost": "Pergaminho Perdido! 📜",

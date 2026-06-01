@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useDisclosure, useToast } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { useShoppingListDetail } from './useShoppingListDetail';
 import { useShoppingListSocket } from './useShoppingListSocket';
 import { useThemedTranslation } from './useThemedTranslation';
@@ -9,13 +10,21 @@ import type {
   UpdateShoppingListItemPayload,
 } from '../types/shoppingList';
 
+export type ShoppingListPendingAction =
+  | 'finish'
+  | 'finishRemaining'
+  | 'recreate';
+
 export function useShoppingListDetailPage(listId: string) {
   const toast = useToast();
+  const navigate = useNavigate();
   const { t } = useThemedTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [editingItem, setEditingItem] =
     useState<ShoppingListItemResponse | null>(null);
   const [togglingItems, setTogglingItems] = useState<Set<string>>(new Set());
+  const [pendingListAction, setPendingListAction] =
+    useState<ShoppingListPendingAction | null>(null);
 
   const {
     detail,
@@ -26,6 +35,8 @@ export function useShoppingListDetailPage(listId: string) {
     toggleItem,
     removeItem,
     completeList,
+    completeListWithRemaining,
+    recreateList,
     handleItemAdded,
     handleItemUpdated,
     handleItemToggled,
@@ -137,34 +148,101 @@ export function useShoppingListDetailPage(listId: string) {
     [removeItem, t, toast],
   );
 
+  const runConfirmedListAction = useCallback(
+    async (
+      actionKey: ShoppingListPendingAction,
+      confirmKey: string,
+      action: () => Promise<unknown>,
+      successKey: string,
+      errorKey: string,
+    ) => {
+      if (pendingListAction) return;
+      if (!globalThis.confirm(t(confirmKey))) return;
+
+      setPendingListAction(actionKey);
+      try {
+        await action();
+        toast({
+          title: t(successKey),
+          status: 'success',
+          duration: 2000,
+        });
+        navigate('/new-resources/shopping');
+      } catch {
+        toast({
+          title: t(errorKey),
+          status: 'error',
+          duration: 3000,
+        });
+      } finally {
+        setPendingListAction(null);
+      }
+    },
+    [navigate, pendingListAction, t, toast],
+  );
+
   const handleFinishList = useCallback(async () => {
-    if (!globalThis.confirm(t('shoppingList.detail.finishListConfirm'))) return;
-    try {
-      await completeList();
-      toast({
-        title: t('shoppingList.detail.listCompleted'),
-        status: 'success',
-        duration: 2000,
-      });
-    } catch {
-      toast({
-        title: t('shoppingList.detail.listCompletedError'),
-        status: 'error',
-        duration: 3000,
-      });
-    }
-  }, [completeList, t, toast]);
+    await runConfirmedListAction(
+      'finish',
+      'shoppingList.detail.finishListConfirm',
+      completeList,
+      'shoppingList.detail.listCompleted',
+      'shoppingList.detail.listCompletedError',
+    );
+  }, [completeList, runConfirmedListAction]);
+
+  const handleFinishAndCreateRemaining = useCallback(async () => {
+    await runConfirmedListAction(
+      'finishRemaining',
+      'shoppingList.detail.finishAndCreateRemainingConfirm',
+      completeListWithRemaining,
+      'shoppingList.detail.listCompletedWithRemaining',
+      'shoppingList.detail.listCompletedWithRemainingError',
+    );
+  }, [completeListWithRemaining, runConfirmedListAction]);
+
+  const handleRecreateList = useCallback(async () => {
+    await runConfirmedListAction(
+      'recreate',
+      'shoppingList.detail.recreateListConfirm',
+      recreateList,
+      'shoppingList.detail.listRecreated',
+      'shoppingList.detail.listRecreatedError',
+    );
+  }, [recreateList, runConfirmedListAction]);
 
   const handleCloseEditModal = useCallback(() => {
     onClose();
     setEditingItem(null);
   }, [onClose]);
 
+  const canFinishWithRemaining =
+    (detail?.inCartCount ?? 0) > 0 && (detail?.pendingCount ?? 0) > 0;
+
+  const isListActionPending = pendingListAction !== null;
+
+  const listActionLoadingText = useMemo(() => {
+    switch (pendingListAction) {
+      case 'finish':
+        return t('shoppingList.detail.finishingList');
+      case 'finishRemaining':
+        return t('shoppingList.detail.finishingAndCreatingList');
+      case 'recreate':
+        return t('shoppingList.detail.recreatingList');
+      default:
+        return t('common.loading');
+    }
+  }, [pendingListAction, t]);
+
   return {
     detail,
     isLoading,
     onlineUsers,
     isCompleted: detail?.status === 'completed',
+    canFinishWithRemaining,
+    pendingListAction,
+    isListActionPending,
+    listActionLoadingText,
     togglingItems,
     editingItem,
     isOpen,
@@ -176,6 +254,8 @@ export function useShoppingListDetailPage(listId: string) {
     handleSaveEdit,
     handleDelete,
     handleFinishList,
+    handleFinishAndCreateRemaining,
+    handleRecreateList,
     handleCloseEditModal,
   };
 }

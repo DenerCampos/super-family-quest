@@ -6,11 +6,14 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { ShoppingListItemRow } from './ShoppingListItemRow';
+import type { ShoppingListPendingAction } from '../../hooks/useShoppingListDetailPage';
 import type { ShoppingListItemResponse } from '../../types/shoppingList';
 
 type Props = {
   categories: [string, ShoppingListItemResponse[]][];
   isCompleted: boolean;
+  canFinishWithRemaining: boolean;
+  pendingListAction: ShoppingListPendingAction | null;
   getColor: (path: string) => string;
   getFont: (type: 'body' | 'heading' | 'mono' | 'theme') => string;
   t: (key: string) => string;
@@ -19,11 +22,15 @@ type Props = {
   onDelete: (itemId: string) => void;
   togglingItemIds: Set<string>;
   onFinishList: () => void;
+  onFinishAndCreateRemaining: () => void;
+  onRecreateList: () => void;
 };
 
 export const ShoppingListDetailCategoriesPanel = ({
   categories,
   isCompleted,
+  canFinishWithRemaining,
+  pendingListAction,
   getColor,
   getFont,
   t,
@@ -32,7 +39,12 @@ export const ShoppingListDetailCategoriesPanel = ({
   onDelete,
   togglingItemIds,
   onFinishList,
-}: Props) => (
+  onFinishAndCreateRemaining,
+  onRecreateList,
+}: Props) => {
+  const isListActionPending = pendingListAction !== null;
+
+  return (
   <>
     <Box flex={1} px={4} overflowY="auto">
       {categories.length === 0 ? (
@@ -105,19 +117,58 @@ export const ShoppingListDetailCategoriesPanel = ({
       )}
     </Box>
 
-    {!isCompleted && categories.length > 0 && (
+    {isCompleted && (
       <Box px={4} py={3}>
         <Button
           w="full"
-          bg={getColor('button.background.revenue')}
-          color={getColor('button.text.revenue')}
+          bg={getColor('button.background.primary')}
+          color={getColor('button.text.primary')}
           fontFamily={getFont('body')}
-          onClick={onFinishList}
+          onClick={onRecreateList}
+          isLoading={pendingListAction === 'recreate'}
+          isDisabled={isListActionPending}
           _hover={{ opacity: 0.8 }}
         >
-          {t('shoppingList.detail.finishList')}
+          {t('shoppingList.detail.recreateList')}
         </Button>
       </Box>
     )}
+
+    {!isCompleted && categories.length > 0 && (
+      <Box px={4} py={3}>
+        <VStack spacing={2} align="stretch">
+          {canFinishWithRemaining && (
+            <Button
+              w="full"
+              variant="outline"
+              borderColor={getColor('text.shoppingList.title')}
+              color={getColor('text.shoppingList.title')}
+              fontFamily={getFont('body')}
+              onClick={onFinishAndCreateRemaining}
+              isLoading={pendingListAction === 'finishRemaining'}
+              isDisabled={isListActionPending}
+              _hover={{
+                bg: getColor('background.shoppingList.cardHover'),
+              }}
+            >
+              {t('shoppingList.detail.finishAndCreateRemaining')}
+            </Button>
+          )}
+          <Button
+            w="full"
+            bg={getColor('button.background.revenue')}
+            color={getColor('button.text.revenue')}
+            fontFamily={getFont('body')}
+            onClick={onFinishList}
+            isLoading={pendingListAction === 'finish'}
+            isDisabled={isListActionPending}
+            _hover={{ opacity: 0.8 }}
+          >
+            {t('shoppingList.detail.finishList')}
+          </Button>
+        </VStack>
+      </Box>
+    )}
   </>
-);
+  );
+};
