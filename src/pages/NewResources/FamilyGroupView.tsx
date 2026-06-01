@@ -2,7 +2,6 @@ import {
   Badge,
   Flex,
   Icon,
-  IconButton,
   Spinner,
   Tab,
   TabList,
@@ -12,10 +11,9 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { FiArrowLeft, FiUsers, FiMail, FiSettings } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { FiUsers, FiMail, FiSettings } from 'react-icons/fi';
+import { FixedAppShell } from '../../components/FixedAppShell';
+import { PageTitleBar } from '../../components/PageTitleBar';
 import { CreateGroupForm } from '../../components/family/CreateGroupForm';
 import { FamilyGroupSummary } from '../../components/family/FamilyGroupSummary';
 import { FamilyInvitations } from '../../components/family/FamilyInvitations';
@@ -32,7 +30,6 @@ export const FamilyGroupView = () => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
   const { profile } = useAuth();
-  const navigate = useNavigate();
 
   const {
     familyGroup,
@@ -87,50 +84,35 @@ export const FamilyGroupView = () => {
 
   if (isLoadingGroup) {
     return (
-      <Flex
-        direction="column"
-        minH="100vh"
-        bg={getColor('background.resources')}
-      >
-        <Header />
+      <FixedAppShell bg={getColor('background.resources')}>
+        <PageTitleBar
+          title={t('newResources.tiles.familyGroup.title')}
+          backTo="/new-resources"
+        />
         <Flex flex={1} justify="center" align="center">
           <Spinner color={getColor('text.familyGroup.primary')} size="lg" />
         </Flex>
-        <NavigationBar />
-      </Flex>
+      </FixedAppShell>
     );
   }
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
-      bg={getColor('background.resources')}
-      pb="70px"
-    >
-      <Header />
+    <FixedAppShell bg={getColor('background.resources')}>
+      <PageTitleBar
+        title={t('newResources.tiles.familyGroup.title')}
+        backTo="/new-resources"
+      />
 
-      <Flex align="center" px={4} pt={4} pb={2} gap={3}>
-        <IconButton
-          aria-label={t('common.back')}
-          icon={<FiArrowLeft />}
-          variant="ghost"
-          color={getColor('text.dashboard.title')}
-          onClick={() => navigate('/new-resources')}
-          size="sm"
-        />
-        <Text
-          fontSize="lg"
-          fontWeight="bold"
-          fontFamily={getFont('heading')}
-          color={getColor('text.dashboard.title')}
-        >
-          {t('newResources.tiles.familyGroup.title')}
-        </Text>
-      </Flex>
-
-      <Tabs variant="enclosed-colored">
+      <Tabs
+        variant="enclosed-colored"
+        display="flex"
+        flexDirection="column"
+        flex={1}
+        minH={0}
+        overflow="hidden"
+      >
         <TabList
+          flexShrink={0}
           overflowX="auto"
           overflowY="hidden"
           css={{
@@ -166,8 +148,8 @@ export const FamilyGroupView = () => {
           )}
         </TabList>
 
-        <TabPanels>
-          <TabPanel p={3}>
+        <TabPanels flex={1} minH={0} overflow="hidden">
+          <TabPanel p={3} h="100%" overflow="auto" pb={20}>
             {!familyGroup ? (
               <CreateGroupForm
                 onGroupCreated={handleGroupCreated}
@@ -209,14 +191,14 @@ export const FamilyGroupView = () => {
             )}
           </TabPanel>
 
-          <TabPanel p={0}>
+          <TabPanel p={0} h="100%" overflow="auto" pb={20}>
             <FamilyInvitations
               onInvitationHandled={handleInvitationHandled}
             />
           </TabPanel>
 
           {familyGroup && userIsAdmin && (
-            <TabPanel p={0}>
+            <TabPanel p={0} h="100%" overflow="auto" pb={20}>
               <FamilyManagement
                 group={familyGroup}
                 onRefresh={handleRefresh}
@@ -225,8 +207,6 @@ export const FamilyGroupView = () => {
           )}
         </TabPanels>
       </Tabs>
-
-      <NavigationBar />
-    </Flex>
+    </FixedAppShell>
   );
 };

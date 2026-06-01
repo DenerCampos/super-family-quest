@@ -1,6 +1,5 @@
-import { Flex, Grid, Text, Box, Spinner, IconButton, Icon } from '@chakra-ui/react';
+import { Flex, Grid, Text, Box, Spinner } from '@chakra-ui/react';
 import {
-  FiArrowLeft,
   FiCheckSquare,
   FiDollarSign,
   FiImage,
@@ -8,8 +7,8 @@ import {
   FiShield,
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { FixedAppShell } from '../../components/FixedAppShell';
+import { PageTitleBar } from '../../components/PageTitleBar';
 import { ReportTile } from '../../components/reports/ReportTile';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFamilyGroup } from '../../hooks/useFamilyGroup';
@@ -70,7 +69,7 @@ const adminTiles: Tile[] = [
 ];
 
 const NewChallengeHub = () => {
-  const { getColor, getFont } = useVisualTheme();
+  const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const navigate = useNavigate();
   const { profile } = useAuth();
@@ -88,27 +87,24 @@ const NewChallengeHub = () => {
 
   if (isLoadingGroup) {
     return (
-      <Flex direction="column" minH="100vh" bg={getColor('background.resources')}>
-        <Header />
+      <FixedAppShell bg={getColor('background.resources')}>
         <Flex flex={1} justify="center" align="center">
           <Spinner color={getColor('text.familyGroup.primary')} size="lg" />
         </Flex>
-        <NavigationBar />
-      </Flex>
+      </FixedAppShell>
     );
   }
 
   if (!familyGroup) {
     return (
-      <Flex direction="column" minH="100vh">
-        <Header />
+      <FixedAppShell bg={getColor('background.resources')}>
         <Flex
           flex={1}
-          bg={getColor('background.resources')}
           align="center"
           justify="center"
           px={4}
           py={6}
+          overflow="auto"
         >
           <Box
             width="100%"
@@ -123,55 +119,24 @@ const NewChallengeHub = () => {
             <NoFamilyGroupHint />
           </Box>
         </Flex>
-        <NavigationBar />
-      </Flex>
+      </FixedAppShell>
     );
   }
 
   return (
-    <Flex direction="column" minH="100vh">
-      <Header />
-
-      <Flex
-        align="center"
-        px={3}
-        py={2}
-        gap={1}
-        bg={getColor('background.familyGroup.card')}
-        borderBottomWidth="1px"
-        borderColor={getColor('border.familyGroup.card')}
-      >
-        <IconButton
-          aria-label={t('common.back')}
-          icon={<Icon as={FiArrowLeft} boxSize={5} />}
-          variant="ghost"
-          size="md"
-          flexShrink={0}
-          onClick={() => navigate('/new-resources')}
-          color={getColor('text.dashboard.title')}
-          _hover={{ bg: getColor('background.familyGroup.memberCard') }}
-        />
-        <Text
-          flex={1}
-          fontWeight="bold"
-          fontFamily={getFont('heading')}
-          fontSize="md"
-          color={getColor('text.dashboard.title')}
-          noOfLines={1}
-        >
-          {t('newChallenge.title')}
-        </Text>
-      </Flex>
+    <FixedAppShell bg={getColor('background.resources')}>
+      <PageTitleBar title={t('newChallenge.title')} backTo="/new-resources" />
 
       <Flex
         flex={1}
+        minH={0}
         direction="column"
         align="center"
         justify="flex-start"
         pt={6}
-        pb={20}
+        overflow="auto"
         px={4}
-        bg={getColor('background.resources')}
+        pb={20}
       >
         <Box
           width="100%"
@@ -183,7 +148,6 @@ const NewChallengeHub = () => {
           p={{ base: 4, md: 5 }}
           boxShadow="sm"
         >
-
           <Text
             color={getColor('text.dashboard.tileSubtitle')}
             fontSize="sm"
@@ -207,9 +171,7 @@ const NewChallengeHub = () => {
           </Grid>
         </Box>
       </Flex>
-
-      <NavigationBar />
-    </Flex>
+    </FixedAppShell>
   );
 };
 

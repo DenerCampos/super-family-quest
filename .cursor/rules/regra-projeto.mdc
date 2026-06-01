@@ -52,7 +52,7 @@ Variável obrigatória em dev: `VITE_API_URL` (axios em `services/api.ts`).
 ```
 src/
 ├── pages/              # Views por rota
-├── components/         # UI reutilizável (modals/, reports/, resources/, family/)
+├── components/         # UI reutilizável — layout: FixedAppShell, PageScaffold, PageTitleBar, BackButton; modals/, reports/, resources/, family/
 ├── hooks/              # Lógica reutilizável + React Query
 ├── services/           # Chamadas HTTP por domínio
 ├── contexts/           # Auth, Theme, CoinFlight
@@ -188,6 +188,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `missoes.md` | Missões do Clã (UI + cache) |
 | `integracao-alexa.md` | Alexa / settings |
 | `stories.md` | Stories / escopo de produto |
+| `layout-shell.md` | Header/nav fixos, PageScaffold, toast acima da nav (SP-111) |
 
 Adicionar linha nesta tabela ao criar nova doc.
 

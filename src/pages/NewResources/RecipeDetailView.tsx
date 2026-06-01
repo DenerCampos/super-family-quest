@@ -3,22 +3,18 @@ import {
   Button,
   Flex,
   IconButton,
-  Spinner,
   Text,
   VStack,
   useToast,
 } from '@chakra-ui/react';
 import { DriveImage } from '../../components/DriveImage';
 import {
-  FiArrowLeft,
-  FiBook,
   FiEdit2,
   FiShoppingCart,
   FiTrash,
 } from 'react-icons/fi';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { PageScaffold } from '../../components/PageScaffold';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRecipeDetail } from '../../hooks/useRecipeDetail';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -88,76 +84,37 @@ export const RecipeDetailView = () => {
 
   if (isLoading) {
     return (
-      <Flex
-        minH="100vh"
-        justify="center"
-        align="center"
+      <PageScaffold
+        title={t('recipes.title')}
+        backTo="/new-resources/recipes"
         bg={getColor('background.profile.primary')}
-      >
-        <Spinner size="lg" color={getColor('text.profile.primary')} />
-      </Flex>
+        isLoading
+      />
     );
   }
 
   if (!recipe) {
     return (
-      <Flex
-        direction="column"
-        minH="100vh"
-        pb="70px"
+      <PageScaffold
+        title={t('recipes.notFound')}
+        backTo="/new-resources/recipes"
         bg={getColor('background.profile.primary')}
-      >
-        <Header />
-        <Flex px={4} pt={4} align="center" gap={3}>
-          <IconButton
-            aria-label={t('common.back')}
-            icon={<FiArrowLeft />}
-            variant="ghost"
-            color={getColor('text.profile.primary')}
-            onClick={() => navigate('/new-resources/recipes')}
-          />
-          <Text color={getColor('text.profile.primary')}>
-            {t('recipes.notFound')}
-          </Text>
-        </Flex>
-        <NavigationBar />
-      </Flex>
+        contentLayout="plain"
+      />
     );
   }
 
   const photos = recipe.photos?.length ? recipe.photos : [];
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
+    <PageScaffold
+      title={recipe.title}
+      backTo="/new-resources/recipes"
       bg={getColor('background.profile.primary')}
-      pb="70px"
-    >
-      <Header />
-
-      {/* Cabeçalho com título e ações */}
-      <Flex align="center" justify="space-between" px={4} pt={4} pb={2}>
-        <Flex align="center" gap={2} flex={1} minW={0}>
-          <IconButton
-            aria-label={t('common.back')}
-            icon={<FiArrowLeft />}
-            variant="ghost"
-            color={getColor('text.profile.primary')}
-            onClick={() => navigate('/new-resources/recipes')}
-            size="sm"
-          />
-          <FiBook color={getColor('text.profile.primary')} />
-          <Text
-            fontSize="lg"
-            fontWeight="bold"
-            fontFamily={getFont('heading')}
-            color={getColor('text.profile.primary')}
-            noOfLines={2}
-          >
-            {recipe.title}
-          </Text>
-        </Flex>
+      contentLayout="plain"
+      contentPx={0}
+      contentPt={0}
+      titleRight={
         <Flex gap={1} flexShrink={0}>
           <IconButton
             aria-label={t('recipes.editRecipe')}
@@ -181,9 +138,8 @@ export const RecipeDetailView = () => {
             />
           ) : null}
         </Flex>
-      </Flex>
-
-      {/* Fotos */}
+      }
+    >
       <Box px={4} pb={3}>
         {photos.length > 0 ? (
           <Flex gap={2} overflowX="auto" pb={2}>
@@ -341,8 +297,6 @@ export const RecipeDetailView = () => {
           {t('recipes.generateShoppingList')}
         </Button>
       </Box>
-
-      <NavigationBar />
-    </Flex>
+    </PageScaffold>
   );
 };

@@ -8,8 +8,7 @@ import {
   FiCheckSquare,
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { FixedAppShell } from '../../components/FixedAppShell';
 import { ReportTile } from '../../components/reports/ReportTile';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -79,18 +78,17 @@ const NewResources = () => {
   const navigate = useNavigate();
 
   return (
-    <Flex direction="column" minH="100vh">
-      <Header />
-
+    <FixedAppShell bg={getColor('background.resources')}>
       <Flex
         flex={1}
+        minH={0}
         direction="column"
         align="center"
         justify="flex-start"
         pt={6}
-        pb={20}
+        overflow="auto"
         px={4}
-        bg={getColor('background.resources')}
+        pb={20}
       >
         <Box width="100%" maxW="600px">
           <Text
@@ -127,9 +125,7 @@ const NewResources = () => {
           </Grid>
         </Box>
       </Flex>
-
-      <NavigationBar />
-    </Flex>
+    </FixedAppShell>
   );
 };
 

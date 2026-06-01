@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Flex, IconButton, Text, Box } from '@chakra-ui/react';
-import { FiArrowLeft } from 'react-icons/fi';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Box } from '@chakra-ui/react';
+import { Navigate, useParams } from 'react-router-dom';
 import { PieChartExpenses } from '../../components/reports/PieChartExpensesByGroup';
 import { BarChartExpensesByStore } from '../../components/reports/BarChartExpensesByStore';
 import { LineChartExpensesByDate } from '../../components/reports/LineChartExpensesByDate';
 import { HorizontalBarChartTopProducts } from '../../components/reports/HorizontalBarChartTopProducts';
 import { BarChartExpensesIncome } from '../../components/reports/BarChartExpensesIncome';
 import { ReportFilters } from '../../components/reports/ReportFilters';
+import { PageScaffold } from '../../components/PageScaffold';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useAuth } from '../../contexts/AuthContext';
@@ -42,8 +42,7 @@ function getMonthDateRange(month: number, year: number) {
 
 export const ReportView = () => {
   const { reportKey } = useParams<{ reportKey: string }>();
-  const navigate = useNavigate();
-  const { getColor, getFont } = useVisualTheme();
+  const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const { profile } = useAuth();
 
@@ -103,62 +102,31 @@ export const ReportView = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh" bg={getColor('background.dashboard.primary')}>
-      <Flex direction="column" flex="1" p={4} pb={4}>
-        <Flex
-          direction="row"
-          gap={4}
-          justify="flex-start"
-          align="center"
-          mb={4}
-        >
-          <IconButton
-            icon={<FiArrowLeft />}
-            size="md"
-            aria-label={t('common.back')}
-            borderRadius="full"
-            color={getColor('text.dashboard.title')}
-            bg={getColor('background.dashboard.tileActive')}
-            border="1px solid"
-            borderColor={getColor('border.dashboard.tile')}
-            _hover={{
-              bg: getColor('border.dashboard.tileActive'),
-              color: getColor('text.primary'),
-            }}
-            onClick={() => navigate('/dashboard')}
-          />
-          <Text
-            color={getColor('text.dashboard.title')}
-            fontSize="lg"
-            fontWeight="bold"
-            fontFamily={getFont('heading')}
-          >
-            {t(TITLE_KEYS[key])}
-          </Text>
-        </Flex>
+    <PageScaffold
+      title={t(TITLE_KEYS[key])}
+      backTo="/dashboard"
+      bg={getColor('background.dashboard.primary')}
+      contentLayout="plain"
+    >
+      <ReportFilters
+        month={month}
+        year={year}
+        startDate={startDate}
+        endDate={endDate}
+        selectedUserId={selectedUserId}
+        familyGroup={familyGroup}
+        currentUserId={profile?.user.id ?? ''}
+        yearOnly={isYearOnly}
+        onMonthChange={setMonth}
+        onYearChange={setYear}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+        onUserChange={setSelectedUserId}
+      />
 
-        <Box maxW="600px" mx="auto" width="100%">
-          <ReportFilters
-            month={month}
-            year={year}
-            startDate={startDate}
-            endDate={endDate}
-            selectedUserId={selectedUserId}
-            familyGroup={familyGroup}
-            currentUserId={profile?.user.id ?? ''}
-            yearOnly={isYearOnly}
-            onMonthChange={setMonth}
-            onYearChange={setYear}
-            onStartDateChange={setStartDate}
-            onEndDateChange={setEndDate}
-            onUserChange={setSelectedUserId}
-          />
-
-          <Box mt={4}>
-            {renderChart()}
-          </Box>
-        </Box>
-      </Flex>
-    </Flex>
+      <Box mt={4}>
+        {renderChart()}
+      </Box>
+    </PageScaffold>
   );
 };

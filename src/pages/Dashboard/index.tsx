@@ -1,4 +1,4 @@
-import { Flex, Grid, Text, Box } from '@chakra-ui/react';
+import { Box, Flex, Grid, Text } from '@chakra-ui/react';
 import {
   FiPieChart,
   FiTrendingUp,
@@ -7,8 +7,7 @@ import {
   FiPackage,
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { FixedAppShell } from '../../components/FixedAppShell';
 import { ReportTile } from '../../components/reports/ReportTile';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -53,18 +52,17 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <Flex direction="column" minH="100vh">
-      <Header />
-
+    <FixedAppShell bg={getColor('background.dashboard.primary')}>
       <Flex
         flex={1}
+        minH={0}
         direction="column"
         align="center"
         justify="flex-start"
         pt={6}
-        pb={20}
+        overflow="auto"
         px={4}
-        bg={getColor('background.dashboard.primary')}
+        pb={20}
       >
         <Box width="100%" maxW="600px">
           <Text
@@ -101,9 +99,7 @@ const Dashboard = () => {
           </Grid>
         </Box>
       </Flex>
-
-      <NavigationBar />
-    </Flex>
+    </FixedAppShell>
   );
 };
 

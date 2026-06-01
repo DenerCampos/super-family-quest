@@ -8,19 +8,16 @@ import {
   Image,
   Input,
   Select,
-  Spinner,
-  Text,
   Textarea,
   VStack,
   useToast,
 } from '@chakra-ui/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
-import { FiArrowLeft, FiCamera, FiImage, FiPlus, FiTrash } from 'react-icons/fi';
+import { FiCamera, FiImage, FiPlus, FiTrash } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/Header';
 import { LoadingOverlay } from '../../components/LoadingOverlay';
-import { NavigationBar } from '../../components/NavigationBar';
+import { PageScaffold } from '../../components/PageScaffold';
 import { useFamilyGroupsList } from '../../hooks/useFamilyGroupsList';
 import { useRecipeForm } from '../../hooks/useRecipeForm';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -153,75 +150,41 @@ export const RecipeFormView = () => {
 
   if (!isNew && isLoadingRecipe) {
     return (
-      <Flex
-        minH="100vh"
-        justify="center"
-        align="center"
+      <PageScaffold
+        title={t('recipes.editRecipe')}
+        backTo="/new-resources/recipes"
         bg={getColor('background.profile.primary')}
-      >
-        <Spinner size="lg" color={getColor('text.profile.primary')} />
-      </Flex>
+        isLoading
+      />
     );
   }
 
   if (!isNew && loadError) {
     return (
-      <Flex
-        direction="column"
-        minH="100vh"
-        pb="70px"
+      <PageScaffold
+        title={t('recipes.notFound')}
+        backTo="/new-resources/recipes"
         bg={getColor('background.profile.primary')}
-      >
-        <Header />
-        <Flex px={4} pt={4} align="center" gap={3}>
-          <IconButton
-            aria-label={t('common.back')}
-            icon={<FiArrowLeft />}
-            variant="ghost"
-            color={getColor('text.profile.primary')}
-            onClick={() => navigate('/new-resources/recipes')}
-          />
-          <Text color={getColor('text.profile.primary')}>
-            {t('recipes.notFound')}
-          </Text>
-        </Flex>
-        <NavigationBar />
-      </Flex>
+        contentLayout="plain"
+      />
     );
   }
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
-      bg={getColor('background.profile.primary')}
-      pb="70px"
-    >
+    <>
       {isUploadingPhotos && (
         <LoadingOverlay typeLoading="save" text={t('recipes.uploadingPhoto')} />
       )}
-      <Header />
 
-      <Flex align="center" gap={3} px={4} pt={4} pb={2}>
-        <IconButton
-          aria-label={t('common.back')}
-          icon={<FiArrowLeft />}
-          variant="ghost"
-          color={getColor('text.profile.primary')}
-          onClick={() => navigate('/new-resources/recipes')}
-          size="sm"
-        />
-        <Text
-          fontSize="lg"
-          fontWeight="bold"
-          fontFamily={getFont('heading')}
-          color={getColor('text.profile.primary')}
-        >
-          {isNew ? t('recipes.newRecipe') : t('recipes.editRecipe')}
-        </Text>
-      </Flex>
-
-      <Box as="form" px={4} pb={6} onSubmit={onSave}>
+      <PageScaffold
+        title={isNew ? t('recipes.newRecipe') : t('recipes.editRecipe')}
+        backTo="/new-resources/recipes"
+        bg={getColor('background.profile.primary')}
+        contentLayout="plain"
+        contentPx={0}
+        contentPt={0}
+      >
+        <Box as="form" px={4} pb={6} onSubmit={onSave}>
         <VStack spacing={4} align="stretch">
           <FormControl isInvalid={!!errors.title}>
             <FormLabel
@@ -506,9 +469,8 @@ export const RecipeFormView = () => {
             {t('common.save')}
           </Button>
         </VStack>
-      </Box>
-
-      <NavigationBar />
-    </Flex>
+        </Box>
+      </PageScaffold>
+    </>
   );
 };

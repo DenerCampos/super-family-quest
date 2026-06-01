@@ -24,13 +24,12 @@ import {
 } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FamilyStories } from "../../components/FamilyStories";
-import { Header } from "../../components/Header";
+import { FixedAppShell } from "../../components/FixedAppShell";
 import { HomePieChart } from "../../components/HomePieChart";
 import { LastRegistrationsList } from "../../components/LastRegistrationsList";
 import { CompleteProfileModal } from "../../components/modals/CompleteProfileModal";
 import { NewRecurringExpenseModal } from "../../components/modals/NewRecurringExpenseModal";
 import { NewRecurringIncomeModal } from "../../components/modals/NewRecurringIncomeModal";
-import { NavigationBar } from "../../components/NavigationBar";
 import { SummaryCard } from "../../components/SummaryCard";
 import { useAuth } from "../../contexts/AuthContext";
 import { useFamilyGroup } from "../../hooks/useFamilyGroup";
@@ -193,14 +192,7 @@ const Home = () => {
   };
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
-      pb="70px"
-      bg={getColor("background.home")}
-    >
-      <Header />
-
+    <FixedAppShell bg={getColor("background.home")}>
       {hasGroup && (
         <FamilyStories
           members={familyMembers}
@@ -209,7 +201,7 @@ const Home = () => {
         />
       )}
 
-      <Flex direction="column" p={4} gap={4}>
+      <Flex direction="column" p={4} gap={4} flexShrink={0}>
         <Flex gap={2} align="center">
           <Box w="28%" minW="90px" flexShrink={0}>
             <HomePieChart
@@ -360,7 +352,9 @@ const Home = () => {
             </MenuList>
           </Menu>
         </Flex>
+      </Flex>
 
+      <Flex flex={1} minH={0} overflow="auto" px={4} pb={20} w="full">
         <LastRegistrationsList
           newRegistrationAdded={newRegistrationAdded}
           setNewRegistrationAdded={setNewRegistrationAdded}
@@ -393,8 +387,7 @@ const Home = () => {
         onDismiss={handleDismissRecurringExpensesModal}
       />
 
-      <NavigationBar />
-    </Flex>
+    </FixedAppShell>
   );
 };
 

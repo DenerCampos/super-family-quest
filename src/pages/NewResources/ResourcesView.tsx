@@ -1,16 +1,10 @@
 import {
   Accordion,
-  Flex,
-  IconButton,
-  Text,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { FiArrowLeft } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { PageScaffold } from '../../components/PageScaffold';
 import { SimpleResourceModal } from '../../components/modals/SimpleResourceModal';
 import ExpenseResource from '../../components/resources/ExpenseResource';
 import GroupResource from '../../components/resources/GroupResource';
@@ -32,10 +26,9 @@ import type {
 } from '../../services/resources';
 
 export const ResourcesView = () => {
-  const { getColor, getFont } = useVisualTheme();
+  const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const toast = useToast();
-  const navigate = useNavigate();
 
   const [editingResource, setEditingResource] = useState<{
     type: 'store' | 'payment' | 'group' | 'expense' | 'revenue';
@@ -150,33 +143,14 @@ export const ResourcesView = () => {
   };
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
+    <PageScaffold
+      title={t('newResources.tiles.resources.title')}
+      backTo="/new-resources"
       bg={getColor('background.resources')}
-      pb="70px"
+      contentLayout="plain"
+      contentPx={0}
+      contentPt={4}
     >
-      <Header />
-
-      <Flex align="center" px={4} pt={4} pb={2} gap={3}>
-        <IconButton
-          aria-label={t('common.back')}
-          icon={<FiArrowLeft />}
-          variant="ghost"
-          color={getColor('text.dashboard.title')}
-          onClick={() => navigate('/new-resources')}
-          size="sm"
-        />
-        <Text
-          fontSize="lg"
-          fontWeight="bold"
-          fontFamily={getFont('heading')}
-          color={getColor('text.dashboard.title')}
-        >
-          {t('newResources.tiles.resources.title')}
-        </Text>
-      </Flex>
-
       <Accordion allowMultiple px={4}>
         <ResourceContainer
           title={t('resources.registrations')}
@@ -272,8 +246,6 @@ export const ResourcesView = () => {
           }
         />
       )}
-
-      <NavigationBar />
-    </Flex>
+    </PageScaffold>
   );
 };

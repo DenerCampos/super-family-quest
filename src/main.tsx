@@ -8,7 +8,7 @@ import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import i18n from "./i18n/config";
-import theme from "./theme/theme";
+import theme, { TOAST_BOTTOM_OFFSET } from "./theme/theme";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +19,17 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <I18nextProvider i18n={i18n}>
           <AuthProvider>
             <ThemeProvider>
-              <ChakraProvider theme={theme}>
+              <ChakraProvider
+                theme={theme}
+                toastOptions={{
+                  defaultOptions: {
+                    position: "bottom",
+                    containerStyle: {
+                      marginBottom: TOAST_BOTTOM_OFFSET,
+                    },
+                  },
+                }}
+              >
                 <App />
               </ChakraProvider>
             </ThemeProvider>
