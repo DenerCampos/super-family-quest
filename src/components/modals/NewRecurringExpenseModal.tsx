@@ -37,15 +37,17 @@ type ExpenseItem = ExpenseComplete & {
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  onDismiss: (rememberLater: boolean) => void;
 };
 
-export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
+export const NewRecurringExpenseModal = ({ isOpen, onClose, onDismiss }: Props) => {
   const toast = useToast();
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
   const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rememberLater, setRememberLater] = useState(false);
 
   // Carregar despesas repetidas
   useEffect(() => {
@@ -205,22 +207,51 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
     );
   };
 
+  const handleDismiss = () => {
+    onDismiss(rememberLater);
+    setRememberLater(false);
+  };
+
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleDismiss}
       closeOnOverlayClick={false}
       size="sm"
       isCentered
+      scrollBehavior="inside"
     >
       <ModalOverlay />
       <ModalContent
         bg={getColor('background.primary')}
         color={getColor('text.primary')}
+        maxH="90dvh"
+        display="flex"
+        flexDirection="column"
+        overflow="hidden"
       >
-        <ModalHeader>{t('modals.recurringExpense.title')}</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+        <ModalHeader flexShrink={0}>{t('modals.recurringExpense.title')}</ModalHeader>
+        <ModalCloseButton onClick={handleDismiss} />
+        <ModalBody
+          overflowY="auto"
+          flex="1"
+          minH={0}
+          pb={6}
+          css={{
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehavior: 'contain',
+            '&::-webkit-scrollbar': {
+              width: '6px',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'transparent',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: getColor('background.tertiary'),
+              borderRadius: '4px',
+            },
+          }}
+        >
           <Text mb={4} fontSize="lg">
             {t('modals.recurringExpense.description')}
           </Text>
@@ -229,24 +260,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
             {t('modals.recurringExpense.expenses')}:
           </Heading>
 
-          <Box
-            maxH="300px"
-            overflowY="auto"
-            overflowX="hidden"
-            pr={2}
-            css={{
-              '&::-webkit-scrollbar': {
-                width: '6px',
-              },
-              '&::-webkit-scrollbar-track': {
-                background: 'transparent',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                background: getColor('background.tertiary'),
-                borderRadius: '4px',
-              },
-            }}
-          >
+          <Box>
             {isLoading ? (
               <Text textAlign="center" py={4}>
                 {t('common.loading')}
@@ -398,6 +412,15 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose }: Props) => {
           <Text fontSize="sm" color={getColor('text.secondary')}>
             {t('modals.recurringExpense.reminder')}
           </Text>
+
+          <Checkbox
+            mt={4}
+            isChecked={rememberLater}
+            onChange={(e) => setRememberLater(e.target.checked)}
+            colorScheme={getColor('chakraColors.green')}
+          >
+            <Text fontSize="sm">{t('modals.recurringExpense.rememberLater')}</Text>
+          </Checkbox>
 
           <Button
             mt={4}
