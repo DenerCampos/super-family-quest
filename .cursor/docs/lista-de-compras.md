@@ -41,6 +41,8 @@ Base URL: `VITE_API_URL` (configurado em `.env`)
 | PATCH | `/shopping-lists/:id` | Atualizar lista (nome, status) |
 | DELETE | `/shopping-lists/:id` | Deletar lista |
 | PATCH | `/shopping-lists/:id/complete` | Finalizar lista |
+| PATCH | `/shopping-lists/:id/complete-with-remaining` | Finalizar e criar nova com itens pendentes |
+| POST | `/shopping-lists/:id/recreate` | Recriar lista a partir de uma finalizada |
 
 ### Items
 
@@ -205,7 +207,9 @@ Pagina da "Lista Viva":
 - Itens agrupados por categoria
 - Checkbox para toggle de status (pending <-> in_cart)
 - Botoes de editar e excluir por item
-- Botao "Finalizar Lista"
+- Botao "Finalizar Lista" (volta ao dashboard de listas ativas)
+- Botao "Finalizar e criar nova com itens pendentes" (visivel quando ha itens comprados e pendentes)
+- Botao "Criar lista novamente" em listas finalizadas (copia nome e itens para nova lista ativa)
 - Atualizacao em tempo real via WebSocket
 
 ---

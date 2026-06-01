@@ -1,26 +1,31 @@
-import { Flex, Spinner, Text } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { Header } from '../Header';
+import { LoadingOverlay } from '../LoadingOverlay';
 import { NavigationBar } from '../NavigationBar';
 
-type Props = {
+type LoadingProps = {
   getColor: (path: string) => string;
+  loadingText: string;
 };
 
-export const ShoppingListDetailLoading = ({ getColor }: Props) => (
+export const ShoppingListDetailLoading = ({
+  getColor,
+  loadingText,
+}: LoadingProps) => (
   <Flex
     direction="column"
     minH="100vh"
     bg={getColor('background.shoppingList.primary')}
   >
+    <LoadingOverlay typeLoading="read" text={loadingText} />
     <Header />
-    <Flex flex={1} justify="center" align="center">
-      <Spinner color={getColor('text.shoppingList.primary')} size="lg" />
-    </Flex>
+    <Flex flex={1} />
     <NavigationBar />
   </Flex>
 );
 
-type ErrorProps = Props & {
+type ErrorProps = {
+  getColor: (path: string) => string;
   message: string;
 };
 

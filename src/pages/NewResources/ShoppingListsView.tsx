@@ -3,7 +3,6 @@ import {
   IconButton,
   Text,
   VStack,
-  Spinner,
   Button,
   useDisclosure,
   useToast,
@@ -13,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { FiArrowLeft, FiPlus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../../components/Header';
+import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { NavigationBar } from '../../components/NavigationBar';
 import { ShoppingListCard } from '../../components/shoppingList/ShoppingListCard';
 import { CreateShoppingListModal } from '../../components/modals/CreateShoppingListModal';
@@ -34,6 +34,7 @@ export const ShoppingListsView = () => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [familyGroups, setFamilyGroups] = useState<{ id: string; name: string }[]>([]);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { lists, isLoading, status, changeStatus, createList, deleteList } =
     useShoppingLists();
@@ -67,7 +68,9 @@ export const ShoppingListsView = () => {
   };
 
   const handleDelete = async (id: string) => {
+    if (isDeleting) return;
     if (!globalThis.confirm(t('shoppingList.deleteListConfirm'))) return;
+    setIsDeleting(true);
     try {
       await deleteList(id);
       toast({
@@ -81,6 +84,8 @@ export const ShoppingListsView = () => {
         status: 'error',
         duration: 3000,
       });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -91,6 +96,17 @@ export const ShoppingListsView = () => {
       bg={getColor('background.shoppingList.primary')}
       pb="70px"
     >
+      {(isLoading || isDeleting) && (
+        <LoadingOverlay
+          typeLoading={isDeleting ? 'save' : 'read'}
+          text={
+            isDeleting
+              ? t('shoppingList.deletingList')
+              : t('shoppingList.loadingLists')
+          }
+        />
+      )}
+
       <Header />
 
       <Flex align="center" justify="space-between" px={4} pt={4} pb={2}>
@@ -160,14 +176,7 @@ export const ShoppingListsView = () => {
       </Flex>
 
       <Box flex={1} px={4}>
-        {isLoading ? (
-          <Flex justify="center" align="center" py={10}>
-            <Spinner
-              color={getColor('text.shoppingList.primary')}
-              size="lg"
-            />
-          </Flex>
-        ) : lists.length === 0 ? (
+        {!isLoading && lists.length === 0 ? (
           <VStack spacing={3} py={10}>
             <Text
               fontSize="md"

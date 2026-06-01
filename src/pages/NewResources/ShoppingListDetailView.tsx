@@ -13,6 +13,7 @@ import {
 } from '../../components/shoppingList/ShoppingListDetailScreenStates';
 import { OnlineUsersIndicator } from '../../components/shoppingList/OnlineUsersIndicator';
 import { EditShoppingListItemModal } from '../../components/modals/EditShoppingListItemModal';
+import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { useShoppingListDetailPage } from '../../hooks/useShoppingListDetailPage';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 
@@ -38,11 +39,22 @@ export const ShoppingListDetailView = () => {
     handleSaveEdit,
     handleDelete,
     handleFinishList,
+    handleFinishAndCreateRemaining,
+    handleRecreateList,
     handleCloseEditModal,
+    canFinishWithRemaining,
+    pendingListAction,
+    isListActionPending,
+    listActionLoadingText,
   } = useShoppingListDetailPage(listId);
 
   if (isLoading) {
-    return <ShoppingListDetailLoading getColor={getColor} />;
+    return (
+      <ShoppingListDetailLoading
+        getColor={getColor}
+        loadingText={t('shoppingList.loadingLists')}
+      />
+    );
   }
 
   if (!detail) {
@@ -63,6 +75,10 @@ export const ShoppingListDetailView = () => {
       bg={getColor('background.shoppingList.primary')}
       pb="70px"
     >
+      {isListActionPending && (
+        <LoadingOverlay typeLoading="save" text={listActionLoadingText} />
+      )}
+
       <Header />
 
       <Flex
@@ -110,6 +126,8 @@ export const ShoppingListDetailView = () => {
       <ShoppingListDetailCategoriesPanel
         categories={categories}
         isCompleted={isCompleted}
+        canFinishWithRemaining={canFinishWithRemaining}
+        pendingListAction={pendingListAction}
         getColor={getColor}
         getFont={getFont}
         t={t}
@@ -118,6 +136,8 @@ export const ShoppingListDetailView = () => {
         onDelete={handleDelete}
         togglingItemIds={togglingItems}
         onFinishList={handleFinishList}
+        onFinishAndCreateRemaining={handleFinishAndCreateRemaining}
+        onRecreateList={handleRecreateList}
       />
 
       <EditShoppingListItemModal

@@ -836,8 +836,19 @@
       "onlineUsers": "Online agora",
       "finishList": "Finalizar Lista",
       "finishListConfirm": "Tem certeza que deseja finalizar a lista? Todos os itens pendentes serão marcados como no carrinho.",
+      "finishAndCreateRemaining": "Finalizar e criar nova com itens pendentes",
+      "finishAndCreateRemainingConfirm": "Finalizar esta lista e criar uma nova com os itens que ainda não foram comprados?",
+      "recreateList": "Criar lista novamente",
+      "recreateListConfirm": "Criar uma nova lista ativa com o mesmo nome e itens desta lista finalizada?",
       "listCompleted": "Lista finalizada com sucesso!",
       "listCompletedError": "Erro ao finalizar lista",
+      "listCompletedWithRemaining": "Lista finalizada e nova lista criada com os itens pendentes!",
+      "listCompletedWithRemainingError": "Erro ao finalizar lista e criar nova",
+      "listRecreated": "Nova lista criada com sucesso!",
+      "listRecreatedError": "Erro ao recriar lista",
+      "finishingList": "Finalizando lista...",
+      "finishingAndCreatingList": "Finalizando e criando nova lista...",
+      "recreatingList": "Recriando lista...",
       "addedBy": "por {{name}}",
       "checkedBy": "{{addedBy}} → {{checkedBy}}"
     },
@@ -877,7 +888,9 @@
     },
     "deleteList": "Excluir Lista",
     "deleteListConfirm": "Tem certeza que deseja excluir esta lista?",
-    "deleteListError": "Erro ao excluir lista"
+    "deleteListError": "Erro ao excluir lista",
+    "loadingLists": "Carregando listas...",
+    "deletingList": "Excluindo lista..."
   },
   "notFoundPage": {
     "lost": "Página não encontrada",
