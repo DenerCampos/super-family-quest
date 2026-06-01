@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { FixedAppShell } from '../../components/FixedAppShell';
 import { BuyThemeModal } from '../../components/modals/BuyThemeModal';
 import {
   Flex,
@@ -348,14 +347,16 @@ const Profile = () => {
   };
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
-      bg={getColor('background.profile.primary')}
-    >
-      <Header />
-      <Tabs isFitted>
-        <TabList>
+    <FixedAppShell bg={getColor('background.profile.primary')}>
+      <Tabs
+        isFitted
+        display="flex"
+        flexDirection="column"
+        flex={1}
+        minH={0}
+        overflow="hidden"
+      >
+        <TabList flexShrink={0}>
           <Tab
             _selected={{
               color: getColor('text.profile.selected'),
@@ -378,17 +379,15 @@ const Profile = () => {
           </Tab>
         </TabList>
 
-        <TabPanels>
-          {/* Aba de Perfil - Mantendo o estilo original */}
-          <TabPanel>
+        <TabPanels flex={1} minH={0} overflow="hidden">
+          <TabPanel p={0} h="100%" overflow="auto">
             <Flex
               p={4}
               direction="column"
               maxW="600px"
               mx="auto"
               w="full"
-              overflowY="auto"
-              h={'calc(100vh - 220px)'}
+              pb={20}
               css={{
                 '&::-webkit-scrollbar': {
                   width: '4px',
@@ -654,9 +653,8 @@ const Profile = () => {
             </Flex>
           </TabPanel>
 
-          {/* Aba de Temas */}
-          <TabPanel>
-            <Box maxW="600px" mx="auto" p={4}>
+          <TabPanel p={0} h="100%" overflow="auto">
+            <Box maxW="600px" mx="auto" p={4} pb={20}>
               {/* Lista de Temas */}
               {isLoadingThemes ? (
                 <Center py={8}>
@@ -784,7 +782,6 @@ const Profile = () => {
         </TabPanels>
       </Tabs>
 
-      {/* Modal para seleção de brasão */}
       <Modal
         isOpen={isCoatModalOpen}
         onClose={closeCoatModal}
@@ -837,9 +834,6 @@ const Profile = () => {
         </ModalContent>
       </Modal>
 
-      <NavigationBar />
-
-      {/* Modal de compra de tema */}
       {selectedThemeToBuy && (
         <BuyThemeModal
           isOpen={!!selectedThemeToBuy}
@@ -850,7 +844,7 @@ const Profile = () => {
           }}
         />
       )}
-    </Flex>
+    </FixedAppShell>
   );
 };
 

@@ -10,8 +10,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { FixedAppShell } from '../../components/FixedAppShell';
 import { useMissions } from '../../hooks/useMissions';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -65,85 +64,87 @@ export const MissionsView = () => {
   };
 
   return (
-    <Flex direction="column" minH="100vh">
-      <Header />
+    <FixedAppShell bg={getColor('background.resources')}>
+      <Box flexShrink={0} px={4} pt={6} maxW="600px" mx="auto" w="full">
+        <Text
+          fontSize="xl"
+          fontWeight="bold"
+          fontFamily={getFont('heading')}
+          color={getColor('text.dashboard.title')}
+          mb={2}
+          textAlign="center"
+        >
+          {t('missions.title')}
+        </Text>
 
-      <Flex
-        flex={1}
-        direction="column"
-        align="center"
-        justify="flex-start"
-        pt={6}
-        pb={20}
-        px={4}
-        bg={getColor('background.resources')}
-      >
-        <Box width="100%" maxW="600px">
-          <Text
-            fontSize="xl"
-            fontWeight="bold"
-            fontFamily={getFont('heading')}
-            color={getColor('text.dashboard.title')}
+        <Text
+          color={getColor('text.dashboard.tileSubtitle')}
+          fontSize="sm"
+          textAlign="center"
+          mb={4}
+        >
+          {t('missions.subtitle')}
+        </Text>
+      </Box>
+
+      {isLoading ? (
+        <Flex flex={1} justify="center" align="center">
+          <Spinner color={getColor('text.dashboard.title')} />
+        </Flex>
+      ) : isError ? (
+        <Flex flex={1} justify="center" align="center" px={4}>
+          <Text color={getColor('status.error')} fontSize="sm" textAlign="center">
+            {t('common.loadError')}
+          </Text>
+        </Flex>
+      ) : (
+        <Tabs
+          display="flex"
+          flexDirection="column"
+          flex={1}
+          minH={0}
+          overflow="hidden"
+          variant="soft-rounded"
+          colorScheme={getColor('primary')}
+          isFitted
+          px={4}
+        >
+          <TabList
+            flexShrink={0}
+            bg={getColor('background.missions.tabList')}
+            borderRadius="xl"
+            p={1}
             mb={2}
-            textAlign="center"
+            maxW="600px"
+            mx="auto"
+            w="full"
           >
-            {t('missions.title')}
-          </Text>
+            {MISSION_TAB_KEYS.map((labelKey) => (
+              <Tab key={labelKey} {...tabStyle}>
+                {t(labelKey)}
+              </Tab>
+            ))}
+          </TabList>
 
-          <Text
-            color={getColor('text.dashboard.tileSubtitle')}
-            fontSize="sm"
-            textAlign="center"
-            mb={5}
-          >
-            {t('missions.subtitle')}
-          </Text>
-
-          {isLoading ? (
-            <Flex justify="center" pt={8}>
-              <Spinner color={getColor('text.dashboard.title')} />
-            </Flex>
-          ) : isError ? (
-            <Text
-              color={getColor('status.error')}
-              fontSize="sm"
-              textAlign="center"
-              py={6}
-            >
-              {t('common.loadError')}
-            </Text>
-          ) : (
-            <Tabs
-              variant="soft-rounded"
-              colorScheme={getColor('primary')}
-              isFitted
-            >
-              <TabList
-                bg={getColor('background.missions.tabList')}
-                borderRadius="xl"
-                p={1}
-                mb={4}
+          <TabPanels flex={1} minH={0} overflow="hidden">
+            {tabItems.map((items, index) => (
+              <TabPanel
+                key={MISSION_TAB_KEYS[index]}
+                px={0}
+                pt={0}
+                pb={20}
+                h="100%"
+                overflow="auto"
+                maxW="600px"
+                mx="auto"
+                w="full"
               >
-                {MISSION_TAB_KEYS.map((labelKey) => (
-                  <Tab key={labelKey} {...tabStyle}>
-                    {t(labelKey)}
-                  </Tab>
-                ))}
-              </TabList>
-
-              <TabPanels>
-                {tabItems.map((items, index) => (
-                  <TabPanel key={MISSION_TAB_KEYS[index]} px={0} pb={0}>
-                    {renderList(items)}
-                  </TabPanel>
-                ))}
-              </TabPanels>
-            </Tabs>
-          )}
-        </Box>
-      </Flex>
-
-      <NavigationBar />
-    </Flex>
+                {renderList(items)}
+              </TabPanel>
+            ))}
+          </TabPanels>
+        </Tabs>
+      )}
+    </FixedAppShell>
   );
 };
