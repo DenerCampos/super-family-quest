@@ -45,7 +45,7 @@ export const useExpenseFormSubmit = ({
           Number(parseBRLCurrency(item.value).toFixed(2)) *
           Number(parseGrams(item.quantity))),
       })),
-      uri: "",
+      uri: data.uri?.trim() ?? "",
     };
 
     if (isEdit && id) {

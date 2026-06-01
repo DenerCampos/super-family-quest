@@ -2,6 +2,7 @@ import { useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../services";
 import { GET_LAST_REGISTRATION_QUERY_KEY } from "./useGetLastRegistration";
+import { missionQueryKeys } from "./missionQueryKeys";
 import { useThemedTranslation } from "./useThemedTranslation";
 import { REVENUE_QUERY_KEY } from "../pages/Revenue";
 import { useNavigate } from "react-router-dom";
@@ -39,6 +40,9 @@ export const useCreateRevenue = (redirectPath?: string | number) => {
       );
       queryClient.invalidateQueries({
         queryKey: [GET_LAST_REGISTRATION_QUERY_KEY],
+      });
+      queryClient.invalidateQueries({
+        queryKey: missionQueryKeys.root,
       });
 
       if (redirectPath !== undefined) {
