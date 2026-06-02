@@ -1,7 +1,6 @@
 import { Box, Image, Text } from '@chakra-ui/react';
 import { keyframes } from '@emotion/react';
 import { useVisualTheme } from '../hooks/useVisualTheme';
-import { useInitialTheme } from '../hooks/useInitialTheme';
 
 // Animação dos pontos
 const loadingAnimation = keyframes`
@@ -15,8 +14,7 @@ const loadingAnimation = keyframes`
 type LoadingState = 'save' | 'loading' | 'open' | 'read';
 
 export const LoadingOverlay = ({ typeLoading = 'save', text = 'Carregando' }: { typeLoading?: LoadingState, text?: string }) => {
-  const initialTheme = useInitialTheme();
-  const { getColor, getFont, getAsset } = useVisualTheme(initialTheme);
+  const { getColor, getFont, getAsset } = useVisualTheme();
   const gifLoading = getAsset(`animations.loading.${typeLoading}`);
 
   return (

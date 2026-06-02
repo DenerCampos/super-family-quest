@@ -8,6 +8,7 @@ import {
   Image,
   Input,
   Select,
+  Text,
   Textarea,
   VStack,
   useToast,
@@ -17,7 +18,7 @@ import { Controller } from 'react-hook-form';
 import { FiCamera, FiImage, FiPlus, FiTrash } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { LoadingOverlay } from '../../components/LoadingOverlay';
-import { PageScaffold } from '../../components/PageScaffold';
+import { ResourceCrudScaffold } from '../../components/ResourceCrudScaffold';
 import { useFamilyGroupsList } from '../../hooks/useFamilyGroupsList';
 import { useRecipeForm } from '../../hooks/useRecipeForm';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -31,6 +32,14 @@ import {
 } from '../../utils/chore-occurrence-photo-constants';
 
 const MAX_UI_PHOTOS = 4;
+
+const labelColor = (getColor: (path: string) => string) =>
+  getColor('text.familyGroup.title');
+
+const fieldProps = (getColor: (path: string) => string) => ({
+  borderColor: getColor('border.primary'),
+  color: getColor('text.familyGroup.title'),
+});
 
 export const RecipeFormView = () => {
   const { getColor, getFont } = useVisualTheme();
@@ -143,17 +152,14 @@ export const RecipeFormView = () => {
     e.target.value = '';
   };
 
-  const inputFocusStyle = {
-    borderColor: getColor('border.tertiary'),
-    boxShadow: `0 0 0 1px ${getColor('border.tertiary')}`,
-  };
+  const formTitle = isNew ? t('recipes.newRecipe') : t('recipes.editRecipe');
+  const fieldsStyle = fieldProps(getColor);
 
   if (!isNew && isLoadingRecipe) {
     return (
-      <PageScaffold
-        title={t('recipes.editRecipe')}
+      <ResourceCrudScaffold
+        title={formTitle}
         backTo="/new-resources/recipes"
-        bg={getColor('background.profile.primary')}
         isLoading
       />
     );
@@ -161,12 +167,11 @@ export const RecipeFormView = () => {
 
   if (!isNew && loadError) {
     return (
-      <PageScaffold
-        title={t('recipes.notFound')}
-        backTo="/new-resources/recipes"
-        bg={getColor('background.profile.primary')}
-        contentLayout="plain"
-      />
+      <ResourceCrudScaffold title={t('recipes.notFound')} backTo="/new-resources/recipes">
+        <Text color={getColor('text.dashboard.tileSubtitle')}>
+          {t('recipes.notFound')}
+        </Text>
+      </ResourceCrudScaffold>
     );
   }
 
@@ -176,52 +181,23 @@ export const RecipeFormView = () => {
         <LoadingOverlay typeLoading="save" text={t('recipes.uploadingPhoto')} />
       )}
 
-      <PageScaffold
-        title={isNew ? t('recipes.newRecipe') : t('recipes.editRecipe')}
-        backTo="/new-resources/recipes"
-        bg={getColor('background.profile.primary')}
-        contentLayout="plain"
-        contentPx={0}
-        contentPt={0}
-      >
-        <Box as="form" px={4} pb={6} onSubmit={onSave}>
-        <VStack spacing={4} align="stretch">
+      <ResourceCrudScaffold title={formTitle} backTo="/new-resources/recipes">
+        <VStack as="form" align="stretch" spacing={4} onSubmit={onSave} pb={4}>
           <FormControl isInvalid={!!errors.title}>
-            <FormLabel
-              fontFamily={getFont('body')}
-              color={getColor('text.profile.primary')}
-            >
-              {t('recipes.fieldTitle')}
-            </FormLabel>
-            <Input
-              {...register('title')}
-              bg={getColor('input.primary')}
-              color={getColor('text.profile.primary')}
-              _focus={inputFocusStyle}
-            />
+            <FormLabel color={labelColor(getColor)}>{t('recipes.fieldTitle')}</FormLabel>
+            <Input {...register('title')} {...fieldsStyle} />
           </FormControl>
 
           <FormControl>
-            <FormLabel
-              fontFamily={getFont('body')}
-              color={getColor('text.profile.primary')}
-            >
+            <FormLabel color={labelColor(getColor)}>
               {t('recipes.fieldDescription')}
             </FormLabel>
-            <Input
-              {...register('description')}
-              bg={getColor('input.primary')}
-              color={getColor('text.profile.primary')}
-              _focus={inputFocusStyle}
-            />
+            <Input {...register('description')} {...fieldsStyle} />
           </FormControl>
 
           {!isNew && recipe?.familyGroup ? (
             <FormControl>
-              <FormLabel
-                fontFamily={getFont('body')}
-                color={getColor('text.profile.primary')}
-              >
+              <FormLabel color={labelColor(getColor)}>
                 {t('recipes.familyGroup')}
               </FormLabel>
               <Input
@@ -229,24 +205,20 @@ export const RecipeFormView = () => {
                 isReadOnly
                 bg={getColor('input.secondary')}
                 color={getColor('text.profile.secondary')}
+                borderColor={getColor('border.primary')}
               />
             </FormControl>
           ) : null}
 
           {isNew ? (
             <FormControl>
-              <FormLabel
-                fontFamily={getFont('body')}
-                color={getColor('text.profile.primary')}
-              >
+              <FormLabel color={labelColor(getColor)}>
                 {t('recipes.shareWithFamily')}
               </FormLabel>
               <Select
                 placeholder={t('shoppingList.personalList')}
                 {...register('familyGroupId')}
-                bg={getColor('input.primary')}
-                color={getColor('text.profile.primary')}
-                _focus={inputFocusStyle}
+                {...fieldsStyle}
               >
                 {familyGroups.map((g) => (
                   <option key={g.id} value={g.id}>
@@ -258,10 +230,7 @@ export const RecipeFormView = () => {
           ) : null}
 
           <FormControl isInvalid={!!errors.ingredients}>
-            <FormLabel
-              fontFamily={getFont('body')}
-              color={getColor('text.profile.primary')}
-            >
+            <FormLabel color={labelColor(getColor)}>
               {t('recipes.ingredients')}
             </FormLabel>
             <VStack align="stretch" spacing={2}>
@@ -276,12 +245,7 @@ export const RecipeFormView = () => {
                         placeholder={t('recipes.ingredientName')}
                         flex={1}
                         minW="0"
-                        bg={getColor('input.primary')}
-                        color={getColor('text.profile.primary')}
-                        _placeholder={{
-                          color: getColor('text.profile.secondary'),
-                        }}
-                        _focus={inputFocusStyle}
+                        {...fieldsStyle}
                       />
                     )}
                   />
@@ -296,12 +260,7 @@ export const RecipeFormView = () => {
                         placeholder={t('recipes.ingredientQuantityPlaceholder')}
                         w="64px"
                         flexShrink={0}
-                        bg={getColor('input.primary')}
-                        color={getColor('text.profile.primary')}
-                        _placeholder={{
-                          color: getColor('text.profile.secondary'),
-                        }}
-                        _focus={inputFocusStyle}
+                        {...fieldsStyle}
                       />
                     )}
                   />
@@ -314,12 +273,7 @@ export const RecipeFormView = () => {
                         placeholder={t('recipes.ingredientUnit')}
                         w="72px"
                         flexShrink={0}
-                        bg={getColor('input.primary')}
-                        color={getColor('text.profile.primary')}
-                        _placeholder={{
-                          color: getColor('text.profile.secondary'),
-                        }}
-                        _focus={inputFocusStyle}
+                        {...fieldsStyle}
                       />
                     )}
                   />
@@ -328,7 +282,7 @@ export const RecipeFormView = () => {
                     icon={<FiTrash />}
                     size="sm"
                     variant="ghost"
-                    color={getColor('text.profile.primary')}
+                    color={getColor('text.familyGroup.title')}
                     flexShrink={0}
                     onClick={() => remove(index)}
                     isDisabled={fields.length <= 1}
@@ -339,7 +293,7 @@ export const RecipeFormView = () => {
                 size="sm"
                 leftIcon={<FiPlus />}
                 variant="outline"
-                color={getColor('text.profile.primary')}
+                color={getColor('text.familyGroup.title')}
                 borderColor={getColor('border.primary')}
                 _hover={{ bg: getColor('input.primary') }}
                 onClick={() => append({ name: '', quantity: 1, unit: 'un' })}
@@ -350,30 +304,17 @@ export const RecipeFormView = () => {
           </FormControl>
 
           <FormControl isInvalid={!!errors.instructions}>
-            <FormLabel
-              fontFamily={getFont('body')}
-              color={getColor('text.profile.primary')}
-            >
+            <FormLabel color={labelColor(getColor)}>
               {t('recipes.fieldInstructions')}
             </FormLabel>
-            <Textarea
-              {...register('instructions')}
-              rows={8}
-              bg={getColor('input.primary')}
-              color={getColor('text.profile.primary')}
-              _focus={inputFocusStyle}
-            />
+            <Textarea {...register('instructions')} rows={8} {...fieldsStyle} />
           </FormControl>
 
           <FormControl>
-            <FormLabel
-              fontFamily={getFont('body')}
-              color={getColor('text.profile.primary')}
-            >
+            <FormLabel color={labelColor(getColor)}>
               {t('recipes.photosWithLimit', { max: MAX_UI_PHOTOS })}
             </FormLabel>
 
-            {/* Input câmera (capture) */}
             <Input
               ref={cameraRef}
               type="file"
@@ -384,7 +325,6 @@ export const RecipeFormView = () => {
               tabIndex={-1}
               onChange={handlePickPhoto}
             />
-            {/* Input galeria */}
             <Input
               ref={galleryRef}
               type="file"
@@ -400,7 +340,7 @@ export const RecipeFormView = () => {
                 size="sm"
                 leftIcon={<FiCamera />}
                 variant="outline"
-                color={getColor('text.profile.primary')}
+                color={getColor('text.familyGroup.title')}
                 borderColor={getColor('border.primary')}
                 _hover={{ bg: getColor('input.primary') }}
                 isDisabled={!canAddMorePhotos}
@@ -412,7 +352,7 @@ export const RecipeFormView = () => {
                 size="sm"
                 leftIcon={<FiImage />}
                 variant="outline"
-                color={getColor('text.profile.primary')}
+                color={getColor('text.familyGroup.title')}
                 borderColor={getColor('border.primary')}
                 _hover={{ bg: getColor('input.primary') }}
                 isDisabled={!canAddMorePhotos}
@@ -469,8 +409,7 @@ export const RecipeFormView = () => {
             {t('common.save')}
           </Button>
         </VStack>
-        </Box>
-      </PageScaffold>
+      </ResourceCrudScaffold>
     </>
   );
 };

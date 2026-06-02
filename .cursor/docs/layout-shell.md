@@ -10,6 +10,7 @@ Padronizar telas autenticadas com **Header** e **NavigationBar** sempre visívei
 |---------|-----|
 | `components/FixedAppShell.tsx` | Header + filhos flex + NavigationBar (`h="100vh"`, `overflow="hidden"`) |
 | `components/PageScaffold.tsx` | Shell + barra de título (voltar + título) + área scroll |
+| `components/ResourceCrudScaffold.tsx` | CRUD em recursos: `singleCard` + `contentPt={4}` (Nova tarefa) |
 | `components/PageTitleBar.tsx` | Barra fixa com `BackButton` e título |
 | `components/BackButton.tsx` | Botão circular com borda (padrão dos relatórios) |
 | `theme/theme.ts` | `TOAST_BOTTOM_OFFSET` + default `position: bottom` |
@@ -22,7 +23,13 @@ Padronizar telas autenticadas com **Header** e **NavigationBar** sempre visívei
 
 ### Destino da bottom nav (home, dashboard, missões, perfil, hub arsenal)
 
-`FixedAppShell` com título e subtítulo **centralizados** no miolo (como hub Recursos). Sem `PageTitleBar`. Em missões/perfil, abas fixas abaixo do título; scroll só no corpo.
+`FixedAppShell` com título e subtítulo **centralizados** (como hub Recursos). Sem `PageTitleBar` em hubs e perfil.
+
+### CRUD em recursos (cadastros no arsenal)
+
+Usar `ResourceCrudScaffold` (cartão com borda + `contentPt={4}`), como Nova tarefa / livro de receitas (criar, editar, visualizar).
+
+Exceções: modais, `/expense`, `/revenue`, perfil.
 
 ### Abas fixas + scroll no corpo
 

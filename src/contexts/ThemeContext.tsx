@@ -43,9 +43,8 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_THEME);
       if (savedTheme) {
-        const { themeId, timestamp } = JSON.parse(savedTheme);
-        // Verifica se o tema salvo não é muito antigo (24 horas)
-        if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
+        const { themeId } = JSON.parse(savedTheme);
+        if (themeId === 'default' || themeId === 'rpg') {
           return themeId;
         }
       }
@@ -140,6 +139,7 @@ const ThemeProviderContent: React.FC<{ children: React.ReactNode }> = ({ childre
         const savedThemeConfig = unlockedThemes.find(theme => theme.theme === themeId);
         if (savedUserId === userId && savedThemeConfig) {
           setCurrentTheme(themeId);
+          saveUserTheme(userId, themeId);
           setIsThemeLoaded(true);
           return;
         }

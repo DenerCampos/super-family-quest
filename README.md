@@ -166,7 +166,6 @@ super-family-quest/
 │   │   ├── useExpensesMutations.ts
 │   │   ├── useGetAutoFillExpenses.ts
 │   │   ├── useGetLastRegistration.ts
-│   │   ├── useInitialTheme.ts
 │   │   ├── useLoginTheme.ts
 │   │   ├── useRevenueMutations.ts
 │   │   ├── useThemeContext.ts
