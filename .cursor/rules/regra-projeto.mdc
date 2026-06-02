@@ -73,7 +73,7 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | `/login`, `/register` | Auth pública |
 | `/alexa-login` | Login Alexa |
 | `/`, `/home` | Home |
-| `/dashboard`, `/dashboard/:reportKey` | Relatórios |
+| `/dashboard`, `/dashboard/:reportKey` | Relatórios — incl. `coinStatement` (SP-97) |
 | `/new-resources` | Hub recursos |
 | `/new-resources/resources` | Grupos, lojas, pagamentos |
 | `/new-resources/family` | Grupo familiar |
@@ -189,6 +189,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `integracao-alexa.md` | Alexa / settings |
 | `stories.md` | Stories / escopo de produto |
 | `layout-shell.md` | Header/nav fixos, PageScaffold, toast acima da nav (SP-111) |
+| `extrato-moedas.md` | Extrato de moedas no Painel + animação de quests (SP-97) |
 
 ### CRUD em recursos
 

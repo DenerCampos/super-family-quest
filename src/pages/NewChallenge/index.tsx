@@ -11,6 +11,7 @@ import { FixedAppShell } from '../../components/FixedAppShell';
 import { PageTitleBar } from '../../components/PageTitleBar';
 import { ReportTile } from '../../components/reports/ReportTile';
 import { useAuth } from '../../contexts/AuthContext';
+import { useChoreCoinCelebration } from '../../hooks/useChoreCoinCelebration';
 import { useFamilyGroup } from '../../hooks/useFamilyGroup';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -82,6 +83,8 @@ const NewChallengeHub = () => {
   const userIsAdmin = familyGroup
     ? isAdmin(familyGroup, userId)
     : false;
+
+  useChoreCoinCelebration();
 
   const tiles = [...baseTiles, ...(userIsAdmin ? adminTiles : [])];
 

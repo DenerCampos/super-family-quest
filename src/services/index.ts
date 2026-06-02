@@ -165,6 +165,7 @@ export const api = {
   getExpenseById: (id: string) => ExpenseService.getExpenseById(id),
 
   getBalanceCoin: CoinService.getBalanceCoin,
+  getCoinStatement: CoinService.getStatement,
 
   getRevenueById: (id: string) => RevenueService.getRevenueById(id),
 
@@ -243,6 +244,8 @@ export const api = {
   choreGetPayrollSuggestion: ChoreService.getPayrollSuggestion,
   choreGetPayrollPending: ChoreService.getPayrollPending,
   choreSettlePayroll: ChoreService.settlePayroll,
+  choreGetPendingCoinRewards: ChoreService.getPendingCoinRewards,
+  choreCelebrateCoinRewards: ChoreService.celebrateCoinRewards,
 
   missionGetAll: MissionsService.getMissions,
   missionClaimReward: MissionsService.claimReward,

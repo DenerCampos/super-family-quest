@@ -3,4 +3,5 @@ export type ReportKey =
   | 'expensesByDate'
   | 'expensesVsIncome'
   | 'expensesByStore'
-  | 'topProducts';
+  | 'topProducts'
+  | 'coinStatement';

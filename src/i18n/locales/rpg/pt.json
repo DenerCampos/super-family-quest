@@ -74,6 +74,10 @@
       "topProducts": {
         "title": "Top Itens",
         "subtitle": "Mais adquiridos"
+      },
+      "coinStatement": {
+        "title": "Extrato de Moedas",
+        "subtitle": "Ganhos e gastos"
       }
     },
     "filters": {
@@ -146,6 +150,20 @@
       "value": "Valor em Ouro",
       "quantity": "Quantidade",
       "totalValue": "Valor Total em Ouro"
+    },
+    "coinStatement": {
+      "title": "Extrato de Moedas",
+      "openFromHeader": "Ver extrato de moedas",
+      "loading": "Consultando o livro-caixa...",
+      "error": "Erro ao carregar extrato de moedas",
+      "noData": "Nenhuma movimentação neste ciclo",
+      "noDescription": "Movimentação de moedas",
+      "totalEarned": "Total de ganhos",
+      "totalSpent": "Total de gastos",
+      "balanceAfter": "Saldo: {{value}}",
+      "pageOf": "Página {{current}} de {{total}}",
+      "previous": "Pergaminho Anterior",
+      "next": "Próximo Pergaminho"
     }
   },
   "resources": {

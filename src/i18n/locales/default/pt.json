@@ -78,6 +78,10 @@
       "topProducts": {
         "title": "Top Produtos",
         "subtitle": "Mais comprados"
+      },
+      "coinStatement": {
+        "title": "Extrato de Moedas",
+        "subtitle": "Ganhos e gastos"
       }
     },
     "filters": {
@@ -150,6 +154,20 @@
       "value": "Valor",
       "quantity": "Quantidade",
       "totalValue": "Valor Total"
+    },
+    "coinStatement": {
+      "title": "Extrato de Moedas",
+      "openFromHeader": "Ver extrato de moedas",
+      "loading": "Carregando extrato...",
+      "error": "Erro ao carregar extrato de moedas",
+      "noData": "Nenhuma movimentação no período",
+      "noDescription": "Movimentação de moedas",
+      "totalEarned": "Total de ganhos",
+      "totalSpent": "Total de gastos",
+      "balanceAfter": "Saldo: {{value}}",
+      "pageOf": "Página {{current}} de {{total}}",
+      "previous": "Anterior",
+      "next": "Próximo"
     }
   },
   "resources": {

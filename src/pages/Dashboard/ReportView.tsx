@@ -6,6 +6,7 @@ import { BarChartExpensesByStore } from '../../components/reports/BarChartExpens
 import { LineChartExpensesByDate } from '../../components/reports/LineChartExpensesByDate';
 import { HorizontalBarChartTopProducts } from '../../components/reports/HorizontalBarChartTopProducts';
 import { BarChartExpensesIncome } from '../../components/reports/BarChartExpensesIncome';
+import { CoinStatementPanel } from '../../components/reports/CoinStatementPanel';
 import { ReportFilters } from '../../components/reports/ReportFilters';
 import { PageScaffold } from '../../components/PageScaffold';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -14,6 +15,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
 import type { FamilyGroupResponseDto } from '../../types/familyGroup';
 import type { ReportKey } from '../../types/reports';
+import { isAdmin } from '../../utils/familyGroupPermissions';
 
 const VALID_KEYS = new Set<ReportKey>([
   'expensesByCategory',
@@ -21,6 +23,7 @@ const VALID_KEYS = new Set<ReportKey>([
   'expensesVsIncome',
   'expensesByStore',
   'topProducts',
+  'coinStatement',
 ]);
 
 const TITLE_KEYS: Record<ReportKey, string> = {
@@ -29,6 +32,7 @@ const TITLE_KEYS: Record<ReportKey, string> = {
   expensesVsIncome: 'reports.expensesIncome.title',
   expensesByStore: 'reports.expensesByStore.title',
   topProducts: 'reports.topProducts.title',
+  coinStatement: 'reports.coinStatement.title',
 };
 
 function getMonthDateRange(month: number, year: number) {
@@ -56,12 +60,18 @@ export const ReportView = () => {
   const { startDate: defaultStart, endDate: defaultEnd } = getMonthDateRange(month, year);
   const [startDate, setStartDate] = useState(defaultStart);
   const [endDate, setEndDate] = useState(defaultEnd);
+  const [statementPage, setStatementPage] = useState(1);
 
   useEffect(() => {
     const { startDate: s, endDate: e } = getMonthDateRange(month, year);
     setStartDate(s);
     setEndDate(e);
+    setStatementPage(1);
   }, [month, year]);
+
+  useEffect(() => {
+    setStatementPage(1);
+  }, [startDate, endDate, selectedUserId]);
 
   useEffect(() => {
     const loadFamilyGroup = async () => {
@@ -85,6 +95,11 @@ export const ReportView = () => {
 
   const isYearOnly = key === 'expensesVsIncome';
   const userId = selectedUserId ?? undefined;
+  const currentUserId = profile?.user.id ?? '';
+  const userIsAdmin = familyGroup
+    ? isAdmin(familyGroup, currentUserId)
+    : false;
+  const showMemberName = key === 'coinStatement' && userIsAdmin && !selectedUserId;
 
   const renderChart = () => {
     switch (key) {
@@ -98,6 +113,17 @@ export const ReportView = () => {
         return <BarChartExpensesByStore startDate={startDate} endDate={endDate} userId={userId} />;
       case 'topProducts':
         return <HorizontalBarChartTopProducts startDate={startDate} endDate={endDate} userId={userId} />;
+      case 'coinStatement':
+        return (
+          <CoinStatementPanel
+            startDate={startDate}
+            endDate={endDate}
+            userId={userId}
+            showMemberName={showMemberName}
+            page={statementPage}
+            onPageChange={setStatementPage}
+          />
+        );
     }
   };
 

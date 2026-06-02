@@ -5,7 +5,7 @@ import { FlyingCoinRewardLayer } from './FlyingCoinRewardLayer';
 export type CoinFlightPortalProps = {
   session: FlightSession | null;
   coinSrc: string;
-  onComplete: (delta: number) => void;
+  onComplete: (delta: number, skipBalanceUpdate: boolean) => void;
 };
 
 /** Portal + camada visual da moeda; mantém `CoinFlightContext` só com orquestração de estado. */
@@ -27,7 +27,9 @@ export function CoinFlightPortal({
       coinW={session.coinW}
       coinH={session.coinH}
       coinSrc={coinSrc}
-      onComplete={onComplete}
+      onComplete={(delta) =>
+        onComplete(delta, session.skipBalanceUpdate)
+      }
     />,
     document.body,
   );
