@@ -61,6 +61,11 @@ export interface ShoppingListDetailResponse {
   updatedAt: string;
 }
 
+export interface CompleteWithRemainingResponse {
+  completed: ShoppingListResponse;
+  newList: ShoppingListResponse;
+}
+
 export interface ItemSuggestionResponse {
   name: string;
   suggestedGroup: string | null;

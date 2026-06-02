@@ -9,10 +9,9 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { DriveImage } from '../../components/DriveImage';
-import { FiArrowLeft, FiPlus, FiTrash } from 'react-icons/fi';
+import { FiPlus, FiTrash } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { PageScaffold } from '../../components/PageScaffold';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRecipes } from '../../hooks/useRecipes';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -50,33 +49,14 @@ export const RecipesView = () => {
   const currentUserId = profile?.user?.id;
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
+    <PageScaffold
+      title={t('recipes.title')}
+      backTo="/new-resources"
       bg={getColor('background.profile.primary')}
-      pb="70px"
-    >
-      <Header />
-
-      <Flex align="center" justify="space-between" px={4} pt={4} pb={2}>
-        <Flex align="center" gap={3}>
-          <IconButton
-            aria-label={t('common.back')}
-            icon={<FiArrowLeft />}
-            variant="ghost"
-            color={getColor('text.profile.primary')}
-            onClick={() => navigate('/new-resources')}
-            size="sm"
-          />
-          <Text
-            fontSize="lg"
-            fontWeight="bold"
-            fontFamily={getFont('heading')}
-            color={getColor('text.profile.primary')}
-          >
-            {t('recipes.title')}
-          </Text>
-        </Flex>
+      contentLayout="plain"
+      contentPx={0}
+      contentPt={4}
+      titleRight={
         <IconButton
           aria-label={t('recipes.newRecipe')}
           icon={<FiPlus />}
@@ -87,9 +67,9 @@ export const RecipesView = () => {
           size="sm"
           borderRadius="full"
         />
-      </Flex>
-
-      <Box flex={1} px={4}>
+      }
+    >
+      <Box px={4}>
         {isLoading ? (
           <Flex justify="center" align="center" py={10}>
             <Spinner color={getColor('text.profile.primary')} size="lg" />
@@ -246,8 +226,6 @@ export const RecipesView = () => {
           </VStack>
         )}
       </Box>
-
-      <NavigationBar />
-    </Flex>
+    </PageScaffold>
   );
 };

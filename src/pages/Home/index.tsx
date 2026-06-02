@@ -24,19 +24,22 @@ import {
 } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FamilyStories } from "../../components/FamilyStories";
-import { Header } from "../../components/Header";
+import { FixedAppShell } from "../../components/FixedAppShell";
 import { HomePieChart } from "../../components/HomePieChart";
 import { LastRegistrationsList } from "../../components/LastRegistrationsList";
 import { CompleteProfileModal } from "../../components/modals/CompleteProfileModal";
 import { NewRecurringExpenseModal } from "../../components/modals/NewRecurringExpenseModal";
 import { NewRecurringIncomeModal } from "../../components/modals/NewRecurringIncomeModal";
-import { NavigationBar } from "../../components/NavigationBar";
 import { SummaryCard } from "../../components/SummaryCard";
 import { useAuth } from "../../contexts/AuthContext";
 import { useFamilyGroup } from "../../hooks/useFamilyGroup";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
 import { api } from "../../services";
+import {
+  isRecurringModalSnoozed,
+  snoozeRecurringModal,
+} from "../../utils/recurringModalSnooze";
 
 const Home = () => {
   const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
@@ -155,14 +158,28 @@ const Home = () => {
       setShowCompleteProfile(true);
     }
 
-    if (profile && profile.hasRecurringRevenues) {
+    if (profile && profile.hasRecurringRevenues && !isRecurringModalSnoozed('income')) {
       setShowRecurringRevenuesModal(true);
     }
 
-    if (profile && profile.hasRecurringExpenses) {
+    if (profile && profile.hasRecurringExpenses && !isRecurringModalSnoozed('expense')) {
       setShowRecurringExpensesModal(true);
     }
   }, [profile]);
+
+  const handleDismissRecurringExpensesModal = (rememberLater: boolean) => {
+    if (rememberLater) {
+      snoozeRecurringModal('expense');
+    }
+    setShowRecurringExpensesModal(false);
+  };
+
+  const handleDismissRecurringRevenuesModal = (rememberLater: boolean) => {
+    if (rememberLater) {
+      snoozeRecurringModal('income');
+    }
+    setShowRecurringRevenuesModal(false);
+  };
 
   const handleCloseRecurringExpensesModal = async () => {
     setShowRecurringExpensesModal(false);
@@ -175,14 +192,7 @@ const Home = () => {
   };
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
-      pb="70px"
-      bg={getColor("background.home")}
-    >
-      <Header />
-
+    <FixedAppShell bg={getColor("background.home")}>
       {hasGroup && (
         <FamilyStories
           members={familyMembers}
@@ -191,7 +201,7 @@ const Home = () => {
         />
       )}
 
-      <Flex direction="column" p={4} gap={4}>
+      <Flex direction="column" p={4} gap={4} flexShrink={0}>
         <Flex gap={2} align="center">
           <Box w="28%" minW="90px" flexShrink={0}>
             <HomePieChart
@@ -342,7 +352,9 @@ const Home = () => {
             </MenuList>
           </Menu>
         </Flex>
+      </Flex>
 
+      <Flex flex={1} minH={0} overflow="auto" px={4} pb={20} w="full">
         <LastRegistrationsList
           newRegistrationAdded={newRegistrationAdded}
           setNewRegistrationAdded={setNewRegistrationAdded}
@@ -366,15 +378,16 @@ const Home = () => {
       <NewRecurringIncomeModal
         isOpen={showRecurringRevenuesModal}
         onClose={handleCloseRecurringRevenuesModal}
+        onDismiss={handleDismissRecurringRevenuesModal}
       />
 
       <NewRecurringExpenseModal
         isOpen={showRecurringExpensesModal}
         onClose={handleCloseRecurringExpensesModal}
+        onDismiss={handleDismissRecurringExpensesModal}
       />
 
-      <NavigationBar />
-    </Flex>
+    </FixedAppShell>
   );
 };
 

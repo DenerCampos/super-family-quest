@@ -1,24 +1,19 @@
 import {
-  Box,
   Button,
   Flex,
   IconButton,
-  Spinner,
   Text,
   VStack,
   useToast,
 } from '@chakra-ui/react';
 import { DriveImage } from '../../components/DriveImage';
 import {
-  FiArrowLeft,
-  FiBook,
   FiEdit2,
   FiShoppingCart,
   FiTrash,
 } from 'react-icons/fi';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { ResourceCrudScaffold } from '../../components/ResourceCrudScaffold';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRecipeDetail } from '../../hooks/useRecipeDetail';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -86,107 +81,69 @@ export const RecipeDetailView = () => {
   const canManageDelete =
     creatorId && currentUserId && creatorId === currentUserId;
 
+  const titleActions = recipe ? (
+    <Flex gap={1} flexShrink={0}>
+      <IconButton
+        aria-label={t('recipes.editRecipe')}
+        icon={<FiEdit2 />}
+        size="sm"
+        variant="ghost"
+        color={getColor('text.dashboard.title')}
+        onClick={() =>
+          navigate(`/new-resources/recipes/${recipe.id}/edit`)
+        }
+      />
+      {canManageDelete ? (
+        <IconButton
+          aria-label={t('recipes.deleteRecipe')}
+          icon={<FiTrash />}
+          size="sm"
+          variant="ghost"
+          color={getColor('status.error')}
+          onClick={() => void handleDelete()}
+          isLoading={isDeleting}
+        />
+      ) : null}
+    </Flex>
+  ) : undefined;
+
   if (isLoading) {
     return (
-      <Flex
-        minH="100vh"
-        justify="center"
-        align="center"
+      <ResourceCrudScaffold
+        title={t('recipes.title')}
+        backTo="/new-resources/recipes"
         bg={getColor('background.profile.primary')}
-      >
-        <Spinner size="lg" color={getColor('text.profile.primary')} />
-      </Flex>
+        isLoading
+      />
     );
   }
 
   if (!recipe) {
     return (
-      <Flex
-        direction="column"
-        minH="100vh"
-        pb="70px"
+      <ResourceCrudScaffold
+        title={t('recipes.notFound')}
+        backTo="/new-resources/recipes"
         bg={getColor('background.profile.primary')}
       >
-        <Header />
-        <Flex px={4} pt={4} align="center" gap={3}>
-          <IconButton
-            aria-label={t('common.back')}
-            icon={<FiArrowLeft />}
-            variant="ghost"
-            color={getColor('text.profile.primary')}
-            onClick={() => navigate('/new-resources/recipes')}
-          />
-          <Text color={getColor('text.profile.primary')}>
-            {t('recipes.notFound')}
-          </Text>
-        </Flex>
-        <NavigationBar />
-      </Flex>
+        <Text color={getColor('text.dashboard.tileSubtitle')}>
+          {t('recipes.notFound')}
+        </Text>
+      </ResourceCrudScaffold>
     );
   }
 
   const photos = recipe.photos?.length ? recipe.photos : [];
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
+    <ResourceCrudScaffold
+      title={recipe.title}
+      backTo="/new-resources/recipes"
       bg={getColor('background.profile.primary')}
-      pb="70px"
+      titleRight={titleActions}
     >
-      <Header />
-
-      {/* Cabeçalho com título e ações */}
-      <Flex align="center" justify="space-between" px={4} pt={4} pb={2}>
-        <Flex align="center" gap={2} flex={1} minW={0}>
-          <IconButton
-            aria-label={t('common.back')}
-            icon={<FiArrowLeft />}
-            variant="ghost"
-            color={getColor('text.profile.primary')}
-            onClick={() => navigate('/new-resources/recipes')}
-            size="sm"
-          />
-          <FiBook color={getColor('text.profile.primary')} />
-          <Text
-            fontSize="lg"
-            fontWeight="bold"
-            fontFamily={getFont('heading')}
-            color={getColor('text.profile.primary')}
-            noOfLines={2}
-          >
-            {recipe.title}
-          </Text>
-        </Flex>
-        <Flex gap={1} flexShrink={0}>
-          <IconButton
-            aria-label={t('recipes.editRecipe')}
-            icon={<FiEdit2 />}
-            size="sm"
-            variant="ghost"
-            color={getColor('text.profile.primary')}
-            onClick={() =>
-              navigate(`/new-resources/recipes/${recipe.id}/edit`)
-            }
-          />
-          {canManageDelete ? (
-            <IconButton
-              aria-label={t('recipes.deleteRecipe')}
-              icon={<FiTrash />}
-              size="sm"
-              variant="ghost"
-              color={getColor('status.error')}
-              onClick={() => void handleDelete()}
-              isLoading={isDeleting}
-            />
-          ) : null}
-        </Flex>
-      </Flex>
-
-      {/* Fotos */}
-      <Box px={4} pb={3}>
+      <VStack align="stretch" spacing={4} pb={2}>
         {photos.length > 0 ? (
-          <Flex gap={2} overflowX="auto" pb={2}>
+          <Flex gap={2} overflowX="auto" pb={1}>
             {photos.map((url) => (
               <DriveImage
                 key={url}
@@ -227,32 +184,20 @@ export const RecipeDetailView = () => {
             {t('recipes.noPhotos')}
           </Text>
         )}
-      </Box>
 
-      {/* Descrição + meta */}
-      <Box
-        mx={4}
-        mb={3}
-        borderRadius="lg"
-        bg={getColor('background.shoppingList.card')}
-        borderWidth="1px"
-        borderColor={getColor('border.shoppingList.card')}
-        p={4}
-        shadow="sm"
-      >
         {recipe.description ? (
           <Text
             fontSize="sm"
-            mb={2}
-            color={getColor('text.profile.primary')}
+            color={getColor('text.familyGroup.title')}
             fontFamily={getFont('body')}
           >
             {recipe.description}
           </Text>
         ) : null}
+
         <Text
           fontSize="xs"
-          color={getColor('text.profile.secondary')}
+          color={getColor('text.dashboard.tileSubtitle')}
           fontFamily={getFont('body')}
         >
           {recipe.createdBy?.name
@@ -262,72 +207,47 @@ export const RecipeDetailView = () => {
             ? ` · ${recipe.familyGroup.name}`
             : ` · ${t('shoppingList.personalList')}`}
         </Text>
-      </Box>
 
-      {/* Ingredientes */}
-      <Box
-        mx={4}
-        mb={3}
-        borderRadius="lg"
-        bg={getColor('background.shoppingList.card')}
-        borderWidth="1px"
-        borderColor={getColor('border.shoppingList.card')}
-        p={4}
-        shadow="sm"
-      >
-        <Text
-          fontWeight="bold"
-          mb={2}
-          color={getColor('text.profile.primary')}
-          fontFamily={getFont('heading')}
-        >
-          {t('recipes.ingredients')}
-        </Text>
-        <VStack align="stretch" spacing={1}>
-          {recipe.ingredients.map((ing, i) => (
-            <Text
-              key={`${ing.name}-${i}`}
-              fontSize="sm"
-              fontFamily={getFont('body')}
-              color={getColor('text.profile.primary')}
-            >
-              • {ing.quantity} {ing.unit} {ing.name}
-            </Text>
-          ))}
+        <VStack align="stretch" spacing={2}>
+          <Text
+            fontWeight="bold"
+            color={getColor('text.familyGroup.title')}
+            fontFamily={getFont('heading')}
+          >
+            {t('recipes.ingredients')}
+          </Text>
+          <VStack align="stretch" spacing={1}>
+            {recipe.ingredients.map((ing, i) => (
+              <Text
+                key={`${ing.name}-${i}`}
+                fontSize="sm"
+                fontFamily={getFont('body')}
+                color={getColor('text.familyGroup.title')}
+              >
+                • {ing.quantity} {ing.unit} {ing.name}
+              </Text>
+            ))}
+          </VStack>
         </VStack>
-      </Box>
 
-      {/* Modo de preparo */}
-      <Box
-        mx={4}
-        mb={4}
-        borderRadius="lg"
-        bg={getColor('background.shoppingList.card')}
-        borderWidth="1px"
-        borderColor={getColor('border.shoppingList.card')}
-        p={4}
-        shadow="sm"
-      >
-        <Text
-          fontWeight="bold"
-          mb={2}
-          color={getColor('text.profile.primary')}
-          fontFamily={getFont('heading')}
-        >
-          {t('recipes.instructions')}
-        </Text>
-        <Text
-          whiteSpace="pre-wrap"
-          fontSize="sm"
-          fontFamily={getFont('body')}
-          color={getColor('text.profile.primary')}
-        >
-          {recipe.instructions}
-        </Text>
-      </Box>
+        <VStack align="stretch" spacing={2}>
+          <Text
+            fontWeight="bold"
+            color={getColor('text.familyGroup.title')}
+            fontFamily={getFont('heading')}
+          >
+            {t('recipes.instructions')}
+          </Text>
+          <Text
+            whiteSpace="pre-wrap"
+            fontSize="sm"
+            fontFamily={getFont('body')}
+            color={getColor('text.familyGroup.title')}
+          >
+            {recipe.instructions}
+          </Text>
+        </VStack>
 
-      {/* Botão gerar lista */}
-      <Box px={4} pb={6}>
         <Button
           w="100%"
           leftIcon={<FiShoppingCart />}
@@ -340,9 +260,7 @@ export const RecipeDetailView = () => {
         >
           {t('recipes.generateShoppingList')}
         </Button>
-      </Box>
-
-      <NavigationBar />
-    </Flex>
+      </VStack>
+    </ResourceCrudScaffold>
   );
 };

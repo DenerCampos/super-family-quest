@@ -119,6 +119,17 @@ export function useShoppingListDetail(listId: string) {
     return result;
   }, [listId]);
 
+  const completeListWithRemaining = useCallback(async () => {
+    const result =
+      await ShoppingListService.completeShoppingListWithRemaining(listId);
+    return result;
+  }, [listId]);
+
+  const recreateList = useCallback(async () => {
+    const result = await ShoppingListService.recreateShoppingList(listId);
+    return result;
+  }, [listId]);
+
   const handleItemAdded = useCallback((item: ShoppingListItemResponse) => {
     setDetail((prev) => {
       if (!prev) return prev;
@@ -244,6 +255,8 @@ export function useShoppingListDetail(listId: string) {
     toggleItem,
     removeItem,
     completeList,
+    completeListWithRemaining,
+    recreateList,
     handleItemAdded,
     handleItemUpdated,
     handleItemToggled,

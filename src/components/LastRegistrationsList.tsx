@@ -137,7 +137,7 @@ export const LastRegistrationsList = ({
   }
 
   return (
-    <VStack spacing={3} align="stretch" mt={4}>
+    <VStack spacing={3} align="stretch" mt={4} w="full">
       <Text
         fontSize="lg"
         fontWeight="bold"
@@ -151,6 +151,7 @@ export const LastRegistrationsList = ({
         ref={scrollContainerRef}
         maxH="350px"
         overflowY="auto"
+        w="full"
         css={{
           '&::-webkit-scrollbar': { width: '4px' },
           '&::-webkit-scrollbar-track': { background: 'transparent' },
@@ -160,7 +161,7 @@ export const LastRegistrationsList = ({
           },
         }}
       >
-        <VStack spacing={3} align="stretch" pr={1}>
+        <VStack spacing={3} align="stretch" w="full">
           <AnimatePresence>
             {registrations.map((registration, index) => (
               <MotionBox
@@ -184,6 +185,7 @@ export const LastRegistrationsList = ({
                   registration.type === 'expense' ? bgColorExpense : bgColorRevenue
                 }
                 borderRadius="md"
+                w="full"
                 p={3}
                 boxShadow="sm"
               >

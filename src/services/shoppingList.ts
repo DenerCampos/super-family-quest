@@ -2,6 +2,7 @@ import api from './api';
 import type {
   CreateShoppingListPayload,
   CreateShoppingListItemPayload,
+  CompleteWithRemainingResponse,
   ItemSuggestionResponse,
   PaginatedResponse,
   ShoppingListDetailResponse,
@@ -51,6 +52,20 @@ export const ShoppingListService = {
 
   async completeShoppingList(id: string): Promise<ShoppingListResponse> {
     const { data } = await api.patch(`/shopping-lists/${id}/complete`);
+    return data;
+  },
+
+  async completeShoppingListWithRemaining(
+    id: string,
+  ): Promise<CompleteWithRemainingResponse> {
+    const { data } = await api.patch(
+      `/shopping-lists/${id}/complete-with-remaining`,
+    );
+    return data;
+  },
+
+  async recreateShoppingList(id: string): Promise<ShoppingListResponse> {
+    const { data } = await api.post(`/shopping-lists/${id}/recreate`);
     return data;
   },
 

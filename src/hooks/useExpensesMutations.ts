@@ -5,6 +5,7 @@ import { useCoinFlight } from "../contexts/CoinFlightContext";
 import { api } from "../services";
 import type { CreateExpense, Expense, UpdateExpense } from "../services/resources";
 import { GET_LAST_REGISTRATION_QUERY_KEY } from "./useGetLastRegistration";
+import { missionQueryKeys } from "./missionQueryKeys";
 import { useThemedTranslation } from "./useThemedTranslation";
 import { coinDeltaFromApi, runAfterNextPaint } from "../utils/coinsNumber";
 
@@ -38,6 +39,9 @@ export const useCreateExpense = (redirectPath?: string | number) => {
 
       queryClient.invalidateQueries({
         queryKey: [GET_LAST_REGISTRATION_QUERY_KEY],
+      });
+      queryClient.invalidateQueries({
+        queryKey: missionQueryKeys.root,
       });
 
       if (redirectPath !== undefined) {

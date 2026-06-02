@@ -1,515 +1,217 @@
 ---
+description: Padrões, checklist e índice do Super Family Quest (React/Vite)
 alwaysApply: true
 ---
 
-# Super Family Quest - Regras do Projeto
+# Super Family Quest — Regras do Projeto
 
-> **Regra sempre ativa**: Este arquivo é aplicado automaticamente como contexto em todas as conversas sobre o projeto.
+> **Sempre ativo** (`alwaysApply: true`). Foco **mobile-first** (layout central `maxW="480px"` em `App.tsx`). Ao criar ou alterar funcionalidade, execute o checklist e **atualize este arquivo** (rotas, services, hooks).
 
-## 📋 Informações Gerais
-- **Nome do Projeto**: Super Family Quest
-- **Tipo**: Frontend Web Application
-- **Versão**: 0.0.0
-- **Tipo de Módulo**: ESM (ES Modules)
-- **Projeto para mobile**: Focar no front para mobile.
+## Checklist obrigatório — nova funcionalidade
 
-## 🛠️ Stack Tecnológica
+- [ ] **Rota**: registrar em `src/App.tsx` com `RequireAuth` quando protegida; seguir prefixos existentes (`/new-resources/...`, `/new-challenge`, etc.).
+- [ ] **Service**: funções em `src/services/<dominio>.ts` usando `api` de `services/api.ts`; exportar em `services/index.ts` se for API pública ao app.
+- [ ] **Dados remotos**: preferir **TanStack React Query** (`useQuery` / `useMutation`) com `queryKeys` em arquivo dedicado (ex.: `missionQueryKeys.ts`, `familyGroupQueryKeys.ts`).
+- [ ] **UI mobile**: componentes dentro do shell 480px; touch-friendly; evitar layouts só desktop.
+- [ ] **Tema**: cores via `useVisualTheme()` + tokens em `theme/themes.ts` — **nunca** cores hardcoded (`bg="blue.800"`).
+- [ ] **i18n**: keys em `i18n/locales/default/pt.json` **e** `i18n/locales/rpg/pt.json`; textos com `useThemedTranslation()`.
+- [ ] **Novos tokens de cor**: adicionar em **todos** os temas em `themes.ts` (default + rpg).
+- [ ] **Formulários**: React Hook Form + Yup (padrão do projeto).
+- [ ] **Tipos**: `src/types/` para contratos compartilhados com a API.
+- [ ] **Documentação**: criar (feature nova) ou atualizar (regra/contrato/fluxo alterado) `app/super-family-quest/.cursor/docs/<dominio>.md` — ver `/.cursor/rules/workflow.mdc` seção Documentação.
+- [ ] **Atualizar este arquivo**: rota na [tabela de rotas](#rotas), service/hook nas seções correspondentes e doc na [Docs de domínio](#docs-de-domínio).
 
-### Linguagem Principal
-- **TypeScript**: ~5.8.3
-  - Target: ES2020
-  - Module: ESNext
-  - Modo: Strict habilitado
-  - JSX: react-jsx
-  - Module Resolution: bundler
+### Comandos de verificação (executar na raiz `app/super-family-quest`)
 
-### Framework e Bibliotecas Core
-- **React**: ^19.1.0
-- **React DOM**: ^19.1.0
-- **React Router DOM**: ^6.20.1
+```bash
+npm run lint
+npm run build
+```
 
-### Build Tools
-- **Vite**: ^6.3.5
-  - Plugin: @vitejs/plugin-react ^4.4.1
-  - Configuração: HMR habilitado
+Variável obrigatória em dev: `VITE_API_URL` (axios em `services/api.ts`).
 
-### UI e Estilização
-- **Chakra UI**: ^2.4.9
-- **Emotion React**: ^11.10.5
-- **Emotion Styled**: ^11.10.5
-- **Framer Motion**: ^6.5.1
-- **React Icons**: ^5.5.0
+---
 
-### Formulários e Validação
-- **React Hook Form**: ^7.56.4
-- **Yup**: ^1.6.1
-- **@hookform/resolvers**: ^5.0.1
+## Visão geral
 
-### Internacionalização (i18n)
-- **i18next**: ^25.3.2
-- **react-i18next**: ^15.6.1
-- **i18next-browser-languagedetector**: ^8.2.0
-- **i18next-http-backend**: ^3.0.2
+| Item | Valor |
+|------|--------|
+| Projeto | Super Family Quest (frontend) |
+| Stack | React 19, TypeScript strict ~5.8, Vite 6, Chakra UI 2, ESM |
+| Estado servidor | TanStack React Query 5 |
+| Estado global UI | Context API (`AuthContext`, `ThemeContext`, `CoinFlightContext`) |
+| API | Axios + JWT em `localStorage` (`accessToken`) |
+| Realtime | `socket.io-client` (ex.: listas de compras) |
+| PWA | `vite-plugin-pwa` + `PWAInstallBanner` |
+| Deploy | Netlify (`npm run build` → `dist/`) |
 
-### Gráficos e Visualização
-- **Recharts**: ^3.0.2
+---
 
-### QR Code
-- **@zxing/browser**: ^0.1.5
+## Estrutura de pastas (resumo)
 
-### HTTP Client
-- **Axios**: ^1.9.0
-
-### Linting e Code Quality
-- **ESLint**: ^9.25.0
-  - @eslint/js: ^9.25.0
-  - eslint-plugin-react-hooks: ^5.2.0
-  - eslint-plugin-react-refresh: ^0.4.19
-  - typescript-eslint: ^8.30.1
-  - globals: ^16.0.0
-
-## 🏗️ Arquitetura e Estrutura
-
-### Padrão Arquitetural
-- **SPA (Single Page Application)** com React Router
-- **Component-Based Architecture**
-- **Context API** para gerenciamento de estado global
-
-### Estrutura de Pastas
 ```
 src/
-├── components/          # Componentes reutilizáveis
-│   ├── modals/         # Componentes de modais
-│   │   ├── BuyThemeModal.tsx
-│   │   ├── CompleteProfileModal.tsx
-│   │   ├── NewRecurringExpenseModal.tsx
-│   │   ├── NewRecurringIncomeModal.tsx
-│   │   └── SimpleResourceModal.tsx
-│   ├── reports/        # Componentes de relatórios/gráficos
-│   │   ├── BarChartExpensesByStore.tsx
-│   │   ├── BarChartExpensesIncome.tsx
-│   │   ├── DateRangeFilter.tsx
-│   │   ├── HorizontalBarChartTopProducts.tsx
-│   │   ├── LineChartExpensesByDate.tsx
-│   │   └── PieChartExpensesByGroup.tsx
-│   ├── resources/      # Componentes de recursos
-│   │   ├── ExpenseResource.tsx
-│   │   ├── GroupResource.tsx
-│   │   ├── PaymentResource.tsx
-│   │   ├── ResourceContainer.tsx
-│   │   ├── RevenueResource.tsx
-│   │   └── StoreResource.tsx
-│   ├── skeletons/      # Componentes skeleton para loading
-│   │   └── Avenue.skeleton.tsx
-│   ├── AutocompleteInput.tsx
-│   ├── AvenueForm.tsx
-│   ├── CoinDisplay.tsx
-│   ├── ExpensesForm.tsx
-│   ├── Header.tsx
-│   ├── LastRegistrationsList.tsx
-│   ├── LoadingOverlay.tsx
-│   ├── LoginThemeProvider.tsx
-│   ├── NavigationBar.tsx
-│   ├── QRScannerPage.tsx
-│   ├── RequireAuth.tsx
-│   └── SummaryCard.tsx
-├── contexts/           # Context Providers (Auth, Theme)
-│   ├── AuthContext.tsx
-│   └── ThemeContext.tsx
-├── hooks/              # Custom React Hooks
-│   ├── useExpenseForm.ts
-│   ├── useExpenseFormAutofill.ts
-│   ├── useExpenseFormSubmit.ts
-│   ├── useExpensesMutations.ts
-│   ├── useGetAutoFillExpenses.ts
-│   ├── useGetLastRegistration.ts
-│   ├── useInitialTheme.ts
-│   ├── useLoginTheme.ts
-│   ├── useRevenueMutations.ts
-│   ├── useThemeContext.ts
-│   ├── useThemedTranslation.ts
-│   ├── useThemeTranslation.ts
-│   └── useVisualTheme.ts
-├── i18n/               # Configuração de internacionalização
-│   ├── config.ts
-│   ├── locales/
-│   │   ├── default/
-│   │   │   └── pt.json
-│   │   └── rpg/
-│   │       └── pt.json
-│   └── types.ts
-├── pages/              # Páginas/Views da aplicação
-│   ├── Dashboard/
-│   ├── Expenses/
-│   ├── Home/
-│   ├── Login/
-│   ├── NewChallenge/
-│   ├── NewResources/
-│   ├── NotFoundPage/
-│   ├── Profile/
-│   ├── Register/
-│   └── Revenue/
-├── services/           # Serviços e API calls
-│   ├── api.ts
-│   ├── auth.ts
-│   ├── coin.ts
-│   ├── couponReader.ts
-│   ├── expense.ts
-│   ├── index.ts
-│   ├── profile.ts
-│   ├── reports.ts
-│   ├── resources.ts
-│   ├── revenue.ts
-│   ├── theme.ts
-│   └── user.ts
-├── styles/             # Estilos globais
-├── theme/              # Configuração de temas
-│   ├── theme.ts
-│   ├── themes.ts
-│   └── types.ts
-├── types/              # Definições de tipos TypeScript
-│   └── revenue.ts
-└── utils/              # Funções utilitárias
-    ├── constants.ts
-    ├── formatCurrency.ts
-    ├── formatDate.ts
-    ├── formatGrams.ts
-    ├── formatString.ts
-    └── qrCode.ts
+├── pages/              # Views por rota
+├── components/         # UI — layout: FixedAppShell, PageScaffold, ResourceCrudScaffold, BackButton; modals/, reports/, resources/, family/
+├── hooks/              # Lógica reutilizável + React Query
+├── services/           # Chamadas HTTP por domínio
+├── contexts/           # Auth, Theme, CoinFlight
+├── i18n/locales/       # default/pt.json + rpg/pt.json
+├── theme/              # themes.ts, types.ts
+├── types/              # Tipos de domínio
+└── utils/              # formatters, constants, qrCode, resolveColor
 ```
 
-### Camadas da Aplicação
+---
 
-#### 1. Pages (Views)
-- Componentes de página que representam rotas
-- Composição de componentes menores
-- Gerenciamento de lógica de página
+## Rotas
 
-#### 2. Components
-- Componentes reutilizáveis e específicos
-- Separados por funcionalidade:
-  - **modals/**: Modais específicos (BuyTheme, CompleteProfile, NewRecurringExpense, NewRecurringIncome, SimpleResource)
-  - **reports/**: Componentes de gráficos e relatórios (BarCharts, LineChart, PieChart, DateRangeFilter)
-  - **resources/**: Componentes de recursos (Expense, Group, Payment, Revenue, Store)
-  - **skeletons/**: Componentes de loading
-- Componentes de layout (Header, NavigationBar)
-- Componentes de formulário (ExpensesForm, AvenueForm, AutocompleteInput)
-- Componentes utilitários (CoinDisplay, LoadingOverlay, SummaryCard)
+Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte da verdade):
 
-#### 3. Contexts
-- **AuthContext**: Gerenciamento de autenticação e usuário
-- **ThemeContext**: Gerenciamento de tema visual (default/medieval)
+| Rota | Página / uso |
+|------|----------------|
+| `/login`, `/register` | Auth pública |
+| `/alexa-login` | Login Alexa |
+| `/`, `/home` | Home |
+| `/dashboard`, `/dashboard/:reportKey` | Relatórios |
+| `/new-resources` | Hub recursos |
+| `/new-resources/resources` | Grupos, lojas, pagamentos |
+| `/new-resources/family` | Grupo familiar |
+| `/new-resources/shopping`, `.../shopping/:id` | Listas de compras |
+| `/new-resources/recipes`, `.../recipes/:id`, `.../new`, `.../edit` | Receitas |
+| `/new-resources/quests` | Hub chores/quests |
+| `/new-resources/quests/chores`, `.../chores/:occurrenceId` | Ocorrências |
+| `/new-resources/quests/definitions`, `.../definitions/:definitionId` | Definições |
+| `/new-resources/quests/approvals`, `allowance`, `history` | Fluxo familiar |
+| `/new-challenge` | Missões dinâmicas (SP-78) |
+| `/settings` | Configurações / Alexa |
+| `/profile` | Perfil |
+| `/scan` | QR cupom |
+| `/image-recognition`, `/audio-recognition` | IA |
+| `/expense/:id?`, `/revenue/:id?` | Lançamentos |
 
-#### 4. Services
-- Camada de comunicação com API
-- Abstração de chamadas HTTP
-- Separados por domínio:
-  - api.ts (configuração base)
-  - auth.ts
-  - user.ts
-  - expense.ts
-  - revenue.ts
-  - coin.ts
-  - theme.ts
-  - reports.ts
-  - resources.ts
-  - profile.ts
-  - couponReader.ts
+---
 
-#### 5. Hooks Customizados
-- **Tema**:
-  - useInitialTheme
-  - useLoginTheme
-  - useThemeContext
-  - useThemedTranslation
-  - useThemeTranslation
-  - useVisualTheme
-- **Despesas**:
-  - useExpenseForm
-  - useExpenseFormAutofill
-  - useExpenseFormSubmit
-  - useExpensesMutations
-  - useGetAutoFillExpenses
-- **Geral**:
-  - useGetLastRegistration
-  - useRevenueMutations
+## Services (índice)
 
-#### 6. Utils
-- Funções utilitárias para formatação:
-  - formatCurrency
-  - formatDate
-  - formatGrams
-  - formatString
-- Utilitários de QR Code:
-  - qrCode
-- Constantes:
-  - constants
+Arquivos em `src/services/` — atualizar ao integrar novo domínio da API:
 
-### Sistema de Temas
+| Arquivo | Domínio |
+|---------|---------|
+| `api.ts` | Instância Axios, interceptors |
+| `auth.ts`, `user.ts` | Autenticação / usuário |
+| `expense.ts`, `revenue.ts`, `resources.ts` | Financeiro |
+| `coin.ts`, `theme.ts`, `profile.ts` | Gamificação / perfil |
+| `reports.ts`, `couponReader.ts` | Relatórios / cupom |
+| `familyGroup.ts` | Grupo familiar |
+| `shoppingList.ts` | Listas de compras |
+| `recipe.ts` | Receitas |
+| `chore.ts` | Tarefas / quests |
+| `missions.ts` | Missões dinâmicas |
+| `integrations.ts` | Integrações (Alexa, etc.) |
 
-O projeto possui um sistema de temas robusto que afeta cores, fontes, assets e traduções.
+Padrão de chamada:
 
-#### Estrutura de Temas
-
-**Arquivos principais**:
-- `src/theme/themes.ts` - Definição dos temas (defaultTheme, rpgTheme)
-- `src/theme/types.ts` - Tipos TypeScript para temas
-- `src/i18n/locales/[tema]/pt.json` - Traduções por tema
-
-#### Temas Disponíveis
-
-1. **default** - Tema profissional/financeiro
-   - Cor primária: blue
-   - Fontes: Roboto, Poppins
-   - Traduções: `i18n/locales/default/pt.json`
-
-2. **rpg** - Tema medieval/gamificado  
-   - Cor primária: purple
-   - Fontes: Pixelify Sans (tema), Press Start 2P (mono)
-   - Traduções: `i18n/locales/rpg/pt.json`
-
-#### Esquema de Cores
-
-Cada tema possui uma estrutura completa de cores semânticas organizada em:
-
-**Categorias de Cores**:
 ```typescript
-colors: {
-  primary: string,           // Cor principal do tema
-  secondary: string,          // Cor secundária
-  accent: string,            // Cor de destaque
-  revenue: string,           // Verde para receitas
-  expense: string,           // Vermelho para despesas
-  
-  // Tokens semânticos (mais de 100 tokens)
-  background: {
-    primary, secondary, tertiary, quaternary,
-    header, navigation, login, reports, home, dashboard,
-    resources, profile, qrScanner, dateRangeFilter,
-    lastRegistrations: { expense, revenue, neutral, badge },
-    summaryCard: { revenue, expense },
-    selected, noSelect, hover, loading, coin
-  },
-  
-  text: {
-    primary, secondary, tertiary, accent, disabled, link, coin,
-    header, eye, dateRangeFilter,
-    navigation: { active, inactive },
-    summaryCard: { revenue, expense },
-    lastRegistrations: { title, primary, icon, neutral, expense, revenue },
-    reports: { title, primary, icon, neutral, expense, revenue },
-    hover: { expense, revenue, neutral, inverse },
-    profile: { primary, secondary, selected }
-  },
-  
-  heading: {
-    summaryCard: { revenue, expense }
-  },
-  
-  border: {
-    primary, secondary, selected, noSelect, coin,
-    header, navigation, reports,
-    lastRegistrations: { expense, revenue, neutral },
-    summaryCard: { revenue, expense }
-  },
-  
-  button: {
-    primary, secondary, danger, warning,
-    background: { primary, expense, revenue, neutral, inverse },
-    text: { primary, expense, revenue },
-    border: { expense, revenue, neutral },
-    hover: {
-      text: { default, expense, revenue, neutral, inverse },
-      background: { default, expense, revenue, neutral, inverse },
-      border: { default, expense, revenue, neutral, inverse }
-    }
-  },
-  
-  input: {
-    primary, secondary, hover, focus, border, background,
-    focusBorder, backgroundPrimary, backgroundSecondary, focusPrimary
-  },
-  
-  status: {
-    success, error, warning, info
-  },
-  
-  link: { primary }
+import api from './api';
+
+export async function getExample(id: string) {
+  const { data } = await api.get(`/exemplo/${id}`);
+  return data;
 }
 ```
 
-**Paleta Base**: O projeto usa a paleta do Chakra UI estendida com 10 variações (50-950) para cada cor:
-- red, orange, yellow, green, teal, blue, cyan, purple, pink, gray
+---
 
-#### Sistema de Tradução (i18n)
+## Hooks e React Query
 
-**IMPORTANTE**: Cada tema possui seu próprio arquivo de tradução!
+- Mutations/listagens: hooks em `src/hooks/` (ex.: `useMissions.ts`, `useShoppingLists.ts`, `useFamilyGroup.ts`).
+- **queryKeys** centralizados por domínio (`missionQueryKeys.ts`, `familyGroupQueryKeys.ts`) para invalidação consistente.
+- Tema: `useVisualTheme`, `useThemedTranslation`, `useThemeColor`.
+- Formulários: `useExpenseForm`, `useRecipeForm`, `useChoreDefinitionForm`, etc.
 
-**Estrutura**:
-```
-i18n/locales/
-├── default/
-│   └── pt.json          # Traduções tema profissional
-└── rpg/
-    └── pt.json          # Traduções tema medieval
-```
-
-**Diferenças de Tradução**:
-- **default**: Linguagem profissional/financeira
-  - "Despesas", "Receitas", "Saldo Disponível"
-- **rpg**: Linguagem medieval/gamificada
-  - "Custos da Jornada", "Recompensas", "Tesouro Acumulado"
-
-**Categorias de Tradução**:
-- `common` - Textos gerais (welcome, save, loading, errors)
-- `auth` - Login e autenticação
-- `dashboard` - Dashboard
-- `home` - Página inicial
-- `profile` - Perfil
-- `resources` - Recursos (grupos, lojas, pagamentos)
-- `reports` - Relatórios
-- `expenses` - Despesas
-- `revenue` - Receitas
-- `navigation` - Navegação
-- `qrScanner` - Scanner QR
-- `theme` - Compra de temas
-
-#### ⚠️ REGRAS OBRIGATÓRIAS
-
-**🎨 Ao Criar uma Nova Tela/Componente**:
-
-1. **SEMPRE use tokens de cor do tema**, NUNCA cores hardcoded:
-   ```typescript
-   // ✅ CORRETO
-   bg={theme.colors.background.primary}
-   color={theme.colors.text.primary}
-   
-   // ❌ ERRADO
-   bg="blue.800"
-   color="white"
-   ```
-
-2. **Se precisar de novos tokens de cor**:
-   - Adicione em TODOS os temas em `src/theme/themes.ts`
-   - Use nomes semânticos descritivos
-   - Mantenha consistência entre temas
-
-3. **SEMPRE adicione traduções**:
-   - Adicione as keys em `default/pt.json`
-   - Adicione versão medieval em `rpg/pt.json`
-   - Use `useThemedTranslation()` para acessar
-
-4. **Use o hook correto para tema**:
-   ```typescript
-   import { useVisualTheme } from '@/hooks/useVisualTheme';
-   
-   const { theme } = useVisualTheme();
-   ```
-
-5. **Use o hook correto para traduções**:
-   ```typescript
-   import { useThemedTranslation } from '@/hooks/useThemedTranslation';
-   
-   const { t } = useThemedTranslation();
-   ```
-
-#### Exemplo Completo
+Exemplo mínimo de query:
 
 ```typescript
-// ✅ Componente seguindo as regras
-import { Box, Text, Button } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
+import { missionKeys } from './missionQueryKeys';
+import { fetchMissions } from '@/services/missions';
+
+export function useMissions(familyGroupId: string) {
+  return useQuery({
+    queryKey: missionKeys.list(familyGroupId),
+    queryFn: () => fetchMissions(familyGroupId),
+    enabled: !!familyGroupId,
+  });
+}
+```
+
+---
+
+## Tema e i18n (obrigatório em UI nova)
+
+```typescript
 import { useVisualTheme } from '@/hooks/useVisualTheme';
 import { useThemedTranslation } from '@/hooks/useThemedTranslation';
 
-export const MyNewComponent = () => {
-  const { theme } = useVisualTheme();
-  const { t } = useThemedTranslation();
-  
-  return (
-    <Box bg={theme.colors.background.primary}>
-      <Text color={theme.colors.text.primary}>
-        {t('myComponent.title')}
-      </Text>
-      <Button
-        bg={theme.colors.button.background.primary}
-        color={theme.colors.button.text.primary}
-      >
-        {t('common.save')}
-      </Button>
-    </Box>
-  );
-};
+const { theme } = useVisualTheme();
+const { t } = useThemedTranslation();
+
+// ✅ bg={theme.colors.background.primary}
+// ❌ bg="blue.800"
 ```
 
-**Traduções necessárias**:
-```json
-// default/pt.json
-{
-  "myComponent": {
-    "title": "Meu Componente"
-  }
-}
+Cores semânticas extensas em `theme/themes.ts` (`background`, `text`, `button`, `shell`, etc.). Cada tema tem `i18n/locales/<tema>/pt.json` (tom profissional vs medieval RPG).
 
-// rpg/pt.json  
-{
-  "myComponent": {
-    "title": "Minha Jornada Épica"
-  }
-}
-```
+---
 
-### Autenticação
-- Sistema de autenticação com proteção de rotas
-- Componente RequireAuth para rotas protegidas
-- Context API para estado de autenticação
+## Padrões de implementação
 
-### Rotas Principais
-- `/login` - Página de login
-- `/register` - Página de registro
-- `/` ou `/home` - Página inicial (protegida)
-- `/dashboard` - Dashboard com relatórios (protegida)
-- `/new-resources` - Gerenciamento de recursos (protegida)
-- `/new-challenge` - Criação de desafios (protegida)
-- `/profile` - Perfil do usuário (protegida)
-- `/scan` - Scanner de QR Code (protegida)
-- `/expense/:id?` - Criação/edição de despesas (protegida)
-- `/revenue/:id?` - Criação/edição de receitas (protegida)
-- `*` - Página 404
+| Área | Regra |
+|------|--------|
+| Auth | `RequireAuth` + `AuthContext`; token no interceptor |
+| Mobile | Shell 480px; testar em viewport estreita |
+| Gráficos | Recharts em `components/reports/` |
+| QR | `@zxing/browser` + `utils/qrCode.ts` |
+| Imagens upload | `browser-image-compression` quando aplicável |
+| Navegação | `NavigationBar`, rotas aninhadas sob `/new-resources` |
 
-## 🚀 Deploy
-- **Plataforma**: Netlify
-- **Configuração**: SPA redirect rules configurado no netlify.toml
-- **Build Command**: `tsc -b && vite build`
-- **Output Directory**: `dist/`
+---
 
-## 📦 Scripts Disponíveis
-```bash
-npm run dev        # Inicia servidor de desenvolvimento
-npm run build      # Build de produção
-npm run lint       # Executa linting
-npm run preview    # Preview da build de produção
-```
+## Docs de domínio
 
-## 🎨 Características do Projeto
-- **Gamificação**: Sistema de moedas e desafios
-- **Multi-idioma**: Suporte a diferentes idiomas (atualmente PT)
-- **Multi-tema**: Temas visuais personalizáveis (compráveis com moedas)
-- **Gestão Financeira**: Controle de despesas e receitas
-- **Relatórios Visuais**: Gráficos com Recharts
-- **Scanner de Cupons**: Leitura de QR codes de cupons fiscais
-- **Responsivo**: Design adaptável para diferentes dispositivos
+Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda funcionalidade**; **atualizar** quando regras ou fluxo mudarem (ver `/.cursor/rules/workflow.mdc`).
 
-## 🔐 Segurança
-- Rotas protegidas com RequireAuth
-- Token JWT para autenticação
-- Validação de formulários com Yup
+| Arquivo | Assunto |
+|---------|---------|
+| `lista-de-compras.md` | Listas de compras (UI + realtime) |
+| `missoes.md` | Missões do Clã (UI + cache) |
+| `integracao-alexa.md` | Alexa / settings |
+| `stories.md` | Stories / escopo de produto |
+| `layout-shell.md` | Header/nav fixos, PageScaffold, toast acima da nav (SP-111) |
 
-## 💡 Boas Práticas
-- Strict TypeScript habilitado
-- ESLint configurado com regras React
-- Componentização e reutilização de código
-- Separação de responsabilidades por camadas
-- Context API para estado global
-- Custom hooks para lógica reutilizável
-- Services para abstração de API
+### CRUD em recursos
 
+| Componente | Uso |
+|------------|-----|
+| `ResourceCrudScaffold` | Formulários e visualização em recursos: cartão com borda (`singleCard`), `contentPt={4}` como na listagem. Padrão alinhado a Nova tarefa. |
+
+Exceções: modais, `/expense`, `/revenue`, perfil.
+
+Adicionar linha nesta tabela ao criar nova doc.
+
+---
+
+## Integração com API (shop-smart)
+
+Backend irmão: `api/shop-smart`. Ao adicionar endpoint no backend, espelhar aqui: service + types + hook/query + rota + i18n + tokens de tema.
+
+Consultar regras do backend: `api/shop-smart/.cursor/rules/regra-projeto.mdc`.
+
+---
+
+## Regras críticas
+
+**Nunca:** cores/textos hardcoded ignorando tema; rota sem `RequireAuth` quando exige login; fetch direto em componente sem service; esquecer tradução RPG + default.
+
+**Sempre:** `npm run lint` e `npm run build` antes de encerrar; doc em `.cursor/docs/` alinhada ao código; atualizar **este** `regra-projeto.mdc` no checklist de nova funcionalidade; manter paridade mobile + temas.

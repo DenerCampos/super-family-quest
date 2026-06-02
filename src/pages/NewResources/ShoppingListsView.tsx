@@ -1,19 +1,18 @@
 import {
+  Box,
+  Button,
   Flex,
   IconButton,
   Text,
   VStack,
-  Spinner,
-  Button,
   useDisclosure,
   useToast,
-  Box,
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
-import { FiArrowLeft, FiPlus } from 'react-icons/fi';
+import { FiPlus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { Header } from '../../components/Header';
-import { NavigationBar } from '../../components/NavigationBar';
+import { LoadingOverlay } from '../../components/LoadingOverlay';
+import { PageScaffold } from '../../components/PageScaffold';
 import { ShoppingListCard } from '../../components/shoppingList/ShoppingListCard';
 import { CreateShoppingListModal } from '../../components/modals/CreateShoppingListModal';
 import { useShoppingLists } from '../../hooks/useShoppingLists';
@@ -34,6 +33,7 @@ export const ShoppingListsView = () => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [familyGroups, setFamilyGroups] = useState<{ id: string; name: string }[]>([]);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { lists, isLoading, status, changeStatus, createList, deleteList } =
     useShoppingLists();
@@ -67,7 +67,9 @@ export const ShoppingListsView = () => {
   };
 
   const handleDelete = async (id: string) => {
+    if (isDeleting) return;
     if (!globalThis.confirm(t('shoppingList.deleteListConfirm'))) return;
+    setIsDeleting(true);
     try {
       await deleteList(id);
       toast({
@@ -81,137 +83,127 @@ export const ShoppingListsView = () => {
         status: 'error',
         duration: 3000,
       });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   return (
-    <Flex
-      direction="column"
-      minH="100vh"
-      bg={getColor('background.shoppingList.primary')}
-      pb="70px"
-    >
-      <Header />
-
-      <Flex align="center" justify="space-between" px={4} pt={4} pb={2}>
-        <Flex align="center" gap={3}>
-          <IconButton
-            aria-label={t('common.back')}
-            icon={<FiArrowLeft />}
-            variant="ghost"
-            color={getColor('text.shoppingList.title')}
-            onClick={() => navigate('/new-resources')}
-            size="sm"
-          />
-          <Text
-            fontSize="lg"
-            fontWeight="bold"
-            fontFamily={getFont('heading')}
-            color={getColor('text.shoppingList.title')}
-          >
-            {t('shoppingList.title')}
-          </Text>
-        </Flex>
-        <IconButton
-          aria-label={t('shoppingList.createNew')}
-          icon={<FiPlus />}
-          onClick={onOpen}
-          bg={getColor('button.background.primary')}
-          color={getColor('button.text.primary')}
-          _hover={{ opacity: 0.8 }}
-          size="sm"
-          borderRadius="full"
+    <>
+      {(isLoading || isDeleting) && (
+        <LoadingOverlay
+          typeLoading={isDeleting ? 'save' : 'read'}
+          text={
+            isDeleting
+              ? t('shoppingList.deletingList')
+              : t('shoppingList.loadingLists')
+          }
         />
-      </Flex>
+      )}
 
-      <Flex px={4} gap={2} mb={4}>
-        {STATUS_TABS.map((s) => (
-          <Button
-            key={s}
-            size="xs"
-            variant="outline"
-            bg={
-              status === s
-                ? getColor('background.shoppingList.card')
-                : 'transparent'
-            }
-            color={
-              status === s
-                ? getColor('text.shoppingList.title')
-                : getColor('text.shoppingList.itemMeta')
-            }
-            borderColor={
-              status === s
-                ? getColor('text.shoppingList.title')
-                : getColor('border.shoppingList.card')
-            }
-            borderWidth={status === s ? '2px' : '1px'}
-            fontWeight={status === s ? 'bold' : 'normal'}
-            fontFamily={getFont('body')}
-            onClick={() => changeStatus(s)}
-            _hover={{
-              bg: getColor('background.shoppingList.cardHover'),
-              borderColor: getColor('text.shoppingList.primary'),
-            }}
-          >
-            {t(`shoppingList.status.${s}`)}
-          </Button>
-        ))}
-      </Flex>
-
-      <Box flex={1} px={4}>
-        {isLoading ? (
-          <Flex justify="center" align="center" py={10}>
-            <Spinner
-              color={getColor('text.shoppingList.primary')}
-              size="lg"
-            />
-          </Flex>
-        ) : lists.length === 0 ? (
-          <VStack spacing={3} py={10}>
-            <Text
-              fontSize="md"
-              color={getColor('text.shoppingList.primary')}
-              fontFamily={getFont('body')}
-              textAlign="center"
-            >
-              {t('shoppingList.emptyState')}
-            </Text>
-            <Text
-              fontSize="sm"
-              color={getColor('text.shoppingList.itemMeta')}
-              fontFamily={getFont('body')}
-              textAlign="center"
-            >
-              {t('shoppingList.emptyStateDescription')}
-            </Text>
-            <Button
-              mt={2}
-              onClick={onOpen}
-              bg={getColor('button.background.primary')}
-              color={getColor('button.text.primary')}
-              fontFamily={getFont('body')}
-              leftIcon={<FiPlus />}
-              _hover={{ opacity: 0.8 }}
-            >
-              {t('shoppingList.createNew')}
-            </Button>
-          </VStack>
-        ) : (
-          <VStack spacing={3} align="stretch">
-            {lists.map((list) => (
-              <ShoppingListCard
-                key={list.id}
-                list={list}
-                onClick={() =>
-                  navigate(`/new-resources/shopping/${list.id}`)
+      <PageScaffold
+        title={t('shoppingList.title')}
+        backTo="/new-resources"
+        bg={getColor('background.shoppingList.primary')}
+        contentLayout="plain"
+        contentPx={0}
+        contentPt={4}
+        titleRight={
+          <IconButton
+            aria-label={t('shoppingList.createNew')}
+            icon={<FiPlus />}
+            onClick={onOpen}
+            bg={getColor('button.background.primary')}
+            color={getColor('button.text.primary')}
+            _hover={{ opacity: 0.8 }}
+            size="sm"
+            borderRadius="full"
+          />
+        }
+        headerExtra={
+          <Flex px={4} gap={2} pt={4} pb={3} flexShrink={0}>
+            {STATUS_TABS.map((s) => (
+              <Button
+                key={s}
+                size="xs"
+                variant="outline"
+                bg={
+                  status === s
+                    ? getColor('background.shoppingList.card')
+                    : 'transparent'
                 }
-                onDelete={handleDelete}
-              />
+                color={
+                  status === s
+                    ? getColor('text.shoppingList.title')
+                    : getColor('text.shoppingList.itemMeta')
+                }
+                borderColor={
+                  status === s
+                    ? getColor('text.shoppingList.title')
+                    : getColor('border.shoppingList.card')
+                }
+                borderWidth={status === s ? '2px' : '1px'}
+                fontWeight={status === s ? 'bold' : 'normal'}
+                fontFamily={getFont('body')}
+                onClick={() => changeStatus(s)}
+                _hover={{
+                  bg: getColor('background.shoppingList.cardHover'),
+                  borderColor: getColor('text.shoppingList.primary'),
+                }}
+              >
+                {t(`shoppingList.status.${s}`)}
+              </Button>
             ))}
-          </VStack>
-        )}
-      </Box>
+          </Flex>
+        }
+      >
+        <Box px={4}>
+          {!isLoading && lists.length === 0 ? (
+            <VStack spacing={3} py={10}>
+              <Text
+                fontSize="md"
+                color={getColor('text.shoppingList.primary')}
+                fontFamily={getFont('body')}
+                textAlign="center"
+              >
+                {t('shoppingList.emptyState')}
+              </Text>
+              <Text
+                fontSize="sm"
+                color={getColor('text.shoppingList.itemMeta')}
+                fontFamily={getFont('body')}
+                textAlign="center"
+              >
+                {t('shoppingList.emptyStateDescription')}
+              </Text>
+              <Button
+                mt={2}
+                onClick={onOpen}
+                bg={getColor('button.background.primary')}
+                color={getColor('button.text.primary')}
+                fontFamily={getFont('body')}
+                leftIcon={<FiPlus />}
+                _hover={{ opacity: 0.8 }}
+              >
+                {t('shoppingList.createNew')}
+              </Button>
+            </VStack>
+          ) : (
+            <VStack spacing={3} align="stretch">
+              {lists.map((list) => (
+                <ShoppingListCard
+                  key={list.id}
+                  list={list}
+                  onClick={() =>
+                    navigate(`/new-resources/shopping/${list.id}`)
+                  }
+                  onDelete={handleDelete}
+                />
+              ))}
+            </VStack>
+          )}
+        </Box>
+      </PageScaffold>
 
       <CreateShoppingListModal
         isOpen={isOpen}
@@ -219,8 +211,6 @@ export const ShoppingListsView = () => {
         onSuccess={handleCreate}
         familyGroups={familyGroups}
       />
-
-      <NavigationBar />
-    </Flex>
+    </>
   );
 };

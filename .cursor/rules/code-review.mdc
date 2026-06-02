@@ -253,14 +253,61 @@ src/
 
 ## 🔒 Segurança
 
-### Checklist
-- ✅ Validar inputs do usuário
-- ✅ Sanitizar dados antes de renderizar
-- ✅ Usar HTTPS para APIs
-- ✅ Não expor tokens/secrets no frontend
-- ✅ Validar tipos no runtime quando necessário
-- ❌ Não usar `dangerouslySetInnerHTML` sem sanitização
-- ❌ Não logar informações sensíveis
+### 1. Autenticação e sessão
+- ✅ Rotas sensíveis com `RequireAuth` em `App.tsx`
+- ✅ Token JWT apenas em `services/api.ts` (interceptor `Authorization`)
+- ✅ Após 401: fluxo que impede uso de telas protegidas com token inválido
+- ❌ Duplicar lógica de auth em vários componentes
+- ❌ `accessToken` ou refresh em query string / estado global desnecessário
+
+**Risco consciente:** `localStorage` é vulnerável a XSS — não armazenar outros segredos além do necessário.
+
+### 2. Segredos e variáveis de ambiente
+- ✅ Só `import.meta.env.VITE_*` para valores que podem ir ao bundle
+- ❌ API key privada, client secret ou senha de backend no código
+- ❌ `.env` / `.env.local` no commit ou no diff do PR
+
+### 3. Entrada, renderização e XSS
+- ✅ Yup + React Hook Form antes de enviar à API
+- ❌ `dangerouslySetInnerHTML` sem sanitização explícita
+- ❌ `eval`, `innerHTML` ou HTML dinâmico de fonte não confiável
+- ❌ Renderizar HTML da API sem sanitizar
+
+### 4. Dados e API
+- ✅ Chamadas HTTP só em `services/`; componentes usam hooks (React Query)
+- ✅ `queryKey` com escopo (`userId`, `familyGroupId`, `id`) — invalidação correta após mutation
+- ✅ Erros: mensagem genérica ao usuário; detalhes técnicos só em dev
+- ❌ Exibir campos sensíveis da API que a UI não precisa (minimizar superfície)
+- ❌ Confiar em dados do cliente para autorização (sempre validar no backend)
+
+### 5. Realtime e integrações
+- ✅ **socket.io**: credencial na conexão; não inscrever em sala de outro grupo
+- ✅ **Alexa / OAuth** (`integrations.ts`, Settings): não logar `code`/`state`; não exibir tokens na UI
+- ✅ **QR / links externos**: validar origem antes de processar ou enviar à API
+
+### 6. Upload e privacidade
+- ✅ `browser-image-compression` / upload: validar tipo e tamanho no cliente
+- ❌ `console.log` com email, token, cupom completo ou dados de família
+- ❌ Persistir PII extra em `localStorage` / sessionStorage / cache PWA
+
+### Checklist rápido (revisor)
+
+| Item | 🔴 se falhar |
+|------|----------------|
+| Rota protegida sem `RequireAuth` | Sim |
+| Secret ou chave privada no código | Sim |
+| Fetch direto no componente | Sim |
+| `dangerouslySetInnerHTML` inseguro | Sim |
+| Token/PII em log ou URL | Sim |
+
+### Red flags (🔴 bloqueiam)
+- Secret ou API key hardcoded
+- Tela protegida sem `RequireAuth`
+- Axios/fetch direto no componente com credencial
+- OAuth/Alexa: vazamento de `code`/`state`/token em log ou UI
+- socket.io sem autenticação alinhada ao backend
+
+Comando `/cr`: seção **🔒 Segurança** obrigatória (`.cursor/commands/cr.md`).
 
 ---
 
@@ -657,9 +704,12 @@ const { t } = useThemedTranslation();
 - [ ] Não viola arquitetura do projeto
 
 ### Segurança
-- [ ] Inputs validados
-- [ ] Dados sanitizados
-- [ ] Sem informações sensíveis expostas
+- [ ] `RequireAuth` nas rotas que exigem login
+- [ ] HTTP só via `services/` + hooks; sem fetch no componente
+- [ ] Yup/RHF nos formulários
+- [ ] Sem secrets no código; só `VITE_*` público
+- [ ] Sem token/PII em log ou query string
+- [ ] socket.io / Alexa / upload conforme seção 🔒 Segurança
 
 ### UX
 - [ ] Loading states
