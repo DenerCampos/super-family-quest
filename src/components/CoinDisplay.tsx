@@ -1,8 +1,10 @@
 import { Flex, Image, Text } from '@chakra-ui/react';
 import { keyframes } from '@emotion/react';
 import { useLayoutEffect, useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCoinFlight } from '../contexts/CoinFlightContext';
 import { useVisualTheme } from '../hooks/useVisualTheme';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
 
 const pulse = keyframes`
   0% { transform: scale(1); }
@@ -20,6 +22,8 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
   const coinImgRef = useRef<HTMLImageElement | null>(null);
   const lastCoinsRef = useRef(coins);
   const { getColor, getAsset, getFont } = useVisualTheme();
+  const { t } = useThemedTranslation();
+  const navigate = useNavigate();
 
   useLayoutEffect(() => {
     registerCoinTarget(coinImgRef.current);
@@ -38,6 +42,8 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
 
   return (
     <Flex
+      as="button"
+      type="button"
       align="center"
       bg={getColor('background.coin')}
       px={3}
@@ -45,6 +51,11 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
       borderRadius="md"
       borderWidth="1px"
       borderColor={getColor('border.coin')}
+      cursor="pointer"
+      onClick={() => navigate('/dashboard/coinStatement')}
+      aria-label={t('reports.coinStatement.openFromHeader')}
+      _hover={{ opacity: 0.9 }}
+      _active={{ transform: 'scale(0.98)' }}
     >
       <Image
         ref={coinImgRef}
@@ -53,8 +64,8 @@ export const CoinDisplay = ({ coins }: CoinDisplayProps) => {
         mr={2}
         animation={animate ? `${pulse} 0.5s ease-in-out` : 'none'}
       />
-      <Text 
-        color={getColor('text.coin')} 
+      <Text
+        color={getColor('text.coin')}
         fontWeight="bold"
         fontFamily={getFont('heading')}
       >

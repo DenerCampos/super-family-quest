@@ -6,6 +6,7 @@ import {
   FiShoppingBag,
   FiPackage,
 } from 'react-icons/fi';
+import { FaCoins } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import { FixedAppShell } from '../../components/FixedAppShell';
 import { ReportTile } from '../../components/reports/ReportTile';
@@ -43,6 +44,12 @@ const tiles: { key: ReportKey; icon: typeof FiPieChart; titleKey: string; subtit
     icon: FiPackage,
     titleKey: 'dashboard.tiles.topProducts.title',
     subtitleKey: 'dashboard.tiles.topProducts.subtitle',
+  },
+  {
+    key: 'coinStatement',
+    icon: FaCoins,
+    titleKey: 'dashboard.tiles.coinStatement.title',
+    subtitleKey: 'dashboard.tiles.coinStatement.subtitle',
   },
 ];
 

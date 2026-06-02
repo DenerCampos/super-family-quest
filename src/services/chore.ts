@@ -318,4 +318,22 @@ export const ChoreService = {
     );
     return response.data;
   },
+
+  getPendingCoinRewards: async (
+    familyGroupId: string,
+  ): Promise<{ totalCoins: number }> => {
+    const response = await api.get(
+      `${base(familyGroupId)}/coin-rewards/pending`,
+    );
+    return response.data;
+  },
+
+  celebrateCoinRewards: async (
+    familyGroupId: string,
+  ): Promise<{ totalCoins: number }> => {
+    const response = await api.post(
+      `${base(familyGroupId)}/coin-rewards/celebrate`,
+    );
+    return response.data;
+  },
 };
