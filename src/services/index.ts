@@ -244,6 +244,7 @@ export const api = {
   choreGetPayrollSuggestion: ChoreService.getPayrollSuggestion,
   choreGetPayrollPending: ChoreService.getPayrollPending,
   choreSettlePayroll: ChoreService.settlePayroll,
+  choreGetPayrollSettlement: ChoreService.getPayrollSettlement,
   choreGetPendingCoinRewards: ChoreService.getPendingCoinRewards,
   choreCelebrateCoinRewards: ChoreService.celebrateCoinRewards,
 

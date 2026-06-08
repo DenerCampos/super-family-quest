@@ -113,6 +113,20 @@ export type ChorePayrollSettlementResponseDto = {
   settledAt: string;
 };
 
+export type ChorePayrollSettlementLineDto = {
+  member: OwnerResponseDto;
+  totalAmount: number;
+};
+
+export type ChorePayrollSettlementDetailDto = {
+  id: string;
+  periodYm: number;
+  settledAt: string;
+  settledBy: OwnerResponseDto;
+  members: ChorePayrollSettlementLineDto[];
+  totalSettled: number;
+};
+
 export type PaginatedChoreResponse<T> = {
   data: T[];
   meta: PaginationMeta;

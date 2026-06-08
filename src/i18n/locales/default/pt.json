@@ -539,6 +539,10 @@
       "approvals": {
         "title": "Aprovações",
         "subtitle": "Validar envios dos membros"
+      },
+      "settlements": {
+        "title": "Liquidações",
+        "subtitle": "Histórico de fechamentos de mesada"
       }
     }
   },
@@ -659,6 +663,14 @@
     "settledSuccess": "Período liquidado com sucesso.",
     "settlementConflict": "Este período já foi liquidado ou não há valores pendentes.",
     "settleError": "Não foi possível liquidar o período."
+  },
+  "settlements": {
+    "empty": "Nenhuma liquidação registrada para o período.",
+    "period": "Período",
+    "settledAt": "Liquidado em",
+    "settledBy": "Liquidado por",
+    "total": "Total liquidado",
+    "amount": "Valor"
   },
   "familyGroup": {
     "title": "Grupo Familiar",

@@ -82,7 +82,7 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | `/new-resources/quests` | Hub chores/quests |
 | `/new-resources/quests/chores`, `.../chores/:occurrenceId` | Ocorrências |
 | `/new-resources/quests/definitions`, `.../definitions/:definitionId` | Definições |
-| `/new-resources/quests/approvals`, `allowance`, `history` | Fluxo familiar |
+| `/new-resources/quests/approvals`, `allowance`, `settlements`, `history` | Fluxo familiar (settlements: admin, SP-113) |
 | `/new-challenge` | Missões dinâmicas (SP-78) |
 | `/settings` | Configurações / Alexa |
 | `/profile` | Perfil |
@@ -190,6 +190,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `stories.md` | Stories / escopo de produto |
 | `layout-shell.md` | Header/nav fixos, PageScaffold, toast acima da nav (SP-111) |
 | `extrato-moedas.md` | Extrato de moedas no Painel + animação de quests (SP-97) |
+| `mesada.md` | Mesada, liquidação e histórico admin (SP-113) |
 
 ### CRUD em recursos
 

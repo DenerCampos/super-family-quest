@@ -20,6 +20,7 @@ import { DefinitionsListView } from "./pages/NewChallenge/DefinitionsListView";
 import { DefinitionFormView } from "./pages/NewChallenge/DefinitionFormView";
 import { ApprovalsView } from "./pages/NewChallenge/ApprovalsView";
 import { AllowanceView } from "./pages/NewChallenge/AllowanceView";
+import { SettlementsView } from "./pages/NewChallenge/SettlementsView";
 import { HistoryView } from "./pages/NewChallenge/HistoryView";
 import NewResources from "./pages/NewResources";
 import { ResourcesView } from "./pages/NewResources/ResourcesView";
@@ -224,6 +225,14 @@ export default function App() {
             element={
               <RequireAuth>
                 <AllowanceView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/new-resources/quests/settlements"
+            element={
+              <RequireAuth>
+                <SettlementsView />
               </RequireAuth>
             }
           />
