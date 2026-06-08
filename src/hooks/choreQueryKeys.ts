@@ -14,4 +14,16 @@ export const choreQueryKeys = {
     [...choreQueryKeys.root, 'payrollPending', familyGroupId, year, month] as const,
   payrollSuggestion: (familyGroupId: string) =>
     [...choreQueryKeys.root, 'payrollSuggestion', familyGroupId] as const,
+  payrollSettlement: (
+    familyGroupId: string,
+    year?: number,
+    month?: number,
+  ) =>
+    [
+      ...choreQueryKeys.root,
+      'payrollSettlement',
+      familyGroupId,
+      year,
+      month,
+    ] as const,
 };

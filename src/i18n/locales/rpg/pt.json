@@ -531,6 +531,10 @@
       "approvals": {
         "title": "Julgamento",
         "subtitle": "Validar relíquias enviadas"
+      },
+      "settlements": {
+        "title": "Registro do cofre",
+        "subtitle": "Crônicas dos encerramentos de tesouro"
       }
     }
   },
@@ -651,6 +655,14 @@
     "settledSuccess": "Ciclo encerrado com honra.",
     "settlementConflict": "Este ciclo já foi encerrado ou não há tributos pendentes.",
     "settleError": "Falha ao encerrar o ciclo."
+  },
+  "settlements": {
+    "empty": "Nenhum encerramento registrado neste ciclo.",
+    "period": "Ciclo",
+    "settledAt": "Encerrado em",
+    "settledBy": "Encerrado por",
+    "total": "Total encerrado",
+    "amount": "Tributo"
   },
   "familyGroup": {
     "title": "Guilda Familiar",

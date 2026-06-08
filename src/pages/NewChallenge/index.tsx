@@ -1,6 +1,7 @@
 import { Flex, Grid, Text, Box, Spinner } from '@chakra-ui/react';
 import {
   FiCheckSquare,
+  FiClipboard,
   FiDollarSign,
   FiImage,
   FiList,
@@ -66,6 +67,13 @@ const adminTiles: Tile[] = [
     titleKey: 'newChallenge.tiles.approvals.title',
     subtitleKey: 'newChallenge.tiles.approvals.subtitle',
     route: `${BASE_PATH}/approvals`,
+  },
+  {
+    key: 'settlements',
+    icon: FiClipboard,
+    titleKey: 'newChallenge.tiles.settlements.title',
+    subtitleKey: 'newChallenge.tiles.settlements.subtitle',
+    route: `${BASE_PATH}/settlements`,
   },
 ];
 
