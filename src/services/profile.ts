@@ -12,6 +12,10 @@ export type Registration = {
   type: RegistrationType;
   date: string;
   user?: UserSummary | null;
+  isInstallment?: boolean;
+  installmentNumber?: number | null;
+  totalInstallments?: number | null;
+  installmentLabel?: string | null;
 };
 
 export type PaginationMeta = {

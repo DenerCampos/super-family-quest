@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCoins, FaStore } from 'react-icons/fa';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { formatCurrencyBRL } from '../utils/formatCurrency';
 import { formatDateToBR } from '../utils/formatDate';
@@ -21,6 +21,7 @@ import { useThemedTranslation } from '../hooks/useThemedTranslation';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 import { useGetLastRegistration } from '../hooks/useGetLastRegistration';
 import UserBadge from './resources/UserBadge';
+import { InstallmentBadge } from './financial-receipt/InstallmentBadge';
 
 const MotionBox = motion(Box);
 
@@ -28,12 +29,14 @@ type LastRegistrationsListProps = {
   newRegistrationAdded: boolean;
   setNewRegistrationAdded: React.Dispatch<React.SetStateAction<boolean>>;
   onDelete: (id: string, type: 'expense' | 'revenue') => Promise<void>;
+  onView?: (id: string, type: 'expense' | 'revenue') => void;
 };
 
 export const LastRegistrationsList = ({
   newRegistrationAdded,
   setNewRegistrationAdded,
   onDelete,
+  onView,
 }: LastRegistrationsListProps) => {
   const { showValues, profile } = useAuth();
   const { t } = useThemedTranslation();
@@ -200,24 +203,32 @@ export const LastRegistrationsList = ({
                     )}
                   </Flex>
 
-                  <Badge
-                    color={
-                      registration.type === 'expense'
-                        ? getColor('text.lastRegistrations.expense')
-                        : getColor('text.lastRegistrations.revenue')
-                    }
-                    bg={
-                      registration.type === 'expense'
-                        ? getColor('background.lastRegistrations.badge.expense')
-                        : getColor('background.lastRegistrations.badge.revenue')
-                    }
-                    borderRadius="md"
-                    fontSize="sm"
-                    fontFamily={getFont('body')}
-                  >
-                    {registration.type === 'expense' ? '-' : '+'}{' '}
-                    {showValues ? formatCurrencyBRL(registration.value) : '••••••'}
-                  </Badge>
+                  <Flex direction="column" align="flex-end" gap={1}>
+                    <Badge
+                      color={
+                        registration.type === 'expense'
+                          ? getColor('text.lastRegistrations.expense')
+                          : getColor('text.lastRegistrations.revenue')
+                      }
+                      bg={
+                        registration.type === 'expense'
+                          ? getColor('background.lastRegistrations.badge.expense')
+                          : getColor('background.lastRegistrations.badge.revenue')
+                      }
+                      borderRadius="md"
+                      fontSize="sm"
+                      fontFamily={getFont('body')}
+                    >
+                      {registration.type === 'expense' ? '-' : '+'}{' '}
+                      {showValues ? formatCurrencyBRL(registration.value) : '••••••'}
+                    </Badge>
+                    {registration.installmentLabel && (
+                      <InstallmentBadge
+                        label={registration.installmentLabel}
+                        variant={registration.type}
+                      />
+                    )}
+                  </Flex>
                 </Flex>
 
                 <Flex
@@ -230,6 +241,16 @@ export const LastRegistrationsList = ({
                 >
                   <Text>{formatDateToBR(registration.date)}</Text>
                   <Flex align="center" gap={1}>
+                    <IconButton
+                      aria-label={t('resources.expense.view')}
+                      icon={<FiEye />}
+                      size="xs"
+                      variant="ghost"
+                      color={getColor('text.lastRegistrations.icon')}
+                      onClick={() =>
+                        onView?.(registration.id, registration.type)
+                      }
+                    />
                     <IconButton
                       aria-label={t('resources.expense.edit')}
                       icon={<FiEdit />}

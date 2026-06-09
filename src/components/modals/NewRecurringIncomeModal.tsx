@@ -19,11 +19,13 @@ import {
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
-import { formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
+import { formatCurrencyInputBRL } from '../../utils/formatCurrency';
+import { buildRevenueCreatePayload } from '../../utils/financialFormMapper';
 import type { Revenue } from '../../services/revenue';
 import type { RevenueItem } from '../../types/revenue';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { InstallmentBadge } from '../financial-receipt/InstallmentBadge';
 
 type Props = {
   isOpen: boolean;
@@ -54,6 +56,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose, onDismiss }: Props) =
           repeat: income.repeat,
           date: income.date,
           isSelected: true,
+          installmentLabel: income.installmentLabel,
         }));
         setIncomes(mappedIncomes);
       } catch (error) {
@@ -78,12 +81,17 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose, onDismiss }: Props) =
     setIsSubmitting(true);
     try {
       // Filtrar apenas as receitas selecionadas e remover o campo isSelected      
-      const selectedIncomes: Revenue[] = incomes
+      const selectedIncomes = incomes
         .filter((income) => income.isSelected)
-        .map(({ isSelected, ...income }) => ({ // eslint-disable-line @typescript-eslint/no-unused-vars
-          ...income,
-          value: parseBRLCurrency(formatCurrencyInputBRL(income.value.toString())),
-        }));
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .map(({ isSelected: _isSelected, ...income }) =>
+          buildRevenueCreatePayload({
+            name: income.name,
+            value: income.value,
+            date: income.date,
+            repeat: income.repeat,
+          }),
+        );
 
       const revenueIds = incomes.map((income) => income.id);
 
@@ -214,7 +222,8 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose, onDismiss }: Props) =
                     transition="all 0.2s"
                     minH="48px"
                     display="flex"
-                    alignItems="center"
+                    flexDirection="column"
+                    gap={2}
                   >
                     <Flex
                       justify="space-between"
@@ -266,6 +275,12 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose, onDismiss }: Props) =
                         isDisabled={!income.isSelected}
                       />
                     </Flex>
+                    {income.installmentLabel && (
+                      <InstallmentBadge
+                        label={income.installmentLabel}
+                        variant="revenue"
+                      />
+                    )}
                   </Box>
                 ))}
               </VStack>

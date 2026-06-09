@@ -92,6 +92,7 @@ export const AutocompleteInput = ({
           borderColor={getColor("input.border")}
           _focus={{
             borderColor: getColor("input.focus"),
+            boxShadow: `0 0 0 1px ${getColor("input.focusBorder")}`,
           }}
         />
         <InputRightElement>
@@ -120,12 +121,12 @@ export const AutocompleteInput = ({
         <Portal>
           <Box ref={dropdownRef} style={dropdownStyles}>
             <List
-              bg={getColor("input.primary")}
+              bg={getColor("input.backgroundSecondary")}
               boxShadow="md"
               maxH="200px"
               overflowY="auto"
               border="1px solid"
-              borderColor={getColor("background.tertiary")}
+              borderColor={getColor("input.border")}
               borderRadius="md"
             >
               {filteredOptions.map((option, index) => (
@@ -134,11 +135,15 @@ export const AutocompleteInput = ({
                   px={4}
                   py={2}
                   cursor="pointer"
-                  color={getColor("text.default")}
+                  color={getColor("text.primary")}
                   fontFamily={getFont("body")}
+                  bg={
+                    option === inputValue
+                      ? getColor("background.selected")
+                      : "transparent"
+                  }
                   _hover={{
-                    bg: getColor("input.hover"),
-                    color: getColor("text.accent"),
+                    bg: getColor("background.selected"),
                   }}
                   onClick={() => handleSelectOption(option)}
                 >

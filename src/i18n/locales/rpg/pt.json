@@ -24,6 +24,8 @@
     "updateError": "A forja mágica falhou",
     "createError": "Falha na forja",
     "deleteError": "O item resistiu à destruição",
+    "none": "Nenhuma",
+    "openOptions": "Abrir opções do grimório",
     "back": "Retornar",
     "months": {
       "1": "Janeiro",
@@ -282,10 +284,13 @@
       "date": "Data do Tributo",
       "url": "Pergaminho Mágico",
       "code": "Runa",
+      "codeShort": "Runa",
       "name": "Nome do Item",
       "quantity": "Quantidade",
+      "quantityShort": "Qtd.",
       "unit": "Medida",
       "unitValue": "Valor em Ouro",
+      "unitValueShort": "Vlr.",
       "group": "Categoria Mágica",
       "groupPlaceholder": "Selecione ou digite uma categoria",
       "removeItem": "Destruir Item",
@@ -316,7 +321,8 @@
       "deleteConfirm": "Tem certeza que deseja abolir este tributo do reino?",
       "confirmed": "Tributos Atualizados! ⚔️",
       "success": "Os tributos do reino foram atualizados com sucesso! 🏰",
-      "rememberLater": "Lembrar mais tarde (ocultar por 24 horas) ⏳"
+      "rememberLater": "Lembrar mais tarde (ocultar por 24 horas) ⏳",
+      "items": "Itens da Campanha ({{count}})"
     },
     "simpleResource": {
       "enterName": "Nomeie seu item mágico",
@@ -951,5 +957,59 @@
       "MONTHLY": "Missão Mensal",
       "ONCE": "Feito Épico"
     }
+  },
+  "financialSteps": {
+    "nav": {
+      "prev": "Recuar",
+      "next": "Avançar",
+      "skip": "Pular Etapa",
+      "swipeHint": "Deslize para trocar de etapa da jornada"
+    },
+    "expense": {
+      "title": "Despesa"
+    },
+    "recurrence": {
+      "title": "Parcelamento Rúnico",
+      "enable": "Ativar feitiço de recorrência ou parcelamento",
+      "mode": "Tipo de Feitiço",
+      "finite": "Parcelado (N vezes)",
+      "infinite": "Parcelado (contínuo)",
+      "fixed": "Recorrente Mensal",
+      "count": "Número de Parcelas",
+      "interval": "Intervalo entre Parcelas",
+      "intervalHint": "Quanto tempo entre uma parcela e a próxima. Ex.: 1 lua = todo mês; 2 luas = a cada dois meses.",
+      "intervalValue": "A cada",
+      "days": "Dias",
+      "months": "Luas",
+      "years": "Anos",
+      "dueDay": "Dia de Vencimento (da lua)"
+    },
+    "warranty": {
+      "title": "Garantia Rúnica",
+      "hint": "Informe a proteção mágica de cada item do inventário, se houver.",
+      "unnamedItem": "Item sem nome",
+      "duration": "Duração",
+      "unit": "Unidade",
+      "label": "Proteção: {{duration}} {{unit}}"
+    },
+    "photos": {
+      "title": "Registros Visuais",
+      "hint": "Até {{max}} pergaminhos visuais ({{count}} adicionados).",
+      "add": "Adicionar pergaminho visual",
+      "zoomIn": "Ampliar visão",
+      "zoomOut": "Reduzir visão",
+      "download": "Baixar pergaminho",
+      "downloadError": "Não foi possível baixar o pergaminho. Tente abri-lo manualmente.",
+      "uploadPartialError": "Alguns pergaminhos visuais não foram salvos. Verifique as imagens e tente novamente."
+    },
+    "revenue": {
+      "title": "Receita"
+    }
+  },
+  "financialReceipt": {
+    "title": "Pergaminho Fiscal",
+    "total": "Total do Saque",
+    "installmentValue": "Valor da Parcela",
+    "totalValue": "Valor Total da Jornada"
   }
 }

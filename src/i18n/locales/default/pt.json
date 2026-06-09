@@ -25,6 +25,8 @@
     "updateError": "Falha ao atualizar",
     "createError": "Falha ao criar",
     "deleteError": "Falha ao excluir",
+    "none": "Nenhuma",
+    "openOptions": "Abrir opções",
     "back": "Voltar",
     "confirmTitle": "Deseja continuar?",
     "confirmDescription": "Se você continuar, as informações alteradas serão perdidas.",
@@ -189,6 +191,7 @@
       "actions": "Ações",
       "edit": "Editar",
       "delete": "Excluir",
+      "view": "Exibir",
       "previous": "Anterior",
       "next": "Próximo"
     },
@@ -207,6 +210,7 @@
       "actions": "Ações",
       "edit": "Editar",
       "delete": "Excluir",
+      "view": "Exibir",
       "previous": "Anterior",
       "next": "Próximo",
       "editTitle": "Editar Receita"
@@ -289,10 +293,13 @@
       "date": "Data",
       "url": "URL da Despesa",
       "code": "Código",
+      "codeShort": "Cod.",
       "name": "Nome",
       "quantity": "Quantidade",
+      "quantityShort": "Qtd.",
       "unit": "Unidade",
       "unitValue": "Valor Unitário",
+      "unitValueShort": "Vlr. unit.",
       "group": "Grupo",
       "groupPlaceholder": "Selecione ou digite um grupo",
       "removeItem": "Remover Item",
@@ -323,7 +330,8 @@
       "deleteConfirm": "Tem certeza que deseja excluir esta despesa mensal?",
       "confirmed": "Despesas atualizadas",
       "success": "Suas despesas mensais foram atualizadas com sucesso",
-      "rememberLater": "Lembrar mais tarde (ocultar por 24 horas)"
+      "rememberLater": "Lembrar mais tarde (ocultar por 24 horas)",
+      "items": "Itens ({{count}})"
     },
     "simpleResource": {
       "enterName": "Digite o nome",
@@ -934,6 +942,60 @@
       "rpgMode": "Modo RPG",
       "defaultMode": "Modo Padrão"
     }
+  },
+  "financialSteps": {
+    "nav": {
+      "prev": "Anterior",
+      "next": "Próximo",
+      "skip": "Pular",
+      "swipeHint": "Deslize para o lado para trocar de passo"
+    },
+    "expense": {
+      "title": "Despesa"
+    },
+    "recurrence": {
+      "title": "Recorrência",
+      "enable": "Ativar recorrência ou parcelamento",
+      "mode": "Tipo",
+      "finite": "Parcelado (N vezes)",
+      "infinite": "Parcelado (contínuo)",
+      "fixed": "Recorrente mensal",
+      "count": "Número de parcelas",
+      "interval": "Intervalo entre parcelas",
+      "intervalHint": "Quanto tempo entre uma parcela e a próxima. Ex.: 1 mês = todo mês; 2 meses = a cada dois meses.",
+      "intervalValue": "A cada",
+      "days": "Dias",
+      "months": "Meses",
+      "years": "Anos",
+      "dueDay": "Vencimento (dia do mês)"
+    },
+    "warranty": {
+      "title": "Garantia",
+      "hint": "Informe a garantia de cada item, se houver.",
+      "unnamedItem": "Item sem nome",
+      "duration": "Duração",
+      "unit": "Unidade",
+      "label": "Garantia: {{duration}} {{unit}}"
+    },
+    "photos": {
+      "title": "Fotos",
+      "hint": "Até {{max}} fotos ({{count}} adicionadas).",
+      "add": "Adicionar foto",
+      "zoomIn": "Aumentar zoom",
+      "zoomOut": "Diminuir zoom",
+      "download": "Baixar imagem",
+      "downloadError": "Não foi possível baixar a imagem. Tente abri-la manualmente.",
+      "uploadPartialError": "Algumas fotos não foram salvas. Verifique as imagens e tente novamente."
+    },
+    "revenue": {
+      "title": "Receita"
+    }
+  },
+  "financialReceipt": {
+    "title": "Comprovante",
+    "total": "Total",
+    "installmentValue": "Valor da parcela",
+    "totalValue": "Valor total"
   },
   "pwa": {
     "installTitle": "Instalar App",

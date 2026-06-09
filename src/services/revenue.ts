@@ -1,5 +1,7 @@
 import api from "./api";
 import { compressImage } from "../utils/compressImage";
+import type { RecurrenceForm, RevenueReceipt } from "../types/financial";
+import type { CreateRevenue } from "./resources";
 
 export type Revenue = {
   id?: string;
@@ -7,10 +9,16 @@ export type Revenue = {
   value: number;
   repeat: boolean;
   date: string;
+  photos?: string[];
+  recurrence?: RecurrenceForm;
+  isInstallment?: boolean;
+  installmentNumber?: number | null;
+  totalInstallments?: number | null;
+  installmentLabel?: string | null;
 };
 
 export type RevenueRecurring = {
-  revenues: Revenue[];
+  revenues: CreateRevenue[];
   revenueIds: string[];
 };
 
@@ -31,6 +39,24 @@ export const RevenueService = {
     const response = await api.get(`/revenue/${id}`);
 
     return response.data;
+  },
+
+  getRevenueReceipt: async (id: string): Promise<RevenueReceipt> => {
+    const response = await api.get(`/revenue/${id}/receipt`);
+    return response.data;
+  },
+
+  uploadRevenuePhoto: async (id: string, file: File): Promise<void> => {
+    // A compressão já é feita pelo caller (PhotosStep via compressImage)
+    const formData = new FormData();
+    formData.append('image', file);
+    await api.post(`/revenue/${id}/photos`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
+  deleteRevenuePhoto: async (id: string, photoUrl: string): Promise<void> => {
+    await api.delete(`/revenue/${id}/photos`, { data: { photoUrl } });
   },
 
   analyzeAudio: async (audioFile: File): Promise<Revenue> => {

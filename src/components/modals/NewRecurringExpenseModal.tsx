@@ -24,11 +24,12 @@ import {
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { api } from '../../services';
-import { formatCurrencyBRL, formatCurrencyInputBRL, parseBRLCurrency } from '../../utils/formatCurrency';
+import { formatCurrencyBRL, formatCurrencyInputBRL } from '../../utils/formatCurrency';
+import { buildExpenseRecurringConfirmPayload } from '../../utils/financialFormMapper';
 import type { ExpenseComplete } from '../../services/expense';
-import { parseGrams } from '../../utils/formatGrams';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { InstallmentBadge } from '../financial-receipt/InstallmentBadge';
 
 type ExpenseItem = ExpenseComplete & {
   isSelected: boolean;
@@ -59,13 +60,9 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose, onDismiss }: Props) 
         const mappedExpenses: ExpenseItem[] = data.map(
           (expense: ExpenseComplete) => ({
             ...expense,
-            value: parseBRLCurrency(formatCurrencyInputBRL(
-              expense.value.toString()),
-            ),
             items: expense.items.map((item) => ({
               ...item,
               value: formatCurrencyInputBRL(item.value.toString()),
-              total: formatCurrencyInputBRL(item.value.toString()),
             })),
             id: expense.id || crypto.randomUUID(),
             isSelected: true,
@@ -94,31 +91,21 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose, onDismiss }: Props) 
     setIsSubmitting(true);
     try {
       // Filtrar apenas as despesas selecionadas e remover o campo isSelected      
-      const selectedExpenses: ExpenseComplete[] = expenses
+      const selectedExpenses = expenses
         .filter((expense) => expense.isSelected)
-        .map(({ isSelected, ...expense }) => ({// eslint-disable-line @typescript-eslint/no-unused-vars
-          ...expense,
-          store: {
-            ...expense.store,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .map(({ isSelected: _isSelected, ...expense }) =>
+          buildExpenseRecurringConfirmPayload({
             name: expense.name,
-          },
-          items: expense.items.map((item) => ({
-            ...item,
-            value: parseBRLCurrency(
-              formatCurrencyInputBRL(item.value.toString()),
-            ),
-            total:
-              Number(parseBRLCurrency(item.value).toFixed(2)) *
-              Number(parseGrams(item.quantity)),
-          })),
-          value: expense.items.reduce(
-            (sum, item) =>
-              sum +
-              Number(parseBRLCurrency(item.value).toFixed(2)) *
-                Number(parseGrams(item.quantity)),
-            0,
-          ),
-        }));
+            uri: expense.uri,
+            date: expense.date,
+            repeat: expense.repeat,
+            payment: expense.payment,
+            store: expense.store,
+            items: expense.items,
+            recurrence: expense.recurrence,
+          }),
+        );
 
       const expenseIds = expenses.map((expense) => expense.id).filter((id): id is string => id !== undefined);
 
@@ -172,24 +159,16 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose, onDismiss }: Props) 
       prevExpenses.map((expense) => {
         if (expense.id === expenseId) {
           const updatedItems = [...expense.items];
-          if (field === 'value') {            
+          if (field === 'value') {
             const numericValue = formatCurrencyInputBRL(value);
             updatedItems[itemIndex] = { ...updatedItems[itemIndex], value: numericValue };
           } else {
             updatedItems[itemIndex] = { ...updatedItems[itemIndex], name: value };
           }
-          
-          // Calcula o novo valor total baseado na soma dos itens
-          const totalValue = updatedItems.reduce((sum, item) => {
-            const itemValue = typeof item.value === 'string' ? parseBRLCurrency(item.value) : item.value;
-            console.log(itemValue);
-            return sum + (itemValue * (typeof item.quantity === 'string' ? parseFloat(item.quantity) : item.quantity));
-          }, 0);
-          
-          return { 
-            ...expense, 
+
+          return {
+            ...expense,
             items: updatedItems,
-            value: totalValue // Atualiza o valor total da despesa
           };
         }
         return expense;
@@ -332,6 +311,12 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose, onDismiss }: Props) 
                           readOnly
                         />
                       </Flex>
+                      {expense.installmentLabel && (
+                        <InstallmentBadge
+                          label={expense.installmentLabel}
+                          variant="expense"
+                        />
+                      )}
 
                       <Accordion allowToggle>
                         <AccordionItem border="none">
@@ -342,7 +327,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose, onDismiss }: Props) 
                           >
                             <Box flex="1" textAlign="left">
                               <Text fontSize="sm" color={getColor('text.primary')}>
-                                Itens ({expense.items.length})
+                                {t('modals.recurringExpense.items', { count: expense.items.length })}
                               </Text>
                             </Box>
                             <AccordionIcon />

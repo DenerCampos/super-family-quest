@@ -23,7 +23,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { FiEdit, FiPlus, FiSearch, FiTrash2 } from "react-icons/fi";
+import { FiEdit, FiEye, FiPlus, FiSearch, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
@@ -38,12 +38,14 @@ const ITEMS_PER_PAGE = 5;
 
 interface ExpenseResourceProps {
   onDelete: (id: string) => void;
+  onView?: (id: string) => void;
   refreshTrigger?: number;
   onTotalChange?: (total: number) => void;
 }
 
 const ExpenseResource = ({
   onDelete,
+  onView,
   refreshTrigger,
   onTotalChange,
 }: ExpenseResourceProps) => {
@@ -240,6 +242,12 @@ const ExpenseResource = ({
                           {t("resources.expense.actions")}
                         </MenuButton>
                         <MenuList>
+                          <MenuItem
+                            icon={<FiEye />}
+                            onClick={() => onView?.(expense.id as string)}
+                          >
+                            {t("resources.expense.view")}
+                          </MenuItem>
                           <MenuItem
                             icon={<FiEdit />}
                             onClick={() => navigate(`/expense/${expense.id}`)}
