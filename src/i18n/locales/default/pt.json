@@ -84,6 +84,10 @@
       "coinStatement": {
         "title": "Extrato de Moedas",
         "subtitle": "Ganhos e gastos"
+      },
+      "warrantyItems": {
+        "title": "Garantias",
+        "subtitle": "Produtos em garantia"
       }
     },
     "filters": {
@@ -167,6 +171,34 @@
       "totalEarned": "Total de ganhos",
       "totalSpent": "Total de gastos",
       "balanceAfter": "Saldo: {{value}}",
+      "pageOf": "Página {{current}} de {{total}}",
+      "previous": "Anterior",
+      "next": "Próximo"
+    },
+    "warrantyItems": {
+      "title": "Garantias",
+      "loading": "Carregando garantias...",
+      "error": "Erro ao carregar itens em garantia",
+      "noData": "Nenhum item em garantia encontrado",
+      "searchPlaceholder": "Buscar por nome do item",
+      "filterActive": "Somente garantias ativas",
+      "filterIncludeExpired": "Incluir garantias vencidas",
+      "purchaseDate": "Compra",
+      "warranty": "Garantia",
+      "quantity": "Qtd.",
+      "expiresAt": "Término da garantia",
+      "daysRemaining": "Faltam {{count}} dias",
+      "oneDayRemaining": "Falta 1 dia",
+      "expiresToday": "Vence hoje",
+      "expiredDaysAgo": "Vencida há {{count}} dias",
+      "expiredBadge": "Vencida",
+      "durationDays": "{{count}} dia",
+      "durationDays_plural": "{{count}} dias",
+      "durationMonths": "{{count}} mês",
+      "durationMonths_plural": "{{count}} meses",
+      "durationYears": "{{count}} ano",
+      "durationYears_plural": "{{count}} anos",
+      "tapToViewReceipt": "Toque para ver o cupom",
       "pageOf": "Página {{current}} de {{total}}",
       "previous": "Anterior",
       "next": "Próximo"

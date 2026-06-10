@@ -1,4 +1,5 @@
 import api from "./api";
+import type { PaginatedWarrantyItems } from "../types/warrantyItems";
 
 export type ExpensesByGroup = {
   name: string;
@@ -27,11 +28,16 @@ export type ExpensesIncomeComparison = {
   totalRevenues: string;
 };
 
-function buildQuery(params: Record<string, string | undefined>): string {
+function buildQuery(
+  params: Record<string, string | number | boolean | undefined>,
+): string {
   const entries = Object.entries(params).filter(
-    (entry): entry is [string, string] => entry[1] !== undefined,
+    (entry): entry is [string, string | number | boolean] =>
+      entry[1] !== undefined && entry[1] !== '',
   );
-  return entries.map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
+  return entries
+    .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)
+    .join("&");
 }
 
 export const ReportsService = {
@@ -100,6 +106,35 @@ export const ReportsService = {
   }): Promise<ExpensesIncomeComparison[]> => {
     const qs = buildQuery({ year, userId });
     const response = await api.get(`/reports/expenses-income-comparison?${qs}`);
+    return response.data;
+  },
+
+  getWarrantyItems: async ({
+    year,
+    userId,
+    search,
+    includeExpired,
+    page,
+    limit,
+  }: {
+    year: string;
+    userId?: string;
+    search?: string;
+    includeExpired?: boolean;
+    page?: number;
+    limit?: number;
+  }): Promise<PaginatedWarrantyItems> => {
+    const qs = buildQuery({
+      year,
+      userId,
+      search,
+      includeExpired,
+      page,
+      limit,
+    });
+    const response = await api.get<PaginatedWarrantyItems>(
+      `/reports/warranty-items?${qs}`,
+    );
     return response.data;
   },
 };
