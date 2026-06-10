@@ -93,49 +93,61 @@ export const fillMonthDays = (data: DayData[]): DayData[] => {
       return [];
     }
 
-    // Pega o primeiro item para determinar o mês/ano
     const firstDate = new Date(data[0].date);
 
     if (isNaN(firstDate.getTime())) {
       throw new Error('Data inválida no array');
     }
 
-    // Obtém o intervalo do mês
     const { startDate, endDate } = getMonthRange(firstDate);
+    return fillDateRangeDays(data, startDate, endDate);
+  } catch (error) {
+    console.error('Erro ao preencher dias do mês:', error);
+    return [];
+  }
+};
 
-    // Converte as datas existentes para um Map para busca rápida
-    const existingDates = new Map<string, string>();
+/** Preenche todos os dias entre startDate e endDate (YYYY-MM-DD), com zero onde não houver dado. */
+export const fillDateRangeDays = (
+  data: DayData[],
+  rangeStart: string,
+  rangeEnd: string,
+): DayData[] => {
+  try {
+    if (!rangeStart || !rangeEnd) {
+      return [];
+    }
+
+    const existingDates = new Map<string, number>();
     data.forEach((item) => {
       const dateKey = formatDateToYYYYMMDD(item.date);
-      existingDates.set(dateKey, item.value.toString());
+      existingDates.set(dateKey, Number(item.value));
     });
 
-    // Gera todos os dias do mês
     const result: DayData[] = [];
-    const currentDate = new Date(startDate);
-    const endDateObj = new Date(endDate);
+    const currentDate = new Date(`${rangeStart}T12:00:00`);
+    const endDateObj = new Date(`${rangeEnd}T12:00:00`);
+
+    if (isNaN(currentDate.getTime()) || isNaN(endDateObj.getTime())) {
+      return [];
+    }
 
     while (currentDate <= endDateObj) {
       const dateKey = formatDateToYYYYMMDD(currentDate);
-      const value = existingDates.get(dateKey) || '0';
-
-      // Cria a data no formato ISO string (mantém o mesmo padrão do input)
       const isoDate = new Date(currentDate);
-      // isoDate.setHours(3, 0, 0, 0); // Mantém o horário 03:00:00.000Z do exemplo
       isoDate.setHours(0, 0, 0, 0);
 
       result.push({
-        value: Number(value),
+        value: existingDates.get(dateKey) ?? 0,
         date: isoDate.toISOString(),
       });
 
-      // Avança para o próximo dia
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
     return result;
   } catch (error) {
-    console.error('Erro ao preencher dias do mês:', error);
+    console.error('Erro ao preencher intervalo de datas:', error);
     return [];
   }
 };

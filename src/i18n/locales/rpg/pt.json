@@ -123,14 +123,22 @@
       "loading": "Consultando os Pergaminhos Antigos...",
       "error": "Os pergaminhos estão ilegíveis!",
       "noData": "Nenhum tributo encontrado neste ciclo lunar",
-      "value": "Valor em Ouro"
+      "value": "Valor em Ouro",
+      "totalInPeriod": "Total no ciclo",
+      "storesCount": "{{count}} mercadores",
+      "shareOfTotal": "{{percent}}% do total"
     },
     "expensesByGroup": {
       "title": "Tributos por Categoria Mágica",
       "loading": "Consultando os Pergaminhos Antigos...",
       "error": "Os pergaminhos estão ilegíveis!",
       "noData": "Nenhum tributo encontrado neste ciclo lunar",
-      "value": "Valor em Ouro"
+      "value": "Valor em Ouro",
+      "totalInPeriod": "Total no ciclo",
+      "topCategory": "Guilda mais custosa",
+      "categoriesCount": "Guildas",
+      "shareOfTotal": "{{percent}}% do total",
+      "others": "Outros Reinos"
     },
     "expensesByDate": {
       "title": "Tributos por Data",
@@ -138,7 +146,12 @@
       "error": "Os pergaminhos estão ilegíveis!",
       "noData": "Nenhum tributo encontrado neste ciclo lunar",
       "value": "Valor em Ouro",
-      "spentValue": "Ouro Gasto"
+      "spentValue": "Ouro Gasto",
+      "totalInPeriod": "Total no ciclo",
+      "averagePerDay": "Média por dia",
+      "peakDay": "Maior tributo",
+      "daysWithExpense": "Dias com tributo",
+      "daysOfTotal": "de {{total}} dias"
     },
     "expensesIncome": {
       "title": "Tributos vs Recompensas",
@@ -146,7 +159,10 @@
       "error": "Os pergaminhos estão ilegíveis!",
       "noData": "Nenhum registro encontrado neste ciclo lunar",
       "expenses": "Tributos",
-      "income": "Recompensas"
+      "income": "Recompensas",
+      "totalExpenses": "Total de tributos",
+      "totalIncome": "Total de recompensas",
+      "balance": "Saldo do ciclo"
     },
     "topProducts": {
       "title": "Itens Mais Adquiridos",
@@ -155,7 +171,10 @@
       "noData": "Nenhum item encontrado neste ciclo lunar",
       "value": "Valor em Ouro",
       "quantity": "Quantidade",
-      "totalValue": "Valor Total em Ouro"
+      "totalValue": "Valor Total em Ouro",
+      "totalInRanking": "Total no pergaminho",
+      "itemsCount": "{{count}} itens sagrados",
+      "shareOfTotal": "{{percent}}% do total"
     },
     "coinStatement": {
       "title": "Extrato de Moedas",

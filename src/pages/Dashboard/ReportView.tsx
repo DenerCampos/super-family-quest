@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Box } from '@chakra-ui/react';
 import { Navigate, useParams } from 'react-router-dom';
-import { PieChartExpenses } from '../../components/reports/PieChartExpensesByGroup';
-import { BarChartExpensesByStore } from '../../components/reports/BarChartExpensesByStore';
+import { ExpensesByCategoryPanel } from '../../components/reports/ExpensesByCategoryPanel';
+import { ExpensesByStorePanel } from '../../components/reports/ExpensesByStorePanel';
 import { LineChartExpensesByDate } from '../../components/reports/LineChartExpensesByDate';
-import { HorizontalBarChartTopProducts } from '../../components/reports/HorizontalBarChartTopProducts';
+import { TopProductsPanel } from '../../components/reports/TopProductsPanel';
 import { BarChartExpensesIncome } from '../../components/reports/BarChartExpensesIncome';
 import { CoinStatementPanel } from '../../components/reports/CoinStatementPanel';
 import { WarrantyItemsPanel } from '../../components/reports/WarrantyItemsPanel';
@@ -116,15 +116,39 @@ export const ReportView = () => {
   const renderChart = () => {
     switch (key) {
       case 'expensesByCategory':
-        return <PieChartExpenses startDate={startDate} endDate={endDate} userId={userId} />;
+        return (
+          <ExpensesByCategoryPanel
+            startDate={startDate}
+            endDate={endDate}
+            userId={userId}
+          />
+        );
       case 'expensesByDate':
-        return <LineChartExpensesByDate startDate={startDate} endDate={endDate} userId={userId} />;
+        return (
+          <LineChartExpensesByDate
+            startDate={startDate}
+            endDate={endDate}
+            userId={userId}
+          />
+        );
       case 'expensesVsIncome':
         return <BarChartExpensesIncome year={year.toString()} userId={userId} />;
       case 'expensesByStore':
-        return <BarChartExpensesByStore startDate={startDate} endDate={endDate} userId={userId} />;
+        return (
+          <ExpensesByStorePanel
+            startDate={startDate}
+            endDate={endDate}
+            userId={userId}
+          />
+        );
       case 'topProducts':
-        return <HorizontalBarChartTopProducts startDate={startDate} endDate={endDate} userId={userId} />;
+        return (
+          <TopProductsPanel
+            startDate={startDate}
+            endDate={endDate}
+            userId={userId}
+          />
+        );
       case 'coinStatement':
         return (
           <CoinStatementPanel

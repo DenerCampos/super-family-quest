@@ -1,186 +1,247 @@
-import { Flex, Text, Box, useBreakpointValue, Spinner } from '@chakra-ui/react';
+import { Box, Flex, Grid, Spinner, Text, VStack } from '@chakra-ui/react';
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
+  BarChart,
   CartesianGrid,
-  Tooltip,
   Legend,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts';
-import { formatCurrency } from '../../utils/formatCurrency';
-import { useState, useEffect } from 'react';
-import { api } from '../../services';
+import { useEffect, useMemo, useRef } from 'react';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
-
-interface ExpenseIncomeData {
-  month: string;
-  totalExpenses: string;
-  totalRevenues: string;
-}
+import { useExpensesIncomeComparison } from '../../hooks/useExpensesIncomeComparison';
+import type { ExpensesIncomeComparison } from '../../services/reports';
+import {
+  formatCompactCurrencyAxis,
+  formatCurrency,
+} from '../../utils/formatCurrency';
+import { resolveChakraColor } from '../../utils/resolveColor';
 
 interface BarChartExpensesIncomeProps {
   year: string;
   userId?: string;
-  data?: ExpenseIncomeData[];
-  onDataUpdate?: (data: ExpenseIncomeData[]) => void;
+  onDataUpdate?: (data: ExpensesIncomeComparison[]) => void;
 }
-
-const generateBarColors = () => {
-  return {
-    expenses: 'hsl(350, 75%, 60%)',
-    revenues: 'hsl(120, 75%, 60%)',
-  };
-};
 
 export const BarChartExpensesIncome = ({
   year,
   userId,
-  data: initialData,
   onDataUpdate,
 }: BarChartExpensesIncomeProps) => {
-  const [data, setData] = useState(initialData ?? []);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { t } = useThemedTranslation();
-  const { getColor } = useVisualTheme();
+  const { getColor, getFont } = useVisualTheme();
+  const { data = [], isLoading, isError } = useExpensesIncomeComparison({ year, userId });
+
+  // Estabiliza o callback com ref para não re-disparar o effect a cada render do pai
+  const onDataUpdateRef = useRef(onDataUpdate);
+  useEffect(() => {
+    onDataUpdateRef.current = onDataUpdate;
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await api.getExpensesIncomeComparison({ year, userId });
-        setData(response);
-        onDataUpdate?.(response);
-        setError(null);
-      } catch (err) {
-        console.error('Erro ao buscar dados do gráfico:', err);
-        setError(t('reports.expensesIncome.error'));
-      } finally {
-        setLoading(false);
-      }
+    if (data.length > 0) {
+      onDataUpdateRef.current?.(data);
+    }
+  }, [data]);
+
+  const expenseColor = resolveChakraColor(
+    getColor('text.lastRegistrations.expense'),
+  );
+  const revenueColor = resolveChakraColor(
+    getColor('text.lastRegistrations.revenue'),
+  );
+
+  const chartData = useMemo(
+    () =>
+      data.map((item) => ({
+        month: new Date(`${item.month}-01T12:00:00`)
+          .toLocaleString('pt-BR', { month: 'short' })
+          .replace('.', '')
+          .toUpperCase(),
+        expenses: Number(item.totalExpenses),
+        revenues: Number(item.totalRevenues),
+      })),
+    [data],
+  );
+
+  const totals = useMemo(() => {
+    const totalExpenses = chartData.reduce((sum, item) => sum + item.expenses, 0);
+    const totalRevenues = chartData.reduce((sum, item) => sum + item.revenues, 0);
+    return {
+      totalExpenses,
+      totalRevenues,
+      balance: totalRevenues - totalExpenses,
     };
-    fetchData();
-  }, [year, userId]);
+  }, [chartData]);
 
-  const chartData = data.map((item) => ({
-    month: new Date(item.month + '-01')
-      .toLocaleString('pt-BR', { month: 'short' })
-      .toUpperCase(),
-    expenses: Number(item.totalExpenses),
-    revenues: Number(item.totalRevenues),
-  }));
+  const hasAnyData = totals.totalExpenses > 0 || totals.totalRevenues > 0;
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const colors = generateBarColors();
+  const cardStyle = {
+    borderRadius: 'lg',
+    bg: getColor('background.dashboard.filterBar'),
+    border: '1px solid',
+    borderColor: getColor('border.dashboard.tile'),
+  };
+
+  if (isLoading) {
+    return (
+      <Flex justify="center" py={8}>
+        <Spinner color={getColor('text.dashboard.title')} />
+      </Flex>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Text
+        color={getColor('status.error')}
+        textAlign="center"
+        fontFamily={getFont('body')}
+      >
+        {t('reports.expensesIncome.error')}
+      </Text>
+    );
+  }
+
+  if (!hasAnyData) {
+    return (
+      <Text
+        color={getColor('text.dashboard.tileSubtitle')}
+        textAlign="center"
+        fontFamily={getFont('body')}
+        py={8}
+      >
+        {t('reports.expensesIncome.noData')}
+      </Text>
+    );
+  }
 
   return (
-    <Flex
-      direction="column"
-      p={4}
-      borderRadius="lg"
-      border="2px solid"
-      borderColor={getColor('border.reports')}
-      width="100%"
-      maxW="600px"
-      mx="auto"
-      mb={6}
-      bg={getColor('background.reports')}
-      boxShadow="sm"
-    >
-      <Text
-        fontSize="xl"
-        color={getColor('text.reports.title')}
-        textAlign="center"
-        mb={4}
-        fontWeight="bold"
-      >
-        {t('reports.expensesIncome.title')}
-      </Text>
-
-      {loading ? (
-        <Flex align="center" justify="center" height="300px">
-          <Spinner
-            size="xl"
-            color={getColor('text.reports.primary')}
-            thickness="4px"
-            emptyColor={getColor('text.reports.primary')}
-          />
-          <Text ml={3} color={getColor('text.reports.primary')}>
-            {t('reports.expensesIncome.loading')}
+    <VStack align="stretch" spacing={3} width="100%" maxW="600px" mx="auto" mb={6}>
+      <Grid templateColumns="1fr 1fr" gap={3}>
+        <Box {...cardStyle} p={4}>
+          <Text
+            fontSize="xs"
+            color={getColor('text.dashboard.filterLabel')}
+            fontFamily={getFont('body')}
+          >
+            {t('reports.expensesIncome.totalExpenses')}
           </Text>
-        </Flex>
-      ) : error ? (
-        <Text color={getColor('status.error')} textAlign="center" py={10}>
-          {error}
+          <Text
+            fontSize="lg"
+            fontWeight="bold"
+            color={expenseColor}
+            fontFamily={getFont('heading')}
+          >
+            {formatCurrency(totals.totalExpenses)}
+          </Text>
+        </Box>
+        <Box {...cardStyle} p={4}>
+          <Text
+            fontSize="xs"
+            color={getColor('text.dashboard.filterLabel')}
+            fontFamily={getFont('body')}
+          >
+            {t('reports.expensesIncome.totalIncome')}
+          </Text>
+          <Text
+            fontSize="lg"
+            fontWeight="bold"
+            color={revenueColor}
+            fontFamily={getFont('heading')}
+          >
+            {formatCurrency(totals.totalRevenues)}
+          </Text>
+        </Box>
+      </Grid>
+
+      <Box {...cardStyle} p={4}>
+        <Text
+          fontSize="xs"
+          color={getColor('text.dashboard.filterLabel')}
+          fontFamily={getFont('body')}
+        >
+          {t('reports.expensesIncome.balance')}
         </Text>
-      ) : data.length > 0 ? (
-        <Box width="100%" height={isMobile ? '300px' : '400px'}>
+        <Text
+          fontSize="xl"
+          fontWeight="bold"
+          color={totals.balance >= 0 ? revenueColor : expenseColor}
+          fontFamily={getFont('heading')}
+        >
+          {formatCurrency(totals.balance)}
+        </Text>
+      </Box>
+
+      <Box {...cardStyle} p={4}>
+        <Box width="100%" height="320px">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}
               margin={{
-                top: 20,
-                right: 30,
-                left: 20,
-                bottom: 5,
+                top: 8,
+                right: 8,
+                left: 4,
+                bottom: 4,
               }}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke={getColor('text.reports.primary')}
+                stroke={getColor('border.dashboard.tile')}
               />
               <XAxis
                 dataKey="month"
-                stroke={getColor('text.reports.primary')}
-                tick={{ fontSize: isMobile ? 12 : 14 }}
+                stroke={getColor('text.dashboard.filterLabel')}
+                tick={{ fontSize: 10 }}
+                interval={0}
               />
-              {!isMobile && (
-                <YAxis
-                  tickFormatter={(value) => formatCurrency(value)}
-                  stroke={getColor('text.reports.primary')}
-                />
-              )}
+              <YAxis
+                tickFormatter={formatCompactCurrencyAxis}
+                stroke={getColor('text.dashboard.filterLabel')}
+                tick={{ fontSize: 10 }}
+                width={48}
+              />
               <Tooltip
-                formatter={(value) => [formatCurrency(Number(value)), '']}
+                formatter={(value, name) => {
+                  const label =
+                    name === 'expenses'
+                      ? t('reports.expensesIncome.expenses')
+                      : t('reports.expensesIncome.income');
+                  return [formatCurrency(Number(value)), label];
+                }}
                 contentStyle={{
-                  background: getColor('background.reports'),
-                  borderColor: getColor('border.reports'),
-                  borderRadius: 'md',
+                  background: getColor('background.dashboard.filterBar'),
+                  borderColor: getColor('border.dashboard.tile'),
+                  borderRadius: '8px',
                   padding: '8px',
                 }}
               />
               <Legend
                 verticalAlign="top"
                 align="center"
-                wrapperStyle={{
-                  paddingBottom: '20px',
-                }}
+                wrapperStyle={{ paddingBottom: 12, fontSize: 12 }}
               />
               <Bar
                 dataKey="expenses"
                 name={t('reports.expensesIncome.expenses')}
-                fill={colors.expenses}
+                fill={expenseColor}
                 radius={[4, 4, 0, 0]}
-                maxBarSize={25}
+                maxBarSize={20}
               />
               <Bar
                 dataKey="revenues"
                 name={t('reports.expensesIncome.income')}
-                fill={colors.revenues}
+                fill={revenueColor}
                 radius={[4, 4, 0, 0]}
-                maxBarSize={25}
+                maxBarSize={20}
               />
             </BarChart>
           </ResponsiveContainer>
         </Box>
-      ) : (
-        <Text color={getColor('text.reports.primary')} py={10} textAlign="center">
-          {t('reports.expensesIncome.noData')}
-        </Text>
-      )}
-    </Flex>
+      </Box>
+    </VStack>
   );
 };

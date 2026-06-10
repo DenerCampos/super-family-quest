@@ -127,14 +127,22 @@
       "loading": "Carregando dados...",
       "error": "Erro ao carregar dados do gráfico",
       "noData": "Nenhuma despesa encontrada no período",
-      "value": "Valor"
+      "value": "Valor",
+      "totalInPeriod": "Total no período",
+      "storesCount": "{{count}} estabelecimentos",
+      "shareOfTotal": "{{percent}}% do total"
     },
     "expensesByGroup": {
       "title": "Despesas por Categoria",
       "loading": "Carregando dados...",
       "error": "Erro ao carregar dados do gráfico",
       "noData": "Nenhuma despesa encontrada no período",
-      "value": "Valor"
+      "value": "Valor",
+      "totalInPeriod": "Total no período",
+      "topCategory": "Maior categoria",
+      "categoriesCount": "Categorias",
+      "shareOfTotal": "{{percent}}% do total",
+      "others": "Outros"
     },
     "expensesByDate": {
       "title": "Despesas por Data",
@@ -142,7 +150,12 @@
       "error": "Erro ao carregar dados do gráfico",
       "noData": "Nenhuma despesa encontrada no período",
       "value": "Valor",
-      "spentValue": "Valor Gasto"
+      "spentValue": "Valor Gasto",
+      "totalInPeriod": "Total no período",
+      "averagePerDay": "Média por dia",
+      "peakDay": "Maior gasto",
+      "daysWithExpense": "Dias com gasto",
+      "daysOfTotal": "de {{total}} dias"
     },
     "expensesIncome": {
       "title": "Despesas vs Receitas",
@@ -150,7 +163,10 @@
       "error": "Erro ao carregar dados do gráfico",
       "noData": "Nenhum dado encontrado no período",
       "expenses": "Despesas",
-      "income": "Receitas"
+      "income": "Receitas",
+      "totalExpenses": "Total de despesas",
+      "totalIncome": "Total de receitas",
+      "balance": "Saldo do período"
     },
     "topProducts": {
       "title": "Produtos Mais Comprados",
@@ -159,7 +175,10 @@
       "noData": "Nenhum produto encontrado no período",
       "value": "Valor",
       "quantity": "Quantidade",
-      "totalValue": "Valor Total"
+      "totalValue": "Valor Total",
+      "totalInRanking": "Total no ranking",
+      "itemsCount": "{{count}} produtos",
+      "shareOfTotal": "{{percent}}% do total"
     },
     "coinStatement": {
       "title": "Extrato de Moedas",
