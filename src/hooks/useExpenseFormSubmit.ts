@@ -1,15 +1,28 @@
+import { useToast } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import type { UseFormReset } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { api } from "../services";
 import type { Expense } from "../services/resources";
-import { parseBRLCurrency } from "../utils/formatCurrency";
-import { parseGrams } from "../utils/formatGrams";
+import type { RecurrenceForm } from "../types/financial";
+import { buildExpenseCreatePayload } from "../utils/financialFormMapper";
 import { useCreateExpense, useUpdateExpense } from "./useExpensesMutations";
+import { useThemedTranslation } from "./useThemedTranslation";
+import { GET_LAST_REGISTRATION_QUERY_KEY } from "./useGetLastRegistration";
+
+export type ExpenseFormValues = Expense & {
+  recurrence?: RecurrenceForm;
+};
 
 interface UseExpenseFormSubmitProps {
   isEdit: boolean;
   id?: string;
   removedItemIds: string[];
-  reset: UseFormReset<Expense>;
+  reset: UseFormReset<ExpenseFormValues>;
+  pendingPhotos?: File[];
+  removedPhotoUrls?: string[];
+  formDirty?: boolean;
+  onPhotosUploaded?: () => void;
 }
 
 export const useExpenseFormSubmit = ({
@@ -17,52 +30,109 @@ export const useExpenseFormSubmit = ({
   id,
   removedItemIds,
   reset,
+  pendingPhotos = [],
+  removedPhotoUrls = [],
+  formDirty = false,
+  onPhotosUploaded,
 }: UseExpenseFormSubmitProps) => {
   const location = useLocation();
-
-  // Define o caminho de redirecionamento baseado na origem dos dados
+  const navigate = useNavigate();
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const { t } = useThemedTranslation();
   const redirectPath = location.state?.couponData ? "/" : undefined;
-
   const { mutateAsync: createExpense } = useCreateExpense(redirectPath);
   const { mutateAsync: updateExpense } = useUpdateExpense(redirectPath);
 
-  const onSubmit = async (data: Expense) => {
-    const formattedData = {
-      ...data,
-      name: data.store.name.trim(),
-      value: data.items.reduce(
-        (sum, item) =>
-          sum +
-          Number(parseBRLCurrency(item.value).toFixed(2)) *
-            Number(parseGrams(item.quantity)),
-        0
-      ),
-      items: data.items.map((item) => ({
-        ...item,
-        value: Number(parseBRLCurrency(item.value).toFixed(2)),
-        quantity: Number(parseGrams(item.quantity)),
-        total: (item.total =
-          Number(parseBRLCurrency(item.value).toFixed(2)) *
-          Number(parseGrams(item.quantity))),
-      })),
-      uri: data.uri?.trim() ?? "",
-    };
+  const finishPhotoOnlyEdit = async (expenseId: string) => {
+    toast({
+      title: t("common.success"),
+      status: "success",
+      duration: 3000,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: [GET_LAST_REGISTRATION_QUERY_KEY],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: ["expense", expenseId],
+    });
+    if (redirectPath !== undefined) {
+      navigate(redirectPath);
+    } else {
+      navigate(-1);
+    }
+  };
+
+  const onSubmit = async (data: ExpenseFormValues) => {
+    const apiPayload = buildExpenseCreatePayload(data);
+    const hasPhotoEdits =
+      pendingPhotos.length > 0 || removedPhotoUrls.length > 0;
 
     if (isEdit && id) {
-      await updateExpense({
-        id,
-        data: {
-          ...formattedData,
+      if (hasPhotoEdits) {
+        let photoError = false;
+        for (const url of removedPhotoUrls) {
+          try {
+            await api.deleteExpensePhoto(id, url);
+          } catch {
+            photoError = true;
+          }
+        }
+        for (const file of pendingPhotos) {
+          try {
+            await api.uploadExpensePhoto(id, file);
+          } catch {
+            photoError = true;
+          }
+        }
+        if (photoError) {
+          toast({
+            title: t("common.error"),
+            description: t("financialSteps.photos.uploadPartialError"),
+            status: "warning",
+            duration: 4000,
+          });
+        }
+        onPhotosUploaded?.();
+      }
+
+      if (formDirty) {
+        await updateExpense({
           id,
-          items: formattedData.items.map((item) => ({
-            ...item,
-            id: item.id || "",
-          })),
-          removedItemIds,
-        },
-      });
+          data: {
+            ...apiPayload,
+            id,
+            items: apiPayload.items.map((item, index) => ({
+              ...item,
+              id: data.items[index]?.id || "",
+            })),
+            removedItemIds,
+          },
+        });
+      } else if (hasPhotoEdits) {
+        await finishPhotoOnlyEdit(id);
+      }
     } else {
-      await createExpense(formattedData);
+      const created = await createExpense(apiPayload);
+      if (created?.id && pendingPhotos.length) {
+        let photoError = false;
+        for (const file of pendingPhotos) {
+          try {
+            await api.uploadExpensePhoto(created.id, file);
+          } catch {
+            photoError = true;
+          }
+        }
+        if (photoError) {
+          toast({
+            title: t("common.error"),
+            description: t("financialSteps.photos.uploadPartialError"),
+            status: "warning",
+            duration: 4000,
+          });
+        }
+        onPhotosUploaded?.();
+      }
     }
 
     reset();

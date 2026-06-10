@@ -5,6 +5,23 @@ export const formatCurrency = (value: number) => {
   }).format(value);
 };
 
+/** Eixo Y compacto para gráficos em telas pequenas (ex.: 1,2k). */
+export function formatCompactCurrencyAxis(value: number): string {
+  const abs = Math.abs(value);
+  const sign = value < 0 ? '-' : '';
+
+  if (abs >= 1_000_000) {
+    return `${sign}${(abs / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}M`;
+  }
+  if (abs >= 1_000) {
+    return `${sign}${(abs / 1_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}k`;
+  }
+
+  return new Intl.NumberFormat('pt-BR', {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 export function formatCurrencyBRL(value: string | number): string {
   const numericValue = typeof value === 'string' ? parseFloat(value) : value;
 

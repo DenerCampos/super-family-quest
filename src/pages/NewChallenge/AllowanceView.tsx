@@ -93,9 +93,12 @@ export const AllowanceView = () => {
     },
   });
 
-  const periodToSettle =
-    suggestionQuery.data?.suggestedPeriodYm ??
-    pendingQuery.data?.periodYm;
+  const periodToSettle = pendingQuery.data?.periodYm;
+  const canSettle =
+    userIsAdmin &&
+    periodToSettle != null &&
+    (pendingQuery.data?.totalPending ?? 0) > 0 &&
+    (pendingQuery.data?.members.length ?? 0) > 0;
 
   const formatYm = (ym: number) => {
     const y = Math.floor(ym / 100);
@@ -228,7 +231,7 @@ export const AllowanceView = () => {
           </>
         )}
 
-        {userIsAdmin && periodToSettle != null && (
+        {canSettle && (
           <Button
             bg={getColor('button.background.primary')}
             color={getColor('button.text.primary')}

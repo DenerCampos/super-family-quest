@@ -1,6 +1,7 @@
 import { Flex, Grid, Text, Box, Spinner } from '@chakra-ui/react';
 import {
   FiCheckSquare,
+  FiClipboard,
   FiDollarSign,
   FiImage,
   FiList,
@@ -11,6 +12,7 @@ import { FixedAppShell } from '../../components/FixedAppShell';
 import { PageTitleBar } from '../../components/PageTitleBar';
 import { ReportTile } from '../../components/reports/ReportTile';
 import { useAuth } from '../../contexts/AuthContext';
+import { useChoreCoinCelebration } from '../../hooks/useChoreCoinCelebration';
 import { useFamilyGroup } from '../../hooks/useFamilyGroup';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -66,6 +68,13 @@ const adminTiles: Tile[] = [
     subtitleKey: 'newChallenge.tiles.approvals.subtitle',
     route: `${BASE_PATH}/approvals`,
   },
+  {
+    key: 'settlements',
+    icon: FiClipboard,
+    titleKey: 'newChallenge.tiles.settlements.title',
+    subtitleKey: 'newChallenge.tiles.settlements.subtitle',
+    route: `${BASE_PATH}/settlements`,
+  },
 ];
 
 const NewChallengeHub = () => {
@@ -82,6 +91,8 @@ const NewChallengeHub = () => {
   const userIsAdmin = familyGroup
     ? isAdmin(familyGroup, userId)
     : false;
+
+  useChoreCoinCelebration();
 
   const tiles = [...baseTiles, ...(userIsAdmin ? adminTiles : [])];
 

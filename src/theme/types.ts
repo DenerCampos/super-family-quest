@@ -276,6 +276,11 @@ export interface ThemeColors {
     error: string;
     warning: string;
     info: string;
+    rank: {
+      gold: string;
+      silver: string;
+      bronze: string;
+    };
   };
 
   // Configuração de botões usando cores do Chakra

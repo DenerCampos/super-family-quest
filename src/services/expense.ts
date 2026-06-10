@@ -1,6 +1,8 @@
 import api from "./api";
 import type { CouponReader } from "./couponReader";
 import { compressImage } from "../utils/compressImage";
+import type { ExpenseReceipt, RecurrenceForm } from "../types/financial";
+import type { CreateExpense } from "./resources";
 
 export type Expense = {
   id?: string;
@@ -34,6 +36,9 @@ export type Items = {
   value: number | string;
   total: number | string;
   group: Groups;
+  warrantyDuration?: number | null;
+  warrantyUnit?: string | null;
+  warrantyExpiresAt?: string | null;
 };
 
 export type ExpenseComplete = {
@@ -48,10 +53,16 @@ export type ExpenseComplete = {
   payment: Payments;
   store: Merchant;
   items: Array<Items>;
+  photos?: string[];
+  recurrence?: RecurrenceForm;
+  isInstallment?: boolean;
+  installmentNumber?: number | null;
+  totalInstallments?: number | null;
+  installmentLabel?: string | null;
 };
 
 export type ExpenseRecurring = {
-  expenses: ExpenseComplete[];
+  expenses: CreateExpense[];
   expenseIds: string[];
 };
 
@@ -78,6 +89,24 @@ export const ExpenseService = {
     const response = await api.get(`/expense/${id}`);
 
     return response.data;
+  },
+
+  getExpenseReceipt: async (id: string): Promise<ExpenseReceipt> => {
+    const response = await api.get(`/expense/${id}/receipt`);
+    return response.data;
+  },
+
+  uploadExpensePhoto: async (id: string, file: File): Promise<void> => {
+    // A compressão já é feita pelo caller (PhotosStep via compressImage)
+    const formData = new FormData();
+    formData.append('image', file);
+    await api.post(`/expense/${id}/photos`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
+  deleteExpensePhoto: async (id: string, photoUrl: string): Promise<void> => {
+    await api.delete(`/expense/${id}/photos`, { data: { photoUrl } });
   },
 
   analyzeAudio: async (audioFile: File): Promise<CouponReader> => {

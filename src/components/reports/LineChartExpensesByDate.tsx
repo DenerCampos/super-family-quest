@@ -1,27 +1,33 @@
-import { Flex, Text, Box, useBreakpointValue, Spinner } from '@chakra-ui/react';
+import { Box, Flex, Grid, Spinner, Text, VStack } from '@chakra-ui/react';
 import {
-  AreaChart,
   Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
 } from 'recharts';
-import { formatCurrency } from '../../utils/formatCurrency';
+import { useEffect, useMemo, useRef } from 'react';
 import type { ExpensesByDate } from '../../services/reports';
-import { fillMonthDays, formatDateToBR } from '../../utils/formatDate';
-import { useState, useEffect } from 'react';
-import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { useExpensesByDate } from '../../hooks/useExpensesByDate';
+import {
+  formatCompactCurrencyAxis,
+  formatCurrency,
+} from '../../utils/formatCurrency';
+import {
+  fillDateRangeDays,
+  formatDateToBR,
+  formatDateToYYYYMMDD,
+} from '../../utils/formatDate';
+import { resolveChakraColor, withAlpha } from '../../utils/resolveColor';
 
 interface LineChartExpensesProps {
   startDate: string;
   endDate: string;
   userId?: string;
-  data?: ExpensesByDate[];
   onDataUpdate?: (data: ExpensesByDate[]) => void;
 }
 
@@ -33,172 +39,278 @@ interface ChartDataItem {
   value: number;
 }
 
-const generateAreaColors = () => {
-  return {
-    stroke: 'hsl(270, 75%, 60%)',
-    fill: 'hsl(270, 75%, 60%, 0.2)',
-  };
-};
-
-export const LineChartExpensesByDate = ({ startDate, endDate, userId, data: initialData, onDataUpdate }: LineChartExpensesProps) => {
-  const [data, setData] = useState(initialData ?? []);
-  const [chartData, setChartData] = useState<ChartDataItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const LineChartExpensesByDate = ({
+  startDate,
+  endDate,
+  userId,
+  onDataUpdate,
+}: LineChartExpensesProps) => {
   const { t } = useThemedTranslation();
-  const { getColor } = useVisualTheme();
+  const { getColor, getFont } = useVisualTheme();
+  const { data = [], isLoading, isError } = useExpensesByDate({ startDate, endDate, userId });
 
+  // Estabiliza o callback com ref para não re-disparar o effect a cada render do pai
+  const onDataUpdateRef = useRef(onDataUpdate);
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await api.getExpenseByDate({
-          startDate,
-          endDate,
-          userId,
-        });
-        setData(response);
-        onDataUpdate?.(response);
-        setError(null);
-      } catch (err) {
-        console.error('Erro ao buscar dados do gráfico:', err);
-        setError(t('reports.expensesByDate.error'));
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [startDate, endDate, userId]);
+    onDataUpdateRef.current = onDataUpdate;
+  });
 
   useEffect(() => {
     if (data.length > 0) {
-      const fillChartData = fillMonthDays(data);
-      const processedData = fillChartData.map((item) => ({
-        date: item.date,
-        formattedDate: formatDateToBR(item.date),
-        formattedDateMobile: new Date(item.date).getDate().toString().padStart(2, '0'),
-        formattedDateDesktop: formatDateToBR(item.date).split('/').slice(0, 2).join('/'),
-        value: Number(item.value),
-      }));
-      setChartData(processedData);
-    } else {
-      setChartData([]);
+      onDataUpdateRef.current?.(data);
     }
   }, [data]);
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const colors = generateAreaColors();
+  const rangeStart = formatDateToYYYYMMDD(startDate);
+  const rangeEnd = formatDateToYYYYMMDD(endDate);
+
+  const expenseColor = resolveChakraColor(
+    getColor('text.lastRegistrations.expense'),
+  );
+  const areaFill = withAlpha(expenseColor, '33');
+
+  const chartData = useMemo<ChartDataItem[]>(() => {
+    if (!data.length || !rangeStart || !rangeEnd) {
+      return [];
+    }
+
+    const normalized = data.map((item) => ({
+      date: item.date,
+      value: Number(item.value),
+    }));
+
+    return fillDateRangeDays(normalized, rangeStart, rangeEnd).map((item) => ({
+      date: item.date,
+      formattedDate: formatDateToBR(item.date),
+      formattedDateMobile: new Date(item.date)
+        .getDate()
+        .toString()
+        .padStart(2, '0'),
+      formattedDateDesktop: formatDateToBR(item.date).split('/').slice(0, 2).join('/'),
+      value: Number(item.value),
+    }));
+  }, [data, rangeStart, rangeEnd]);
+
+  const stats = useMemo(() => {
+    if (!chartData.length) {
+      return null;
+    }
+
+    const total = chartData.reduce((sum, item) => sum + item.value, 0);
+    const daysWithExpense = chartData.filter((item) => item.value > 0).length;
+    const peak = chartData.reduce(
+      (best, item) => (item.value > best.value ? item : best),
+      chartData[0],
+    );
+
+    return {
+      total,
+      average: chartData.length > 0 ? total / chartData.length : 0,
+      daysWithExpense,
+      totalDays: chartData.length,
+      peakValue: peak.value,
+      peakDate: peak.date,
+    };
+  }, [chartData]);
+
+  const hasAnyData = (stats?.total ?? 0) > 0;
+
+  const xAxisInterval = chartData.length > 20 ? Math.floor(chartData.length / 15) : 0;
+
+  const cardStyle = {
+    borderRadius: 'lg',
+    bg: getColor('background.dashboard.filterBar'),
+    border: '1px solid',
+    borderColor: getColor('border.dashboard.tile'),
+  };
+
+  if (isLoading) {
+    return (
+      <Flex justify="center" py={8}>
+        <Spinner color={getColor('text.dashboard.title')} />
+      </Flex>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Text
+        color={getColor('status.error')}
+        textAlign="center"
+        fontFamily={getFont('body')}
+      >
+        {t('reports.expensesByDate.error')}
+      </Text>
+    );
+  }
+
+  if (!hasAnyData || !stats) {
+    return (
+      <Text
+        color={getColor('text.dashboard.tileSubtitle')}
+        textAlign="center"
+        fontFamily={getFont('body')}
+        py={8}
+      >
+        {t('reports.expensesByDate.noData')}
+      </Text>
+    );
+  }
 
   return (
-    <Flex
-      direction="column"
-      p={4}
-      borderRadius="lg"
-      border="2px solid"
-      borderColor={getColor('border.reports')}
-      width="100%"
-      maxW="600px"
-      mx="auto"
-      mb={6}
-      bg={getColor('background.reports')}
-      boxShadow="sm"
-    >
-      <Text
-        fontSize="xl"
-        color={getColor('text.reports.title')}
-        textAlign="center"
-        mb={4}
-        fontWeight="bold"
-      >
-        {t('reports.expensesByDate.title')}
-      </Text>
-
-      {loading ? (
-        <Flex align="center" justify="center" height="300px">
-          <Spinner
-            size="xl"
-            color={getColor('text.reports.primary')}
-            thickness="4px"
-            emptyColor={getColor('text.reports.primary')}
-          />
-          <Text ml={3} color={getColor('text.reports.primary')}>
-            {t('reports.expensesByDate.loading')}
+    <VStack align="stretch" spacing={3} width="100%" maxW="600px" mx="auto" mb={6}>
+      <Grid templateColumns="1fr 1fr" gap={3}>
+        <Box {...cardStyle} p={4}>
+          <Text
+            fontSize="xs"
+            color={getColor('text.dashboard.filterLabel')}
+            fontFamily={getFont('body')}
+          >
+            {t('reports.expensesByDate.totalInPeriod')}
           </Text>
-        </Flex>
-      ) : error ? (
-        <Text color={getColor('status.error')} textAlign="center" py={10}>
-          {error}
-        </Text>
-      ) : chartData.length > 0 ? (
-        <Box width="100%" height={isMobile ? '300px' : '400px'}>
+          <Text
+            fontSize="lg"
+            fontWeight="bold"
+            color={expenseColor}
+            fontFamily={getFont('heading')}
+          >
+            {formatCurrency(stats.total)}
+          </Text>
+        </Box>
+        <Box {...cardStyle} p={4}>
+          <Text
+            fontSize="xs"
+            color={getColor('text.dashboard.filterLabel')}
+            fontFamily={getFont('body')}
+          >
+            {t('reports.expensesByDate.averagePerDay')}
+          </Text>
+          <Text
+            fontSize="lg"
+            fontWeight="bold"
+            color={expenseColor}
+            fontFamily={getFont('heading')}
+          >
+            {formatCurrency(stats.average)}
+          </Text>
+        </Box>
+      </Grid>
+
+      <Grid templateColumns="1fr 1fr" gap={3}>
+        <Box {...cardStyle} p={4}>
+          <Text
+            fontSize="xs"
+            color={getColor('text.dashboard.filterLabel')}
+            fontFamily={getFont('body')}
+          >
+            {t('reports.expensesByDate.peakDay')}
+          </Text>
+          <Text
+            fontSize="sm"
+            fontWeight="bold"
+            color={getColor('text.dashboard.tileTitle')}
+            fontFamily={getFont('heading')}
+          >
+            {formatCurrency(stats.peakValue)}
+          </Text>
+          <Text
+            fontSize="xs"
+            color={getColor('text.dashboard.tileSubtitle')}
+            mt={1}
+            fontFamily={getFont('body')}
+          >
+            {formatDateToBR(stats.peakDate)}
+          </Text>
+        </Box>
+        <Box {...cardStyle} p={4}>
+          <Text
+            fontSize="xs"
+            color={getColor('text.dashboard.filterLabel')}
+            fontFamily={getFont('body')}
+          >
+            {t('reports.expensesByDate.daysWithExpense')}
+          </Text>
+          <Text
+            fontSize="lg"
+            fontWeight="bold"
+            color={getColor('text.dashboard.tileTitle')}
+            fontFamily={getFont('heading')}
+          >
+            {stats.daysWithExpense}
+          </Text>
+          <Text
+            fontSize="xs"
+            color={getColor('text.dashboard.tileSubtitle')}
+            mt={1}
+            fontFamily={getFont('body')}
+          >
+            {t('reports.expensesByDate.daysOfTotal', { total: stats.totalDays })}
+          </Text>
+        </Box>
+      </Grid>
+
+      <Box {...cardStyle} p={4}>
+        <Box width="100%" height="320px">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={chartData}
               margin={{
-                top: 10,
-                right: 30,
-                left: 20,
-                bottom: 5,
+                top: 8,
+                right: 8,
+                left: 4,
+                bottom: 4,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke={getColor('text.reports.primary')} />
-              <XAxis
-                dataKey={isMobile ? "formattedDateMobile" : "formattedDateDesktop"}
-                stroke={getColor('text.reports.primary')}
-                tick={{ fontSize: isMobile ? 12 : 14 }}
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke={getColor('border.dashboard.tile')}
               />
-              {!isMobile && (
-                <YAxis
-                  tickFormatter={(value) => formatCurrency(value)}
-                  stroke={getColor('text.reports.primary')}
-                />
-              )}
+              <XAxis
+                dataKey="formattedDateMobile"
+                stroke={getColor('text.dashboard.filterLabel')}
+                tick={{ fontSize: 10 }}
+                interval={xAxisInterval}
+              />
+              <YAxis
+                tickFormatter={formatCompactCurrencyAxis}
+                stroke={getColor('text.dashboard.filterLabel')}
+                tick={{ fontSize: 10 }}
+                width={48}
+              />
               <Tooltip
-                formatter={(value) => [formatCurrency(Number(value)), t('reports.expensesByDate.value')]}
-                labelFormatter={(value) => {
-                  const fullDate = chartData.find(
-                    (item) => item.formattedDate === value,
-                  )?.date;
-                  return fullDate ? formatDateToBR(fullDate) : value;
+                formatter={(value) => [
+                  formatCurrency(Number(value)),
+                  t('reports.expensesByDate.value'),
+                ]}
+                labelFormatter={(_, payload) => {
+                  const item = payload?.[0]?.payload as ChartDataItem | undefined;
+                  return item ? formatDateToBR(item.date) : '';
                 }}
                 contentStyle={{
-                  background: getColor('background.reports'),
-                  borderColor: getColor('border.reports'),
-                  borderRadius: 'md',
+                  background: getColor('background.dashboard.filterBar'),
+                  borderColor: getColor('border.dashboard.tile'),
+                  borderRadius: '8px',
                   padding: '8px',
                 }}
               />
-              {!isMobile && (
-                <Legend
-                  verticalAlign="top"
-                  align="center"
-                  wrapperStyle={{
-                    paddingBottom: '20px',
-                  }}
-                />
-              )}
               <Area
                 type="monotone"
                 dataKey="value"
                 name={t('reports.expensesByDate.spentValue')}
-                stroke={colors.stroke}
-                fill={colors.fill}
+                stroke={expenseColor}
+                fill={areaFill}
                 strokeWidth={2}
                 activeDot={{
-                  stroke: colors.stroke,
+                  stroke: expenseColor,
                   strokeWidth: 2,
-                  fill: getColor('background.reports'),
+                  fill: getColor('background.dashboard.filterBar'),
                   r: 4,
                 }}
               />
             </AreaChart>
           </ResponsiveContainer>
         </Box>
-      ) : (
-        <Text color={getColor('text.reports.primary')} py={10} textAlign="center">
-          {t('reports.expensesByDate.noData')}
-        </Text>
-      )}
-    </Flex>
+      </Box>
+    </VStack>
   );
 };

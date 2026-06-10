@@ -6,7 +6,6 @@ import {
   AccordionPanel,
   Box,
   Button,
-  Checkbox,
   Collapse,
   Flex,
   FormControl,
@@ -18,19 +17,26 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { FiChevronDown } from "react-icons/fi";
+import {
+  FiCamera,
+  FiChevronDown,
+  FiRefreshCw,
+  FiShield,
+  FiShoppingBag,
+} from "react-icons/fi";
 import {
   useExpenseFormAutofill,
   useExpenseFormSubmit,
 } from "../hooks/useExpenseForm";
+import type { ExpenseFormValues } from "../hooks/useExpenseFormSubmit";
+import { useFinancialPhotoEdits } from "../hooks/useFinancialPhotoEdits";
 import { useGetAutoFillExpenses } from "../hooks/useGetAutoFillExpenses";
 import { useThemedTranslation } from "../hooks/useThemedTranslation";
 import { useVisualTheme } from "../hooks/useVisualTheme";
 import { api } from "../services";
 import type { ExpenseComplete } from "../services/expense";
-import type { Expense } from "../services/resources";
 import {
   formatCurrency,
   formatCurrencyInputBRL,
@@ -38,10 +44,21 @@ import {
 } from "../utils/formatCurrency";
 import { formatGramsInput, parseGrams, formatIntegerQuantityInput, isExpenseDiscreteCountUnit } from "../utils/formatGrams";
 import { AutocompleteInput } from "./AutocompleteInput";
+import {
+  ResourceFormStepper,
+} from "./form-stepper/ResourceFormStepper";
+import { FinancialFormFooter } from "./form-stepper/FinancialFormFooter";
+import { FinancialFormLayout } from "./form-stepper/FinancialFormLayout";
+import { StepSwipePanels } from "./form-stepper/StepSwipePanels";
+import { useFormStepper } from "./form-stepper/useFormStepper";
+import { RecurrenceStep } from "./financial-steps/RecurrenceStep";
+import { WarrantyStep } from "./financial-steps/WarrantyStep";
+import { PhotosStep } from "./financial-steps/PhotosStep";
 
 interface IExpensesFormProps {
   isEdit: boolean;
   id?: string;
+  onPhotoChangesChange?: (hasChanges: boolean) => void;
 }
 
 const inputStyle = (getColor: (path: string) => string) => ({
@@ -64,10 +81,33 @@ const smallInputStyle = (getColor: (path: string) => string) => ({
   size: "sm",
 });
 
-const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
+const itemFieldLabelProps = (getColor: (path: string) => string) => ({
+  color: getColor("text.primary"),
+  fontSize: "xs",
+  mb: 1,
+  minH: "28px",
+  display: "flex" as const,
+  alignItems: "flex-end" as const,
+  lineHeight: "1.15",
+  noOfLines: 2,
+});
+
+
+const ExpensesForm = ({ isEdit, id, onPhotoChangesChange }: IExpensesFormProps) => {
   const { getColor } = useVisualTheme();
   const [expandedItemIndex, setExpandedItemIndex] = useState<number>(0);
   const [removedItemIds, setRemovedItemIds] = useState<string[]>([]);
+  const {
+    pendingPhotos,
+    existingPhotos,
+    removedPhotoUrls,
+    hasPhotoChanges,
+    setExistingPhotos,
+    addPending,
+    removePending,
+    markExistingForRemoval,
+    clearPhotoEdits,
+  } = useFinancialPhotoEdits();
   const { isOpen: isItemsCollapsed, onToggle: toggleItemsCollapsed } =
     useDisclosure({ defaultIsOpen: isEdit });
 
@@ -86,9 +126,31 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
     control,
     reset,
     formState: { errors, isValid, isSubmitting, isDirty },
-  } = useFormContext<Expense>();
+  } = useFormContext<ExpenseFormValues>();
   const { t } = useThemedTranslation();
   const { fields, remove, append } = useFieldArray({ control, name: "items" });
+
+  const expenseSteps = useMemo(() => [
+    { id: 'expense', label: t('financialSteps.expense.title'), icon: FiShoppingBag },
+    { id: 'recurrence', label: t('financialSteps.recurrence.title'), optional: true, icon: FiRefreshCw },
+    { id: 'warranty', label: t('financialSteps.warranty.title'), optional: true, icon: FiShield },
+    { id: 'photos', label: t('financialSteps.photos.title'), optional: true, icon: FiCamera },
+  ], [t]);
+
+  const step1Valid =
+    !!watch("store.name")?.trim() &&
+    !!watch("payment.name")?.trim() &&
+    !!watch("date") &&
+    !errors.store?.name &&
+    !errors.payment?.name &&
+    !errors.date &&
+    !errors.items;
+
+  const {
+    activeIndex,
+    stepStates,
+    goTo,
+  } = useFormStepper(expenseSteps, step1Valid);
 
   const { data: autofillData } = useGetAutoFillExpenses();
 
@@ -106,20 +168,31 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
     fields,
     isItemsCollapsed,
     toggleItemsCollapsed,
+    onEditPhotosLoaded: setExistingPhotos,
   });
+
+  useEffect(() => {
+    onPhotoChangesChange?.(hasPhotoChanges);
+  }, [hasPhotoChanges, onPhotoChangesChange]);
 
   const { onSubmit } = useExpenseFormSubmit({
     isEdit,
     id,
     removedItemIds,
     reset,
+    pendingPhotos,
+    removedPhotoUrls,
+    formDirty: isDirty,
+    onPhotosUploaded: clearPhotoEdits,
   });
+
+  const canSubmitEdit = isDirty || hasPhotoChanges;
 
   const handleAddItem = () => {
     const newIndex = fields.length;
     append({
       ...{
-        code: "1",
+        code: String(newIndex + 1),
         name: "",
         quantity: "1",
         unit: "Unidade",
@@ -143,11 +216,28 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
       style={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100%",
         flex: 1,
+        minHeight: 0,
+        height: "100%",
       }}
     >
-      <Flex direction="column" flex="1">
+      <FinancialFormLayout
+        stepper={
+          <ResourceFormStepper
+            steps={expenseSteps}
+            activeIndex={activeIndex}
+            stepStates={stepStates}
+            onStepClick={goTo}
+          />
+        }
+        content={
+          <StepSwipePanels
+            activeIndex={activeIndex}
+            onStepChange={goTo}
+            stepStates={stepStates}
+            swipeEnabled={step1Valid}
+            panels={[
+              <>
         {/* Campo Loja */}
         <FormControl isInvalid={!!errors.store?.name} mb={4}>
           <FormLabel color={getColor("text.primary")}>
@@ -207,18 +297,6 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
             )}
           </FormControl>
         </Grid>
-
-        <FormControl mb={4}>
-          <Checkbox
-            {...register("repeat")}
-            defaultChecked={watch("repeat") || false}
-            colorScheme={getColor("chakraColors.green")}
-            size="lg"
-            color={getColor("text.primary")}
-          >
-            {t("modals.expense.repeat")}
-          </Checkbox>
-        </FormControl>
 
         {/* Seção de Itens */}
         <FormControl isInvalid={!!errors.items}>
@@ -282,11 +360,7 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                     }
                   );
 
-                  const {
-                    ref: qtyRef,
-                    onChange: _rhfQtyOnChange,
-                    ...qtyRest
-                  } = quantityRegistration;
+                  const { ref: qtyRef, ...qtyRest } = quantityRegistration;
 
                   const {
                     ref: unitRef,
@@ -354,15 +428,12 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                       >
                         <Flex direction="column" gap={4}>
                           {/* Código e Nome */}
-                          <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+                          <Grid templateColumns="64px 1fr" gap={3} alignItems="start">
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.code}
                             >
-                              <FormLabel
-                                color={getColor("text.primary")}
-                                fontSize="sm"
-                              >
-                                {t("modals.expense.code")}
+                              <FormLabel {...itemFieldLabelProps(getColor)}>
+                                {t("modals.expense.codeShort")}
                               </FormLabel>
                               <Input
                                 {...register(`items.${index}.code`, {
@@ -385,10 +456,7 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.name}
                             >
-                              <FormLabel
-                                color={getColor("text.primary")}
-                                fontSize="sm"
-                              >
+                              <FormLabel {...itemFieldLabelProps(getColor)}>
                                 {t("modals.expense.name")}
                               </FormLabel>
                               <Input
@@ -413,15 +481,16 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                           </Grid>
 
                           {/* Quantidade, Unidade e Valor */}
-                          <Grid templateColumns="repeat(3, 1fr)" gap={4}>
+                          <Grid
+                            templateColumns="1fr 1fr minmax(72px, 1fr)"
+                            gap={3}
+                            alignItems="start"
+                          >
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.quantity}
                             >
-                              <FormLabel
-                                color={getColor("text.primary")}
-                                fontSize="sm"
-                              >
-                                {t("modals.expense.quantity")}
+                              <FormLabel {...itemFieldLabelProps(getColor)}>
+                                {t("modals.expense.quantityShort")}
                               </FormLabel>
                               <Input
                                 type="text"
@@ -466,10 +535,7 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.unit}
                             >
-                              <FormLabel
-                                color={getColor("text.primary")}
-                                fontSize="sm"
-                              >
+                              <FormLabel {...itemFieldLabelProps(getColor)}>
                                 {t("modals.expense.unit")}
                               </FormLabel>
                               <Input
@@ -518,11 +584,8 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                             <FormControl
                               isInvalid={!!errors.items?.[index]?.value}
                             >
-                              <FormLabel
-                                color={getColor("text.primary")}
-                                fontSize="sm"
-                              >
-                                {t("modals.expense.unitValue")}
+                              <FormLabel {...itemFieldLabelProps(getColor)}>
+                                {t("modals.expense.unitValueShort")}
                               </FormLabel>
                               <Input
                                 type="text"
@@ -534,7 +597,7 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
                                     if (isNaN(numericValue))
                                       return t("common.invalidValue");
                                     return (
-                                      numericValue >= 0.01 ||
+                                      numericValue >= 0 ||
                                       t("common.invalidValue")
                                     );
                                   },
@@ -640,29 +703,30 @@ const ExpensesForm = ({ isEdit, id }: IExpensesFormProps) => {
             </Box>
           </Collapse>
         </FormControl>
-      </Flex>
-
-      {/* Botão Salvar */}
-      <Flex justify="center" align="center" pb={4} mt="auto" width="100%">
-        <Button
-          color={getColor("text.primary")}
-          bg={getColor("background.tertiary")}
-          border="1px solid"
-          borderColor={getColor("border.primary")}
-          _hover={{
-            bg: getColor("background.selected"),
-            color: getColor("text.accent"),
-          }}
-          type="submit"
-          w="full"
-          size="lg"
-          isDisabled={!isValid || isSubmitting || (isEdit ? !isDirty : false)}
-          isLoading={isSubmitting}
-          loadingText={t("common.saving")}
-        >
-          {isEdit ? t("common.update") : t("common.save")}
-        </Button>
-      </Flex>
+              </>,
+              <RecurrenceStep key="recurrence" />,
+              <WarrantyStep key="warranty" />,
+              <PhotosStep
+                key="photos"
+                pendingFiles={pendingPhotos}
+                existingUrls={existingPhotos}
+                onAdd={addPending}
+                onRemovePending={removePending}
+                onRemoveExisting={
+                  isEdit ? markExistingForRemoval : undefined
+                }
+              />,
+            ]}
+          />
+        }
+        footer={
+          <FinancialFormFooter
+            isSubmitDisabled={!isValid || isSubmitting || (isEdit ? !canSubmitEdit : false)}
+            isSubmitting={isSubmitting}
+            isEdit={isEdit}
+          />
+        }
+      />
     </form>
   );
 };

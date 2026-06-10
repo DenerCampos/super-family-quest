@@ -24,7 +24,7 @@ import {
   Badge,
   Checkbox,
 } from '@chakra-ui/react';
-import { FiPlus, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiSearch, FiEdit, FiTrash2, FiEye } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -38,12 +38,14 @@ const ITEMS_PER_PAGE = 5;
 
 interface RevenueResourceProps {
   onDelete: (id: string) => void;
+  onView?: (id: string) => void;
   refreshTrigger?: number;
   onTotalChange?: (total: number) => void;
 }
 
 const RevenueResource = ({
   onDelete,
+  onView,
   refreshTrigger,
   onTotalChange,
 }: RevenueResourceProps) => {
@@ -234,6 +236,12 @@ const RevenueResource = ({
                           {t('resources.revenue.actions')}
                         </MenuButton>
                         <MenuList>
+                          <MenuItem
+                            icon={<FiEye />}
+                            onClick={() => onView?.(revenue.id as string)}
+                          >
+                            {t('resources.revenue.view')}
+                          </MenuItem>
                           <MenuItem
                             icon={<FiEdit />}
                             onClick={() => navigate(`/revenue/${revenue.id}`)}

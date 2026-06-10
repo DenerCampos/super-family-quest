@@ -25,6 +25,8 @@
     "updateError": "Falha ao atualizar",
     "createError": "Falha ao criar",
     "deleteError": "Falha ao excluir",
+    "none": "Nenhuma",
+    "openOptions": "Abrir opções",
     "back": "Voltar",
     "confirmTitle": "Deseja continuar?",
     "confirmDescription": "Se você continuar, as informações alteradas serão perdidas.",
@@ -78,6 +80,14 @@
       "topProducts": {
         "title": "Top Produtos",
         "subtitle": "Mais comprados"
+      },
+      "coinStatement": {
+        "title": "Extrato de Moedas",
+        "subtitle": "Ganhos e gastos"
+      },
+      "warrantyItems": {
+        "title": "Garantias",
+        "subtitle": "Produtos em garantia"
       }
     },
     "filters": {
@@ -117,14 +127,22 @@
       "loading": "Carregando dados...",
       "error": "Erro ao carregar dados do gráfico",
       "noData": "Nenhuma despesa encontrada no período",
-      "value": "Valor"
+      "value": "Valor",
+      "totalInPeriod": "Total no período",
+      "storesCount": "{{count}} estabelecimentos",
+      "shareOfTotal": "{{percent}}% do total"
     },
     "expensesByGroup": {
       "title": "Despesas por Categoria",
       "loading": "Carregando dados...",
       "error": "Erro ao carregar dados do gráfico",
       "noData": "Nenhuma despesa encontrada no período",
-      "value": "Valor"
+      "value": "Valor",
+      "totalInPeriod": "Total no período",
+      "topCategory": "Maior categoria",
+      "categoriesCount": "Categorias",
+      "shareOfTotal": "{{percent}}% do total",
+      "others": "Outros"
     },
     "expensesByDate": {
       "title": "Despesas por Data",
@@ -132,7 +150,12 @@
       "error": "Erro ao carregar dados do gráfico",
       "noData": "Nenhuma despesa encontrada no período",
       "value": "Valor",
-      "spentValue": "Valor Gasto"
+      "spentValue": "Valor Gasto",
+      "totalInPeriod": "Total no período",
+      "averagePerDay": "Média por dia",
+      "peakDay": "Maior gasto",
+      "daysWithExpense": "Dias com gasto",
+      "daysOfTotal": "de {{total}} dias"
     },
     "expensesIncome": {
       "title": "Despesas vs Receitas",
@@ -140,7 +163,10 @@
       "error": "Erro ao carregar dados do gráfico",
       "noData": "Nenhum dado encontrado no período",
       "expenses": "Despesas",
-      "income": "Receitas"
+      "income": "Receitas",
+      "totalExpenses": "Total de despesas",
+      "totalIncome": "Total de receitas",
+      "balance": "Saldo do período"
     },
     "topProducts": {
       "title": "Produtos Mais Comprados",
@@ -149,7 +175,52 @@
       "noData": "Nenhum produto encontrado no período",
       "value": "Valor",
       "quantity": "Quantidade",
-      "totalValue": "Valor Total"
+      "totalValue": "Valor Total",
+      "totalInRanking": "Total no ranking",
+      "itemsCount": "{{count}} produtos",
+      "shareOfTotal": "{{percent}}% do total"
+    },
+    "coinStatement": {
+      "title": "Extrato de Moedas",
+      "openFromHeader": "Ver extrato de moedas",
+      "loading": "Carregando extrato...",
+      "error": "Erro ao carregar extrato de moedas",
+      "noData": "Nenhuma movimentação no período",
+      "noDescription": "Movimentação de moedas",
+      "totalEarned": "Total de ganhos",
+      "totalSpent": "Total de gastos",
+      "balanceAfter": "Saldo: {{value}}",
+      "pageOf": "Página {{current}} de {{total}}",
+      "previous": "Anterior",
+      "next": "Próximo"
+    },
+    "warrantyItems": {
+      "title": "Garantias",
+      "loading": "Carregando garantias...",
+      "error": "Erro ao carregar itens em garantia",
+      "noData": "Nenhum item em garantia encontrado",
+      "searchPlaceholder": "Buscar por nome do item",
+      "filterActive": "Somente garantias ativas",
+      "filterIncludeExpired": "Incluir garantias vencidas",
+      "purchaseDate": "Compra",
+      "warranty": "Garantia",
+      "quantity": "Qtd.",
+      "expiresAt": "Término da garantia",
+      "daysRemaining": "Faltam {{count}} dias",
+      "oneDayRemaining": "Falta 1 dia",
+      "expiresToday": "Vence hoje",
+      "expiredDaysAgo": "Vencida há {{count}} dias",
+      "expiredBadge": "Vencida",
+      "durationDays": "{{count}} dia",
+      "durationDays_plural": "{{count}} dias",
+      "durationMonths": "{{count}} mês",
+      "durationMonths_plural": "{{count}} meses",
+      "durationYears": "{{count}} ano",
+      "durationYears_plural": "{{count}} anos",
+      "tapToViewReceipt": "Toque para ver o cupom",
+      "pageOf": "Página {{current}} de {{total}}",
+      "previous": "Anterior",
+      "next": "Próximo"
     }
   },
   "resources": {
@@ -171,6 +242,7 @@
       "actions": "Ações",
       "edit": "Editar",
       "delete": "Excluir",
+      "view": "Exibir",
       "previous": "Anterior",
       "next": "Próximo"
     },
@@ -189,6 +261,7 @@
       "actions": "Ações",
       "edit": "Editar",
       "delete": "Excluir",
+      "view": "Exibir",
       "previous": "Anterior",
       "next": "Próximo",
       "editTitle": "Editar Receita"
@@ -271,10 +344,13 @@
       "date": "Data",
       "url": "URL da Despesa",
       "code": "Código",
+      "codeShort": "Cod.",
       "name": "Nome",
       "quantity": "Quantidade",
+      "quantityShort": "Qtd.",
       "unit": "Unidade",
       "unitValue": "Valor Unitário",
+      "unitValueShort": "Vlr. unit.",
       "group": "Grupo",
       "groupPlaceholder": "Selecione ou digite um grupo",
       "removeItem": "Remover Item",
@@ -305,7 +381,8 @@
       "deleteConfirm": "Tem certeza que deseja excluir esta despesa mensal?",
       "confirmed": "Despesas atualizadas",
       "success": "Suas despesas mensais foram atualizadas com sucesso",
-      "rememberLater": "Lembrar mais tarde (ocultar por 24 horas)"
+      "rememberLater": "Lembrar mais tarde (ocultar por 24 horas)",
+      "items": "Itens ({{count}})"
     },
     "simpleResource": {
       "enterName": "Digite o nome",
@@ -521,6 +598,10 @@
       "approvals": {
         "title": "Aprovações",
         "subtitle": "Validar envios dos membros"
+      },
+      "settlements": {
+        "title": "Liquidações",
+        "subtitle": "Histórico de fechamentos de mesada"
       }
     }
   },
@@ -641,6 +722,14 @@
     "settledSuccess": "Período liquidado com sucesso.",
     "settlementConflict": "Este período já foi liquidado ou não há valores pendentes.",
     "settleError": "Não foi possível liquidar o período."
+  },
+  "settlements": {
+    "empty": "Nenhuma liquidação registrada para o período.",
+    "period": "Período",
+    "settledAt": "Liquidado em",
+    "settledBy": "Liquidado por",
+    "total": "Total liquidado",
+    "amount": "Valor"
   },
   "familyGroup": {
     "title": "Grupo Familiar",
@@ -904,6 +993,60 @@
       "rpgMode": "Modo RPG",
       "defaultMode": "Modo Padrão"
     }
+  },
+  "financialSteps": {
+    "nav": {
+      "prev": "Anterior",
+      "next": "Próximo",
+      "skip": "Pular",
+      "swipeHint": "Deslize para o lado para trocar de passo"
+    },
+    "expense": {
+      "title": "Despesa"
+    },
+    "recurrence": {
+      "title": "Recorrência",
+      "enable": "Ativar recorrência ou parcelamento",
+      "mode": "Tipo",
+      "finite": "Parcelado (N vezes)",
+      "infinite": "Parcelado (contínuo)",
+      "fixed": "Recorrente mensal",
+      "count": "Número de parcelas",
+      "interval": "Intervalo entre parcelas",
+      "intervalHint": "Quanto tempo entre uma parcela e a próxima. Ex.: 1 mês = todo mês; 2 meses = a cada dois meses.",
+      "intervalValue": "A cada",
+      "days": "Dias",
+      "months": "Meses",
+      "years": "Anos",
+      "dueDay": "Vencimento (dia do mês)"
+    },
+    "warranty": {
+      "title": "Garantia",
+      "hint": "Informe a garantia de cada item, se houver.",
+      "unnamedItem": "Item sem nome",
+      "duration": "Duração",
+      "unit": "Unidade",
+      "label": "Garantia: {{duration}} {{unit}}"
+    },
+    "photos": {
+      "title": "Fotos",
+      "hint": "Até {{max}} fotos ({{count}} adicionadas).",
+      "add": "Adicionar foto",
+      "zoomIn": "Aumentar zoom",
+      "zoomOut": "Diminuir zoom",
+      "download": "Baixar imagem",
+      "downloadError": "Não foi possível baixar a imagem. Tente abri-la manualmente.",
+      "uploadPartialError": "Algumas fotos não foram salvas. Verifique as imagens e tente novamente."
+    },
+    "revenue": {
+      "title": "Receita"
+    }
+  },
+  "financialReceipt": {
+    "title": "Comprovante",
+    "total": "Total",
+    "installmentValue": "Valor da parcela",
+    "totalValue": "Valor total"
   },
   "pwa": {
     "installTitle": "Instalar App",

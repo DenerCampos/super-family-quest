@@ -27,12 +27,14 @@ import { FamilyStories } from "../../components/FamilyStories";
 import { FixedAppShell } from "../../components/FixedAppShell";
 import { HomePieChart } from "../../components/HomePieChart";
 import { LastRegistrationsList } from "../../components/LastRegistrationsList";
+import { FinancialReceiptDrawer } from "../../components/financial-receipt/FinancialReceiptDrawer";
 import { CompleteProfileModal } from "../../components/modals/CompleteProfileModal";
 import { NewRecurringExpenseModal } from "../../components/modals/NewRecurringExpenseModal";
 import { NewRecurringIncomeModal } from "../../components/modals/NewRecurringIncomeModal";
 import { SummaryCard } from "../../components/SummaryCard";
 import { useAuth } from "../../contexts/AuthContext";
 import { useFamilyGroup } from "../../hooks/useFamilyGroup";
+import { useFinancialReceiptDrawer } from "../../hooks/useFinancialReceiptDrawer";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
 import { api } from "../../services";
@@ -66,6 +68,7 @@ const Home = () => {
   const [showRecurringExpensesModal, setShowRecurringExpensesModal] =
     useState(false);
   const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
+  const { target, openReceipt, closeReceipt } = useFinancialReceiptDrawer();
 
   const handleDeleteRegistration = async (
     id: string,
@@ -359,8 +362,11 @@ const Home = () => {
           newRegistrationAdded={newRegistrationAdded}
           setNewRegistrationAdded={setNewRegistrationAdded}
           onDelete={handleDeleteRegistration}
+          onView={(id, type) => openReceipt(type, id)}
         />
       </Flex>
+
+      <FinancialReceiptDrawer target={target} onClose={closeReceipt} />
 
       <CompleteProfileModal
         isOpen={showCompleteProfile}

@@ -22,7 +22,19 @@ import { useRevenueFormSubmit } from "../../hooks/useRevenueFormSubmit";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
 import { api } from "../../services";
+import type { RecurrenceForm } from "../../types/financial";
+import { formatDateToYYYYMMDD } from "../../utils/formatDate";
 import { formatCurrencyInputBRL } from "../../utils/formatCurrency";
+import { buildRecurrenceFromRecord } from "../../utils/financialFormMapper";
+
+const defaultRecurrence: RecurrenceForm = {
+  enabled: false,
+  mode: 'none',
+  count: 2,
+  intervalUnit: 'months',
+  intervalValue: 1,
+  dueDay: 10,
+};
 
 export const REVENUE_QUERY_KEY = "revenue";
 const Revenue = () => {
@@ -30,17 +42,19 @@ const Revenue = () => {
   const navigate = useNavigate();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasPhotoChanges, setHasPhotoChanges] = useState(false);
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
 
   const isEdit = !!id;
 
-  const form = useForm({
+  const form = useForm<RevenueFormData>({
     defaultValues: {
       name: "",
       value: "",
       repeat: false,
       date: new Date().toISOString().split("T")[0],
+      recurrence: defaultRecurrence,
     },
   });
   const reset = form.reset;
@@ -63,7 +77,8 @@ const Revenue = () => {
         name: data.name,
         value: formatCurrencyInputBRL(data.value.toString()),
         repeat: data.repeat,
-        date: data.date.split("T")[0],
+        date: formatDateToYYYYMMDD(data.date),
+        recurrence: data.recurrence ?? buildRecurrenceFromRecord(data),
       });
     }
   }, [data, reset]);
@@ -72,10 +87,15 @@ const Revenue = () => {
     return <RevenueSkeleton />;
   }
 
-  const handleSubmit = async (data: RevenueFormData) => {
+  const handleSubmit = async (
+    data: RevenueFormData,
+    pendingPhotos: File[],
+    removedPhotoUrls: string[],
+    formDirty: boolean,
+  ) => {
     setIsSubmitting(true);
     try {
-      await onSubmit(data);
+      await onSubmit(data, pendingPhotos, removedPhotoUrls, formDirty);
     } finally {
       setIsSubmitting(false);
     }
@@ -86,14 +106,14 @@ const Revenue = () => {
   }
 
   return (
-    <Flex direction="column" minH="100vh" bg={getColor("background.primary")}>
-      <Flex direction="column" flex="1" p={4} pb={0}>
+    <Flex direction="column" h="100vh" overflow="hidden" bg={getColor("background.primary")}>
+      <Flex flexShrink={0} direction="column" px={4} pt={4} pb={2}>
         <Flex
           direction="row"
           gap={4}
           justify="flex-start"
           align="center"
-          mb={6}
+          mb={4}
         >
           <IconButton
             icon={<FiArrowLeft />}
@@ -109,7 +129,7 @@ const Revenue = () => {
               color: getColor("text.accent"),
             }}
             onClick={() => {
-              if (form.formState.isDirty) {
+              if (form.formState.isDirty || hasPhotoChanges) {
                 setIsConfirmModalOpen(true);
                 return;
               }
@@ -128,9 +148,15 @@ const Revenue = () => {
               : t("resources.revenue.new")}
           </Text>
         </Flex>
-
+      </Flex>
+      <Flex flex="1" minH={0} direction="column" px={4} pb={4}>
         <FormProvider {...form}>
-          <RevenueForm onSubmit={handleSubmit} isEdit={isEdit} id={id} />
+          <RevenueForm
+            onSubmit={handleSubmit}
+            isEdit={isEdit}
+            id={id}
+            onPhotoChangesChange={setHasPhotoChanges}
+          />
         </FormProvider>
       </Flex>
 

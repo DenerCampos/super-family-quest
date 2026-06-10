@@ -23,7 +23,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
-import { FiEdit, FiSearch, FiTrash2 } from 'react-icons/fi';
+import { FiEdit, FiEye, FiSearch, FiTrash2 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -38,12 +38,14 @@ const ITEMS_PER_PAGE = 5;
 
 interface RecurringExpenseResourceProps {
   onDelete: (id: string) => Promise<void>;
+  onView?: (id: string) => void;
   refreshTrigger?: number;
   onTotalChange?: (total: number) => void;
 }
 
 const RecurringExpenseResource = ({
   onDelete,
+  onView,
   refreshTrigger,
   onTotalChange,
 }: RecurringExpenseResourceProps) => {
@@ -196,6 +198,12 @@ const RecurringExpenseResource = ({
                           {t('resources.expense.actions')}
                         </MenuButton>
                         <MenuList>
+                          <MenuItem
+                            icon={<FiEye />}
+                            onClick={() => onView?.(expense.id ?? '')}
+                          >
+                            {t('resources.expense.view')}
+                          </MenuItem>
                           <MenuItem
                             icon={<FiEdit />}
                             onClick={() =>

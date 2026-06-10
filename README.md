@@ -127,12 +127,12 @@ super-family-quest/
 │   │   │   ├── NewRecurringIncomeModal.tsx
 │   │   │   └── SimpleResourceModal.tsx
 │   │   ├── reports/       # Componentes de gráficos e relatórios
-│   │   │   ├── BarChartExpensesByStore.tsx
+│   │   │   ├── ExpensesByStorePanel.tsx
 │   │   │   ├── BarChartExpensesIncome.tsx
 │   │   │   ├── DateRangeFilter.tsx
-│   │   │   ├── HorizontalBarChartTopProducts.tsx
+│   │   │   ├── TopProductsPanel.tsx
 │   │   │   ├── LineChartExpensesByDate.tsx
-│   │   │   └── PieChartExpensesByGroup.tsx
+│   │   │   ├── ExpensesByCategoryPanel.tsx
 │   │   ├── resources/     # Componentes de recursos
 │   │   │   ├── ExpenseResource.tsx
 │   │   │   ├── GroupResource.tsx

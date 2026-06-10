@@ -4,6 +4,7 @@ import type {
   ChoreOccurrenceQueryStatusSnake,
   ChorePayrollPendingMemberDto,
   ChorePayrollPendingResponseDto,
+  ChorePayrollSettlementDetailDto,
   ChorePayrollSettlementResponseDto,
   ChorePayrollSuggestionResponseDto,
   CreateChoreDefinitionDto,
@@ -315,6 +316,38 @@ export const ChoreService = {
     const response = await api.post(
       `${base(familyGroupId)}/payroll/settle`,
       body,
+    );
+    return response.data;
+  },
+
+  getPayrollSettlement: async (
+    familyGroupId: string,
+    params: { month?: number; year?: number } = {},
+  ): Promise<ChorePayrollSettlementDetailDto | null> => {
+    const search = new URLSearchParams();
+    if (params.month != null) search.set('month', String(params.month));
+    if (params.year != null) search.set('year', String(params.year));
+    const q = search.toString();
+    const response = await api.get(
+      `${base(familyGroupId)}/payroll/settlements${q ? `?${q}` : ''}`,
+    );
+    return response.data;
+  },
+
+  getPendingCoinRewards: async (
+    familyGroupId: string,
+  ): Promise<{ totalCoins: number }> => {
+    const response = await api.get(
+      `${base(familyGroupId)}/coin-rewards/pending`,
+    );
+    return response.data;
+  },
+
+  celebrateCoinRewards: async (
+    familyGroupId: string,
+  ): Promise<{ totalCoins: number }> => {
+    const response = await api.post(
+      `${base(familyGroupId)}/coin-rewards/celebrate`,
     );
     return response.data;
   },

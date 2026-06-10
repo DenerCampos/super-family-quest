@@ -15,11 +15,14 @@ export type PlayCoinRewardOpts = {
   delta: number;
   /** Centro da viewport é o default; passe para originar num botão/card. */
   from?: { x: number; y: number };
+  /** Quando o saldo já foi sincronizado via API (ex.: tarefa aprovada). */
+  skipBalanceUpdate?: boolean;
 };
 
 export type FlightSession = {
   key: string;
   delta: number;
+  skipBalanceUpdate: boolean;
   startCx: number;
   startCy: number;
   endCx: number;
@@ -65,6 +68,7 @@ function computeSession(opts: PlayCoinRewardOpts, rect: DOMRect): FlightSession 
   return {
     key: newSessionKey(),
     delta: opts.delta,
+    skipBalanceUpdate: opts.skipBalanceUpdate ?? false,
     startCx,
     startCy,
     endCx: rect.left + rect.width / 2,
@@ -94,8 +98,9 @@ export function CoinFlightProvider({
   }, []);
 
   const applyWithoutAnimation = useCallback(
-    (delta: number) => {
-      const n = normalizeCoinDelta(delta);
+    (opts: PlayCoinRewardOpts) => {
+      if (opts.skipBalanceUpdate) return;
+      const n = normalizeCoinDelta(opts.delta);
       if (n == null || n === 0) return;
       applyCoinsDelta(n);
     },
@@ -113,7 +118,7 @@ export function CoinFlightProvider({
     const normalized = { ...next, delta };
 
     if (prefersReducedMotion()) {
-      applyWithoutAnimation(delta);
+      applyWithoutAnimation(normalized);
       tryStartNext();
       return;
     }
@@ -125,7 +130,7 @@ export function CoinFlightProvider({
           '[CoinFlight] Sem alvo no DOM; aplicando delta sem animação.',
         );
       }
-      applyWithoutAnimation(delta);
+      applyWithoutAnimation(normalized);
       tryStartNext();
       return;
     }
@@ -150,7 +155,7 @@ export function CoinFlightProvider({
       }
 
       if (prefersReducedMotion()) {
-        applyWithoutAnimation(delta);
+        applyWithoutAnimation(normalized);
         return;
       }
 
@@ -161,7 +166,7 @@ export function CoinFlightProvider({
             '[CoinFlight] Sem alvo no DOM; aplicando delta sem animação.',
           );
         }
-        applyWithoutAnimation(delta);
+        applyWithoutAnimation(normalized);
         return;
       }
 
@@ -171,15 +176,20 @@ export function CoinFlightProvider({
     [applyWithoutAnimation],
   );
 
-  const handleLayerComplete = useCallback((delta: number) => {
-    setSession(null);
-    playingRef.current = false;
-    queueMicrotask(() => {
-      const n = normalizeCoinDelta(delta);
-      if (n != null && n !== 0) applyCoinsDelta(n);
-      tryStartNext();
-    });
-  }, [applyCoinsDelta, tryStartNext]);
+  const handleLayerComplete = useCallback(
+    (delta: number, skipBalanceUpdate: boolean) => {
+      setSession(null);
+      playingRef.current = false;
+      queueMicrotask(() => {
+        if (!skipBalanceUpdate) {
+          const n = normalizeCoinDelta(delta);
+          if (n != null && n !== 0) applyCoinsDelta(n);
+        }
+        tryStartNext();
+      });
+    },
+    [applyCoinsDelta, tryStartNext],
+  );
 
   const value = useMemo(
     (): CoinFlightContextValue => ({

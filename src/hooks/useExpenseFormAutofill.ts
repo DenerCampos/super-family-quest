@@ -7,9 +7,13 @@ import type {
 } from "react-hook-form";
 import { useLocation } from "react-router-dom";
 import type { ExpenseComplete } from "../services/expense";
-import type { Expense } from "../services/resources";
+import type { ExpenseFormValues } from "./useExpenseFormSubmit";
 import { formatCurrencyInputBRL } from "../utils/formatCurrency";
 import { formatGramsDisplay } from "../utils/formatGrams";
+import {
+  buildRecurrenceFromRecord,
+} from "../utils/financialFormMapper";
+import { formatDateToYYYYMMDD } from "../utils/formatDate";
 
 interface AutofillData {
   stores: Array<{ name: string }>;
@@ -42,12 +46,13 @@ interface UseExpenseFormAutofillProps {
   expenseData: ExpenseComplete | undefined;
   autofillData: AutofillData | undefined;
   isEdit: boolean;
-  reset: UseFormReset<Expense>;
-  setValue: UseFormSetValue<Expense>;
-  watch: UseFormWatch<Expense>;
-  fields: FieldArrayWithId<Expense, "items", "id">[];
+  reset: UseFormReset<ExpenseFormValues>;
+  setValue: UseFormSetValue<ExpenseFormValues>;
+  watch: UseFormWatch<ExpenseFormValues>;
+  fields: FieldArrayWithId<ExpenseFormValues, "items", "id">[];
   isItemsCollapsed: boolean;
   toggleItemsCollapsed: () => void;
+  onEditPhotosLoaded?: (photos: string[]) => void;
 }
 
 /**
@@ -64,6 +69,7 @@ export const useExpenseFormAutofill = ({
   fields,
   isItemsCollapsed,
   toggleItemsCollapsed,
+  onEditPhotosLoaded,
 }: UseExpenseFormAutofillProps) => {
   const location = useLocation();
 
@@ -87,7 +93,7 @@ export const useExpenseFormAutofill = ({
         value: value,
         payment: { name: expenseData.payment.name },
         store: { name: expenseData.store.name },
-        date: expenseData.date.split("T")[0],
+        date: formatDateToYYYYMMDD(expenseData.date),
         repeat: expenseData.repeat,
         items: expenseData.items.map((item) => ({
           ...item,
@@ -98,11 +104,15 @@ export const useExpenseFormAutofill = ({
               ? parseFloat(item.total)
               : item.total,
         })),
+        recurrence:
+          expenseData.recurrence ?? buildRecurrenceFromRecord(expenseData),
       });
+
+      onEditPhotosLoaded?.(expenseData.photos ?? []);
 
       hasFilledEdit.current = true;
     }
-  }, [expenseData, isEdit, reset]);
+  }, [expenseData, isEdit, reset, onEditPhotosLoaded]);
 
   // 2. Preenche dados do cupom fiscal (segunda prioridade)
   useEffect(() => {
