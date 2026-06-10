@@ -191,6 +191,8 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `layout-shell.md` | Header/nav fixos, PageScaffold, toast acima da nav (SP-111) |
 | `extrato-moedas.md` | Extrato de moedas no Painel + animação de quests (SP-97) |
 | `mesada.md` | Mesada, liquidação e histórico admin (SP-113) |
+| `formulario-financeiro-stepper.md` | Stepper despesa/receita, parcelamento, cupom drawer (SP-86) |
+| `relatorio-garantias.md` | Relatório de garantias no Painel (SP-86) |
 
 ### CRUD em recursos
 

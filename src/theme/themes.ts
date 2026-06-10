@@ -404,6 +404,11 @@ export const defaultTheme: VisualTheme = {
       error: 'red.300',
       warning: 'yellow.300',
       info: 'blue.300',
+      rank: {
+        gold: 'yellow.300',
+        silver: 'gray.400',
+        bronze: 'orange.400',
+      },
     },
     button: {
       primary: 'blue',
@@ -767,6 +772,11 @@ export const rpgTheme: VisualTheme = {
       error: 'red.300',
       warning: 'yellow.300',
       info: 'purple.300',
+      rank: {
+        gold: 'yellow.300',
+        silver: 'gray.400',
+        bronze: 'orange.400',
+      },
     },
     button: {
       primary: 'purple',

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Box } from '@chakra-ui/react';
 import { Navigate, useParams } from 'react-router-dom';
-import { PieChartExpenses } from '../../components/reports/PieChartExpensesByGroup';
-import { BarChartExpensesByStore } from '../../components/reports/BarChartExpensesByStore';
+import { ExpensesByCategoryPanel } from '../../components/reports/ExpensesByCategoryPanel';
+import { ExpensesByStorePanel } from '../../components/reports/ExpensesByStorePanel';
 import { LineChartExpensesByDate } from '../../components/reports/LineChartExpensesByDate';
-import { HorizontalBarChartTopProducts } from '../../components/reports/HorizontalBarChartTopProducts';
+import { TopProductsPanel } from '../../components/reports/TopProductsPanel';
 import { BarChartExpensesIncome } from '../../components/reports/BarChartExpensesIncome';
 import { CoinStatementPanel } from '../../components/reports/CoinStatementPanel';
+import { WarrantyItemsPanel } from '../../components/reports/WarrantyItemsPanel';
 import { ReportFilters } from '../../components/reports/ReportFilters';
 import { PageScaffold } from '../../components/PageScaffold';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -24,6 +25,7 @@ const VALID_KEYS = new Set<ReportKey>([
   'expensesByStore',
   'topProducts',
   'coinStatement',
+  'warrantyItems',
 ]);
 
 const TITLE_KEYS: Record<ReportKey, string> = {
@@ -33,6 +35,7 @@ const TITLE_KEYS: Record<ReportKey, string> = {
   expensesByStore: 'reports.expensesByStore.title',
   topProducts: 'reports.topProducts.title',
   coinStatement: 'reports.coinStatement.title',
+  warrantyItems: 'reports.warrantyItems.title',
 };
 
 function getMonthDateRange(month: number, year: number) {
@@ -61,6 +64,7 @@ export const ReportView = () => {
   const [startDate, setStartDate] = useState(defaultStart);
   const [endDate, setEndDate] = useState(defaultEnd);
   const [statementPage, setStatementPage] = useState(1);
+  const [warrantyPage, setWarrantyPage] = useState(1);
 
   useEffect(() => {
     const { startDate: s, endDate: e } = getMonthDateRange(month, year);
@@ -71,7 +75,12 @@ export const ReportView = () => {
 
   useEffect(() => {
     setStatementPage(1);
+    setWarrantyPage(1);
   }, [startDate, endDate, selectedUserId]);
+
+  useEffect(() => {
+    setWarrantyPage(1);
+  }, [year]);
 
   useEffect(() => {
     const loadFamilyGroup = async () => {
@@ -93,26 +102,53 @@ export const ReportView = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const isYearOnly = key === 'expensesVsIncome';
+  const isYearOnly = key === 'expensesVsIncome' || key === 'warrantyItems';
   const userId = selectedUserId ?? undefined;
   const currentUserId = profile?.user.id ?? '';
   const userIsAdmin = familyGroup
     ? isAdmin(familyGroup, currentUserId)
     : false;
-  const showMemberName = key === 'coinStatement' && userIsAdmin && !selectedUserId;
+  const showMemberName =
+    (key === 'coinStatement' || key === 'warrantyItems') &&
+    userIsAdmin &&
+    !selectedUserId;
 
   const renderChart = () => {
     switch (key) {
       case 'expensesByCategory':
-        return <PieChartExpenses startDate={startDate} endDate={endDate} userId={userId} />;
+        return (
+          <ExpensesByCategoryPanel
+            startDate={startDate}
+            endDate={endDate}
+            userId={userId}
+          />
+        );
       case 'expensesByDate':
-        return <LineChartExpensesByDate startDate={startDate} endDate={endDate} userId={userId} />;
+        return (
+          <LineChartExpensesByDate
+            startDate={startDate}
+            endDate={endDate}
+            userId={userId}
+          />
+        );
       case 'expensesVsIncome':
         return <BarChartExpensesIncome year={year.toString()} userId={userId} />;
       case 'expensesByStore':
-        return <BarChartExpensesByStore startDate={startDate} endDate={endDate} userId={userId} />;
+        return (
+          <ExpensesByStorePanel
+            startDate={startDate}
+            endDate={endDate}
+            userId={userId}
+          />
+        );
       case 'topProducts':
-        return <HorizontalBarChartTopProducts startDate={startDate} endDate={endDate} userId={userId} />;
+        return (
+          <TopProductsPanel
+            startDate={startDate}
+            endDate={endDate}
+            userId={userId}
+          />
+        );
       case 'coinStatement':
         return (
           <CoinStatementPanel
@@ -122,6 +158,16 @@ export const ReportView = () => {
             showMemberName={showMemberName}
             page={statementPage}
             onPageChange={setStatementPage}
+          />
+        );
+      case 'warrantyItems':
+        return (
+          <WarrantyItemsPanel
+            year={year}
+            userId={userId}
+            showMemberName={showMemberName}
+            page={warrantyPage}
+            onPageChange={setWarrantyPage}
           />
         );
     }

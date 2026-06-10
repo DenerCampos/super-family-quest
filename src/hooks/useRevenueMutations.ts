@@ -16,7 +16,8 @@ type RevenuePayload = {
   name: string;
   value: number;
   date: string;
-  repeat: boolean;
+  repeat?: boolean;
+  recurrence?: import('../types/financial').RecurrenceForm;
 };
 
 export const useCreateRevenue = (redirectPath?: string | number) => {

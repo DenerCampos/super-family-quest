@@ -4,4 +4,5 @@ export type ReportKey =
   | 'expensesVsIncome'
   | 'expensesByStore'
   | 'topProducts'
-  | 'coinStatement';
+  | 'coinStatement'
+  | 'warrantyItems';

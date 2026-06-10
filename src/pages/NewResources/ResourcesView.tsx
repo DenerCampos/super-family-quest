@@ -14,6 +14,8 @@ import RecurringRevenueResource from '../../components/resources/RecurringRevenu
 import ResourceContainer from '../../components/resources/ResourceContainer';
 import RevenueResource from '../../components/resources/RevenueResource';
 import StoreResource from '../../components/resources/StoreResource';
+import { FinancialReceiptDrawer } from '../../components/financial-receipt/FinancialReceiptDrawer';
+import { useFinancialReceiptDrawer } from '../../hooks/useFinancialReceiptDrawer';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { api } from '../../services';
@@ -71,6 +73,8 @@ export const ResourcesView = () => {
   const [currentResource, setCurrentResource] = useState<
     'store' | 'payment' | 'group'
   >('store');
+
+  const { target, openReceipt, closeReceipt } = useFinancialReceiptDrawer();
 
   const triggerRefresh = (
     resourceType: 'store' | 'payment' | 'group' | 'expense' | 'revenue',
@@ -184,6 +188,7 @@ export const ResourcesView = () => {
         >
           <ExpenseResource
             onDelete={(id) => handleDelete('expense', id)}
+            onView={(id) => openReceipt('expense', id)}
             refreshTrigger={refreshTriggers.expense}
             onTotalChange={(n) => updateCount('expense', n)}
           />
@@ -196,6 +201,7 @@ export const ResourcesView = () => {
         >
           <RevenueResource
             onDelete={(id) => handleDelete('revenue', id)}
+            onView={(id) => openReceipt('revenue', id)}
             refreshTrigger={refreshTriggers.revenue}
             onTotalChange={(n) => updateCount('revenue', n)}
           />
@@ -208,6 +214,7 @@ export const ResourcesView = () => {
         >
           <RecurringExpenseResource
             onDelete={(id) => handleDelete('expense', id)}
+            onView={(id) => openReceipt('expense', id)}
             refreshTrigger={refreshTriggers.expense}
             onTotalChange={(n) => updateCount('recurringExpense', n)}
           />
@@ -220,6 +227,7 @@ export const ResourcesView = () => {
         >
           <RecurringRevenueResource
             onDelete={(id) => handleDelete('revenue', id)}
+            onView={(id) => openReceipt('revenue', id)}
             refreshTrigger={refreshTriggers.revenue}
             onTotalChange={(n) => updateCount('recurringRevenue', n)}
           />
@@ -246,6 +254,8 @@ export const ResourcesView = () => {
           }
         />
       )}
+
+      <FinancialReceiptDrawer target={target} onClose={closeReceipt} />
     </PageScaffold>
   );
 };

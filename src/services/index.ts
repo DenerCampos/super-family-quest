@@ -163,11 +163,21 @@ export const api = {
     ExpenseService.postRecurringConfirm(expenses),
   getExpenseRecurring: ExpenseService.getRecurring,
   getExpenseById: (id: string) => ExpenseService.getExpenseById(id),
+  getExpenseReceipt: (id: string) => ExpenseService.getExpenseReceipt(id),
+  uploadExpensePhoto: (id: string, file: File) =>
+    ExpenseService.uploadExpensePhoto(id, file),
+  deleteExpensePhoto: (id: string, photoUrl: string) =>
+    ExpenseService.deleteExpensePhoto(id, photoUrl),
 
   getBalanceCoin: CoinService.getBalanceCoin,
   getCoinStatement: CoinService.getStatement,
 
   getRevenueById: (id: string) => RevenueService.getRevenueById(id),
+  getRevenueReceipt: (id: string) => RevenueService.getRevenueReceipt(id),
+  uploadRevenuePhoto: (id: string, file: File) =>
+    RevenueService.uploadRevenuePhoto(id, file),
+  deleteRevenuePhoto: (id: string, photoUrl: string) =>
+    RevenueService.deleteRevenuePhoto(id, photoUrl),
 
   uploadProfileImage: (file: File) => ProfileService.uploadImage(file),
 

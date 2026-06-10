@@ -5,6 +5,7 @@ export interface RevenueItem {
   repeat: boolean;
   date: string;
   isSelected: boolean;
+  installmentLabel?: string | null;
 }
 
 export interface RevenueFormData {

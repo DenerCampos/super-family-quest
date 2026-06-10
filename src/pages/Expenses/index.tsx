@@ -44,6 +44,14 @@ const defaultExpense = {
     name: "",
   },
   items: [defaultItem],
+  recurrence: {
+    enabled: false,
+    mode: 'none' as const,
+    count: 2,
+    intervalUnit: 'months' as const,
+    intervalValue: 1,
+    dueDay: 10,
+  },
 };
 
 export const Expenses = () => {
@@ -52,6 +60,7 @@ export const Expenses = () => {
   const { t } = useThemedTranslation();
   const navigate = useNavigate();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [hasPhotoChanges, setHasPhotoChanges] = useState(false);
 
   const form = useForm<Expense>({
     mode: "onChange",
@@ -61,14 +70,14 @@ export const Expenses = () => {
   const isEdit = !!id;
 
   return (
-    <Flex direction="column" minH="100vh" bg={getColor("background.primary")}>
-      <Flex direction="column" flex="1" p={4} pb={0}>
+    <Flex direction="column" h="100vh" overflow="hidden" bg={getColor("background.primary")}>
+      <Flex flexShrink={0} direction="column" px={4} pt={4} pb={2}>
         <Flex
           direction="row"
           gap={4}
           justify="flex-start"
           align="center"
-          mb={6}
+          mb={4}
         >
           <IconButton
             icon={<FiArrowLeft />}
@@ -84,7 +93,7 @@ export const Expenses = () => {
               color: getColor("text.accent"),
             }}
             onClick={() => {
-              if (form.formState.isDirty) {
+              if (form.formState.isDirty || hasPhotoChanges) {
                 setIsConfirmModalOpen(true);
                 return;
               }
@@ -103,8 +112,14 @@ export const Expenses = () => {
               : t("resources.expense.new")}
           </Text>
         </Flex>
+      </Flex>
+      <Flex flex="1" minH={0} direction="column" px={4} pb={4}>
         <FormProvider {...form}>
-          <ExpensesForm isEdit={isEdit} id={id} />
+          <ExpensesForm
+            isEdit={isEdit}
+            id={id}
+            onPhotoChangesChange={setHasPhotoChanges}
+          />
         </FormProvider>
       </Flex>
 

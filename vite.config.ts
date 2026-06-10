@@ -61,4 +61,79 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Gráficos — recharts é o maior contribuinte isolado
+          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3')) {
+            return 'vendor-charts';
+          }
+
+          // UI / animações
+          if (
+            id.includes('node_modules/@chakra-ui') ||
+            id.includes('node_modules/@emotion') ||
+            id.includes('node_modules/framer-motion')
+          ) {
+            return 'vendor-ui';
+          }
+
+          // React core
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom/') ||
+            id.includes('node_modules/react-router-dom') ||
+            id.includes('node_modules/react-hook-form')
+          ) {
+            return 'vendor-react';
+          }
+
+          // Dados / rede
+          if (
+            id.includes('node_modules/@tanstack') ||
+            id.includes('node_modules/axios') ||
+            id.includes('node_modules/socket.io-client') ||
+            id.includes('node_modules/engine.io-client')
+          ) {
+            return 'vendor-data';
+          }
+
+          // Ícones (react-icons costuma ser grande)
+          if (id.includes('node_modules/react-icons')) {
+            return 'vendor-icons';
+          }
+
+          // i18n
+          if (
+            id.includes('node_modules/i18next') ||
+            id.includes('node_modules/react-i18next')
+          ) {
+            return 'vendor-i18n';
+          }
+
+          // Formulários / validação
+          if (
+            id.includes('node_modules/yup') ||
+            id.includes('node_modules/@hookform')
+          ) {
+            return 'vendor-forms';
+          }
+
+          // Utilitários pesados (QR, compressão)
+          if (
+            id.includes('node_modules/@zxing') ||
+            id.includes('node_modules/browser-image-compression')
+          ) {
+            return 'vendor-utils';
+          }
+
+          // Restante de node_modules
+          if (id.includes('node_modules/')) {
+            return 'vendor-misc';
+          }
+        },
+      },
+    },
+  },
 })

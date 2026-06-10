@@ -41,6 +41,9 @@ export type Items = {
   value: number | string;
   total: number;
   group: Groups;
+  warrantyDuration?: number | null;
+  warrantyUnit?: string | null;
+  warrantyExpiresAt?: string | null;
 };
 
 import type { UserSummary } from '../types/user';
@@ -59,6 +62,7 @@ export type Expense = {
   payment: Payments;
   store: Merchant;
   items: Array<Items>;
+  recurrence?: RecurrenceForm;
   user?: Owner | null;
   /** Moedas ganhas ao registrar esta despesa (quando enviadas pela API). */
   coins?: number | string;
@@ -70,16 +74,20 @@ export type ItemsCreate = {
   quantity: number;
   unit: string;
   value: number | string;
-  total: number;
+  warrantyDuration?: number | null;
+  warrantyUnit?: string | null;
   group: {
     name: string;
   };
 };
 
+import type { RecurrenceForm } from '../types/financial';
+
 export type CreateExpense = {
   name: string;
   uri: string | null;
   date: string;
+  repeat?: boolean;
   payment: {
     name: string;
   };
@@ -87,6 +95,7 @@ export type CreateExpense = {
     name: string;
   };
   items: Array<ItemsCreate>;
+  recurrence?: RecurrenceForm;
 };
 
 export type UpdateItem = ItemsCreate & {
@@ -103,8 +112,9 @@ export type CreateRevenue = {
   name: string;
   value: number;
   date: string;
-  repeat: boolean;
-}
+  repeat?: boolean;
+  recurrence?: import('../types/financial').RecurrenceForm;
+};
 
 export type Revenue = {
   id?: string;
