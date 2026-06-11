@@ -55,7 +55,7 @@ export const ResourceFormStepper = ({
               border="2px solid"
               borderColor={
                 isActive
-                  ? getColor('text.accent')
+                  ? getColor('text.financial.accent')
                   : getColor('border.primary')
               }
               bg={
@@ -67,14 +67,14 @@ export const ResourceFormStepper = ({
               {locked ? (
                 <Icon as={FiLock} boxSize={3.5} color={getColor('text.muted')} />
               ) : state === 'done' ? (
-                <Icon as={FiCheck} boxSize={4} color={getColor('text.accent')} />
+                <Icon as={FiCheck} boxSize={4} color={getColor('text.financial.accent')} />
               ) : (
                 <Icon
                   as={StepIcon}
                   boxSize={4}
                   color={
                     isActive
-                      ? getColor('text.accent')
+                      ? getColor('text.financial.accent')
                       : getColor('text.primary')
                   }
                 />

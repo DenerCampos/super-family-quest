@@ -126,7 +126,7 @@ const Revenue = () => {
             borderColor={getColor("border.primary")}
             _hover={{
               bg: getColor("background.selected"),
-              color: getColor("text.accent"),
+              color: getColor("text.financial.accent"),
             }}
             onClick={() => {
               if (form.formState.isDirty || hasPhotoChanges) {

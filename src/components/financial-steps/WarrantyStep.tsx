@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
 import { ThemedSelect } from '../ThemedSelect';
+import { FinancialHint } from './FinancialHint';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import type { IntervalUnit } from '../../types/financial';
@@ -77,9 +78,9 @@ export const WarrantyStep = () => {
 
   return (
     <VStack align="stretch" spacing={4}>
-      <Text fontSize="sm" color={getColor('text.muted')}>
+      <FinancialHint fontSize="sm">
         {t('financialSteps.warranty.hint')}
-      </Text>
+      </FinancialHint>
       {items.map((item, index) => {
         const duration = item.warrantyDuration ?? 0;
         const unit = (item.warrantyUnit ?? '') as IntervalUnit | '';
@@ -113,7 +114,7 @@ export const WarrantyStep = () => {
               <Text
                 fontSize="sm"
                 fontWeight="medium"
-                color={getColor('text.muted')}
+                color={getColor('text.secondary')}
                 flexShrink={0}
               >
                 R$ {formatCurrencyBRL(lineTotal)}

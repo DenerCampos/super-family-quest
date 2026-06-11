@@ -5,11 +5,12 @@ import {
   FormLabel,
   Input,
   Switch,
-  Text,
   VStack,
 } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
 import { ThemedSelect } from '../ThemedSelect';
+import { FinancialHint } from './FinancialHint';
+import { InfoHintPopover } from './InfoHintPopover';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import type { RecurrenceForm } from '../../types/financial';
@@ -87,6 +88,9 @@ export const RecurrenceStep = () => {
 
   return (
     <VStack align="stretch" spacing={4}>
+      <FinancialHint fontSize="sm">
+        {t('financialSteps.recurrence.hint')}
+      </FinancialHint>
       <FormControl display="flex" alignItems="center">
         <FormLabel htmlFor="recurrence-enabled" mb={0} color={getColor('text.primary')}>
           {t('financialSteps.recurrence.enable')}
@@ -157,10 +161,6 @@ export const RecurrenceStep = () => {
 
           {recurrence.mode !== 'fixed_repeat' && (
             <>
-              <Text fontSize="sm" color={getColor('text.muted')}>
-                {t('financialSteps.recurrence.intervalHint')}
-              </Text>
-
               <Flex
                 gap={4}
                 align="flex-end"
@@ -174,9 +174,15 @@ export const RecurrenceStep = () => {
                       : 'full'
                   }
                 >
-                  <FormLabel color={getColor('text.primary')}>
-                    {t('financialSteps.recurrence.interval')}
-                  </FormLabel>
+                  <Flex align="center">
+                    <FormLabel mb={0} color={getColor('text.primary')}>
+                      {t('financialSteps.recurrence.interval')}
+                    </FormLabel>
+                    <InfoHintPopover
+                      label={t('financialSteps.recurrence.intervalHint')}
+                      ariaLabel={t('financialSteps.recurrence.intervalHint')}
+                    />
+                  </Flex>
                   <Flex gap={2}>
                     <Input
                       type="text"

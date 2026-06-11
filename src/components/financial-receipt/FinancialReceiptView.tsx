@@ -58,7 +58,18 @@ export const FinancialReceiptView = ({ receipt }: Props) => {
 
       {isExpense && (
         <>
-          <Grid templateColumns="repeat(4, 1fr)" gap={1} fontSize="xs" color={getColor('text.muted')}>
+          <Grid
+            templateColumns="repeat(4, 1fr)"
+            gap={1}
+            fontSize="xs"
+            color={getColor('text.muted')}
+            bg={getColor('background.financial.hint')}
+            border="1px solid"
+            borderColor={getColor('border.financial.hint')}
+            borderRadius="md"
+            px={2}
+            py={1.5}
+          >
             <Text>{t('modals.expense.code')}</Text>
             <Text>{t('modals.expense.name')}</Text>
             <Text textAlign="right">{t('modals.expense.quantity')}</Text>

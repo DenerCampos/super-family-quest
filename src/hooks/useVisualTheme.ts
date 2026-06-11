@@ -38,7 +38,7 @@ export function useVisualTheme(overrideTheme?: string) {
     return typeof current === 'string' ? current : '';
   };
 
-  const getFont = (type: 'body' | 'heading' | 'mono' | 'theme') => {
+  const getFont = (type: 'body' | 'heading' | 'mono' | 'numeric' | 'theme') => {
     if (!theme) return '';
     return theme.fonts[type];
   };

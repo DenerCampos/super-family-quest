@@ -4,13 +4,13 @@ import {
   Flex,
   IconButton,
   Image,
-  Text,
   VStack,
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import { FiTrash2, FiUpload } from 'react-icons/fi';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { FinancialHint } from './FinancialHint';
 import { compressImage } from '../../utils/compressImage';
 import { toDisplayableImageUrl } from '../../utils/formatString';
 
@@ -58,9 +58,9 @@ export const PhotosStep = ({
 
   return (
     <VStack align="stretch" spacing={4}>
-      <Text fontSize="sm" color={getColor('text.muted')}>
+      <FinancialHint fontSize="sm">
         {t('financialSteps.photos.hint', { max: MAX_FINANCIAL_PHOTOS, count: total })}
-      </Text>
+      </FinancialHint>
 
       <input
         ref={inputRef}
