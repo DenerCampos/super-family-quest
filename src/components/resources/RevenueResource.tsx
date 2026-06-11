@@ -92,10 +92,12 @@ const RevenueResource = ({
     if (refreshTrigger) {
       refreshData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger]);
 
   useEffect(() => {
     loadRevenues(page, search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

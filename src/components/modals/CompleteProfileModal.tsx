@@ -72,7 +72,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
       const lastName = names[names.length - 1];
       setValue('family', lastName);
     }
-  }, [user]);
+  }, [user, setValue]);
 
   const onSubmit = async (data: FormData) => {
     try {

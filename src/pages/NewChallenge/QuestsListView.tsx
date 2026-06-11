@@ -21,7 +21,7 @@ export const QuestsListView = () => {
     handleOpen,
   } = useChoreQuestLists();
 
-  const mineRows = mineQuery.data?.data ?? [];
+  const mineRows = useMemo(() => mineQuery.data?.data ?? [], [mineQuery.data?.data]);
   const inProgressRows = useMemo(() => {
     const rows = mineRows.filter((r) => r.status === 'IN_PROGRESS');
     return [...rows].sort((a, b) => {

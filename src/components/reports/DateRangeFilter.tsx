@@ -20,6 +20,7 @@ const getDefaultDates = () => {
   };
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const defaultDates = getDefaultDates();
 
 export const DateRangeFilter = ({

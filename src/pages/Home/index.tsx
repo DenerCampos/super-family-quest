@@ -42,7 +42,6 @@ const Home = () => {
     ]);
 
   const location = useLocation();
-  const [scanError, setScanError] = useState("");
   const [showCompleteProfile, setShowCompleteProfile] = useState(false);
   const [showRecurringRevenuesModal, setShowRecurringRevenuesModal] =
     useState(false);
@@ -130,8 +129,7 @@ const Home = () => {
 
   useEffect(() => {
     if (location.state?.error) {
-      setScanError(location.state.error);
-      console.error(scanError);
+      console.error(location.state.error);
     }
   }, [location.state]);
 
