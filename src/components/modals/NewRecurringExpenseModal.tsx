@@ -85,7 +85,7 @@ export const NewRecurringExpenseModal = ({ isOpen, onClose, onDismiss }: Props) 
     if (isOpen) {
       loadRepeatedExpenses();
     }
-  }, [isOpen]);
+  }, [isOpen, t, toast]);
 
   const handleConfirm = async () => {
     setIsSubmitting(true);

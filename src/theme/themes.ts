@@ -250,11 +250,23 @@ export const defaultTheme: VisualTheme = {
         card: 'white',
         tabList: 'white',
       },
+      hint: 'whiteAlpha.150',
+      financial: {
+        hint: 'blue.700',
+        infoPopover: 'white',
+      },
+      button: {
+        hover: {
+          primary: 'blue.500',
+        },
+      },
     },
     text: {
       primary: 'white',
       secondary: 'gray.300',
       tertiary: 'gray.200',
+      muted: 'blue.100',
+      inverted: 'white',
       accent: 'blue.300',
       disabled: 'gray.500',
       link: 'blue.300',
@@ -300,6 +312,7 @@ export const defaultTheme: VisualTheme = {
         tileIcon: 'blue.500',
         tileIconActive: 'blue.700',
         filterLabel: 'blue.700',
+        statementMeta: 'gray.600',
       },
       profile: {
         primary: 'blue.800',
@@ -348,6 +361,11 @@ export const defaultTheme: VisualTheme = {
         statusConnected: 'green.700',
         statusDisconnected: 'red.700',
       },
+      financial: {
+        accent: 'blue.300',
+        hintIcon: 'white',
+        infoPopover: 'gray.700',
+      },
     },
     heading: {
       summaryCard: {
@@ -358,6 +376,11 @@ export const defaultTheme: VisualTheme = {
     border: {
       primary: 'blue.700',
       secondary: 'gray.600',
+      hint: 'whiteAlpha.300',
+      financial: {
+        hint: 'blue.600',
+        infoPopover: 'gray.200',
+      },
       selected: 'blue.500',
       noSelect: 'gray.200',
       lastRegistrations: {
@@ -476,6 +499,7 @@ export const defaultTheme: VisualTheme = {
     body: "'Roboto', sans-serif",
     heading: "'Poppins', sans-serif",
     mono: "'Roboto Mono', monospace",
+    numeric: "'Roboto Mono', monospace",
     theme: "'Roboto', sans-serif",
   },
   assets: {
@@ -619,11 +643,23 @@ export const rpgTheme: VisualTheme = {
         card: 'white',
         tabList: 'white',
       },
+      hint: 'whiteAlpha.120',
+      financial: {
+        hint: 'purple.700',
+        infoPopover: 'white',
+      },
+      button: {
+        hover: {
+          primary: 'purple.500',
+        },
+      },
     },
     text: {
       primary: 'white',
-      secondary: 'gray.500',
+      secondary: 'gray.400',
       tertiary: 'gray.200',
+      muted: 'purple.100',
+      inverted: 'white',
       accent: 'purple.800',
       disabled: 'gray.500',
       link: 'purple.300',
@@ -668,6 +704,7 @@ export const rpgTheme: VisualTheme = {
         tileIcon: 'purple.500',
         tileIconActive: 'purple.700',
         filterLabel: 'purple.700',
+        statementMeta: 'gray.600',
       },
       profile: {
         primary: 'purple.800',
@@ -716,6 +753,11 @@ export const rpgTheme: VisualTheme = {
         statusConnected: 'green.700',
         statusDisconnected: 'red.700',
       },
+      financial: {
+        accent: 'purple.200',
+        hintIcon: 'white',
+        infoPopover: 'gray.700',
+      },
     },
     heading: {
       summaryCard: {
@@ -726,6 +768,11 @@ export const rpgTheme: VisualTheme = {
     border: {
       primary: 'purple.700',
       secondary: 'gray.600',
+      hint: 'whiteAlpha.250',
+      financial: {
+        hint: 'purple.600',
+        infoPopover: 'gray.200',
+      },
       selected: 'purple.500',
       noSelect: 'gray.200',
       lastRegistrations: {
@@ -843,7 +890,8 @@ export const rpgTheme: VisualTheme = {
   fonts: {
     body: 'system-ui',
     heading: 'Helvetica',
-    mono: "'Press Start 2P', cursive",
+    mono: "'Roboto Mono', monospace",
+    numeric: "'Press Start 2P', cursive",
     theme: "'Pixelify Sans', sans-serif",
   },
   assets: {

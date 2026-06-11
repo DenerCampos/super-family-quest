@@ -157,11 +157,11 @@ const Profile = () => {
       });
 
       return true; // Retorna true para indicar sucesso
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao comprar tema:', error);
       toast({
         title: t('common.error'),
-        description: error.message || t('profile.themes.purchaseError'),
+        description: error instanceof Error ? error.message : t('profile.themes.purchaseError'),
         status: 'error',
         duration: 3000,
       });
@@ -209,7 +209,7 @@ const Profile = () => {
     } else {
       setErrors((prev) => ({ ...prev, email: '' }));
     }
-  }, [email]);
+  }, [email, t]);
 
   // Validação de senhas em tempo real
   useEffect(() => {
@@ -226,7 +226,7 @@ const Profile = () => {
     } else {
       setErrors((prev) => ({ ...prev, confirmPassword: '' }));
     }
-  }, [password, confirmPassword]);
+  }, [password, confirmPassword, t]);
 
 
   const validateEmail = (email: string) => {
@@ -268,11 +268,11 @@ const Profile = () => {
         status: 'success',
         duration: 3000,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Erro ao trocar tema:', error);
       toast({
         title: t('common.error'),
-        description: error.message || t('profile.themes.changeError'),
+        description: error instanceof Error ? error.message : t('profile.themes.changeError'),
         status: 'error',
         duration: 3000,
       });

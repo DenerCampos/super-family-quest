@@ -53,6 +53,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
         navigate('/login');
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, navigate]);
 
   const loadProfile = useCallback(async () => {   
@@ -148,6 +149,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

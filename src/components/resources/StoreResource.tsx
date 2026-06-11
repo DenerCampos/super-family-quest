@@ -84,10 +84,12 @@ const StoreResource = ({
     if (refreshTrigger) {
       refreshData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger]);
 
   useEffect(() => {
     loadStores(page, search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

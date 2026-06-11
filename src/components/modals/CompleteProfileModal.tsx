@@ -72,7 +72,7 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
       const lastName = names[names.length - 1];
       setValue('family', lastName);
     }
-  }, [user]);
+  }, [user, setValue]);
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -173,14 +173,17 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                   label={t('profile.nameRevenueTooltip')}
                   placement="top"
                   hasArrow
-                  bg={getColor('background.tertiary')}
-                  color={getColor('text.primary')}
+                  bg={getColor('background.financial.infoPopover')}
+                  color={getColor('text.financial.infoPopover')}
+                  border="1px solid"
+                  borderColor={getColor('border.financial.infoPopover')}
                 >
                   <Box ml={1}>
                     <Icon
                       as={FiInfo}
-                      color={getColor('primary.300')}
+                      color={getColor('text.dashboard.filterLabel')}
                       boxSize={4}
+                      strokeWidth={2.5}
                     />
                   </Box>
                 </Tooltip>
@@ -227,14 +230,17 @@ export const CompleteProfileModal = ({ isOpen, user, onComplete }: Props) => {
                     label={t('profile.repeatMonthlyTooltip')}
                     placement="top"
                     hasArrow
-                    bg={getColor('background.tertiary')}
-                    color={getColor('text.primary')}
+                    bg={getColor('background.financial.infoPopover')}
+                    color={getColor('text.financial.infoPopover')}
+                    border="1px solid"
+                    borderColor={getColor('border.financial.infoPopover')}
                   >
                     <Box ml={1}>
                       <Icon
                         as={FiInfo}
-                        color={getColor('primary.300')}
+                        color={getColor('text.dashboard.filterLabel')}
                         boxSize={4}
+                        strokeWidth={2.5}
                       />
                     </Box>
                   </Tooltip>

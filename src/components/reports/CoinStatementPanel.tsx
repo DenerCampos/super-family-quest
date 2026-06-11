@@ -145,7 +145,7 @@ export function CoinStatementPanel({
           <Text
             p={6}
             textAlign="center"
-            color={getColor('text.dashboard.tileSubtitle')}
+            color={getColor('text.dashboard.statementMeta')}
             fontFamily={getFont('body')}
           >
             {t('reports.coinStatement.noData')}
@@ -177,7 +177,7 @@ export function CoinStatementPanel({
                     </Text>
                     <Text
                       fontSize="xs"
-                      color={getColor('text.dashboard.tileSubtitle')}
+                      color={getColor('text.dashboard.statementMeta')}
                       fontFamily={getFont('body')}
                       mt={1}
                     >
@@ -229,7 +229,7 @@ export function CoinStatementPanel({
           </Button>
           <Text
             fontSize="sm"
-            color={getColor('text.dashboard.tileSubtitle')}
+            color={getColor('text.dashboard.statementMeta')}
             fontFamily={getFont('body')}
           >
             {t('reports.coinStatement.pageOf', {
