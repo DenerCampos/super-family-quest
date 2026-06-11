@@ -16,17 +16,6 @@ export const FinancialFormFooter = ({
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
 
-  const buttonStyles = {
-    bg: getColor('background.tertiary'),
-    color: getColor('text.primary'),
-    border: '1px solid',
-    borderColor: getColor('border.primary'),
-    _hover: {
-      bg: getColor('background.selected'),
-      color: getColor('text.accent'),
-    },
-  };
-
   return (
     <Flex
       flexShrink={0}
@@ -43,7 +32,21 @@ export const FinancialFormFooter = ({
         isDisabled={isSubmitDisabled}
         isLoading={isSubmitting}
         loadingText={t('common.saving')}
-        {...buttonStyles}
+        bg={getColor('button.background.neutral')}
+        color={getColor('button.text.primary')}
+        border="1px solid"
+        borderColor={getColor('border.primary')}
+        fontWeight="semibold"
+        _hover={{
+          bg: getColor('background.selected'),
+          color: getColor('button.text.primary'),
+        }}
+        _disabled={{
+          opacity: 0.6,
+          bg: getColor('background.tertiary'),
+          color: getColor('text.secondary'),
+          cursor: 'not-allowed',
+        }}
       >
         {isEdit ? t('common.update') : t('common.save')}
       </Button>

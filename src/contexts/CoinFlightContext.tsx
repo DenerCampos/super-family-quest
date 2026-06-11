@@ -214,6 +214,7 @@ export function CoinFlightProvider({
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useCoinFlight(): CoinFlightContextValue {
   const ctx = useContext(CoinFlightContext);
   if (!ctx) {

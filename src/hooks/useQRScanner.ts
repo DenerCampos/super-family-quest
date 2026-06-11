@@ -108,7 +108,7 @@ export const useQRScanner = () => {
     });
   };
 
-  const waitForVideoLoad = (videoEl: HTMLVideoElement): Promise<void> => {
+  const waitForVideoLoad = useCallback((videoEl: HTMLVideoElement): Promise<void> => {
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         reject(new Error(t('qrScannerPage.errors.videoTimeout')));
@@ -124,7 +124,7 @@ export const useQRScanner = () => {
         reject(err);
       };
     });
-  };
+  }, [t]);
 
   const attachQRReader = async (
     deviceId: string,
@@ -198,7 +198,7 @@ export const useQRScanner = () => {
         }
       }
     },
-    [handleQRCodeScanned, t],
+    [handleQRCodeScanned, t, waitForVideoLoad],
   );
 
   const switchCamera = useCallback(() => {
@@ -270,6 +270,7 @@ export const useQRScanner = () => {
       isMountedRef.current = false;
       stopCamera();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

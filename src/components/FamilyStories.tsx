@@ -24,8 +24,8 @@ export const FamilyStories = ({
   return (
     <Flex
       overflowX="auto"
-      gap={3}
-      py={3}
+      gap={2}
+      py={2}
       px={4}
       bg={getColor('background.familyStories.container')}
       css={{
@@ -34,8 +34,8 @@ export const FamilyStories = ({
       }}
     >
       <VStack
-        spacing={1}
-        minW="68px"
+        spacing={0.5}
+        minW="52px"
         cursor="pointer"
         onClick={() => onSelect(null)}
       >
@@ -55,8 +55,8 @@ export const FamilyStories = ({
           }
         >
           <Flex
-            w="56px"
-            h="56px"
+            w="44px"
+            h="44px"
             borderRadius="full"
             bg={getColor('background.familyStories.avatar')}
             border="2px solid"
@@ -65,13 +65,13 @@ export const FamilyStories = ({
             justify="center"
           >
             <FaUsers
-              size={24}
+              size={18}
               color={getColor('text.familyStories.name')}
             />
           </Flex>
         </Box>
         <Text
-          fontSize="xs"
+          fontSize="2xs"
           fontFamily={getFont('body')}
           fontWeight={isFamilySelected ? 'bold' : 'normal'}
           color={
@@ -81,7 +81,7 @@ export const FamilyStories = ({
           }
           textAlign="center"
           noOfLines={1}
-          maxW="68px"
+          maxW="52px"
         >
           {t('home.familyStories.familyLabel')}
         </Text>
@@ -93,8 +93,8 @@ export const FamilyStories = ({
         return (
           <VStack
             key={member.userId}
-            spacing={1}
-            minW="68px"
+            spacing={0.5}
+            minW="52px"
             cursor="pointer"
             onClick={() => onSelect(member.userId)}
           >
@@ -114,7 +114,7 @@ export const FamilyStories = ({
               }
             >
               <Avatar
-                size="md"
+                boxSize="44px"
                 name={member.name}
                 src={toDisplayableImageUrl(member.profileImage) || undefined}
                 referrerPolicy="no-referrer"
@@ -123,7 +123,7 @@ export const FamilyStories = ({
               />
             </Box>
             <Text
-              fontSize="xs"
+              fontSize="2xs"
               fontFamily={getFont('body')}
               fontWeight={isSelected ? 'bold' : 'normal'}
               color={
@@ -133,7 +133,7 @@ export const FamilyStories = ({
               }
               textAlign="center"
               noOfLines={1}
-              maxW="68px"
+              maxW="52px"
             >
               {member.name}
             </Text>

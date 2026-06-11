@@ -115,6 +115,18 @@ export interface ThemeColors {
       card: string;
       tabList: string;
     };
+    /** Fundo sutil para dicas em formulários financeiros (fundo escuro). */
+    hint: string;
+    financial: {
+      /** Fundo sólido de dicas e popovers informativos. */
+      hint: string;
+      infoPopover: string;
+    };
+    button: {
+      hover: {
+        primary: string;
+      };
+    };
   };
 
   // Tokens semânticos para texto
@@ -122,6 +134,10 @@ export interface ThemeColors {
     primary: string;
     secondary: string;
     tertiary: string;
+    /** Texto auxiliar legível sobre fundos escuros (formulários, comprovante). */
+    muted: string;
+    /** Texto sobre botões/accordions com fundo colorido. */
+    inverted: string;
     accent: string;
     disabled: string;
     link: string;
@@ -166,6 +182,8 @@ export interface ThemeColors {
       tileIcon: string;
       tileIconActive: string;
       filterLabel: string;
+      /** Metadados secundários no extrato de moedas (sobre cartões claros). */
+      statementMeta: string;
     };
     profile: {
       primary: string;
@@ -214,6 +232,12 @@ export interface ThemeColors {
       statusConnected: string;
       statusDisconnected: string;
     };
+    /** Formulários financeiros sobre fundo escuro (despesa, receita, comprovante). */
+    financial: {
+      accent: string;
+      hintIcon: string;
+      infoPopover: string;
+    };
   };
 
   // Tokens semânticos para heading
@@ -228,6 +252,12 @@ export interface ThemeColors {
   border: {
     primary: string;
     secondary: string;
+    /** Borda de dicas em formulários financeiros. */
+    hint: string;
+    financial: {
+      hint: string;
+      infoPopover: string;
+    };
     selected: string;
     noSelect: string;
     lastRegistrations: {
@@ -353,6 +383,8 @@ export interface ThemeFonts {
   body: string;
   heading: string;
   mono: string;
+  /** Fonte para exibição de valores numéricos financeiros (saldo, receita, despesa). */
+  numeric: string;
   theme: string;
 }
 

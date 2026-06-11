@@ -9,6 +9,7 @@ import {
   // defineStyle,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
+import axios from 'axios';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -92,27 +93,27 @@ const Register = () => {
       
       // Faz o login automaticamente após o registro
       await login(email, password);
-    } catch (error: any) {
+    } catch (error: unknown) {
       let errorMessage = t('register.errorCreatingRealm');
-      
-      // Verifica se é um erro 409 (Conflict)
-      if (error.response?.status === 409) {
-        toast({
-          title: t('common.success'), // Usamos success para dar um tom positivo
-          description: t('register.errorCreatingRealmUserLimitUsers'),
-          status: 'info', // Usamos info ao invés de error
-          duration: 12000, // Aumentamos o tempo para dar tempo de ler
-          isClosable: true,
-        });
-        return; // Retorna aqui para não mostrar o toast de erro
-      }
 
-      // Para outros erros, mantém o comportamento padrão
-      if (error.message) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 409) {
+          toast({
+            title: t('common.success'),
+            description: t('register.errorCreatingRealmUserLimitUsers'),
+            status: 'info',
+            duration: 12000,
+            isClosable: true,
+          });
+          return;
+        }
+        if (error.response?.status === 400) {
+          errorMessage = t('register.errorCreatingRealmUserAlreadyExists');
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+      } else if (error instanceof Error && error.message) {
         errorMessage = error.message;
-      }
-      if (error.status === 400) {
-        errorMessage = t('register.errorCreatingRealmUserAlreadyExists');
       }
 
       toast({

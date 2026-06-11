@@ -389,7 +389,7 @@ const ExpensesForm = ({ isEdit, id, onPhotoChangesChange }: IExpensesFormProps) 
                             Item {index + 1}:{" "}
                             {watch(`items.${index}.name`) || "Novo item"}
                           </Text>
-                          <Text fontSize="sm" color={getColor("text.muted")}>
+                          <Text fontSize="sm" color={getColor("text.secondary")}>
                             {formatCurrency(
                               parseBRLCurrency(
                                 watch(`items.${index}.value`) ?? ""
@@ -695,7 +695,7 @@ const ExpensesForm = ({ isEdit, id, onPhotoChangesChange }: IExpensesFormProps) 
                 borderColor={getColor("border.primary")}
                 _hover={{
                   bg: getColor("background.selected"),
-                  color: getColor("text.accent"),
+                  color: getColor("text.financial.accent"),
                 }}
               >
                 {t("modals.expense.addItem")}

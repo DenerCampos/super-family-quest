@@ -75,7 +75,7 @@ export const NewRecurringIncomeModal = ({ isOpen, onClose, onDismiss }: Props) =
     if (isOpen) {
       loadRepeatedIncomes();
     }
-  }, [isOpen]);
+  }, [isOpen, t, toast]);
 
   const handleConfirm = async () => {
     setIsSubmitting(true);

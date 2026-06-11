@@ -1,9 +1,9 @@
-import { Box, Flex, Icon, Text } from '@chakra-ui/react';
-import { useCallback, useEffect, useRef } from 'react';
-import { FiChevronsRight } from 'react-icons/fi';
-import { useThemedTranslation } from '../../hooks/useThemedTranslation';
+import { Box, Flex } from '@chakra-ui/react';
+import { useCallback, useRef } from 'react';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import type { StepState } from './useFormStepper';
+
+const SWIPE_THRESHOLD_PX = 48;
 
 type Props = {
   activeIndex: number;
@@ -20,108 +20,58 @@ export const StepSwipePanels = ({
   swipeEnabled,
   panels,
 }: Props) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const { getColor } = useVisualTheme();
-  const { t } = useThemedTranslation();
-  const isDragging = useRef(false);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
-  const handleScrollEnd = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el || !swipeEnabled) return;
+  const tryChangeStep = useCallback(
+    (nextIndex: number) => {
+      if (nextIndex < 0 || nextIndex >= panels.length) return;
+      if (nextIndex > 0 && stepStates[nextIndex] === 'locked') return;
+      onStepChange(nextIndex);
+    },
+    [onStepChange, panels.length, stepStates],
+  );
 
-    const width = el.clientWidth;
-    if (width <= 0) return;
+  const handleTouchStart = (event: React.TouchEvent) => {
+    if (!swipeEnabled) return;
+    const touch = event.touches[0];
+    touchStart.current = { x: touch.clientX, y: touch.clientY };
+  };
 
-    const rawIndex = Math.round(el.scrollLeft / width);
-    const clamped = Math.max(0, Math.min(rawIndex, panels.length - 1));
+  const handleTouchEnd = (event: React.TouchEvent) => {
+    if (!swipeEnabled || !touchStart.current) return;
 
-    if (stepStates[clamped] === 'locked') {
-      el.scrollTo({ left: activeIndex * width, behavior: 'smooth' });
-      return;
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - touchStart.current.x;
+    const dy = touch.clientY - touchStart.current.y;
+    touchStart.current = null;
+
+    if (Math.abs(dx) <= Math.abs(dy)) return;
+    if (Math.abs(dx) < SWIPE_THRESHOLD_PX) return;
+
+    if (dx < 0) {
+      tryChangeStep(activeIndex + 1);
+    } else {
+      tryChangeStep(activeIndex - 1);
     }
+  };
 
-    if (clamped !== activeIndex) {
-      onStepChange(clamped);
-    }
-  }, [activeIndex, onStepChange, panels.length, stepStates, swipeEnabled]);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el || isDragging.current) return;
-    const width = el.clientWidth;
-    if (width <= 0) return;
-    el.scrollTo({ left: activeIndex * width, behavior: 'smooth' });
-  }, [activeIndex]);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    let timer: ReturnType<typeof setTimeout>;
-    const onScroll = () => {
-      isDragging.current = true;
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        isDragging.current = false;
-        handleScrollEnd();
-      }, 150);
-    };
-
-    el.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      clearTimeout(timer);
-      el.removeEventListener('scroll', onScroll);
-    };
-  }, [handleScrollEnd]);
+  const panel = panels[activeIndex] ?? null;
 
   return (
     <Flex direction="column" flex="1" minH={0} overflow="hidden">
-      {swipeEnabled && panels.length > 1 && (
-        <Flex
-          align="center"
-          gap={2}
-          mb={2}
-          color={getColor('text.muted')}
-          flexShrink={0}
-        >
-          <Icon as={FiChevronsRight} boxSize={4} aria-hidden />
-          <Text fontSize="xs">{t('financialSteps.nav.swipeHint')}</Text>
-        </Flex>
-      )}
-
       <Box
-        ref={scrollRef}
+        key={activeIndex}
         flex="1"
         minH={0}
-        overflowX={swipeEnabled ? 'auto' : 'hidden'}
-        overflowY="hidden"
-        sx={{
-          scrollSnapType: swipeEnabled ? 'x mandatory' : 'none',
-          WebkitOverflowScrolling: 'touch',
-          scrollbarWidth: 'none',
-          '&::-webkit-scrollbar': { display: 'none' },
-        }}
+        overflowY="auto"
+        overflowX="hidden"
+        bg={getColor('background.primary')}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        sx={{ WebkitOverflowScrolling: 'touch' }}
       >
-        <Flex h="full" w={`${panels.length * 100}%`}>
-          {panels.map((panel, index) => (
-            <Box
-              key={index}
-              flex={`0 0 ${100 / panels.length}%`}
-              w={`${100 / panels.length}%`}
-              h="full"
-              overflowY="auto"
-              overflowX="hidden"
-              px={1}
-              pb={2}
-              scrollSnapAlign="start"
-              sx={{
-                WebkitOverflowScrolling: 'touch',
-              }}
-            >
-              {panel}
-            </Box>
-          ))}
-        </Flex>
+        {panel}
       </Box>
     </Flex>
   );

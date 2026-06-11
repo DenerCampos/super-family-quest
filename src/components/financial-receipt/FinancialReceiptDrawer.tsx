@@ -55,6 +55,8 @@ export const FinancialReceiptDrawer = ({ target, onClose }: Props) => {
             aria-label={t('common.close')}
             icon={<FiX />}
             variant="ghost"
+            color={getColor('text.primary')}
+            _hover={{ bg: getColor('background.secondary') }}
             onClick={onClose}
           />
         </DrawerHeader>

@@ -21,7 +21,7 @@ export function ExpensesByStorePanel({ startDate, endDate, userId }: Props) {
     userId,
   });
 
-  const items = data ?? [];
+  const items = useMemo(() => data ?? [], [data]);
 
   const { maxValue, totalValue } = useMemo(() => {
     const vals = items.map((item) => Number(item.value));

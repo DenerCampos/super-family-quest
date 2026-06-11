@@ -14,6 +14,9 @@
     "required": "Campo obrigatório",
     "minLength": "Mínimo {{count}} caracteres",
     "close": "Fechar",
+    "information": "Informação",
+    "hideValues": "Ocultar valores",
+    "showValues": "Mostrar valores",
     "confirm": "Confirmar",
     "error": "Erro",
     "success": "Sucesso",
@@ -102,12 +105,19 @@
       "income": "Receitas do Mês",
       "expenses": "Despesas do Mês"
     },
+    "balance": {
+      "title": "Balanço Mensal",
+      "currentBalanceOf": "Saldo Atual · {{name}}",
+      "sliceShare": "{{label}}: {{percent}}%"
+    },
     "addExpense": "Adicionar Despesa",
+    "addExpenseShort": "Despesa",
     "newExpense": "Nova Despesa",
     "scanQRCode": "Ler Nota Fiscal",
     "scanReceipt": "Capturar Comprovante",
     "recordAudio": "Gravar por Voz",
     "addRevenue": "Adicionar Receita",
+    "addRevenueShort": "Receita",
     "newRevenue": "Nova Receita",
     "familyStories": {
       "familyLabel": "Família",
@@ -1006,6 +1016,7 @@
     },
     "recurrence": {
       "title": "Recorrência",
+      "hint": "Configure parcelamento ou recorrência desta despesa, se necessário.",
       "enable": "Ativar recorrência ou parcelamento",
       "mode": "Tipo",
       "finite": "Parcelado (N vezes)",
