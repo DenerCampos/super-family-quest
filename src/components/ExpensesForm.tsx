@@ -42,7 +42,7 @@ import {
   formatCurrencyInputBRL,
   parseBRLCurrency,
 } from "../utils/formatCurrency";
-import { formatGramsInput, parseGrams, formatIntegerQuantityInput, isExpenseDiscreteCountUnit } from "../utils/formatGrams";
+import { formatGramsInput, parseGrams, formatIntegerQuantityInput, isExpenseDiscreteCountUnit, abbreviateUnit } from "../utils/formatGrams";
 import { AutocompleteInput } from "./AutocompleteInput";
 import {
   ResourceFormStepper,
@@ -367,6 +367,21 @@ const ExpensesForm = ({ isEdit, id, onPhotoChangesChange }: IExpensesFormProps) 
                     ...unitRest
                   } = unitRegistration;
 
+                  const summaryPrice = parseBRLCurrency(
+                    watch(`items.${index}.value`) ?? ""
+                  );
+                  const summaryRawQty = watch(`items.${index}.quantity`);
+                  const summaryQty = discreteQty
+                    ? Math.max(
+                        1,
+                        Math.round(parseGrams(String(summaryRawQty ?? "1")))
+                      )
+                    : parseGrams(summaryRawQty?.toString() ?? "") || 1;
+                  const summaryUnit =
+                    watch(`items.${index}.unit`) || field.unit || "Unidade";
+                  const summaryTotal = summaryPrice * summaryQty;
+                  const itemSummary = `${formatCurrency(summaryPrice)} • ${summaryQty} ${abbreviateUnit(summaryUnit)} • ${formatCurrency(summaryTotal)}`;
+
                   return (
                     <AccordionItem
                       key={field.id}
@@ -389,34 +404,8 @@ const ExpensesForm = ({ isEdit, id, onPhotoChangesChange }: IExpensesFormProps) 
                             Item {index + 1}:{" "}
                             {watch(`items.${index}.name`) || "Novo item"}
                           </Text>
-                          <Text fontSize="sm" color={getColor("text.secondary")}>
-                            {formatCurrency(
-                              parseBRLCurrency(
-                                watch(`items.${index}.value`) ?? ""
-                              )
-                            )}{" "}
-                            •{" "}
-                            {discreteQty
-                              ? Math.max(
-                                  1,
-                                  Math.round(
-                                    parseGrams(
-                                      String(
-                                        watch(
-                                          `items.${index}.quantity`
-                                        ) ?? "1"
-                                      )
-                                    )
-                                  )
-                                )
-                              : parseGrams(
-                                  watch(
-                                    `items.${index}.quantity`
-                                  )?.toString() ?? ""
-                                ) || 1}{" "}
-                            {watch(`items.${index}.unit`) ||
-                              field.unit ||
-                              "Unidade"}
+                          <Text fontSize="sm" color={getColor("text.secondary")} noOfLines={1}>
+                            {itemSummary}
                           </Text>
                         </Box>
                         <AccordionIcon />

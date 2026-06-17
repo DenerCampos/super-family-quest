@@ -51,6 +51,37 @@ export function isExpenseDiscreteCountUnit(unit: string | undefined): boolean {
   return u === 'unidade' || u === 'uni' || u === 'u';
 }
 
+const UNIT_ABBREVIATIONS: Record<string, string> = {
+  quilogramas: 'kg',
+  quilograma: 'kg',
+  gramas: 'g',
+  grama: 'g',
+  miligramas: 'mg',
+  miligrama: 'mg',
+  toneladas: 't',
+  tonelada: 't',
+  litros: 'L',
+  litro: 'L',
+  mililitros: 'ml',
+  mililitro: 'ml',
+  centilitros: 'cl',
+  centilitro: 'cl',
+  unidades: 'un',
+  unidade: 'un',
+  metros: 'm',
+  metro: 'm',
+  'centímetros': 'cm',
+  'centímetro': 'cm',
+  'milímetros': 'mm',
+  'milímetro': 'mm',
+};
+
+/** Retorna a abreviação padronizada de uma unidade de medida. */
+export function abbreviateUnit(unit: string): string {
+  const normalized = unit.trim().toLowerCase();
+  return UNIT_ABBREVIATIONS[normalized] ?? unit;
+}
+
 /** Máscara para quantidade inteira (somente dígitos). */
 export function formatIntegerQuantityInput(value: string): string {
   const digits = value.replace(/\D/g, '');
