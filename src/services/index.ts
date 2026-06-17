@@ -31,6 +31,7 @@ export const api = {
     ProfileService.getLatestRegistrationsPaginated(page, limit),
 
   login: AuthService.login,
+  demoLogin: AuthService.demoLogin,
   register: UserService.register,
   updateUser: UserService.update,
 
