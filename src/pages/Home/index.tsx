@@ -18,6 +18,7 @@ import { NewRecurringIncomeModal } from "../../components/modals/NewRecurringInc
 import { useAuth } from "../../contexts/AuthContext";
 import { useFamilyGroup } from "../../hooks/useFamilyGroup";
 import { useFinancialReceiptDrawer } from "../../hooks/useFinancialReceiptDrawer";
+import { useInvalidateFinancialSummary } from "../../hooks/useInvalidateFinancialSummary";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
 import { api } from "../../services";
@@ -49,6 +50,7 @@ const Home = () => {
     useState(false);
   const [newRegistrationAdded, setNewRegistrationAdded] = useState(false);
   const { target, openReceipt, closeReceipt } = useFinancialReceiptDrawer();
+  const invalidateFinancialSummary = useInvalidateFinancialSummary();
 
   const handleDeleteRegistration = async (
     id: string,
@@ -69,6 +71,7 @@ const Home = () => {
         duration: 2000,
         isClosable: true,
       });
+      void invalidateFinancialSummary();
     } catch {
       toast({
         title:

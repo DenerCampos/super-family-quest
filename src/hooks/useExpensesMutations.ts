@@ -8,6 +8,7 @@ import { GET_LAST_REGISTRATION_QUERY_KEY } from "./useGetLastRegistration";
 import { missionQueryKeys } from "./missionQueryKeys";
 import { useThemedTranslation } from "./useThemedTranslation";
 import { coinDeltaFromApi, runAfterNextPaint } from "../utils/coinsNumber";
+import { useInvalidateFinancialSummary } from "./useInvalidateFinancialSummary";
 
 const DEFAULT_COINS_ON_CREATE_EXPENSE = 5;
 
@@ -22,6 +23,7 @@ export const useCreateExpense = (redirectPath?: string | number) => {
   const { t } = useThemedTranslation();
   const navigate = useNavigate();
   const { playReward } = useCoinFlight();
+  const invalidateFinancialSummary = useInvalidateFinancialSummary();
 
   return useMutation({
     mutationFn: (data: CreateExpense) => api.createExpense(data),
@@ -43,6 +45,7 @@ export const useCreateExpense = (redirectPath?: string | number) => {
       queryClient.invalidateQueries({
         queryKey: missionQueryKeys.root,
       });
+      void invalidateFinancialSummary();
 
       if (redirectPath !== undefined) {
         navigate(redirectPath as string);
@@ -69,6 +72,7 @@ export const useUpdateExpense = (redirectPath?: string | number) => {
   const toast = useToast();
   const { t } = useThemedTranslation();
   const navigate = useNavigate();
+  const invalidateFinancialSummary = useInvalidateFinancialSummary();
 
   return useMutation({
     mutationFn: (payload: UpdateExpensePayload) =>
@@ -83,8 +87,8 @@ export const useUpdateExpense = (redirectPath?: string | number) => {
       queryClient.invalidateQueries({
         queryKey: [GET_LAST_REGISTRATION_QUERY_KEY],
       });
+      void invalidateFinancialSummary();
 
-      // Se redirectPath for fornecido, usa ele, senão volta para página anterior
       if (redirectPath !== undefined) {
         navigate(redirectPath as string);
       } else {
