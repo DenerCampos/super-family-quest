@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useCoinFlight } from "../contexts/CoinFlightContext";
 import type { Revenue } from "../services/resources";
 import { coinDeltaFromApi, runAfterNextPaint } from "../utils/coinsNumber";
+import { useInvalidateFinancialSummary } from "./useInvalidateFinancialSummary";
 
 const DEFAULT_COINS_ON_CREATE_REVENUE = 10;
 
@@ -26,6 +27,7 @@ export const useCreateRevenue = (redirectPath?: string | number) => {
   const toast = useToast();
   const { t } = useThemedTranslation();
   const { playReward } = useCoinFlight();
+  const invalidateFinancialSummary = useInvalidateFinancialSummary();
 
   return useMutation({
     mutationFn: (payload: RevenuePayload) => api.createRevenue(payload),
@@ -45,6 +47,7 @@ export const useCreateRevenue = (redirectPath?: string | number) => {
       queryClient.invalidateQueries({
         queryKey: missionQueryKeys.root,
       });
+      void invalidateFinancialSummary();
 
       if (redirectPath !== undefined) {
         navigate(redirectPath as string);
@@ -72,6 +75,7 @@ export const useUpdateRevenue = (redirectPath?: string | number) => {
   const navigate = useNavigate();
   const toast = useToast();
   const { t } = useThemedTranslation();
+  const invalidateFinancialSummary = useInvalidateFinancialSummary();
 
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: RevenuePayload }) =>
@@ -88,8 +92,8 @@ export const useUpdateRevenue = (redirectPath?: string | number) => {
       queryClient.invalidateQueries({
         queryKey: [REVENUE_QUERY_KEY, variables.id],
       });
+      void invalidateFinancialSummary();
 
-      // Se redirectPath for fornecido, usa ele, senão volta para página anterior
       if (redirectPath !== undefined) {
         navigate(redirectPath as string);
       } else {
