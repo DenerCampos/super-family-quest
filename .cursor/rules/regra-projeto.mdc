@@ -193,6 +193,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `mesada.md` | Mesada, liquidação e histórico admin (SP-113) |
 | `formulario-financeiro-stepper.md` | Stepper despesa/receita, parcelamento, cupom drawer (SP-86) |
 | `relatorio-garantias.md` | Relatório de garantias no Painel (SP-86) |
+| `demo-login.md` | Login demo via link para portfólio (SP-118) |
 
 ### CRUD em recursos
 

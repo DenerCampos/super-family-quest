@@ -15,4 +15,9 @@ export const AuthService = {
 
     return response.data;
   },
+
+  demoLogin: async (key: string): Promise<{ accessToken: string }> => {
+    const response = await api.post('/auth/demo', { key });
+    return response.data;
+  },
 };

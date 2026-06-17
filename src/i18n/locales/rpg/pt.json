@@ -1073,5 +1073,8 @@
     "total": "Total do Saque",
     "installmentValue": "Valor da Parcela",
     "totalValue": "Valor Total da Jornada"
+  },
+  "demoLogin": {
+    "loading": "Adentrando o reino como viajante..."
   }
 }

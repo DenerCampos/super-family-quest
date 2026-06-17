@@ -1083,5 +1083,8 @@
       "MONTHLY": "Mensal",
       "ONCE": "Conquista"
     }
+  },
+  "demoLogin": {
+    "loading": "Entrando como demo..."
   }
 }
