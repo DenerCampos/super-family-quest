@@ -64,17 +64,32 @@ Usuário salva/exclui transação
   MonthlyBalanceCard renderiza valores atualizados
 ```
 
+## UI do card (SP-120)
+
+O `MonthlyBalanceCard` é presentacional: recebe valores já calculados pela Home (`profile` ou `useFamilyGroup().summary`) e não dispara fetch próprio.
+
+| Elemento | Comportamento |
+|---|---|
+| Título | `{title} · {mês atual}` via `common.months.*` (i18n default + rpg) |
+| Gráfico | `HomePieChart` em modo `compact` (coluna ~30% da linha) |
+| Valores | Três mini-cards (`BalanceValueCard`): saldo (com rótulo), receita e despesa |
+| Bordas | Saldo: `border.summaryCard.balance`; receita/despesa: tokens `lastRegistrations` |
+| Visibilidade | Toggle olho reutiliza `showValues` / `masked` do `AuthContext` |
+
+Tokens novos em `themes.ts` (default + rpg): `border.summaryCard.balance`.
+
 ## Arquivos-chave
 
 | Arquivo | Papel |
 |---|---|
-| `src/hooks/useInvalidateFinancialSummary.ts` | Hook centralizado (novo) |
-| `src/hooks/useExpensesMutations.ts` | Mutations de despesa (alterado) |
-| `src/hooks/useRevenueMutations.ts` | Mutations de receita (alterado) |
-| `src/pages/Home/index.tsx` | Delete handler (alterado) |
-| `src/components/home/MonthlyBalanceCard.tsx` | Componente presentacional (não alterado) |
-| `src/hooks/useFamilyGroup.ts` | Query de summary do grupo (não alterado) |
-| `src/contexts/AuthContext.tsx` | `loadProfile` (não alterado) |
+| `src/hooks/useInvalidateFinancialSummary.ts` | Hook centralizado (SP-119) |
+| `src/hooks/useExpensesMutations.ts` | Mutations de despesa (SP-119) |
+| `src/hooks/useRevenueMutations.ts` | Mutations de receita (SP-119) |
+| `src/pages/Home/index.tsx` | Delete handler + composição do card |
+| `src/components/home/MonthlyBalanceCard.tsx` | Layout do card, `BalanceValueCard`, mês no título (SP-120) |
+| `src/components/HomePieChart.tsx` | Donut compacto usado pelo card (SP-120) |
+| `src/hooks/useFamilyGroup.ts` | Query de summary do grupo |
+| `src/contexts/AuthContext.tsx` | `loadProfile`, `showValues` |
 
 ## Testes
 

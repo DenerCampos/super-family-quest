@@ -11,6 +11,18 @@ type FamilyStoriesProps = {
   onSelect: (memberId: string | null) => void;
 };
 
+const AVATAR_SIZE = 44;
+const SELECTED_AVATAR_EXTRA = 12;
+const AVATAR_SLOT_HEIGHT = AVATAR_SIZE + SELECTED_AVATAR_EXTRA + 8;
+
+function getAvatarSize(isSelected: boolean) {
+  return isSelected ? AVATAR_SIZE + SELECTED_AVATAR_EXTRA : AVATAR_SIZE;
+}
+
+function getRingBorderColor(isSelected: boolean, getColor: (token: string) => string) {
+  return isSelected ? getColor('border.familyStories.default') : 'transparent';
+}
+
 export const FamilyStories = ({
   members,
   selectedId,
@@ -27,6 +39,7 @@ export const FamilyStories = ({
       gap={2}
       py={2}
       px={4}
+      align="flex-start"
       bg={getColor('background.familyStories.container')}
       css={{
         '&::-webkit-scrollbar': { display: 'none' },
@@ -39,37 +52,36 @@ export const FamilyStories = ({
         cursor="pointer"
         onClick={() => onSelect(null)}
       >
-        <Box
-          p="2px"
-          borderRadius="full"
-          bg={
-            isFamilySelected
-              ? `linear-gradient(135deg, ${getColor('background.familyStories.selected')}, ${getColor('border.familyStories.selected')})`
-              : 'transparent'
-          }
-          border="2px solid"
-          borderColor={
-            isFamilySelected
-              ? 'transparent'
-              : getColor('border.familyStories.default')
-          }
+        <Flex
+          h={`${AVATAR_SLOT_HEIGHT}px`}
+          align="center"
+          justify="center"
         >
-          <Flex
-            w="44px"
-            h="44px"
+          <Box
+            p="2px"
             borderRadius="full"
-            bg={getColor('background.familyStories.avatar')}
             border="2px solid"
-            borderColor={getColor('background.familyStories.container')}
-            align="center"
-            justify="center"
+            borderColor={getRingBorderColor(isFamilySelected, getColor)}
+            transition="all 0.2s ease"
           >
-            <FaUsers
-              size={18}
-              color={getColor('text.familyStories.name')}
-            />
-          </Flex>
-        </Box>
+            <Flex
+              w={`${getAvatarSize(isFamilySelected)}px`}
+              h={`${getAvatarSize(isFamilySelected)}px`}
+              borderRadius="full"
+              bg={getColor('background.familyStories.avatar')}
+              border="2px solid"
+              borderColor={getColor('background.familyStories.container')}
+              align="center"
+              justify="center"
+              transition="width 0.2s ease, height 0.2s ease"
+            >
+              <FaUsers
+                size={isFamilySelected ? 22 : 18}
+                color={getColor('text.familyStories.name')}
+              />
+            </Flex>
+          </Box>
+        </Flex>
         <Text
           fontSize="2xs"
           fontFamily={getFont('body')}
@@ -98,30 +110,29 @@ export const FamilyStories = ({
             cursor="pointer"
             onClick={() => onSelect(member.userId)}
           >
-            <Box
-              p="2px"
-              borderRadius="full"
-              bg={
-                isSelected
-                  ? `linear-gradient(135deg, ${getColor('background.familyStories.selected')}, ${getColor('border.familyStories.selected')})`
-                  : 'transparent'
-              }
-              border="2px solid"
-              borderColor={
-                isSelected
-                  ? 'transparent'
-                  : getColor('border.familyStories.default')
-              }
+            <Flex
+              h={`${AVATAR_SLOT_HEIGHT}px`}
+              align="center"
+              justify="center"
             >
-              <Avatar
-                boxSize="44px"
-                name={member.name}
-                src={toDisplayableImageUrl(member.profileImage) || undefined}
-                referrerPolicy="no-referrer"
+              <Box
+                p="2px"
+                borderRadius="full"
                 border="2px solid"
-                borderColor={getColor('background.familyStories.container')}
-              />
-            </Box>
+                borderColor={getRingBorderColor(isSelected, getColor)}
+                transition="all 0.2s ease"
+              >
+                <Avatar
+                  boxSize={`${getAvatarSize(isSelected)}px`}
+                  name={member.name}
+                  src={toDisplayableImageUrl(member.profileImage) || undefined}
+                  referrerPolicy="no-referrer"
+                  border="2px solid"
+                  borderColor={getColor('background.familyStories.container')}
+                  transition="width 0.2s ease, height 0.2s ease"
+                />
+              </Box>
+            </Flex>
             <Text
               fontSize="2xs"
               fontFamily={getFont('body')}
