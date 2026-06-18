@@ -9,6 +9,14 @@ Permitir fechamento da mesada com impacto financeiro e consulta do histórico de
 - Tela **Mesada** (`/new-resources/quests/allowance`): filtro mês/ano; botão liquidar só com pendente no período filtrado.
 - Tela **Liquidações** (`/new-resources/quests/settlements`): somente admin; filtro padrão = mês anterior.
 - Tile admin no hub de Quests.
+- Tela **Aprovações** (`/new-resources/quests/approvals`): botão **Voltar para ajuste** devolve tarefa ao executor em `IN_PROGRESS` (SP-115).
+
+## Fluxo — Aprovações (devolver para ajuste)
+
+1. Admin vê tarefa aguardando aprovação.
+2. Clica **Voltar para ajuste** quando a execução precisa de correção (sem recusar).
+3. API `POST .../return-for-adjustment` → status `IN_PROGRESS`, mesmo executor.
+4. Executor vê a tarefa em **Minhas tarefas** / **Em andamento** e pode ajustar fotos e reenviar.
 
 ## Fluxo — Mesada
 
@@ -32,6 +40,7 @@ Ver `api/shop-smart/.cursor/docs/mesada.md`.
 | `choreGetPayrollPending` | Pendentes |
 | `choreSettlePayroll` | Liquidar |
 | `choreGetPayrollSettlement` | Detalhe da liquidação |
+| `choreReturnOccurrenceForAdjustment` | Devolver para ajuste (SP-115) |
 
 ## Arquivos-chave
 
@@ -39,6 +48,7 @@ Ver `api/shop-smart/.cursor/docs/mesada.md`.
 |---------|--------|
 | `pages/NewChallenge/AllowanceView.tsx` | Mesada e liquidação |
 | `pages/NewChallenge/SettlementsView.tsx` | Histórico admin |
+| `pages/NewChallenge/ApprovalsView.tsx` | Aprovações admin (SP-115: voltar para ajuste) |
 | `pages/NewChallenge/index.tsx` | Tile admin |
 | `services/chore.ts` | HTTP |
 | `hooks/choreQueryKeys.ts` | Cache React Query |
