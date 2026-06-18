@@ -35,6 +35,89 @@ function formatDisplayValue(
   return formatCurrency(value);
 }
 
+type BalanceValueCardProps = {
+  value: number;
+  variant: 'revenue' | 'expense' | 'balance';
+  label?: string;
+  masked?: boolean;
+  showValues: boolean;
+  valueFont: string;
+  bodyFont: string;
+};
+
+const BalanceValueCard = ({
+  value,
+  variant,
+  label,
+  masked,
+  showValues,
+  valueFont,
+  bodyFont,
+}: BalanceValueCardProps) => {
+  const { getColor } = useVisualTheme();
+  const isRevenue = variant === 'revenue';
+  const isBalance = variant === 'balance';
+
+  const borderLeftColor = isBalance
+    ? getColor('border.summaryCard.balance')
+    : isRevenue
+      ? getColor('border.lastRegistrations.revenue')
+      : getColor('border.lastRegistrations.expense');
+
+  const bg = isBalance
+    ? getColor('background.familyGroup.primary')
+    : isRevenue
+      ? getColor('background.lastRegistrations.revenue')
+      : getColor('background.lastRegistrations.expense');
+
+  const valueColor = isBalance
+    ? value >= 0
+      ? getColor('status.success')
+      : getColor('status.error')
+    : isRevenue
+      ? getColor('text.lastRegistrations.revenue')
+      : getColor('text.lastRegistrations.expense');
+
+  return (
+    <Box
+      w="full"
+      p={2}
+      borderRadius="md"
+      boxShadow="sm"
+      borderLeftWidth="4px"
+      borderLeftColor={borderLeftColor}
+      bg={bg}
+    >
+      {label && (
+        <Text
+          fontSize="xs"
+          color={getColor('text.familyGroup.secondary')}
+          fontFamily={bodyFont}
+          mb={0.5}
+          noOfLines={1}
+          overflow="hidden"
+          textOverflow="ellipsis"
+          whiteSpace="nowrap"
+          textAlign="right"
+        >
+          {label}
+        </Text>
+      )}
+      <Text
+        fontSize="md"
+        fontWeight="bold"
+        fontFamily={valueFont}
+        color={valueColor}
+        noOfLines={1}
+        textAlign="right"
+        sx={{ fontVariantNumeric: 'tabular-nums' }}
+      >
+        {formatDisplayValue(value, masked, showValues)}
+      </Text>
+    </Box>
+  );
+};
+
 export const MonthlyBalanceCard = ({
   title,
   balanceLabel,
@@ -52,6 +135,8 @@ export const MonthlyBalanceCard = ({
   const { t } = useThemedTranslation();
   const balance = income - expenses;
   const valueFont = getFont('numeric');
+  const currentMonth = new Date().getMonth() + 1;
+  const monthName = t(`common.months.${currentMonth}`);
 
   return (
     <Box
@@ -69,7 +154,7 @@ export const MonthlyBalanceCard = ({
           color={getColor('text.familyGroup.title')}
           fontFamily={getFont('heading')}
         >
-          {title}
+          {title} · {monthName}
         </Text>
         <IconButton
           aria-label={showValues ? t('common.hideValues') : t('common.showValues')}
@@ -88,101 +173,59 @@ export const MonthlyBalanceCard = ({
         />
       </Flex>
 
-      <Flex gap={3} align="center">
-        <Box w="100px" flexShrink={0} alignSelf="stretch">
-          <HomePieChart
-            income={income}
-            expenses={expenses}
-            masked={masked}
-            compact
-            revenueColor={revenueColor}
-            expenseColor={expenseColor}
-            revenueLabelColor={getColor('text.summaryCard.revenue')}
-            expenseLabelColor={getColor('text.summaryCard.expense')}
-            emptyFillColor={emptyFillColor}
-            emptyLabelColor={emptyLabelColor}
-            strokeColor={getColor('background.familyGroup.card')}
-          />
-        </Box>
+      <Flex gap={2} align="stretch">
+        <Flex flex="3" minW={0} align="center" justify="center">
+          <Box w="full">
+            <HomePieChart
+              income={income}
+              expenses={expenses}
+              masked={masked}
+              compact
+              revenueColor={revenueColor}
+              expenseColor={expenseColor}
+              revenueLabelColor={getColor('text.summaryCard.revenue')}
+              expenseLabelColor={getColor('text.summaryCard.expense')}
+              emptyFillColor={emptyFillColor}
+              emptyLabelColor={emptyLabelColor}
+              strokeColor={getColor('background.familyGroup.card')}
+            />
+          </Box>
+        </Flex>
 
         <Flex
           direction="column"
-          gap={1}
-          flex={1}
+          gap={1.5}
+          flex="7"
           minW={0}
           justify="center"
-          align="flex-end"
         >
-          <Box w="full" minW={0}>
-            <Text
-              fontSize="xs"
-              color={getColor('text.familyGroup.secondary')}
-              fontFamily={getFont('body')}
-              mb={0.5}
-              noOfLines={1}
-              overflow="hidden"
-              textOverflow="ellipsis"
-              whiteSpace="nowrap"
-              textAlign="right"
-            >
-              {balanceLabel}
-            </Text>
-            <Text
-              fontSize="lg"
-              fontWeight="bold"
-              fontFamily={valueFont}
-              color={
-                balance >= 0
-                  ? getColor('status.success')
-                  : getColor('status.error')
-              }
-              noOfLines={1}
-              textAlign="right"
-              sx={{ fontVariantNumeric: 'tabular-nums' }}
-            >
-              {formatDisplayValue(balance, masked, showValues)}
-            </Text>
-          </Box>
+          <BalanceValueCard
+            value={balance}
+            variant="balance"
+            label={balanceLabel}
+            masked={masked}
+            showValues={showValues}
+            valueFont={valueFont}
+            bodyFont={getFont('body')}
+          />
 
-          <Flex align="center" justify="flex-end" gap={1.5} w="full">
-            <Box
-              w="9px"
-              h="9px"
-              borderRadius="full"
-              bg={getColor('border.summaryCard.revenue')}
-              flexShrink={0}
-            />
-            <Text
-              fontSize="md"
-              fontWeight="semibold"
-              fontFamily={valueFont}
-              color={getColor('text.summaryCard.revenue')}
-              noOfLines={1}
-              sx={{ fontVariantNumeric: 'tabular-nums' }}
-            >
-              {formatDisplayValue(income, masked, showValues)}
-            </Text>
-          </Flex>
+          <BalanceValueCard
+            value={income}
+            variant="revenue"
+            masked={masked}
+            showValues={showValues}
+            valueFont={valueFont}
+            bodyFont={getFont('body')}
+          />
 
-          <Flex align="center" justify="flex-end" gap={1.5} w="full">
-            <Box
-              w="9px"
-              h="9px"
-              borderRadius="full"
-              bg={getColor('border.summaryCard.expense')}
-              flexShrink={0}
-            />
-            <Text
-              fontSize="md"
-              fontWeight="semibold"
-              fontFamily={valueFont}
-              color={getColor('text.summaryCard.expense')}
-              noOfLines={1}
-              sx={{ fontVariantNumeric: 'tabular-nums' }}
-            >
-              {formatDisplayValue(expenses, masked, showValues)}
-            </Text>
-          </Flex>
+          <BalanceValueCard
+            value={expenses}
+            variant="expense"
+            masked={masked}
+            showValues={showValues}
+            valueFont={valueFont}
+            bodyFont={getFont('body')}
+          />
         </Flex>
       </Flex>
     </Box>

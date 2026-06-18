@@ -391,6 +391,7 @@ export const defaultTheme: VisualTheme = {
       summaryCard: {
         revenue: 'green.500',
         expense: 'red.500',
+        balance: 'blue.600',
       },
       reports: 'black',
       dashboard: {
@@ -783,6 +784,7 @@ export const rpgTheme: VisualTheme = {
       summaryCard: {
         revenue: 'green.500',
         expense: 'red.500',
+        balance: 'purple.600',
       },
       reports: 'purple.500',
       dashboard: {

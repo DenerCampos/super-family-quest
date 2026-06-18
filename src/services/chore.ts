@@ -286,6 +286,16 @@ export const ChoreService = {
     return response.data;
   },
 
+  returnOccurrenceForAdjustment: async (
+    familyGroupId: string,
+    occurrenceId: string,
+  ): Promise<ChoreOccurrenceResponseDto> => {
+    const response = await api.post(
+      `${base(familyGroupId)}/occurrences/${occurrenceId}/return-for-adjustment`,
+    );
+    return response.data;
+  },
+
   getPayrollSuggestion: async (
     familyGroupId: string,
   ): Promise<ChorePayrollSuggestionResponseDto> => {

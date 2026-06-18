@@ -268,6 +268,7 @@ export interface ThemeColors {
     summaryCard: {
       revenue: string;
       expense: string;
+      balance: string;
     };
     reports: string;
     dashboard: {

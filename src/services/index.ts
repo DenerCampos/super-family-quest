@@ -252,6 +252,7 @@ export const api = {
   choreSubmitOccurrence: ChoreService.submitOccurrence,
   choreApproveOccurrence: ChoreService.approveOccurrence,
   choreRejectOccurrence: ChoreService.rejectOccurrence,
+  choreReturnOccurrenceForAdjustment: ChoreService.returnOccurrenceForAdjustment,
   choreGetPayrollSuggestion: ChoreService.getPayrollSuggestion,
   choreGetPayrollPending: ChoreService.getPayrollPending,
   choreSettlePayroll: ChoreService.settlePayroll,

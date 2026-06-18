@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   Image,
   Modal,
   ModalBody,
@@ -105,6 +106,23 @@ export const ApprovalsView = () => {
       toast({
         title: t('common.error'),
         description: t('chores.rejectError'),
+        status: 'error',
+      });
+    },
+  });
+
+  const returnForAdjustmentMutation = useMutation({
+    mutationFn: (occurrenceId: string) =>
+      api.choreReturnOccurrenceForAdjustment(groupId!, occurrenceId),
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: choreQueryKeys.root });
+      await loadProfile();
+      toast({ title: t('chores.returnedForAdjustment'), status: 'success' });
+    },
+    onError: () => {
+      toast({
+        title: t('common.error'),
+        description: t('chores.returnForAdjustmentError'),
         status: 'error',
       });
     },
@@ -258,27 +276,40 @@ export const ApprovalsView = () => {
                     </Box>
                   ) : null}
                 </VStack>
-                <Button
-                  mt={3}
-                  mr={2}
-                  size="sm"
-                  bg={getColor('button.background.revenue')}
-                  color={getColor('button.text.revenue')}
-                  onClick={() => approveMutation.mutate(item.id)}
-                  isLoading={approveMutation.isPending}
-                >
-                  {t('chores.approve')}
-                </Button>
-                <Button
-                  mt={3}
-                  size="sm"
-                  variant="outline"
-                  borderColor={getColor('status.error')}
-                  color={getColor('status.error')}
-                  onClick={() => openReject(item)}
-                >
-                  {t('chores.reject')}
-                </Button>
+                <Flex mt={3} gap={2} flexWrap="wrap">
+                  <Button
+                    size="sm"
+                    bg={getColor('button.background.revenue')}
+                    color={getColor('button.text.revenue')}
+                    onClick={() => approveMutation.mutate(item.id)}
+                    isLoading={
+                      approveMutation.isPending &&
+                      approveMutation.variables === item.id
+                    }
+                  >
+                    {t('chores.approve')}
+                  </Button>
+                  <Button
+                    size="sm"
+                    bg={getColor('status.warning')}
+                    color={getColor('button.text.revenue')}
+                    onClick={() => returnForAdjustmentMutation.mutate(item.id)}
+                    isLoading={
+                      returnForAdjustmentMutation.isPending &&
+                      returnForAdjustmentMutation.variables === item.id
+                    }
+                  >
+                    {t('chores.returnForAdjustment')}
+                  </Button>
+                  <Button
+                    size="sm"
+                    bg={getColor('status.error')}
+                    color={getColor('button.text.revenue')}
+                    onClick={() => openReject(item)}
+                  >
+                    {t('chores.reject')}
+                  </Button>
+                </Flex>
               </Box>
             );
           })

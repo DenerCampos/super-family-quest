@@ -102,9 +102,9 @@ export const HomePieChart = ({
   const { t } = useTranslation();
   const [selectedSlice, setSelectedSlice] = useState<SliceKey | null>(null);
   const total = income + expenses;
-  const chartHeight = compact ? 108 : 120;
-  const outerRadius = compact ? 44 : 50;
-  const innerRadius = compact ? 26 : 30;
+  const chartHeight = compact ? 124 : 120;
+  const outerRadius = 50;
+  const innerRadius = 30;
 
   const pieProps = {
     dataKey: 'value' as const,
