@@ -9,6 +9,7 @@ import type {
   ShoppingListItemResponse,
   UpdateShoppingListItemPayload,
 } from '../types/shoppingList';
+import { LOCAL_STORAGE_KEYS } from '../utils/constants';
 
 export type ShoppingListPendingAction =
   | 'finish'
@@ -44,7 +45,7 @@ export function useShoppingListDetailPage(listId: string) {
     handleListCompleted,
   } = useShoppingListDetail(listId);
 
-  const token = localStorage.getItem('accessToken') || '';
+  const token = localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN) || '';
 
   const { onlineUsers } = useShoppingListSocket({
     listId,

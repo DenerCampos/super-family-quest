@@ -6,6 +6,7 @@ import {
   FiSettings,
   FiBook,
   FiCheckSquare,
+  FiActivity,
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { FixedAppShell } from '../../components/FixedAppShell';
@@ -19,6 +20,7 @@ type TileKey =
   | 'shoppingList'
   | 'recipes'
   | 'quests'
+  | 'health'
   | 'settings';
 
 const tiles: {
@@ -62,6 +64,13 @@ const tiles: {
     titleKey: 'newResources.tiles.quests.title',
     subtitleKey: 'newResources.tiles.quests.subtitle',
     route: '/new-resources/quests',
+  },
+  {
+    key: 'health',
+    icon: FiActivity,
+    titleKey: 'newResources.tiles.health.title',
+    subtitleKey: 'newResources.tiles.health.subtitle',
+    route: '/new-resources/health',
   },
   {
     key: 'settings',

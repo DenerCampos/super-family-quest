@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Flex,
   IconButton,
   Text,
   VStack,
@@ -13,6 +12,7 @@ import { FiPlus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { PageScaffold } from '../../components/PageScaffold';
+import { PillTabBar } from '../../components/PillTabBar';
 import { ShoppingListCard } from '../../components/shoppingList/ShoppingListCard';
 import { CreateShoppingListModal } from '../../components/modals/CreateShoppingListModal';
 import { useShoppingLists } from '../../hooks/useShoppingLists';
@@ -121,40 +121,15 @@ export const ShoppingListsView = () => {
           />
         }
         headerExtra={
-          <Flex px={4} gap={2} pt={4} pb={3} flexShrink={0}>
-            {STATUS_TABS.map((s) => (
-              <Button
-                key={s}
-                size="xs"
-                variant="outline"
-                bg={
-                  status === s
-                    ? getColor('background.shoppingList.card')
-                    : 'transparent'
-                }
-                color={
-                  status === s
-                    ? getColor('text.shoppingList.title')
-                    : getColor('text.shoppingList.itemMeta')
-                }
-                borderColor={
-                  status === s
-                    ? getColor('text.shoppingList.title')
-                    : getColor('border.shoppingList.card')
-                }
-                borderWidth={status === s ? '2px' : '1px'}
-                fontWeight={status === s ? 'bold' : 'normal'}
-                fontFamily={getFont('body')}
-                onClick={() => changeStatus(s)}
-                _hover={{
-                  bg: getColor('background.shoppingList.cardHover'),
-                  borderColor: getColor('text.shoppingList.primary'),
-                }}
-              >
-                {t(`shoppingList.status.${s}`)}
-              </Button>
-            ))}
-          </Flex>
+          <PillTabBar
+            tabs={STATUS_TABS.map((s) => ({
+              id: s,
+              label: t(`shoppingList.status.${s}`),
+            }))}
+            activeTab={status ?? 'active'}
+            onChange={changeStatus}
+            variant="shopping"
+          />
         }
       >
         <Box px={4}>

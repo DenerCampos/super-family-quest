@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useMemo } 
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '../services';
+import { registerUnauthorizedHandler, unregisterUnauthorizedHandler } from '../services/authSession';
 import { LOCAL_STORAGE_KEYS } from '../utils/constants';
 import { normalizeCoinDelta } from '../utils/coinsNumber';
 
@@ -46,10 +47,10 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const queryClient = useQueryClient();
   
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
     if (token && !profile) {
       loadProfile().catch(() => {
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
         navigate('/login');
       });
     }
@@ -94,7 +95,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const login = useCallback(async (email: string, password: string) => {
     try {
       const { accessToken } = await api.login({ email, password });
-      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
       
       await loadProfile();
       await waitForThemeLoad(); // Aguarda o tema ser carregado
@@ -108,11 +109,16 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   }, [loadProfile, navigate, waitForThemeLoad]);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
     setProfile(null);
     queryClient.clear();
     navigate('/login');
   }, [navigate, queryClient]);
+
+  useEffect(() => {
+    registerUnauthorizedHandler(logout);
+    return () => unregisterUnauthorizedHandler();
+  }, [logout]);
 
   const toggleShowValues = useCallback(() => {
     setShowValues((prev: boolean) => {

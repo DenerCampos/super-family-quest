@@ -833,6 +833,10 @@
       "quests": {
         "title": "Quests",
         "subtitle": "Tarefas e missões da família"
+      },
+      "health": {
+        "title": "Saúde",
+        "subtitle": "Exames e receituários"
       }
     }
   },
@@ -1089,5 +1093,253 @@
   },
   "demoLogin": {
     "loading": "Entrando como demo..."
+  },
+  "health": {
+    "title": "Saúde",
+    "subtitle": "Gerencie exames e receituários da família",
+    "tiles": {
+      "exams": { "title": "Exames", "subtitle": "Cadastrados e em processamento" },
+      "search": { "title": "Busca", "subtitle": "Pesquisar exames" },
+      "overview": { "title": "Visão Geral", "subtitle": "Relatório IA de saúde" },
+      "prescriptions": { "title": "Receituário", "subtitle": "Medicamentos" }
+    },
+    "examTypes": {
+      "LABORATORY": "Laboratorial (Sangue, Urina...)",
+      "IMAGING": "Imagem (Ultrassom, TC, RM, RX...)",
+      "FUNCTIONAL": "Funcional (ECG, Holter, MAPA...)",
+      "PROCEDURE": "Procedimento (Endoscopia, Biópsia...)",
+      "OTHER": "Outro"
+    },
+    "daysOfWeek": {
+      "Mon": "Seg",
+      "Tue": "Ter",
+      "Wed": "Qua",
+      "Thu": "Qui",
+      "Fri": "Sex",
+      "Sat": "Sáb",
+      "Sun": "Dom"
+    },
+    "common": {
+      "abnormal": "Anormal",
+      "abnormalMarker": "!"
+    },
+    "doctorPrefix": "Dr(a). {{name}}",
+    "upload": {
+      "fileFormats": "PDF, JPG, PNG — máx. {{maxMb}} MB por arquivo"
+    },
+    "validation": {
+      "itemNameRequired": "Informe o nome do exame",
+      "itemsMin": "Adicione ao menos um resultado com nome",
+      "medicationNameRequired": "Informe o nome do medicamento",
+      "scheduleTimesMin": "Adicione ao menos um horário",
+      "medicationsMin": "Adicione ao menos um medicamento",
+      "doctorNameRequired": "Informe o nome do médico",
+      "prescriptionDateRequired": "Informe a data da receita"
+    },
+    "toast": {
+      "examCreated": "Exame cadastrado com sucesso!",
+      "examCreateError": "Erro ao cadastrar exame.",
+      "examUpdated": "Exame atualizado!",
+      "examUpdateError": "Erro ao atualizar exame.",
+      "examDeleted": "Exame excluído.",
+      "examDeleteError": "Erro ao excluir exame.",
+      "filesUploaded": "{{count}} arquivo(s) enviado(s) para processamento.",
+      "uploadError": "Erro ao enviar arquivos.",
+      "fileTooLarge": "Arquivo excede o limite de 10 MB.",
+      "invalidFileType": "Tipo de arquivo não permitido. Use PDF, JPG ou PNG.",
+      "examSaved": "Exame salvo com sucesso!",
+      "examSaveError": "Erro ao salvar exame.",
+      "fileDiscarded": "Arquivo descartado.",
+      "discardError": "Erro ao descartar arquivo.",
+      "retrySuccess": "Análise concluída. Revise os dados extraídos.",
+      "retryFailed": "A análise falhou novamente.",
+      "retryError": "Erro ao tentar reprocessar o arquivo.",
+      "overviewGenerated": "Relatório de saúde gerado com sucesso!",
+      "overviewError": "Erro ao gerar relatório de saúde.",
+      "overviewNoNewData": "Não há dados novos para gerar o relatório.",
+      "prescriptionCreated": "Receituário cadastrado!",
+      "prescriptionCreateError": "Erro ao cadastrar receituário.",
+      "prescriptionUpdated": "Receituário atualizado!",
+      "prescriptionUpdateError": "Erro ao atualizar receituário.",
+      "prescriptionDeleted": "Receituário excluído.",
+      "prescriptionDeleteError": "Erro ao excluir receituário.",
+      "prescriptionAnalyzed": "Receituário analisado! Revise os dados antes de salvar.",
+      "prescriptionAnalyzeError": "Não foi possível analisar o receituário. Tente novamente ou preencha manualmente."
+    },
+    "register": {
+      "title": "Cadastrar Exame",
+      "tabs": {
+        "manual": "Manual",
+        "upload": "PDF / Imagem"
+      },
+      "targetMember": "Para qual membro?",
+      "targetMemberPlaceholder": "Selecione um membro (padrão: você)",
+      "examType": "Tipo de Exame",
+      "labName": "Laboratório / Clínica / Hospital",
+      "labNamePlaceholder": "Ex: Materdei, Santa Casa...",
+      "doctorName": "Médico solicitante",
+      "doctorNamePlaceholder": "Nome do médico",
+      "examDate": "Data do Exame",
+      "notes": "Observações",
+      "notesPlaceholder": "Observações adicionais...",
+      "items": "Resultados",
+      "itemName": "Nome do exame",
+      "resultValue": "Resultado",
+      "resultUnit": "Unidade",
+      "referenceRange": "Referência",
+      "itemNotes": "Observações do item",
+      "findings": "Laudo / Aspectos observados",
+      "conclusion": "Impressão / Conclusão",
+      "addItem": "Adicionar item",
+      "save": "Salvar Exame",
+      "uploadHint": "Envie PDFs ou imagens de exames. A IA irá ler e extrair os dados automaticamente para conferência.",
+      "clickToSelect": "Clique para selecionar arquivos",
+      "uploadAndProcess": "Enviar para Processamento"
+    },
+    "pending": {
+      "title": "Cadastros Pendentes",
+      "empty": "Nenhum arquivo em processamento ou pendente de revisão.",
+      "unknownFile": "Arquivo sem nome",
+      "for": "Para",
+      "clickToReview": "Clique para revisar e salvar",
+      "waitingProcessingHint": "Aguardando processamento pela IA. A lista atualiza automaticamente.",
+      "processingFailedRetryHint": "O sistema irá tentar novamente daqui {{hours}} horas, ou clique em Tentar novamente para executar novamente a análise.",
+      "processingFailedRetrySoon": "O sistema tentará novamente em breve, ou clique em Tentar novamente para executar novamente a análise.",
+      "processingFailedRetryCountdownHours": "O sistema irá tentar novamente daqui {{hours}} h, ou clique em Tentar novamente para executar novamente a análise.",
+      "processingFailedRetryCountdownMinutes": "O sistema irá tentar novamente daqui {{minutes}} min, ou clique em Tentar novamente para executar novamente a análise.",
+      "processingFailedRetryCountdownHoursMinutes": "O sistema irá tentar novamente daqui {{hours}} h e {{minutes}} min, ou clique em Tentar novamente para executar novamente a análise.",
+      "retryFailed": "Tentar novamente",
+      "removeFailed": "Remover",
+      "notFound": "Processamento não encontrado.",
+      "status": {
+        "QUEUED": "Aguardando processamento",
+        "PROCESSING": "Processando",
+        "COMPLETED": "Pronto para revisão",
+        "FAILED": "Falhou"
+      },
+      "detail": {
+        "title": "Revisar Exame",
+        "reviewData": "Dados do exame (edite se necessário)",
+        "extractedItems": "Resultados extraídos",
+        "save": "Salvar Exame",
+        "discard": "Descartar"
+      }
+    },
+    "exams": {
+      "title": "Exames",
+      "new": "Novo",
+      "register": "Cadastrar exame",
+      "registeredEmpty": "Nenhum exame cadastrado ainda.",
+      "unnamedExam": "Exame sem identificação",
+      "tabs": {
+        "registered": "Cadastrados",
+        "processing": "Em processamento"
+      },
+      "notFound": "Exame não encontrado.",
+      "detail": {
+        "title": "Exame",
+        "edit": "Editar",
+        "delete": "Excluir Exame",
+        "attachments": "Anexos",
+        "attachmentFallback": "Arquivo anexado",
+        "results": "Resultados",
+        "confirmDeleteTitle": "Excluir exame?",
+        "confirmDeleteMessage": "Esta ação não pode ser desfeita. O exame e seus anexos serão removidos.",
+        "confirmDeleteConfirm": "Excluir",
+        "confirmDeleteCancel": "Cancelar"
+      },
+      "form": {
+        "titleEdit": "Editar Exame",
+        "save": "Salvar alterações",
+        "attachmentsReadOnly": "Os anexos não podem ser alterados nesta tela. Use a visualização do exame para baixar o arquivo."
+      }
+    },
+    "search": {
+      "title": "Busca de Exames",
+      "allTypes": "Todos os tipos",
+      "allMembers": "Todos os membros",
+      "byExamName": "Buscar por nome do exame...",
+      "byDoctorName": "Buscar por médico...",
+      "byLabName": "Buscar por laboratório...",
+      "search": "Buscar",
+      "noResults": "Nenhum exame encontrado para os filtros informados.",
+      "unknownLab": "Laboratório não identificado",
+      "referenceRange": "(ref: {{range}})",
+      "viewHistory": "Ver evolução",
+      "evolution": "Evolução"
+    },
+    "overview": {
+      "title": "Visão Geral de Saúde",
+      "selectMember": "Selecionar membro",
+      "me": "Eu",
+      "generate": "Gerar Relatório de Saúde",
+      "regenerate": "Regenerar Relatório",
+      "lastGenerated": "Último relatório gerado",
+      "noReport": "Nenhum relatório gerado ainda. Cadastre exames ou informe o contexto do paciente e clique em Gerar.",
+      "disclaimer": "Este relatório é informativo e não substitui consulta médica profissional.",
+      "patientContextLabel": "Informações adicionais sobre o paciente",
+      "patientContextHint": "Opcional. Descreva sintomas, relatos de consultas, doenças conhecidas ou suspeitas. Será salvo no histórico e enviado à IA.",
+      "patientContextPlaceholder": "Ex.: Dor abdominal há 2 semanas. Última consulta mencionou gastrite. Histórico de diabetes na família...",
+      "contextHistory": "Histórico de informações",
+      "newDataHint": "O relatório só é gerado se houver exames novos/atualizados ou novas informações desde a última geração."
+    },
+    "prescriptions": {
+      "title": "Receituário",
+      "new": "Novo",
+      "empty": "Nenhum receituário cadastrado.",
+      "more": "medicamento(s)",
+      "activeCount": "{{count}} ativo(s)",
+      "finishedCount": "{{count}} concluído(s)",
+      "for": "Para",
+      "notFound": "Receituário não encontrado.",
+      "detail": {
+        "title": "Receituário",
+        "medications": "Medicamentos",
+        "edit": "Editar",
+        "delete": "Excluir Receituário",
+        "confirmDeleteTitle": "Excluir receituário?",
+        "confirmDeleteMessage": "Esta ação não pode ser desfeita. Todos os medicamentos deste receituário serão removidos.",
+        "confirmDeleteConfirm": "Excluir",
+        "confirmDeleteCancel": "Cancelar",
+        "ongoing": "Em uso",
+        "finished": "Concluído",
+        "everyday": "Todos os dias",
+        "from": "De",
+        "until": "até",
+        "noEndDate": "uso contínuo"
+      },
+      "form": {
+        "titleNew": "Novo Receituário",
+        "titleEdit": "Editar Receituário",
+        "doctorName": "Nome do Médico",
+        "prescriptionDate": "Data da Receita",
+        "notes": "Observações",
+        "medications": "Medicamentos",
+        "medication": "Medicamento",
+        "medicationName": "Nome do Medicamento",
+        "dosage": "Dosagem",
+        "dosagePlaceholder": "Ex: 1 comprimido de 10mg",
+        "scheduleTimes": "Horários",
+        "addTime": "Adicionar horário",
+        "daysOfWeek": "Dias da semana",
+        "everyDay": "Todo dia",
+        "startDate": "Início",
+        "endDate": "Fim",
+        "endDateHint": "Deixe vazio para uso contínuo",
+        "itemNotes": "Observações",
+        "addMedication": "Adicionar Medicamento",
+        "save": "Salvar Receituário",
+        "scanTitle": "Analisar receita com IA",
+        "scanHint": "Tire uma foto, escolha da galeria ou envie um PDF. A IA preenche os campos abaixo para você revisar.",
+        "scanCamera": "Tirar foto",
+        "scanGallery": "Galeria",
+        "scanPdf": "PDF",
+        "analyzing": "Analisando receituário...",
+        "manualHint": "Ou preencha manualmente os dados abaixo.",
+        "cameraTitle": "Fotografar receita",
+        "cameraInstructions": "Enquadre a receita na tela e toque em Tirar Foto.",
+        "cameraAccessError": "Não foi possível acessar a câmera. Verifique as permissões do navegador."
+      }
+    }
   }
 }

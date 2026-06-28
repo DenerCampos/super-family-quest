@@ -14,6 +14,7 @@ import { UserService } from "./user";
 import { ChoreService } from "./chore";
 import { RecipeService } from "./recipe";
 import { MissionsService } from "./missions";
+import { HealthService } from "./health";
 
 export const api = {
   getAvailableThemes: themeService.getAvailableThemes,
@@ -262,4 +263,23 @@ export const api = {
 
   missionGetAll: MissionsService.getMissions,
   missionClaimReward: MissionsService.claimReward,
+
+  healthCreateExam: HealthService.createExam,
+  healthListExams: HealthService.listExams,
+  healthGetExamById: HealthService.getExamById,
+  healthUpdateExam: HealthService.updateExam,
+  healthDeleteExam: HealthService.deleteExam,
+  healthUploadFiles: HealthService.uploadFiles,
+  healthListProcessing: HealthService.listProcessing,
+  healthGetProcessingById: HealthService.getProcessingById,
+  healthApproveProcessing: HealthService.approveProcessing,
+  healthDiscardProcessing: HealthService.discardProcessing,
+  healthRetryProcessing: HealthService.retryProcessing,
+  healthGenerateOverview: HealthService.generateOverview,
+  healthGetLatestOverview: HealthService.getLatestOverview,
+  healthCreatePrescription: HealthService.createPrescription,
+  healthListPrescriptions: HealthService.listPrescriptions,
+  healthGetPrescriptionById: HealthService.getPrescriptionById,
+  healthUpdatePrescription: HealthService.updatePrescription,
+  healthDeletePrescription: HealthService.deletePrescription,
 };

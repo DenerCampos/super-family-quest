@@ -83,6 +83,14 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | `/new-resources/quests/chores`, `.../chores/:occurrenceId` | Ocorrências |
 | `/new-resources/quests/definitions`, `.../definitions/:definitionId` | Definições |
 | `/new-resources/quests/approvals`, `allowance`, `settlements`, `history` | Fluxo familiar (settlements: admin, SP-113) |
+| `/new-resources/health` | Hub Saúde (SP-123) |
+| `/new-resources/health/register` | Cadastro manual + upload PDF/imagem |
+| `/new-resources/health/pending`, `.../pending/:id` | Pendentes e revisão de processados |
+| `/new-resources/health/search` | Busca de exames com filtros + gráfico |
+| `/new-resources/health/overview` | Visão geral de saúde (relatório IA Gemini) |
+| `/new-resources/health/prescriptions` | Lista de receituários |
+| `/new-resources/health/prescriptions/new`, `.../prescriptions/:id/edit` | Form receituário |
+| `/new-resources/health/prescriptions/:id` | Detalhe receituário |
 | `/new-challenge` | Missões dinâmicas (SP-78) |
 | `/settings` | Configurações / Alexa |
 | `/profile` | Perfil |
@@ -108,6 +116,7 @@ Arquivos em `src/services/` — atualizar ao integrar novo domínio da API:
 | `recipe.ts` | Receitas |
 | `chore.ts` | Tarefas / quests |
 | `missions.ts` | Missões dinâmicas |
+| `health.ts` | Saúde — exames, upload, processamento, visão geral, receituário (SP-123) |
 | `integrations.ts` | Integrações (Alexa, etc.) |
 
 Padrão de chamada:
@@ -195,6 +204,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `relatorio-garantias.md` | Relatório de garantias no Painel (SP-86) |
 | `demo-login.md` | Login demo via link para portfólio (SP-118) |
 | `balanco-mensal-atualizacao-real-time.md` | Atualização do card Balanço Mensal após mutações financeiras (SP-119) |
+| `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, visão geral, receituário (SP-123) |
 
 ### CRUD em recursos
 
