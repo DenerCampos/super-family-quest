@@ -5,4 +5,5 @@ export type ReportKey =
   | 'expensesByStore'
   | 'topProducts'
   | 'coinStatement'
-  | 'warrantyItems';
+  | 'warrantyItems'
+  | 'healthReports';

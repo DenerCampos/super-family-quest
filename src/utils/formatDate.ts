@@ -1,3 +1,42 @@
+import { APP_DATE_LOCALE } from '../i18n/config';
+
+function parseAppDate(dateInput: string | Date): Date {
+  if (dateInput instanceof Date) return dateInput;
+  return new Date(dateInput.includes('T') ? dateInput : `${dateInput}T00:00:00`);
+}
+
+export function formatAppDate(
+  dateInput: string | Date,
+  options?: Intl.DateTimeFormatOptions,
+): string {
+  const date = parseAppDate(dateInput);
+  if (Number.isNaN(date.getTime())) return '—';
+
+  return date.toLocaleDateString(
+    APP_DATE_LOCALE,
+    options ?? { day: '2-digit', month: 'short', year: 'numeric' },
+  );
+}
+
+export function formatAppDateTime(
+  dateInput: string | Date,
+  options?: Intl.DateTimeFormatOptions,
+): string {
+  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  if (Number.isNaN(date.getTime())) return '—';
+
+  return date.toLocaleDateString(
+    APP_DATE_LOCALE,
+    options ?? {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    },
+  );
+}
+
 /**
  * Formata inteiro YYYYMM (ex.: mesada / API) para data legível no locale.
  * Ex.: 202605 → "Maio de 2026" em pt-BR.

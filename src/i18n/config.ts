@@ -27,4 +27,7 @@ i18n
     },
   });
 
+/** Locale BCP 47 para formatação de datas (alinhado ao `lng` atual). */
+export const APP_DATE_LOCALE = 'pt-BR';
+
 export default i18n; 
