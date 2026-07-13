@@ -57,12 +57,19 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 3. (Opcional) Preenche campo de **informações adicionais** sobre o paciente — sintomas, relatos de consultas, doenças conhecidas/suspeitas
 4. Clica "Gerar Relatório" → POST `/health/ai-overview` com `{ targetUserId?, patientContext? }`
 5. Se `patientContext` informado, salvo em `health_patient_context` (histórico com data)
-6. API valida se há dados novos desde o último relatório (exames criados/atualizados ou novos registros de contexto); caso contrário retorna 400
-7. API busca exames aprovados + histórico completo de contexto do paciente e monta prompt para a IA
-8. Gemini gera relatório em Markdown com seções de saúde
-9. Resultado salvo em `health_ai_overview`
-10. Próximas visitas carregam do cache via GET `/health/ai-overview/latest` e histórico via GET `/health/patient-context`
-11. Botão "Regenerar" só funciona com dados novos ou novo texto no campo opcional
+6. **Geração incremental:**
+   - **1º relatório**: envia **tudo** (todos os exames + todo o contexto + último receituário).
+   - **2º em diante**: envia só o **novo desde o último relatório** (exames/contextos após `generatedAt`) + **último receituário** + **relatório anterior** para consolidação.
+   - Sem exames/contextos/receituário novos → **não gera**, apenas mostra o último relatório.
+7. Gemini gera relatório em Markdown (incl. seção de medicamentos)
+8. Resultado salvo em `health_ai_overview`
+9. Próximas visitas carregam do cache via GET `/health/ai-overview/latest`. Na tela, o **"Histórico de informações"** e o **"Último relatório gerado"** ficam **colapsados** por padrão (expansíveis); o relatório aparece **logo após** o histórico, antes do botão de gerar/regenerar.
+
+### Relatórios de Saúde (dashboard)
+1. Tile **"Relatórios de Saúde"** no dashboard → `/dashboard/healthReports`
+2. Filtros iguais aos demais cards: membro (`UserFamilyFilter`: "Família Inteira"/membro), mês, ano e período personalizado
+3. Lista os relatórios de `health_ai_overview` do período via GET `/health/ai-overview` (por membro ou família toda), ordenados do mais recente
+4. Tocar um item abre `/dashboard/health-report/:overviewId` (tela de detalhe) → GET `/health/ai-overview/:id` → conteúdo em Markdown (`HealthMarkdownContent`)
 
 ### Receituário
 - Listagem: GET `/health/prescriptions` com filtro por membro
@@ -98,8 +105,12 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 | Método | Rota | Descrição |
 |--------|------|-----------|
 | GET | `/health/patient-context?targetUserId=` | Histórico de informações adicionais do paciente |
+| GET | `/health/patient-context/latest?targetUserId=` | Última descrição registrada do paciente |
+| POST | `/health/patient-context` | Registrar descrição ("como estou me sentindo agora") sem gerar relatório |
 | POST | `/health/ai-overview` | Gerar relatório (`patientContext` opcional) |
 | GET | `/health/ai-overview/latest` | Última geração (cache) |
+| GET | `/health/ai-overview?targetUserId=&startDate=&endDate=` | Listar relatórios por membro/família e período (card "Relatórios de Saúde" no dashboard) |
+| GET | `/health/ai-overview/:id` | Detalhe de um relatório (tela aberta ao tocar um item do card) |
 
 ### Receituário
 | Método | Rota | Descrição |
@@ -161,7 +172,8 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 ### App (`app/super-family-quest`)
 | Arquivo | Responsabilidade |
 |---------|-----------------|
-| `src/pages/NewHealth/index.tsx` | Hub de tiles |
+| `src/pages/NewHealth/index.tsx` | Hub de tiles (1º tile: "Como estou me sentindo agora") |
+| `src/pages/NewHealth/HealthFeelingNowView.tsx` | Tela "como estou me sentindo agora": input + seletor de membro + card da última descrição |
 | `src/pages/NewHealth/HealthRegisterView.tsx` | Cadastro manual + upload |
 | `src/pages/NewHealth/HealthProcessingList.tsx` | Lista de processamentos (incl. retry manual e mensagem de auto-retry) |
 | `src/pages/NewHealth/HealthPendingView.tsx` | Lista de pendentes (abas) |
@@ -169,7 +181,9 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 | `src/utils/healthProcessingRetry.ts` | Texto/countdown do próximo retry automático |
 | `src/pages/NewHealth/HealthPendingDetailView.tsx` | Revisão / aprovação de IA |
 | `src/pages/NewHealth/HealthSearchView.tsx` | Busca de exames + gráfico |
-| `src/pages/NewHealth/HealthOverviewView.tsx` | Relatório IA |
+| `src/pages/NewHealth/HealthOverviewView.tsx` | Relatório IA (histórico + último relatório colapsados) |
+| `src/components/reports/HealthReportsPanel.tsx` | Card "Relatórios de Saúde" do dashboard (lista por membro/período) |
+| `src/pages/Dashboard/HealthReportDetailView.tsx` | Tela de detalhe de um relatório (rota `/dashboard/health-report/:overviewId`) |
 | `src/pages/NewHealth/HealthPrescriptionsView.tsx` | Lista receituários |
 | `src/pages/NewHealth/HealthPrescriptionFormView.tsx` | Formulário receituário |
 | `src/pages/NewHealth/HealthPrescriptionDetailView.tsx` | Detalhe receituário |

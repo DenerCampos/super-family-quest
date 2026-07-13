@@ -8,6 +8,7 @@ import { TopProductsPanel } from '../../components/reports/TopProductsPanel';
 import { BarChartExpensesIncome } from '../../components/reports/BarChartExpensesIncome';
 import { CoinStatementPanel } from '../../components/reports/CoinStatementPanel';
 import { WarrantyItemsPanel } from '../../components/reports/WarrantyItemsPanel';
+import { HealthReportsPanel } from '../../components/reports/HealthReportsPanel';
 import { ReportFilters } from '../../components/reports/ReportFilters';
 import { PageScaffold } from '../../components/PageScaffold';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -26,6 +27,7 @@ const VALID_KEYS = new Set<ReportKey>([
   'topProducts',
   'coinStatement',
   'warrantyItems',
+  'healthReports',
 ]);
 
 const TITLE_KEYS: Record<ReportKey, string> = {
@@ -36,6 +38,7 @@ const TITLE_KEYS: Record<ReportKey, string> = {
   topProducts: 'reports.topProducts.title',
   coinStatement: 'reports.coinStatement.title',
   warrantyItems: 'reports.warrantyItems.title',
+  healthReports: 'reports.healthReports.title',
 };
 
 function getMonthDateRange(month: number, year: number) {
@@ -168,6 +171,14 @@ export const ReportView = () => {
             showMemberName={showMemberName}
             page={warrantyPage}
             onPageChange={setWarrantyPage}
+          />
+        );
+      case 'healthReports':
+        return (
+          <HealthReportsPanel
+            startDate={startDate}
+            endDate={endDate}
+            userId={userId}
           />
         );
     }

@@ -73,7 +73,8 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | `/login`, `/register` | Auth pública |
 | `/alexa-login` | Login Alexa |
 | `/`, `/home` | Home |
-| `/dashboard`, `/dashboard/:reportKey` | Relatórios — incl. `coinStatement` (SP-97) |
+| `/dashboard`, `/dashboard/:reportKey` | Relatórios — incl. `coinStatement` (SP-97), `healthReports` (SP-123) |
+| `/dashboard/health-report/:overviewId` | Detalhe de relatório de saúde (card "Relatórios de Saúde", SP-123) |
 | `/new-resources` | Hub recursos |
 | `/new-resources/resources` | Grupos, lojas, pagamentos |
 | `/new-resources/family` | Grupo familiar |
@@ -84,6 +85,7 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | `/new-resources/quests/definitions`, `.../definitions/:definitionId` | Definições |
 | `/new-resources/quests/approvals`, `allowance`, `settlements`, `history` | Fluxo familiar (settlements: admin, SP-113) |
 | `/new-resources/health` | Hub Saúde (SP-123) |
+| `/new-resources/health/feeling-now` | "Como estou me sentindo agora": registro de contexto do paciente |
 | `/new-resources/health/register` | Cadastro manual + upload PDF/imagem |
 | `/new-resources/health/pending`, `.../pending/:id` | Pendentes e revisão de processados |
 | `/new-resources/health/search` | Busca de exames com filtros + gráfico |

@@ -5,7 +5,11 @@ import { HealthService } from '../services/health';
 import { healthQueryKeys } from './healthQueryKeys';
 import { useHealthViewerId } from './useHealthViewerId';
 import { useThemedTranslation } from './useThemedTranslation';
-import type { GenerateOverviewPayload } from '../types/health';
+import type {
+  CreatePatientContextPayload,
+  GenerateOverviewPayload,
+  HealthOverviewListParams,
+} from '../types/health';
 
 export const useHealthOverview = (targetUserId?: string) => {
   const viewerId = useHealthViewerId();
@@ -17,6 +21,31 @@ export const useHealthOverview = (targetUserId?: string) => {
   });
 };
 
+export const useHealthOverviewList = (
+  params: HealthOverviewListParams = {},
+  enabled = true,
+) => {
+  const viewerId = useHealthViewerId();
+
+  return useQuery({
+    queryKey: healthQueryKeys.overviewList(viewerId, params),
+    queryFn: () => HealthService.listOverviews(params),
+    staleTime: 60_000,
+    enabled,
+  });
+};
+
+export const useHealthOverviewById = (id: string | undefined) => {
+  const viewerId = useHealthViewerId();
+
+  return useQuery({
+    queryKey: healthQueryKeys.overviewItem(viewerId, id ?? ''),
+    queryFn: () => HealthService.getOverviewById(id as string),
+    enabled: Boolean(id),
+    staleTime: 60_000,
+  });
+};
+
 export const useHealthPatientContext = (targetUserId?: string) => {
   const viewerId = useHealthViewerId();
 
@@ -24,6 +53,48 @@ export const useHealthPatientContext = (targetUserId?: string) => {
     queryKey: healthQueryKeys.patientContext(viewerId, targetUserId),
     queryFn: () => HealthService.listPatientContext(targetUserId),
     staleTime: 30_000,
+  });
+};
+
+export const useLatestPatientContext = (targetUserId?: string) => {
+  const viewerId = useHealthViewerId();
+
+  return useQuery({
+    queryKey: healthQueryKeys.latestPatientContext(viewerId, targetUserId),
+    queryFn: () => HealthService.getLatestPatientContext(targetUserId),
+    staleTime: 30_000,
+  });
+};
+
+export const useCreatePatientContext = () => {
+  const viewerId = useHealthViewerId();
+  const queryClient = useQueryClient();
+  const toast = useToast();
+  const { t } = useThemedTranslation();
+
+  return useMutation({
+    mutationFn: (payload: CreatePatientContextPayload) =>
+      HealthService.createPatientContext(payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: healthQueryKeys.patientContextAll(viewerId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: healthQueryKeys.latestPatientContextAll(viewerId),
+      });
+      toast({
+        title: t('health.toast.feelingSaved'),
+        status: 'success',
+        duration: 3000,
+      });
+    },
+    onError: () => {
+      toast({
+        title: t('health.toast.feelingError'),
+        status: 'error',
+        duration: 4000,
+      });
+    },
   });
 };
 

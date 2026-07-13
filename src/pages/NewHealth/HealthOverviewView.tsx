@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Collapse,
   Flex,
   FormControl,
   FormLabel,
@@ -10,10 +11,12 @@ import {
   Stack,
   Text,
   Textarea,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { FiRefreshCw } from 'react-icons/fi';
+import { FiChevronDown, FiChevronUp, FiRefreshCw } from 'react-icons/fi';
 import { FixedAppShell } from '../../components/FixedAppShell';
+import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { PageTitleBar } from '../../components/PageTitleBar';
 import { HealthMarkdownContent } from '../../components/health/HealthMarkdownContent';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -48,6 +51,8 @@ export const HealthOverviewView = () => {
   const { data: contextHistory = [], isLoading: isLoadingHistory } =
     useHealthPatientContext(targetUserId || undefined);
   const generateMutation = useGenerateHealthOverview();
+  const { isOpen: isHistoryOpen, onToggle: onToggleHistory } = useDisclosure();
+  const { isOpen: isReportOpen, onToggle: onToggleReport } = useDisclosure();
 
   const bg = getColor('background.resources');
   const cardBg = getColor('background.familyGroup.card');
@@ -68,6 +73,13 @@ export const HealthOverviewView = () => {
 
   return (
     <FixedAppShell bg={bg}>
+      {generateMutation.isPending && (
+        <LoadingOverlay
+          typeLoading="read"
+          text={t('health.overview.generating')}
+        />
+      )}
+
       <PageTitleBar title={t('health.overview.title')} backTo="/new-resources/health" />
 
       <Flex flex={1} minH={0} direction="column" align="center" overflow="auto" pt={4} px={4} pb={20}>
@@ -119,32 +131,94 @@ export const HealthOverviewView = () => {
 
           {contextHistory.length > 0 && (
             <Box bg={cardBg} borderRadius="lg" borderWidth="1px" borderColor={borderColor} p={4} mb={4}>
-              <Text color={textPrimary} fontSize="sm" fontWeight="semibold" mb={3}>
-                {t('health.overview.contextHistory')}
-              </Text>
-              {isLoadingHistory ? (
-                <Flex justify="center" py={2}><Spinner size="sm" /></Flex>
-              ) : (
-                <Stack spacing={3}>
-                  {contextHistory.map((entry) => (
-                    <Box
-                      key={entry.id}
-                      bg={inputBg}
-                      borderRadius="md"
-                      borderWidth="1px"
-                      borderColor={borderColor}
-                      p={3}
-                    >
-                      <Text color={textSub} fontSize="xs" mb={1}>
-                        {formatAppDateTime(entry.createdAt)}
-                      </Text>
-                      <Text color={textPrimary} fontSize="sm" whiteSpace="pre-wrap">
-                        {entry.content}
-                      </Text>
-                    </Box>
-                  ))}
-                </Stack>
-              )}
+              <Flex
+                as="button"
+                type="button"
+                width="100%"
+                align="center"
+                justify="space-between"
+                onClick={onToggleHistory}
+                aria-expanded={isHistoryOpen}
+              >
+                <Text color={textPrimary} fontSize="sm" fontWeight="semibold">
+                  {t('health.overview.contextHistory')} ({contextHistory.length})
+                </Text>
+                <Icon
+                  as={isHistoryOpen ? FiChevronUp : FiChevronDown}
+                  color={textSub}
+                />
+              </Flex>
+              <Collapse in={isHistoryOpen} animateOpacity>
+                <Box mt={3}>
+                  {isLoadingHistory ? (
+                    <Flex justify="center" py={2}><Spinner size="sm" /></Flex>
+                  ) : (
+                    <Stack spacing={3}>
+                      {contextHistory.map((entry) => (
+                        <Box
+                          key={entry.id}
+                          bg={inputBg}
+                          borderRadius="md"
+                          borderWidth="1px"
+                          borderColor={borderColor}
+                          p={3}
+                        >
+                          <Text color={textSub} fontSize="xs" mb={1}>
+                            {formatAppDateTime(entry.createdAt)}
+                          </Text>
+                          <Text color={textPrimary} fontSize="sm" whiteSpace="pre-wrap">
+                            {entry.content}
+                          </Text>
+                        </Box>
+                      ))}
+                    </Stack>
+                  )}
+                </Box>
+              </Collapse>
+            </Box>
+          )}
+
+          {isLoading && (
+            <Flex justify="center" py={6}><Spinner /></Flex>
+          )}
+
+          {!isLoading && overview && (
+            <Box bg={cardBg} borderRadius="lg" borderWidth="1px" borderColor={borderColor} p={4} mb={4}>
+              <Flex
+                as="button"
+                type="button"
+                width="100%"
+                align="center"
+                justify="space-between"
+                onClick={onToggleReport}
+                aria-expanded={isReportOpen}
+              >
+                <Flex direction="column" align="flex-start">
+                  <Text color={textPrimary} fontSize="sm" fontWeight="semibold">
+                    {t('health.overview.lastGenerated')}
+                  </Text>
+                  <Text color={textSub} fontSize="xs">
+                    {formatAppDateTime(overview.generatedAt)}
+                  </Text>
+                </Flex>
+                <Icon
+                  as={isReportOpen ? FiChevronUp : FiChevronDown}
+                  color={textSub}
+                />
+              </Flex>
+
+              <Collapse in={isReportOpen} animateOpacity>
+                <Box mt={3}>
+                  <HealthMarkdownContent
+                    content={overview.reportContent}
+                    textPrimary={textPrimary}
+                  />
+
+                  <Text color={textSub} fontSize="xs" mt={4} fontStyle="italic">
+                    {t('health.overview.disclaimer')}
+                  </Text>
+                </Box>
+              </Collapse>
             </Box>
           )}
 
@@ -166,32 +240,6 @@ export const HealthOverviewView = () => {
           <Text color={textSub} fontSize="xs" mb={4} textAlign="center">
             {t('health.overview.newDataHint')}
           </Text>
-
-          {isLoading && (
-            <Flex justify="center" py={6}><Spinner /></Flex>
-          )}
-
-          {!isLoading && overview && (
-            <Box bg={cardBg} borderRadius="lg" borderWidth="1px" borderColor={borderColor} p={4}>
-              <Flex justify="space-between" align="center" mb={3}>
-                <Text color={textPrimary} fontSize="sm" fontWeight="semibold">
-                  {t('health.overview.lastGenerated')}
-                </Text>
-                <Text color={textSub} fontSize="xs">
-                  {formatAppDateTime(overview.generatedAt)}
-                </Text>
-              </Flex>
-
-              <HealthMarkdownContent
-                content={overview.reportContent}
-                textPrimary={textPrimary}
-              />
-
-              <Text color={textSub} fontSize="xs" mt={4} fontStyle="italic">
-                {t('health.overview.disclaimer')}
-              </Text>
-            </Box>
-          )}
 
           {!isLoading && !overview && (
             <Box bg={cardBg} borderRadius="lg" borderWidth="1px" borderColor={borderColor} p={6} textAlign="center">

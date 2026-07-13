@@ -1,6 +1,7 @@
 import api from './api';
 import type {
   CreateHealthExamPayload,
+  CreatePatientContextPayload,
   CreatePrescriptionPayload,
   ExtractedPrescriptionData,
   GenerateOverviewPayload,
@@ -8,6 +9,7 @@ import type {
   HealthExamDto,
   HealthExamFilterParams,
   HealthExamProcessingDto,
+  HealthOverviewListParams,
   HealthPatientContextDto,
   HealthPrescriptionDto,
   HealthPrescriptionFilterParams,
@@ -135,6 +137,27 @@ const listPatientContext = async (
   return data;
 };
 
+const getLatestPatientContext = async (
+  targetUserId?: string,
+): Promise<HealthPatientContextDto | null> => {
+  const params = targetUserId ? { targetUserId } : {};
+  const { data } = await api.get<HealthPatientContextDto | null>(
+    '/health/patient-context/latest',
+    { params },
+  );
+  return data;
+};
+
+const createPatientContext = async (
+  payload: CreatePatientContextPayload,
+): Promise<HealthPatientContextDto> => {
+  const { data } = await api.post<HealthPatientContextDto>(
+    '/health/patient-context',
+    payload,
+  );
+  return data;
+};
+
 const getLatestOverview = async (
   targetUserId?: string,
 ): Promise<HealthAiOverviewDto | null> => {
@@ -142,6 +165,24 @@ const getLatestOverview = async (
   const { data } = await api.get<HealthAiOverviewDto | null>(
     '/health/ai-overview/latest',
     { params },
+  );
+  return data;
+};
+
+const listOverviews = async (
+  params: HealthOverviewListParams = {},
+): Promise<HealthAiOverviewDto[]> => {
+  const { data } = await api.get<HealthAiOverviewDto[]>('/health/ai-overview', {
+    params,
+  });
+  return data;
+};
+
+const getOverviewById = async (
+  id: string,
+): Promise<HealthAiOverviewDto> => {
+  const { data } = await api.get<HealthAiOverviewDto>(
+    `/health/ai-overview/${id}`,
   );
   return data;
 };
@@ -217,7 +258,11 @@ export const HealthService = {
   retryProcessing,
   generateOverview,
   getLatestOverview,
+  listOverviews,
+  getOverviewById,
   listPatientContext,
+  getLatestPatientContext,
+  createPatientContext,
   createPrescription,
   listPrescriptions,
   getPrescriptionById,

@@ -128,8 +128,15 @@ export interface HealthAiOverviewDto {
   id: string;
   reportContent: string;
   generatedAt: string;
+  createdAt?: string;
   user: { id: string; name: string };
-  generatedBy: { id: string; name: string };
+  generatedBy?: { id: string; name: string };
+}
+
+export interface HealthOverviewListParams {
+  targetUserId?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface HealthPatientContextDto {
@@ -142,6 +149,11 @@ export interface HealthPatientContextDto {
 export interface GenerateOverviewPayload {
   targetUserId?: string;
   patientContext?: string;
+}
+
+export interface CreatePatientContextPayload {
+  content: string;
+  targetUserId?: string;
 }
 
 // ─── Request DTOs ──────────────────────────────────────────────────────────

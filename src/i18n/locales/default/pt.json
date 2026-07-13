@@ -91,6 +91,10 @@
       "warrantyItems": {
         "title": "Garantias",
         "subtitle": "Produtos em garantia"
+      },
+      "healthReports": {
+        "title": "Relatórios de Saúde",
+        "subtitle": "Visões geradas por IA"
       }
     },
     "filters": {
@@ -231,6 +235,13 @@
       "pageOf": "Página {{current}} de {{total}}",
       "previous": "Anterior",
       "next": "Próximo"
+    },
+    "healthReports": {
+      "title": "Relatórios de Saúde",
+      "detailTitle": "Relatório de Saúde",
+      "error": "Erro ao carregar relatórios de saúde",
+      "noData": "Nenhum relatório de saúde encontrado no período",
+      "unknownMember": "Membro"
     }
   },
   "resources": {
@@ -1098,10 +1109,22 @@
     "title": "Saúde",
     "subtitle": "Gerencie exames e receituários da família",
     "tiles": {
+      "feelingNow": { "title": "Como estou me sentindo agora", "subtitle": "Registre sintomas e como está hoje" },
       "exams": { "title": "Exames", "subtitle": "Cadastrados e em processamento" },
       "search": { "title": "Busca", "subtitle": "Pesquisar exames" },
       "overview": { "title": "Visão Geral", "subtitle": "Relatório IA de saúde" },
       "prescriptions": { "title": "Receituário", "subtitle": "Medicamentos" }
+    },
+    "feelingNow": {
+      "title": "Como estou me sentindo agora",
+      "selectMember": "Para quem é esta descrição",
+      "me": "Eu",
+      "contentLabel": "Como você está se sentindo agora?",
+      "contentHint": "Descreva sintomas, dores, se tomou algum remédio e como está no momento. Será salvo no histórico e usado no relatório de IA.",
+      "contentPlaceholder": "Ex.: Dor de cabeça desde ontem à noite. Tomei um analgésico às 8h. Estou com um pouco de enjoo...",
+      "lastEntryTitle": "Última descrição registrada",
+      "noLastEntry": "Nenhuma descrição registrada ainda para este membro.",
+      "save": "Salvar descrição"
     },
     "examTypes": {
       "LABORATORY": "Laboratorial (Sangue, Urina...)",
@@ -1157,6 +1180,8 @@
       "overviewGenerated": "Relatório de saúde gerado com sucesso!",
       "overviewError": "Erro ao gerar relatório de saúde.",
       "overviewNoNewData": "Não há dados novos para gerar o relatório.",
+      "feelingSaved": "Descrição salva no histórico!",
+      "feelingError": "Erro ao salvar a descrição.",
       "prescriptionCreated": "Receituário cadastrado!",
       "prescriptionCreateError": "Erro ao cadastrar receituário.",
       "prescriptionUpdated": "Receituário atualizado!",
@@ -1274,6 +1299,7 @@
       "me": "Eu",
       "generate": "Gerar Relatório de Saúde",
       "regenerate": "Regenerar Relatório",
+      "generating": "Gerando relatório de saúde",
       "lastGenerated": "Último relatório gerado",
       "noReport": "Nenhum relatório gerado ainda. Cadastre exames ou informe o contexto do paciente e clique em Gerar.",
       "disclaimer": "Este relatório é informativo e não substitui consulta médica profissional.",

@@ -87,6 +87,10 @@
       "warrantyItems": {
         "title": "Pergaminhos de Garantia",
         "subtitle": "Artefatos sob proteção"
+      },
+      "healthReports": {
+        "title": "Pergaminhos de Vitalidade",
+        "subtitle": "Presságios do Oráculo"
       }
     },
     "filters": {
@@ -227,6 +231,13 @@
       "pageOf": "Página {{current}} de {{total}}",
       "previous": "Pergaminho Anterior",
       "next": "Próximo Pergaminho"
+    },
+    "healthReports": {
+      "title": "Pergaminhos de Vitalidade",
+      "detailTitle": "Pergaminho de Vitalidade",
+      "error": "Erro ao consultar os presságios de vitalidade",
+      "noData": "Nenhum presságio de vitalidade neste ciclo",
+      "unknownMember": "Aventureiro"
     }
   },
   "resources": {
@@ -1088,10 +1099,22 @@
     "title": "Vitalidade do Herói",
     "subtitle": "Gerencie os pergaminhos de saúde do clã",
     "tiles": {
+      "feelingNow": { "title": "Como me sinto agora", "subtitle": "Registre sintomas e vitalidade de hoje" },
       "exams": { "title": "Exames", "subtitle": "Registrados e em processamento" },
       "search": { "title": "Buscar", "subtitle": "Pesquisar registros" },
       "overview": { "title": "Oráculo da Saúde", "subtitle": "Relatório do oráculo" },
       "prescriptions": { "title": "Poções", "subtitle": "Medicamentos e fórmulas" }
+    },
+    "feelingNow": {
+      "title": "Como me sinto agora",
+      "selectMember": "Para qual herói é este relato",
+      "me": "Eu",
+      "contentLabel": "Como você está se sentindo agora?",
+      "contentHint": "Descreva sintomas, dores, poções tomadas e como está no momento. Será guardado no pergaminho e usado pelo oráculo.",
+      "contentPlaceholder": "Ex.: Dor de cabeça desde a noite passada. Tomei uma poção às 8h. Estou com um leve enjoo...",
+      "lastEntryTitle": "Último relato registrado",
+      "noLastEntry": "Nenhum relato registrado ainda para este herói.",
+      "save": "Guardar relato"
     },
     "examTypes": {
       "LABORATORY": "Laboratorial (Sangue, Urina...)",
@@ -1147,6 +1170,8 @@
       "overviewGenerated": "Visão oracular gerada com sucesso!",
       "overviewError": "Erro ao consultar o oráculo.",
       "overviewNoNewData": "Não há dados novos para consultar o oráculo.",
+      "feelingSaved": "Relato guardado no pergaminho!",
+      "feelingError": "Erro ao guardar o relato.",
       "prescriptionCreated": "Receita de poções cadastrada!",
       "prescriptionCreateError": "Erro ao cadastrar receita.",
       "prescriptionUpdated": "Receita atualizada!",
@@ -1264,6 +1289,7 @@
       "me": "Eu",
       "generate": "Consultar o Oráculo",
       "regenerate": "Reconsultar o Oráculo",
+      "generating": "Consultando o oráculo",
       "lastGenerated": "Última consulta oracular",
       "noReport": "O oráculo ainda não foi consultado. Registre exames ou informe o contexto do herói e consulte o oráculo.",
       "disclaimer": "Esta visão oracular é informativa e não substitui consulta com um curandeiro humano.",

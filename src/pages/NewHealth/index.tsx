@@ -3,6 +3,7 @@ import {
   FiActivity,
   FiClipboard,
   FiFileText,
+  FiHeart,
   FiSearch,
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
@@ -25,6 +26,13 @@ type Tile = {
 const BASE_PATH = '/new-resources/health';
 
 const baseTiles: Tile[] = [
+  {
+    key: 'feelingNow',
+    icon: FiHeart,
+    titleKey: 'health.tiles.feelingNow.title',
+    subtitleKey: 'health.tiles.feelingNow.subtitle',
+    route: `${BASE_PATH}/feeling-now`,
+  },
   {
     key: 'exams',
     icon: FiClipboard,

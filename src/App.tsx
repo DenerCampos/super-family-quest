@@ -10,6 +10,7 @@ import { useVisualTheme } from "./hooks/useVisualTheme";
 import { resolveChakraColor } from "./utils/resolveColor";
 import Dashboard from "./pages/Dashboard";
 import { ReportView } from "./pages/Dashboard/ReportView";
+import { HealthReportDetailView } from "./pages/Dashboard/HealthReportDetailView";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NewChallenge from "./pages/NewChallenge";
@@ -39,6 +40,7 @@ import { HealthPendingView } from "./pages/NewHealth/HealthPendingView";
 import { HealthPendingDetailView } from "./pages/NewHealth/HealthPendingDetailView";
 import { HealthSearchView } from "./pages/NewHealth/HealthSearchView";
 import { HealthOverviewView } from "./pages/NewHealth/HealthOverviewView";
+import { HealthFeelingNowView } from "./pages/NewHealth/HealthFeelingNowView";
 import { HealthPrescriptionsView } from "./pages/NewHealth/HealthPrescriptionsView";
 import { HealthPrescriptionDetailView } from "./pages/NewHealth/HealthPrescriptionDetailView";
 import { HealthPrescriptionFormView } from "./pages/NewHealth/HealthPrescriptionFormView";
@@ -102,6 +104,14 @@ export default function App() {
             element={
               <RequireAuth>
                 <Dashboard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/dashboard/health-report/:overviewId"
+            element={
+              <RequireAuth>
+                <HealthReportDetailView />
               </RequireAuth>
             }
           />
@@ -260,6 +270,7 @@ export default function App() {
           />
           {/* SP-123 — Módulo de Saúde */}
           <Route path="/new-resources/health" element={<RequireAuth><NewHealthHub /></RequireAuth>} />
+          <Route path="/new-resources/health/feeling-now" element={<RequireAuth><HealthFeelingNowView /></RequireAuth>} />
           <Route path="/new-resources/health/register" element={<RequireAuth><HealthRegisterView /></RequireAuth>} />
           <Route path="/new-resources/health/exams" element={<RequireAuth><HealthExamsView /></RequireAuth>} />
           <Route path="/new-resources/health/exams/:id/edit" element={<RequireAuth><HealthExamEditView /></RequireAuth>} />
