@@ -10,6 +10,7 @@ import { useVisualTheme } from "./hooks/useVisualTheme";
 import { resolveChakraColor } from "./utils/resolveColor";
 import Dashboard from "./pages/Dashboard";
 import { ReportView } from "./pages/Dashboard/ReportView";
+import { HealthReportDetailView } from "./pages/Dashboard/HealthReportDetailView";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NewChallenge from "./pages/NewChallenge";
@@ -30,6 +31,19 @@ import { ShoppingListDetailView } from "./pages/NewResources/ShoppingListDetailV
 import { RecipesView } from "./pages/NewResources/RecipesView";
 import { RecipeDetailView } from "./pages/NewResources/RecipeDetailView";
 import { RecipeFormView } from "./pages/NewResources/RecipeFormView";
+import NewHealthHub from "./pages/NewHealth";
+import { HealthRegisterView } from "./pages/NewHealth/HealthRegisterView";
+import { HealthExamsView } from "./pages/NewHealth/HealthExamsView";
+import { HealthExamDetailView } from "./pages/NewHealth/HealthExamDetailView";
+import { HealthExamEditView } from "./pages/NewHealth/HealthExamEditView";
+import { HealthPendingView } from "./pages/NewHealth/HealthPendingView";
+import { HealthPendingDetailView } from "./pages/NewHealth/HealthPendingDetailView";
+import { HealthSearchView } from "./pages/NewHealth/HealthSearchView";
+import { HealthOverviewView } from "./pages/NewHealth/HealthOverviewView";
+import { HealthFeelingNowView } from "./pages/NewHealth/HealthFeelingNowView";
+import { HealthPrescriptionsView } from "./pages/NewHealth/HealthPrescriptionsView";
+import { HealthPrescriptionDetailView } from "./pages/NewHealth/HealthPrescriptionDetailView";
+import { HealthPrescriptionFormView } from "./pages/NewHealth/HealthPrescriptionFormView";
 import NotFoundPage from "./pages/NotFoundPage";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
@@ -90,6 +104,14 @@ export default function App() {
             element={
               <RequireAuth>
                 <Dashboard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/dashboard/health-report/:overviewId"
+            element={
+              <RequireAuth>
+                <HealthReportDetailView />
               </RequireAuth>
             }
           />
@@ -246,6 +268,21 @@ export default function App() {
               </RequireAuth>
             }
           />
+          {/* SP-123 — Módulo de Saúde */}
+          <Route path="/new-resources/health" element={<RequireAuth><NewHealthHub /></RequireAuth>} />
+          <Route path="/new-resources/health/feeling-now" element={<RequireAuth><HealthFeelingNowView /></RequireAuth>} />
+          <Route path="/new-resources/health/register" element={<RequireAuth><HealthRegisterView /></RequireAuth>} />
+          <Route path="/new-resources/health/exams" element={<RequireAuth><HealthExamsView /></RequireAuth>} />
+          <Route path="/new-resources/health/exams/:id/edit" element={<RequireAuth><HealthExamEditView /></RequireAuth>} />
+          <Route path="/new-resources/health/exams/:id" element={<RequireAuth><HealthExamDetailView /></RequireAuth>} />
+          <Route path="/new-resources/health/pending" element={<RequireAuth><HealthPendingView /></RequireAuth>} />
+          <Route path="/new-resources/health/pending/:id" element={<RequireAuth><HealthPendingDetailView /></RequireAuth>} />
+          <Route path="/new-resources/health/search" element={<RequireAuth><HealthSearchView /></RequireAuth>} />
+          <Route path="/new-resources/health/overview" element={<RequireAuth><HealthOverviewView /></RequireAuth>} />
+          <Route path="/new-resources/health/prescriptions" element={<RequireAuth><HealthPrescriptionsView /></RequireAuth>} />
+          <Route path="/new-resources/health/prescriptions/new" element={<RequireAuth><HealthPrescriptionFormView /></RequireAuth>} />
+          <Route path="/new-resources/health/prescriptions/:id/edit" element={<RequireAuth><HealthPrescriptionFormView /></RequireAuth>} />
+          <Route path="/new-resources/health/prescriptions/:id" element={<RequireAuth><HealthPrescriptionDetailView /></RequireAuth>} />
           {/* SP-78 — Sistema de Missões Dinâmicas */}
           <Route
             path="/new-challenge"

@@ -6,6 +6,7 @@ import {
   FiShoppingBag,
   FiPackage,
   FiShield,
+  FiActivity,
 } from 'react-icons/fi';
 import { FaCoins } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
@@ -57,6 +58,12 @@ const tiles: { key: ReportKey; icon: typeof FiPieChart; titleKey: string; subtit
     icon: FiShield,
     titleKey: 'dashboard.tiles.warrantyItems.title',
     subtitleKey: 'dashboard.tiles.warrantyItems.subtitle',
+  },
+  {
+    key: 'healthReports',
+    icon: FiActivity,
+    titleKey: 'dashboard.tiles.healthReports.title',
+    subtitleKey: 'dashboard.tiles.healthReports.subtitle',
   },
 ];
 

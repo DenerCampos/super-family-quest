@@ -87,6 +87,10 @@
       "warrantyItems": {
         "title": "Pergaminhos de Garantia",
         "subtitle": "Artefatos sob proteção"
+      },
+      "healthReports": {
+        "title": "Pergaminhos de Vitalidade",
+        "subtitle": "Presságios do Oráculo"
       }
     },
     "filters": {
@@ -227,6 +231,13 @@
       "pageOf": "Página {{current}} de {{total}}",
       "previous": "Pergaminho Anterior",
       "next": "Próximo Pergaminho"
+    },
+    "healthReports": {
+      "title": "Pergaminhos de Vitalidade",
+      "detailTitle": "Pergaminho de Vitalidade",
+      "error": "Erro ao consultar os presságios de vitalidade",
+      "noData": "Nenhum presságio de vitalidade neste ciclo",
+      "unknownMember": "Aventureiro"
     }
   },
   "resources": {
@@ -823,6 +834,10 @@
       "quests": {
         "title": "Missões",
         "subtitle": "Tarefas e missões do clã"
+      },
+      "health": {
+        "title": "Vitalidade",
+        "subtitle": "Pergaminhos de cura e poções"
       }
     }
   },
@@ -1079,5 +1094,268 @@
   },
   "demoLogin": {
     "loading": "Adentrando o reino como viajante..."
+  },
+  "health": {
+    "title": "Vitalidade do Herói",
+    "subtitle": "Gerencie os pergaminhos de saúde do clã",
+    "tiles": {
+      "feelingNow": { "title": "Como me sinto agora", "subtitle": "Registre sintomas e vitalidade de hoje" },
+      "exams": { "title": "Exames", "subtitle": "Registrados e em processamento" },
+      "search": { "title": "Buscar", "subtitle": "Pesquisar registros" },
+      "overview": { "title": "Oráculo da Saúde", "subtitle": "Relatório do oráculo" },
+      "prescriptions": { "title": "Poções", "subtitle": "Medicamentos e fórmulas" }
+    },
+    "feelingNow": {
+      "title": "Como me sinto agora",
+      "selectMember": "Para qual herói é este relato",
+      "me": "Eu",
+      "contentLabel": "Como você está se sentindo agora?",
+      "contentHint": "Descreva sintomas, dores, poções tomadas e como está no momento. Será guardado no pergaminho e usado pelo oráculo.",
+      "contentPlaceholder": "Ex.: Dor de cabeça desde a noite passada. Tomei uma poção às 8h. Estou com um leve enjoo...",
+      "lastEntryTitle": "Último relato registrado",
+      "noLastEntry": "Nenhum relato registrado ainda para este herói.",
+      "save": "Guardar relato"
+    },
+    "examTypes": {
+      "LABORATORY": "Laboratorial (Sangue, Urina...)",
+      "IMAGING": "Imagem (Visão arcana, TC, RM...)",
+      "FUNCTIONAL": "Funcional (ECG, Holter, MAPA...)",
+      "PROCEDURE": "Procedimento (Endoscopia, Biópsia...)",
+      "OTHER": "Outro"
+    },
+    "daysOfWeek": {
+      "Mon": "Seg",
+      "Tue": "Ter",
+      "Wed": "Qua",
+      "Thu": "Qui",
+      "Fri": "Sex",
+      "Sat": "Sáb",
+      "Sun": "Dom"
+    },
+    "common": {
+      "abnormal": "Anormal",
+      "abnormalMarker": "!"
+    },
+    "doctorPrefix": "Curandeiro(a) {{name}}",
+    "upload": {
+      "fileFormats": "PDF, JPG, PNG — máx. {{maxMb}} MB por pergaminho"
+    },
+    "validation": {
+      "itemNameRequired": "Informe o nome do exame",
+      "itemsMin": "Adicione ao menos um resultado com nome",
+      "medicationNameRequired": "Informe o nome da poção",
+      "scheduleTimesMin": "Adicione ao menos um horário",
+      "medicationsMin": "Adicione ao menos uma poção",
+      "doctorNameRequired": "Informe o mestre curandeiro",
+      "prescriptionDateRequired": "Informe a data da receita"
+    },
+    "toast": {
+      "examCreated": "Exame registrado no grimório!",
+      "examCreateError": "Erro ao registrar exame.",
+      "examUpdated": "Registro atualizado!",
+      "examUpdateError": "Erro ao atualizar registro.",
+      "examDeleted": "Registro removido do grimório.",
+      "examDeleteError": "Erro ao remover registro.",
+      "filesUploaded": "{{count}} pergaminho(s) enviado(s) ao oráculo.",
+      "uploadError": "Erro ao enviar pergaminhos.",
+      "fileTooLarge": "Pergaminho excede o limite de 10 MB.",
+      "invalidFileType": "Tipo de arquivo não permitido. Use PDF, JPG ou PNG.",
+      "examSaved": "Registro confirmado no grimório!",
+      "examSaveError": "Erro ao confirmar registro.",
+      "fileDiscarded": "Pergaminho descartado.",
+      "discardError": "Erro ao descartar pergaminho.",
+      "retrySuccess": "Decifragem concluída. Revise os dados extraídos.",
+      "retryFailed": "A decifragem falhou novamente.",
+      "retryError": "Erro ao tentar decifrar novamente.",
+      "overviewGenerated": "Visão oracular gerada com sucesso!",
+      "overviewError": "Erro ao consultar o oráculo.",
+      "overviewNoNewData": "Não há dados novos para consultar o oráculo.",
+      "feelingSaved": "Relato guardado no pergaminho!",
+      "feelingError": "Erro ao guardar o relato.",
+      "prescriptionCreated": "Receita de poções cadastrada!",
+      "prescriptionCreateError": "Erro ao cadastrar receita.",
+      "prescriptionUpdated": "Receita atualizada!",
+      "prescriptionUpdateError": "Erro ao atualizar receita.",
+      "prescriptionDeleted": "Receita descartada.",
+      "prescriptionDeleteError": "Erro ao descartar receita.",
+      "prescriptionAnalyzed": "Receita decifrada! Revise os dados antes de gravar no grimório.",
+      "prescriptionAnalyzeError": "O oráculo não conseguiu ler a receita. Tente de novo ou preencha manualmente."
+    },
+    "register": {
+      "title": "Registrar Exame",
+      "tabs": {
+        "manual": "Manual",
+        "upload": "Pergaminho / Imagem"
+      },
+      "targetMember": "Para qual herói?",
+      "targetMemberPlaceholder": "Selecione um herói (padrão: você)",
+      "examType": "Tipo de Exame",
+      "labName": "Clínica / Castelo / Guilda",
+      "labNamePlaceholder": "Ex: Torre dos Alquimistas...",
+      "doctorName": "Mestre solicitante",
+      "doctorNamePlaceholder": "Nome do mestre curandeiro",
+      "examDate": "Data do Exame",
+      "notes": "Anotações do grimório",
+      "notesPlaceholder": "Observações adicionais...",
+      "items": "Resultados",
+      "itemName": "Nome do exame",
+      "resultValue": "Resultado",
+      "resultUnit": "Unidade",
+      "referenceRange": "Referência",
+      "itemNotes": "Observações do item",
+      "findings": "Visão / Laudo do oráculo",
+      "conclusion": "Veredicto / Conclusão",
+      "addItem": "Adicionar item",
+      "save": "Registrar no Grimório",
+      "uploadHint": "Envie pergaminhos (PDFs) ou imagens de exames. O oráculo irá decifrar e extrair os dados para conferência.",
+      "clickToSelect": "Clique para selecionar pergaminhos",
+      "uploadAndProcess": "Enviar ao Oráculo"
+    },
+    "pending": {
+      "title": "Pergaminhos Pendentes",
+      "empty": "Nenhum pergaminho em processamento ou aguardando revisão.",
+      "unknownFile": "Pergaminho sem nome",
+      "for": "Para o herói",
+      "clickToReview": "Clique para revisar e confirmar",
+      "waitingProcessingHint": "Aguardando o oráculo. A lista atualiza automaticamente.",
+      "processingFailedRetryHint": "O oráculo tentará decifrar novamente daqui {{hours}} horas, ou clique em Tentar novamente para executar a análise agora.",
+      "processingFailedRetrySoon": "O oráculo tentará decifrar novamente em breve, ou clique em Tentar novamente para executar a análise agora.",
+      "processingFailedRetryCountdownHours": "O oráculo tentará decifrar novamente daqui {{hours}} h, ou clique em Tentar novamente para executar a análise agora.",
+      "processingFailedRetryCountdownMinutes": "O oráculo tentará decifrar novamente daqui {{minutes}} min, ou clique em Tentar novamente para executar a análise agora.",
+      "processingFailedRetryCountdownHoursMinutes": "O oráculo tentará decifrar novamente daqui {{hours}} h e {{minutes}} min, ou clique em Tentar novamente para executar a análise agora.",
+      "retryFailed": "Tentar novamente",
+      "removeFailed": "Remover",
+      "notFound": "Pergaminho não encontrado.",
+      "status": {
+        "QUEUED": "Aguardando processamento",
+        "PROCESSING": "Decifrando",
+        "COMPLETED": "Pronto para revisão",
+        "FAILED": "Falhou"
+      },
+      "detail": {
+        "title": "Revisar Pergaminho",
+        "reviewData": "Dados decifrados (edite se necessário)",
+        "extractedItems": "Resultados extraídos",
+        "save": "Confirmar no Grimório",
+        "discard": "Descartar"
+      }
+    },
+    "exams": {
+      "title": "Exames",
+      "new": "Nova",
+      "register": "Registrar exame",
+      "registeredEmpty": "Nenhum exame registrado ainda.",
+      "unnamedExam": "Exame sem identificação",
+      "tabs": {
+        "registered": "Registrados",
+        "processing": "Em processamento"
+      },
+      "notFound": "Registro não encontrado.",
+      "detail": {
+        "title": "Exame",
+        "edit": "Editar",
+        "delete": "Remover do Grimório",
+        "attachments": "Pergaminhos anexos",
+        "attachmentFallback": "Pergaminho anexo",
+        "results": "Resultados",
+        "confirmDeleteTitle": "Remover registro?",
+        "confirmDeleteMessage": "Esta ação não pode ser desfeita. O registro e os pergaminhos anexos serão removidos.",
+        "confirmDeleteConfirm": "Remover",
+        "confirmDeleteCancel": "Cancelar"
+      },
+      "form": {
+        "titleEdit": "Editar Registro",
+        "save": "Salvar alterações",
+        "attachmentsReadOnly": "Os pergaminhos anexos não podem ser alterados aqui. Na visualização você pode baixá-los."
+      }
+    },
+    "search": {
+      "title": "Busca no Grimório",
+      "allTypes": "Todos os tipos",
+      "allMembers": "Todos os heróis",
+      "byExamName": "Buscar por tipo de exame...",
+      "byDoctorName": "Buscar por curandeiro...",
+      "byLabName": "Buscar por clínica / guilda...",
+      "search": "Buscar",
+      "noResults": "Nenhum registro encontrado para os filtros.",
+      "unknownLab": "Clínica não identificada",
+      "referenceRange": "(ref: {{range}})",
+      "viewHistory": "Ver evolução",
+      "evolution": "Evolução"
+    },
+    "overview": {
+      "title": "Oráculo da Saúde",
+      "selectMember": "Selecionar herói",
+      "me": "Eu",
+      "generate": "Consultar o Oráculo",
+      "regenerate": "Reconsultar o Oráculo",
+      "generating": "Consultando o oráculo",
+      "lastGenerated": "Última consulta oracular",
+      "noReport": "O oráculo ainda não foi consultado. Registre exames ou informe o contexto do herói e consulte o oráculo.",
+      "disclaimer": "Esta visão oracular é informativa e não substitui consulta com um curandeiro humano.",
+      "patientContextLabel": "Informações adicionais sobre o herói",
+      "patientContextHint": "Opcional. Descreva sintomas, relatos de consultas, doenças conhecidas ou suspeitas. Será salvo no grimório e enviado ao oráculo.",
+      "patientContextPlaceholder": "Ex.: Dor abdominal há 2 semanas. Última consulta mencionou gastrite. Histórico de diabetes na família...",
+      "contextHistory": "Grimório de informações",
+      "newDataHint": "O oráculo só responde se houver exames novos/atualizados ou novas informações desde a última consulta."
+    },
+    "prescriptions": {
+      "title": "Poções e Fórmulas",
+      "new": "Nova",
+      "empty": "Nenhuma poção cadastrada.",
+      "more": "poção(ões)",
+      "activeCount": "{{count}} em uso",
+      "finishedCount": "{{count}} concluída(s)",
+      "for": "Para o herói",
+      "notFound": "Receituário não encontrado.",
+      "detail": {
+        "title": "Poções",
+        "medications": "Poções do grimório",
+        "edit": "Editar",
+        "delete": "Descartar Receituário",
+        "confirmDeleteTitle": "Descartar receituário?",
+        "confirmDeleteMessage": "Esta ação não pode ser desfeita. Todas as poções desta receita serão removidas.",
+        "confirmDeleteConfirm": "Descartar",
+        "confirmDeleteCancel": "Cancelar",
+        "ongoing": "Em uso",
+        "finished": "Concluído",
+        "everyday": "Todos os dias",
+        "from": "De",
+        "until": "até",
+        "noEndDate": "uso contínuo"
+      },
+      "form": {
+        "titleNew": "Nova Receita de Poções",
+        "titleEdit": "Editar Receita",
+        "doctorName": "Mestre Curandeiro",
+        "prescriptionDate": "Data da Receita",
+        "notes": "Anotações do grimório",
+        "medications": "Poções",
+        "medication": "Poção",
+        "medicationName": "Nome da Poção",
+        "dosage": "Dosagem",
+        "dosagePlaceholder": "Ex: 1 frasco de 10ml",
+        "scheduleTimes": "Horários de consumo",
+        "addTime": "Adicionar horário",
+        "daysOfWeek": "Dias da jornada",
+        "everyDay": "Toda jornada",
+        "startDate": "Início",
+        "endDate": "Fim",
+        "endDateHint": "Deixe vazio para uso contínuo",
+        "itemNotes": "Observações",
+        "addMedication": "Adicionar Poção",
+        "save": "Salvar no Grimório",
+        "scanTitle": "Decifrar receita com o oráculo",
+        "scanHint": "Fotografe, escolha da galeria ou envie um PDF. A IA preenche os campos abaixo para revisão.",
+        "scanCamera": "Tirar foto",
+        "scanGallery": "Grimório visual",
+        "scanPdf": "Pergaminho PDF",
+        "analyzing": "Consultando o oráculo...",
+        "manualHint": "Ou inscreva manualmente os dados abaixo.",
+        "cameraTitle": "Fotografar receita",
+        "cameraInstructions": "Enquadre a receita na tela e toque em Tirar Foto.",
+        "cameraAccessError": "Não foi possível acessar a câmera. Verifique as permissões do navegador."
+      }
+    }
   }
 }

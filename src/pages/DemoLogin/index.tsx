@@ -6,6 +6,7 @@ import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useLoginTheme } from '../../hooks/useLoginTheme';
 import { LoginThemeProvider } from '../../components/LoginThemeProvider';
+import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
 
 const DemoLoginContent = () => {
   const { key } = useParams<{ key: string }>();
@@ -29,7 +30,7 @@ const DemoLoginContent = () => {
     api
       .demoLogin(key)
       .then(({ accessToken }) => {
-        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
         navigate('/home', { replace: true });
       })
       .catch(() => {

@@ -1,4 +1,5 @@
 export const LOCAL_STORAGE_KEYS = {
+  ACCESS_TOKEN: 'accessToken',
   SHOW_VALUES: '@SuperFamilyQuest:showValues',
   USER_THEME: '@SuperFamilyQuest:userTheme',
   RECURRING_EXPENSE_SNOOZE_UNTIL: '@SuperFamilyQuest:recurringExpenseSnoozeUntil',
