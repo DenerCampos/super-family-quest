@@ -14,6 +14,7 @@
     "required": "Item necessário para a jornada",
     "minLength": "Precisa de pelo menos {{count}} runas antigas",
     "close": "Fechar Portal Mágico",
+    "cancel": "Recuar",
     "information": "Consultar Grimório",
     "hideValues": "Ocultar tesouros",
     "showValues": "Revelar tesouros",
