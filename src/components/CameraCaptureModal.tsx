@@ -204,23 +204,27 @@ export const CameraCaptureModal = ({
             overflow="hidden"
             bg={cameraPreviewBg}
           >
+            <Box
+              as="video"
+              ref={videoRef}
+              playsInline
+              autoPlay
+              muted
+              w="100%"
+              h="100%"
+              objectFit="cover"
+            />
             {loading ? (
-              <Flex h="100%" minH="45vh" align="center" justify="center">
+              <Flex
+                position="absolute"
+                inset={0}
+                align="center"
+                justify="center"
+                bg={cameraPreviewBg}
+              >
                 <Spinner color={primaryBtnText} size="lg" />
               </Flex>
-            ) : (
-              <Box
-                as="video"
-                ref={videoRef}
-                playsInline
-                autoPlay
-                muted
-                w="100%"
-                h="100%"
-                minH="45vh"
-                objectFit="cover"
-              />
-            )}
+            ) : null}
           </Box>
 
           {error ? (
