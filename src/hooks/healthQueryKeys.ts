@@ -1,5 +1,7 @@
 import type {
   HealthExamFilterParams,
+  HealthLabItemEvolutionParams,
+  HealthLabItemNamesParams,
   HealthOverviewListParams,
   HealthPrescriptionFilterParams,
 } from '../types/health';
@@ -8,10 +10,17 @@ export const healthQueryKeys = {
   all: (viewerId: string) => ['health', viewerId] as const,
   exams: (viewerId: string, params?: HealthExamFilterParams) =>
     ['health', viewerId, 'exams', params] as const,
-  exam: (viewerId: string, id: string) => ['health', viewerId, 'exam', id] as const,
+  exam: (viewerId: string, id: string) =>
+    ['health', viewerId, 'exam', id] as const,
   processing: (viewerId: string) => ['health', viewerId, 'processing'] as const,
   processingItem: (viewerId: string, id: string) =>
     ['health', viewerId, 'processing', id] as const,
+  labItemNames: (viewerId: string, params?: HealthLabItemNamesParams) =>
+    ['health', viewerId, 'labItemNames', params] as const,
+  labItemEvolution: (
+    viewerId: string,
+    params?: HealthLabItemEvolutionParams,
+  ) => ['health', viewerId, 'labItemEvolution', params] as const,
   overview: (viewerId: string, targetUserId?: string) =>
     ['health', viewerId, 'overview', targetUserId ?? 'self'] as const,
   overviewAll: (viewerId: string) => ['health', viewerId, 'overview'] as const,
@@ -24,7 +33,12 @@ export const healthQueryKeys = {
   patientContextAll: (viewerId: string) =>
     ['health', viewerId, 'patientContext'] as const,
   latestPatientContext: (viewerId: string, targetUserId?: string) =>
-    ['health', viewerId, 'latestPatientContext', targetUserId ?? 'self'] as const,
+    [
+      'health',
+      viewerId,
+      'latestPatientContext',
+      targetUserId ?? 'self',
+    ] as const,
   latestPatientContextAll: (viewerId: string) =>
     ['health', viewerId, 'latestPatientContext'] as const,
   prescriptions: (viewerId: string, params?: HealthPrescriptionFilterParams) =>

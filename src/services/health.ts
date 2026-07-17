@@ -7,8 +7,11 @@ import type {
   GenerateOverviewPayload,
   HealthAiOverviewDto,
   HealthExamDto,
+  HealthExamEvolutionPointDto,
   HealthExamFilterParams,
   HealthExamProcessingDto,
+  HealthLabItemEvolutionParams,
+  HealthLabItemNamesParams,
   HealthOverviewListParams,
   HealthPatientContextDto,
   HealthPrescriptionDto,
@@ -60,6 +63,25 @@ const updateExam = async (
 
 const deleteExam = async (id: string): Promise<void> => {
   await api.delete(`/health/exams/${id}`);
+};
+
+const listLabItemNames = async (
+  params: HealthLabItemNamesParams = {},
+): Promise<string[]> => {
+  const { data } = await api.get<string[]>('/health/exam-items/names', {
+    params,
+  });
+  return data;
+};
+
+const getLabItemEvolution = async (
+  params: HealthLabItemEvolutionParams,
+): Promise<HealthExamEvolutionPointDto[]> => {
+  const { data } = await api.get<HealthExamEvolutionPointDto[]>(
+    '/health/exam-items/evolution',
+    { params },
+  );
+  return data;
 };
 
 // ─── Upload / Processamento ───────────────────────────────────────────────────
@@ -250,6 +272,8 @@ export const HealthService = {
   getExamById,
   updateExam,
   deleteExam,
+  listLabItemNames,
+  getLabItemEvolution,
   uploadFiles,
   listProcessing,
   getProcessingById,

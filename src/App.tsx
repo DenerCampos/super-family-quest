@@ -39,6 +39,7 @@ import { HealthExamEditView } from "./pages/NewHealth/HealthExamEditView";
 import { HealthPendingView } from "./pages/NewHealth/HealthPendingView";
 import { HealthPendingDetailView } from "./pages/NewHealth/HealthPendingDetailView";
 import { HealthSearchView } from "./pages/NewHealth/HealthSearchView";
+import { HealthEvolutionView } from "./pages/NewHealth/HealthEvolutionView";
 import { HealthOverviewView } from "./pages/NewHealth/HealthOverviewView";
 import { HealthFeelingNowView } from "./pages/NewHealth/HealthFeelingNowView";
 import { HealthPrescriptionsView } from "./pages/NewHealth/HealthPrescriptionsView";
@@ -278,6 +279,7 @@ export default function App() {
           <Route path="/new-resources/health/pending" element={<RequireAuth><HealthPendingView /></RequireAuth>} />
           <Route path="/new-resources/health/pending/:id" element={<RequireAuth><HealthPendingDetailView /></RequireAuth>} />
           <Route path="/new-resources/health/search" element={<RequireAuth><HealthSearchView /></RequireAuth>} />
+          <Route path="/new-resources/health/evolution" element={<RequireAuth><HealthEvolutionView /></RequireAuth>} />
           <Route path="/new-resources/health/overview" element={<RequireAuth><HealthOverviewView /></RequireAuth>} />
           <Route path="/new-resources/health/prescriptions" element={<RequireAuth><HealthPrescriptionsView /></RequireAuth>} />
           <Route path="/new-resources/health/prescriptions/new" element={<RequireAuth><HealthPrescriptionFormView /></RequireAuth>} />

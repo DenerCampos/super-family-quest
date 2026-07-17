@@ -14,16 +14,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { FiAlertTriangle, FiSearch, FiTrendingUp } from 'react-icons/fi';
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { FiAlertTriangle, FiSearch } from 'react-icons/fi';
 import { FixedAppShell } from '../../components/FixedAppShell';
 import { PageTitleBar } from '../../components/PageTitleBar';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -51,7 +42,6 @@ export const HealthSearchView = () => {
   const [userId, setUserId] = useState('');
   const [filter, setFilter] = useState<HealthExamFilterParams>({});
   const [selectedExam, setSelectedExam] = useState<HealthExamDto | null>(null);
-  const [showHistory, setShowHistory] = useState(false);
 
   const { data, isLoading } = useHealthExams(filter);
   const examTypeFilterOptions = getHealthExamTypeFilterOptions(t);
@@ -71,24 +61,6 @@ export const HealthSearchView = () => {
     });
   };
 
-  const historyData = (() => {
-    if (!selectedExam || !data?.data) return [];
-    const targetItemName = selectedExam.items[0]?.itemName;
-    if (!targetItemName) return [];
-
-    return data.data
-      .filter((e) => e.items.some((i) => i.itemName === targetItemName && i.resultValue))
-      .map((e) => {
-        const item = e.items.find((i) => i.itemName === targetItemName);
-        return {
-          date: e.examDate ?? '',
-          value: parseFloat(item?.resultValue ?? '0') || 0,
-          isAbnormal: item?.isAbnormal ?? false,
-        };
-      })
-      .sort((a, b) => a.date.localeCompare(b.date));
-  })();
-
   const bg = getColor('background.resources');
   const cardBg = getColor('background.familyGroup.card');
   const borderColor = getColor('border.familyGroup.card');
@@ -99,7 +71,6 @@ export const HealthSearchView = () => {
   const primaryBtnText = getColor('button.text.primary');
   const warningColor = getColor('status.warning');
   const infoColor = getColor('status.info');
-  const chartStroke = getColor('status.info');
 
   return (
     <FixedAppShell bg={bg}>
@@ -172,7 +143,6 @@ export const HealthSearchView = () => {
                 cursor="pointer"
                 onClick={() => {
                   setSelectedExam(selectedExam?.id === exam.id ? null : exam);
-                  setShowHistory(false);
                 }}
               >
                 <Flex justify="space-between" align="flex-start" mb={2}>
@@ -223,39 +193,6 @@ export const HealthSearchView = () => {
                         )}
                       </Flex>
                     ))}
-
-                    {exam.examType === 'LABORATORY' && exam.items.some((i) => i.resultValue) && (
-                      <Button
-                        size="xs"
-                        variant="ghost"
-                        leftIcon={<Icon as={FiTrendingUp} />}
-                        color={textSub}
-                        onClick={(e) => { e.stopPropagation(); setShowHistory((v) => !v); }}
-                        mt={1}
-                      >
-                        {t('health.search.viewHistory')}
-                      </Button>
-                    )}
-
-                    {showHistory && historyData.length > 1 && (
-                      <Box mt={2} pt={2} borderTopWidth="1px" borderColor={borderColor}>
-                        <Text color={textSub} fontSize="xs" mb={2}>
-                          {t('health.search.evolution')}: {exam.items[0]?.itemName}
-                        </Text>
-                        <ResponsiveContainer width="100%" height={120}>
-                          <LineChart data={historyData}>
-                            <CartesianGrid strokeDasharray="3 3" stroke={borderColor} />
-                            <XAxis dataKey="date" tick={{ fontSize: 9, fill: textSub }} />
-                            <YAxis tick={{ fontSize: 9, fill: textSub }} />
-                            <Tooltip
-                              contentStyle={{ background: cardBg, border: `1px solid ${borderColor}` }}
-                              labelStyle={{ color: textPrimary, fontSize: 11 }}
-                            />
-                            <Line type="monotone" dataKey="value" stroke={chartStroke} strokeWidth={2} dot={{ r: 3 }} />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </Box>
-                    )}
                   </Stack>
                 )}
               </Box>
