@@ -1113,6 +1113,7 @@
       "feelingNow": { "title": "Como estou me sentindo agora", "subtitle": "Registre sintomas e como está hoje" },
       "exams": { "title": "Exames", "subtitle": "Cadastrados e em processamento" },
       "search": { "title": "Busca", "subtitle": "Pesquisar exames" },
+      "evolution": { "title": "Evolução", "subtitle": "Gráficos por exame laboratorial" },
       "overview": { "title": "Visão Geral", "subtitle": "Relatório IA de saúde" },
       "prescriptions": { "title": "Receituário", "subtitle": "Medicamentos" }
     },
@@ -1290,9 +1291,32 @@
       "search": "Buscar",
       "noResults": "Nenhum exame encontrado para os filtros informados.",
       "unknownLab": "Laboratório não identificado",
-      "referenceRange": "(ref: {{range}})",
-      "viewHistory": "Ver evolução",
-      "evolution": "Evolução"
+      "referenceRange": "(ref: {{range}})"
+    },
+    "evolution": {
+      "title": "Evolução de Exames",
+      "me": "Eu",
+      "searchPlaceholder": "Filtrar exames por nome...",
+      "selectExamPlaceholder": "Selecione um exame",
+      "loadingExams": "Carregando exames disponíveis...",
+      "noExams": "Nenhum exame laboratorial com valor encontrado para este membro.",
+      "selectHint": "Selecione um exame no filtro para ver a evolução ao longo do tempo.",
+      "notEnoughData": "São necessários pelo menos 2 resultados numéricos no período para montar o gráfico.",
+      "loadNamesError": "Não foi possível carregar a lista de exames.",
+      "loadEvolutionError": "Não foi possível carregar a evolução do exame.",
+      "chartTitle": "Evolução",
+      "abnormalCount": "{{count}} fora da referência",
+      "period": "Período: {{from}} — {{to}}",
+      "info": {
+        "title": "Resumo",
+        "lastValue": "Último valor",
+        "variation": "Variação",
+        "min": "Mínimo",
+        "max": "Máximo",
+        "avg": "Média",
+        "count": "Pontos",
+        "reference": "Referência (último exame)"
+      }
     },
     "overview": {
       "title": "Visão Geral de Saúde",

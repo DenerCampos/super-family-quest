@@ -88,7 +88,8 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | `/new-resources/health/feeling-now` | "Como estou me sentindo agora": registro de contexto do paciente |
 | `/new-resources/health/register` | Cadastro manual + upload PDF/imagem |
 | `/new-resources/health/pending`, `.../pending/:id` | Pendentes e revisão de processados |
-| `/new-resources/health/search` | Busca de exames com filtros + gráfico |
+| `/new-resources/health/search` | Busca de exames com filtros |
+| `/new-resources/health/evolution` | Evolução temporal por exame laboratorial |
 | `/new-resources/health/overview` | Visão geral de saúde (relatório IA Gemini) |
 | `/new-resources/health/prescriptions` | Lista de receituários |
 | `/new-resources/health/prescriptions/new`, `.../prescriptions/:id/edit` | Form receituário |
@@ -118,7 +119,7 @@ Arquivos em `src/services/` — atualizar ao integrar novo domínio da API:
 | `recipe.ts` | Receitas |
 | `chore.ts` | Tarefas / quests |
 | `missions.ts` | Missões dinâmicas |
-| `health.ts` | Saúde — exames, upload, processamento, visão geral, receituário (SP-123) |
+| `health.ts` | Saúde — exames, upload, processamento, evolução laboratorial, visão geral, receituário (SP-123/SP-124) |
 | `integrations.ts` | Integrações (Alexa, etc.) |
 
 Padrão de chamada:
@@ -206,7 +207,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `relatorio-garantias.md` | Relatório de garantias no Painel (SP-86) |
 | `demo-login.md` | Login demo via link para portfólio (SP-118) |
 | `balanco-mensal-atualizacao-real-time.md` | Atualização do card Balanço Mensal após mutações financeiras (SP-119) |
-| `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, visão geral, receituário (SP-123) |
+| `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, evolução laboratorial, visão geral, receituário (SP-123/SP-124) |
 
 ### CRUD em recursos
 

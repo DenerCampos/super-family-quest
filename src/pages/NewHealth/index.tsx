@@ -5,6 +5,7 @@ import {
   FiFileText,
   FiHeart,
   FiSearch,
+  FiTrendingUp,
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { FixedAppShell } from '../../components/FixedAppShell';
@@ -46,6 +47,13 @@ const baseTiles: Tile[] = [
     titleKey: 'health.tiles.search.title',
     subtitleKey: 'health.tiles.search.subtitle',
     route: `${BASE_PATH}/search`,
+  },
+  {
+    key: 'evolution',
+    icon: FiTrendingUp,
+    titleKey: 'health.tiles.evolution.title',
+    subtitleKey: 'health.tiles.evolution.subtitle',
+    route: `${BASE_PATH}/evolution`,
   },
   {
     key: 'overview',

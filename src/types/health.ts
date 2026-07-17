@@ -193,6 +193,28 @@ export interface HealthExamFilterParams {
   limit?: number;
 }
 
+export interface HealthLabItemNamesParams {
+  userId?: string;
+  search?: string;
+}
+
+export interface HealthLabItemEvolutionParams {
+  itemName: string;
+  userId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+}
+
+export interface HealthExamEvolutionPointDto {
+  examId: string;
+  itemName: string;
+  examDate: string | null;
+  resultValue: string | null;
+  resultUnit: string | null;
+  referenceRange: string | null;
+  isAbnormal: boolean;
+}
+
 export interface CreatePrescriptionItemPayload {
   medicationName: string;
   dosage?: string;
