@@ -1,8 +1,8 @@
-# Módulo de Saúde — SP-123
+# Módulo de Saúde — SP-123 / SP-124
 
 ## Objetivo
 
-Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exames médicos, receituários e obtenham um relatório de saúde gerado por IA (Gemini), com suporte a upload de PDFs e imagens.
+Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exames médicos, receituários e obtenham um relatório de saúde gerado por IA (Gemini), com suporte a upload de PDFs e imagens. Inclui evolução temporal de itens laboratoriais numéricos.
 
 ---
 
@@ -12,7 +12,8 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 - Cadastro manual de exames (laboratorial, imagem, funcional, procedimento)
 - Upload de PDFs e imagens de exames para processamento automático via IA
 - Revisão e aprovação dos dados extraídos pela IA antes de salvar
-- Busca de exames com filtros (nome, médico, laboratório, data, tipo) + gráfico de evolução
+- Busca de exames com filtros (nome, médico, laboratório, data, tipo)
+- **Evolução** por item laboratorial (gráfico temporal por exame: Plaquetas, Neutrófilos, etc.)
 - Visão geral de saúde gerada por Gemini (relatório em cache, regenerável)
 - Cadastro, listagem e detalhe de receituários com horários e agendamento estruturado
 - Permissões familiares: admin gerencia qualquer membro; membros gerenciam apenas os seus
@@ -49,7 +50,14 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 ### Busca
 - `/new-resources/health/search` com filtros independentes
 - Resultado em lista expansível; item anormal com badge laranja
-- Botão "Ver evolução" exibe `LineChart` (Recharts) com histórico do primeiro item laboratorial
+- Evolução temporal **não** fica embutida na busca (foi movida para o card dedicado)
+
+### Evolução (SP-124)
+1. Usuário acessa `/new-resources/health/evolution`
+2. Filtros: membro da família, busca por nome parecido, select com nomes únicos de itens laboratoriais que têm `resultValue`, período `dateFrom`/`dateTo` (vazio = todas as datas)
+3. Ao selecionar um exame → GET `/health/exam-items/evolution` (ordenado por `examDate` ASC)
+4. Front filtra só valores numéricos (`parseHealthResultValue`) e monta `HealthEvolutionChart` (Recharts) se houver ≥ 2 pontos
+5. Abaixo do gráfico: resumo (último valor, variação, min/max/média, contagem, referência)
 
 ### Visão Geral (IA)
 1. Usuário acessa `/new-resources/health/overview`
@@ -90,6 +98,8 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 | GET | `/health/exams/:id` | Detalhe |
 | PUT | `/health/exams/:id` | Atualização |
 | DELETE | `/health/exams/:id` | Exclusão (soft delete) |
+| GET | `/health/exam-items/names?userId=&search=` | Nomes distintos de itens laboratoriais com valor (select da Evolução; 1ª maiúscula; busca case-insensitive) |
+| GET | `/health/exam-items/evolution?itemName=&userId=&dateFrom=&dateTo=` | Série temporal do item (ordenado por `examDate` ASC; `itemName` case-insensitive) |
 
 ### Upload / Processamento
 | Método | Rota | Descrição |
@@ -180,7 +190,11 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 | `src/utils/healthProcessingConstants.ts` | Constante de intervalo de retry (2 h) |
 | `src/utils/healthProcessingRetry.ts` | Texto/countdown do próximo retry automático |
 | `src/pages/NewHealth/HealthPendingDetailView.tsx` | Revisão / aprovação de IA |
-| `src/pages/NewHealth/HealthSearchView.tsx` | Busca de exames + gráfico |
+| `src/pages/NewHealth/HealthSearchView.tsx` | Busca de exames (lista expansível) |
+| `src/pages/NewHealth/HealthEvolutionView.tsx` | Evolução por item laboratorial |
+| `src/components/health/HealthEvolutionChart.tsx` | Gráfico Recharts da evolução |
+| `src/utils/healthValue.ts` | Parse de valor/referência laboratorial |
+| `src/hooks/useHealthEvolution.ts` | Hooks de nomes + série temporal |
 | `src/pages/NewHealth/HealthOverviewView.tsx` | Relatório IA (histórico + último relatório colapsados) |
 | `src/components/reports/HealthReportsPanel.tsx` | Card "Relatórios de Saúde" do dashboard (lista por membro/período) |
 | `src/pages/Dashboard/HealthReportDetailView.tsx` | Tela de detalhe de um relatório (rota `/dashboard/health-report/:overviewId`) |

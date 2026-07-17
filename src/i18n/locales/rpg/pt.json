@@ -1103,6 +1103,7 @@
       "feelingNow": { "title": "Como me sinto agora", "subtitle": "Registre sintomas e vitalidade de hoje" },
       "exams": { "title": "Exames", "subtitle": "Registrados e em processamento" },
       "search": { "title": "Buscar", "subtitle": "Pesquisar registros" },
+      "evolution": { "title": "Evolução", "subtitle": "Curvas dos pergaminhos laboratoriais" },
       "overview": { "title": "Oráculo da Saúde", "subtitle": "Relatório do oráculo" },
       "prescriptions": { "title": "Poções", "subtitle": "Medicamentos e fórmulas" }
     },
@@ -1280,9 +1281,32 @@
       "search": "Buscar",
       "noResults": "Nenhum registro encontrado para os filtros.",
       "unknownLab": "Clínica não identificada",
-      "referenceRange": "(ref: {{range}})",
-      "viewHistory": "Ver evolução",
-      "evolution": "Evolução"
+      "referenceRange": "(ref: {{range}})"
+    },
+    "evolution": {
+      "title": "Evolução dos Pergaminhos",
+      "me": "Este herói",
+      "searchPlaceholder": "Buscar runas do exame por nome...",
+      "selectExamPlaceholder": "Escolha um exame do grimório",
+      "loadingExams": "Consultando os pergaminhos disponíveis...",
+      "noExams": "Nenhum pergaminho laboratorial com valor encontrado para este herói.",
+      "selectHint": "Escolha um exame para ver a evolução ao longo das eras.",
+      "notEnoughData": "São necessários pelo menos 2 resultados numéricos no ciclo para traçar a curva.",
+      "loadNamesError": "Os pergaminhos de exames não puderam ser consultados.",
+      "loadEvolutionError": "A curva de evolução deste exame não pôde ser traçada.",
+      "chartTitle": "Curva do Oráculo",
+      "abnormalCount": "{{count}} fora do limiar sagrado",
+      "period": "Ciclo: {{from}} — {{to}}",
+      "info": {
+        "title": "Resumo do Oráculo",
+        "lastValue": "Última marca",
+        "variation": "Oscilação",
+        "min": "Vale",
+        "max": "Pico",
+        "avg": "Equilíbrio",
+        "count": "Marcas",
+        "reference": "Limiar sagrado (último pergaminho)"
+      }
     },
     "overview": {
       "title": "Oráculo da Saúde",
