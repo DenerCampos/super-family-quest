@@ -1,4 +1,4 @@
-# Módulo de Saúde — SP-123 / SP-124
+# Módulo de Saúde — SP-123 / SP-124 / SP-125
 
 ## Objetivo
 
@@ -143,6 +143,7 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 ### Processamento IA
 - PDF com texto legível → extração via `pdf-parse` + prompt laboratorial (sem limite de páginas)
 - PDF sem texto / imagem → envio do base64 ao Gemini com prompt de laudo de imagem
+- **Nomes de itens (SP-125, API):** a IA deve devolver `itemName` em Title Case; hemograma com sufixo ` (Hemograma)`; urina com ` (Urina)`. Na revisão pendente, conferir/ajustar se algum nome sair fora do padrão (exames antigos no banco não são renomeados sozinhos).
 - Máx. 3 arquivos por execução do cron (a cada 2 min)
 - Falhas registradas com `errorMessage`, `failedAt` e `retryCount`; status `FAILED` visível na fila de pendentes
 - **Retry automático:** após **2 horas** (`HEALTH_PROCESSING_AUTO_RETRY_AFTER_MS` na API; espelhada em `src/utils/healthProcessingConstants.ts` no app)
