@@ -49,7 +49,8 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 
 ### Busca
 - `/new-resources/health/search` com filtros independentes
-- Resultado em lista expansível; item anormal com badge laranja
+- Clique no resultado → `/new-resources/health/exams/:id` (detalhe com editar / baixar arquivo)
+- Item anormal com ícone de alerta no card da lista
 - Evolução temporal **não** fica embutida na busca (foi movida para o card dedicado)
 
 ### Evolução (SP-124)
@@ -191,7 +192,7 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 | `src/utils/healthProcessingConstants.ts` | Constante de intervalo de retry (2 h) |
 | `src/utils/healthProcessingRetry.ts` | Texto/countdown do próximo retry automático |
 | `src/pages/NewHealth/HealthPendingDetailView.tsx` | Revisão / aprovação de IA |
-| `src/pages/NewHealth/HealthSearchView.tsx` | Busca de exames (lista expansível) |
+| `src/pages/NewHealth/HealthSearchView.tsx` | Busca de exames (clique abre detalhe) |
 | `src/pages/NewHealth/HealthEvolutionView.tsx` | Evolução por item laboratorial |
 | `src/components/health/HealthEvolutionChart.tsx` | Gráfico Recharts da evolução |
 | `src/utils/healthValue.ts` | Parse de valor/referência laboratorial |

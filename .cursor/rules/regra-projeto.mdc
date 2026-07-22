@@ -88,7 +88,7 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | `/new-resources/health/feeling-now` | "Como estou me sentindo agora": registro de contexto do paciente |
 | `/new-resources/health/register` | Cadastro manual + upload PDF/imagem |
 | `/new-resources/health/pending`, `.../pending/:id` | Pendentes e revisão de processados |
-| `/new-resources/health/search` | Busca de exames com filtros |
+| `/new-resources/health/search` | Busca de exames com filtros (clique → detalhe) |
 | `/new-resources/health/evolution` | Evolução temporal por exame laboratorial |
 | `/new-resources/health/overview` | Visão geral de saúde (relatório IA Gemini) |
 | `/new-resources/health/prescriptions` | Lista de receituários |
