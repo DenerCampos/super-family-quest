@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { useRef } from 'react';
 import { FiDownload, FiEdit2, FiFileText, FiImage, FiTrash2 } from 'react-icons/fi';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FixedAppShell } from '../../components/FixedAppShell';
 import { PageTitleBar } from '../../components/PageTitleBar';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -26,13 +26,21 @@ import { useDeleteHealthExam, useHealthExam } from '../../hooks/useHealthExams';
 import { getHealthExamTypeOptions } from '../../utils/healthConstants';
 import { formatAppDate } from '../../utils/formatDate';
 
+type HealthExamLocationState = {
+  from?: string;
+};
+
 export const HealthExamDetailView = () => {
   const { id } = useParams<{ id: string }>();
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const cancelRef = useRef<HTMLButtonElement>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const backTo =
+    (location.state as HealthExamLocationState | null)?.from ??
+    '/new-resources/health/exams';
 
   const { data: exam, isLoading } = useHealthExam(id ?? '');
   const deleteMutation = useDeleteHealthExam();
@@ -52,7 +60,7 @@ export const HealthExamDetailView = () => {
   const handleDelete = async () => {
     await deleteMutation.mutateAsync(id!);
     onClose();
-    navigate('/new-resources/health/exams');
+    navigate(backTo);
   };
 
   const formatDate = (value?: string | null) => {
@@ -75,7 +83,7 @@ export const HealthExamDetailView = () => {
   if (!exam) {
     return (
       <FixedAppShell bg={bg}>
-        <PageTitleBar title={t('health.exams.detail.title')} backTo="/new-resources/health/exams" />
+        <PageTitleBar title={t('health.exams.detail.title')} backTo={backTo} />
         <Flex flex={1} justify="center" align="center">
           <Text color={textSub}>{t('health.exams.notFound')}</Text>
         </Flex>
@@ -92,7 +100,7 @@ export const HealthExamDetailView = () => {
     <FixedAppShell bg={bg}>
       <PageTitleBar
         title={t('health.exams.detail.title')}
-        backTo="/new-resources/health/exams"
+        backTo={backTo}
         titleRight={
           <Button
             size="sm"

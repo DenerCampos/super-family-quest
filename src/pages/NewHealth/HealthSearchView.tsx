@@ -15,13 +15,14 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { FiAlertTriangle, FiSearch } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import { FixedAppShell } from '../../components/FixedAppShell';
 import { PageTitleBar } from '../../components/PageTitleBar';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useHealthExams } from '../../hooks/useHealthExams';
 import { useFamilyGroup } from '../../hooks/useFamilyGroup';
-import type { HealthExamDto, HealthExamFilterParams, HealthExamType } from '../../types/health';
+import type { HealthExamFilterParams, HealthExamType } from '../../types/health';
 import {
   getHealthExamTypeFilterOptions,
   getHealthExamTypeOptions,
@@ -31,6 +32,7 @@ import { formatAppDate } from '../../utils/formatDate';
 export const HealthSearchView = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
+  const navigate = useNavigate();
   const { familyGroup } = useFamilyGroup({ fetchSummary: false, fetchInvitations: false });
 
   const [examName, setExamName] = useState('');
@@ -41,7 +43,6 @@ export const HealthSearchView = () => {
   const [examType, setExamType] = useState<HealthExamType | ''>('');
   const [userId, setUserId] = useState('');
   const [filter, setFilter] = useState<HealthExamFilterParams>({});
-  const [selectedExam, setSelectedExam] = useState<HealthExamDto | null>(null);
 
   const { data, isLoading } = useHealthExams(filter);
   const examTypeFilterOptions = getHealthExamTypeFilterOptions(t);
@@ -138,14 +139,16 @@ export const HealthSearchView = () => {
                 bg={cardBg}
                 borderRadius="lg"
                 borderWidth="1px"
-                borderColor={selectedExam?.id === exam.id ? getColor('text.familyGroup.primary') : borderColor}
+                borderColor={borderColor}
                 p={4}
                 cursor="pointer"
-                onClick={() => {
-                  setSelectedExam(selectedExam?.id === exam.id ? null : exam);
-                }}
+                onClick={() =>
+                  navigate(`/new-resources/health/exams/${exam.id}`, {
+                    state: { from: '/new-resources/health/search' },
+                  })
+                }
               >
-                <Flex justify="space-between" align="flex-start" mb={2}>
+                <Flex justify="space-between" align="flex-start">
                   <Box flex={1}>
                     <Text color={textPrimary} fontSize="sm" fontWeight="semibold">
                       {exam.labName ?? t('health.search.unknownLab')}
@@ -154,6 +157,15 @@ export const HealthSearchView = () => {
                       {exam.doctorName ? t('health.doctorPrefix', { name: exam.doctorName }) : ''}
                       {exam.examDate ? ` · ${formatAppDate(exam.examDate)}` : ''}
                     </Text>
+                    {exam.items.length > 0 && (
+                      <Text color={textSub} fontSize="xs" mt={1} noOfLines={1}>
+                        {exam.items
+                          .slice(0, 3)
+                          .map((item) => item.itemName)
+                          .join(' · ')}
+                        {exam.items.length > 3 ? ` · +${exam.items.length - 3}` : ''}
+                      </Text>
+                    )}
                   </Box>
                   <Flex gap={1} align="center" flexShrink={0}>
                     {exam.items.some((i) => i.isAbnormal) && (
@@ -164,37 +176,6 @@ export const HealthSearchView = () => {
                     </Badge>
                   </Flex>
                 </Flex>
-
-                {selectedExam?.id === exam.id && (
-                  <Stack spacing={1} mt={2}>
-                    {exam.items.map((item) => (
-                      <Flex key={item.id} justify="space-between" align="center" bg={inputBg} borderRadius="sm" px={2} py={1}>
-                        <Text color={item.isAbnormal ? warningColor : textPrimary} fontSize="xs" fontWeight={item.isAbnormal ? 'bold' : 'normal'} flex={1}>
-                          {item.itemName}
-                        </Text>
-                        {item.resultValue && (
-                          <Text color={item.isAbnormal ? warningColor : textSub} fontSize="xs" ml={2}>
-                            {item.resultValue} {item.resultUnit ?? ''}
-                            {item.referenceRange
-                              ? ` ${t('health.search.referenceRange', { range: item.referenceRange })}`
-                              : ''}
-                          </Text>
-                        )}
-                        {item.isAbnormal && (
-                          <Badge
-                            bg={warningColor}
-                            color={textPrimary}
-                            size="sm"
-                            ml={1}
-                            aria-label={t('health.common.abnormal')}
-                          >
-                            {t('health.common.abnormalMarker')}
-                          </Badge>
-                        )}
-                      </Flex>
-                    ))}
-                  </Stack>
-                )}
               </Box>
             ))}
           </Stack>
