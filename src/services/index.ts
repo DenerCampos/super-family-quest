@@ -15,6 +15,7 @@ import { ChoreService } from "./chore";
 import { RecipeService } from "./recipe";
 import { MissionsService } from "./missions";
 import { HealthService } from "./health";
+import { ChatAgentService } from "./chatAgent";
 
 export const api = {
   getAvailableThemes: themeService.getAvailableThemes,
@@ -282,4 +283,10 @@ export const api = {
   healthGetPrescriptionById: HealthService.getPrescriptionById,
   healthUpdatePrescription: HealthService.updatePrescription,
   healthDeletePrescription: HealthService.deletePrescription,
+
+  chatCreateSession: ChatAgentService.createSession,
+  chatListSessions: ChatAgentService.listSessions,
+  chatGetMessages: ChatAgentService.getMessages,
+  chatSendMessage: ChatAgentService.sendMessage,
+  chatDeleteSession: ChatAgentService.deleteSession,
 };
