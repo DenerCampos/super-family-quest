@@ -1382,5 +1382,95 @@
         "cameraAccessError": "Não foi possível acessar a câmera. Verifique as permissões do navegador."
       }
     }
+  },
+  "chatAssistant": {
+    "title": "Oráculo Familiar",
+    "subtitle": "Consulte os registros da guilda (somente leitura)",
+    "placeholder": "O que deseja descobrir?",
+    "send": "Perguntar",
+    "openAria": "Abrir oráculo familiar",
+    "closeAria": "Fechar oráculo",
+    "empty": "Faça uma pergunta ou escolha um exemplo abaixo.",
+    "thinking": "Consultando os pergaminhos...",
+    "errorQuota": "As consultas mágicas do dia acabaram. Volte amanhã.",
+    "errorProvider": "O oráculo falhou. Tente novamente.",
+    "errorNetwork": "A conexão com o reino falhou. Verifique a internet.",
+    "contextLabel": "Local: {{context}}",
+    "contexts": {
+      "home": "Salão principal",
+      "expenses": "Custos da jornada",
+      "revenues": "Recompensas",
+      "reports": "Pergaminhos do conselho",
+      "shopping": "Lista de provisões",
+      "family": "Guilda familiar",
+      "recipes": "Receitas culinárias",
+      "chores": "Quests e mesada",
+      "prescriptions": "Poções prescritas",
+      "health": "Vitalidade",
+      "missions": "Missões do clã",
+      "profile": "Ficha do herói"
+    },
+    "examples": {
+      "home": [
+        "Quanto a guilda gastou este mês?",
+        "Quem são os membros da minha família?",
+        "Quais quests estão abertas?"
+      ],
+      "expenses": [
+        "Quais itens comprei no mercado este mês?",
+        "Quanto gastei com alimentação?",
+        "Há despesas recorrentes pendentes?"
+      ],
+      "revenues": [
+        "Quanto recebi este mês?",
+        "Tenho receitas recorrentes?",
+        "Qual o saldo do mês?"
+      ],
+      "reports": [
+        "Onde mais gastei este mês?",
+        "Quais itens mais comprei?",
+        "Tenho garantias ativas?"
+      ],
+      "shopping": [
+        "O que falta na lista de compras?",
+        "Quais listas estão ativas?",
+        "Sugira itens para arroz"
+      ],
+      "family": [
+        "Quem são os integrantes da minha família?",
+        "Há convites pendentes?",
+        "Qual o resumo do mês?"
+      ],
+      "recipes": [
+        "Quais receitas culinárias tenho?",
+        "Tem receita de bolo?",
+        "Liste as receitas do grupo"
+      ],
+      "chores": [
+        "A quest de lavar louça já foi concluída?",
+        "O que espera aprovação?",
+        "Quanto de mesada está pendente?"
+      ],
+      "prescriptions": [
+        "Que horas devo tomar o remédio?",
+        "Quais poções estão em uso?",
+        "Tem a receita médica do mês?"
+      ],
+      "health": [
+        "Qual meu último exame?",
+        "Mostre a evolução da glicose",
+        "Há relatório de saúde gerado?"
+      ],
+      "missions": [
+        "Quais missões estão disponíveis?",
+        "Qual meu saldo de moedas?",
+        "Quais missões já completei?"
+      ],
+      "profile": [
+        "Qual meu saldo de moedas?",
+        "Alexa está vinculada?",
+        "Quais foram os últimos lançamentos?"
+      ]
+    }
   }
 }

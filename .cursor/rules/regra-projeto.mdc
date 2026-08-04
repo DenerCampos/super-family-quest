@@ -19,6 +19,7 @@ alwaysApply: true
 - [ ] **Formulários**: React Hook Form + Yup (padrão do projeto).
 - [ ] **Tipos**: `src/types/` para contratos compartilhados com a API.
 - [ ] **Documentação**: criar (feature nova) ou atualizar (regra/contrato/fluxo alterado) `app/super-family-quest/.cursor/docs/<dominio>.md` — ver `/.cursor/rules/workflow.mdc` seção Documentação.
+- [ ] **Assistente Familiar**: se a feature expõe dados pesquisáveis, coordenar com a API para novas tools read-only (`assistente-familiar.md`) e, se necessário, exemplos/contexto em `utils/chatScreenContext.ts` + i18n `chatAssistant.examples.*`.
 - [ ] **Atualizar este arquivo**: rota na [tabela de rotas](#rotas), service/hook nas seções correspondentes e doc na [Docs de domínio](#docs-de-domínio).
 
 ### Comandos de verificação (executar na raiz `app/super-family-quest`)
@@ -120,6 +121,7 @@ Arquivos em `src/services/` — atualizar ao integrar novo domínio da API:
 | `chore.ts` | Tarefas / quests |
 | `missions.ts` | Missões dinâmicas |
 | `health.ts` | Saúde — exames, upload, processamento, evolução laboratorial, visão geral, receituário (SP-123/SP-124) |
+| `chatAgent.ts` | Assistente Familiar — sessões/mensagens (SP-117); hook `useChatAgent` |
 | `integrations.ts` | Integrações (Alexa, etc.) |
 
 Padrão de chamada:
@@ -208,6 +210,9 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `demo-login.md` | Login demo via link para portfólio (SP-118) |
 | `balanco-mensal-atualizacao-real-time.md` | Atualização do card Balanço Mensal após mutações financeiras (SP-119) |
 | `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, evolução laboratorial, visão geral, receituário; padronização de nomes (SP-123/SP-124/SP-125) |
+| `assistente-familiar.md` | Assistente Familiar — FAB flutuante, chat, screenContext, erros IA (SP-117) |
+
+Widget global: `ChatAssistantWidget` (`ChatFab` + `ChatPanel` + hooks `useChatAgent` / etc.) montado em `RequireAuth` (ausente em rotas públicas).
 
 ### CRUD em recursos
 
