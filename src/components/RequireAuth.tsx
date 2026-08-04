@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import type { JSX } from 'react';
 import { LoadingOverlay } from './LoadingOverlay';
 import { useEffect, useState } from 'react';
+import { ChatAssistantWidget } from './chat-assistant/ChatAssistantWidget';
 
 export function RequireAuth({ children }: Readonly<{ children: JSX.Element }>) {
   const { profile } = useAuth();
@@ -30,5 +31,10 @@ export function RequireAuth({ children }: Readonly<{ children: JSX.Element }>) {
     return <Navigate to="/login" replace />;
   }
 
-  return <CoinFlightProvider>{children}</CoinFlightProvider>;
+  return (
+    <CoinFlightProvider>
+      {children}
+      <ChatAssistantWidget />
+    </CoinFlightProvider>
+  );
 }
