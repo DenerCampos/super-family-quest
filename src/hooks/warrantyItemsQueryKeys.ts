@@ -3,6 +3,7 @@ export const warrantyItemsQueryKey = {
   list: (
     year: number,
     userId: string | undefined,
+    familyGroupId: string | undefined,
     search: string,
     includeExpired: boolean,
     page: number,
@@ -11,6 +12,7 @@ export const warrantyItemsQueryKey = {
       ...warrantyItemsQueryKey.root,
       year,
       userId ?? 'default',
+      familyGroupId ?? 'none',
       search,
       includeExpired ? 'expired' : 'active',
       page,

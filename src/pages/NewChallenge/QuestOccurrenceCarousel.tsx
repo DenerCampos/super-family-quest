@@ -9,11 +9,12 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { FiChevronsRight } from 'react-icons/fi';
+import { FamilyGroupBadge } from '../../components/family/FamilyGroupBadge';
+import type { TaggedChoreOccurrence } from '../../hooks/useChoreQuestLists';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { resolveChakraColor } from '../../utils/resolveColor';
-import type { ChoreOccurrenceResponseDto } from '../../types/chore';
 import { isChoreOccurrenceExpiring } from '../../utils/chore-expiry';
 
 const OccurrenceCard = ({
@@ -25,10 +26,10 @@ const OccurrenceCard = ({
   inCarousel = false,
   expiring = false,
 }: {
-  item: ChoreOccurrenceResponseDto;
+  item: TaggedChoreOccurrence;
   showStart: boolean;
-  onStart: (id: string) => void;
-  onOpen: (item: ChoreOccurrenceResponseDto) => void;
+  onStart: (item: TaggedChoreOccurrence) => void;
+  onOpen: (item: TaggedChoreOccurrence) => void;
   isStarting: boolean;
   inCarousel?: boolean;
   expiring?: boolean;
@@ -56,6 +57,11 @@ const OccurrenceCard = ({
       cursor="pointer"
       boxShadow={carouselShadow}
     >
+      {item.familyGroupName ? (
+        <Box mb={2}>
+          <FamilyGroupBadge name={item.familyGroupName} />
+        </Box>
+      ) : null}
       <Text
         fontWeight="bold"
         fontFamily={getFont('body')}
@@ -126,7 +132,7 @@ const OccurrenceCard = ({
             isLoading={isStarting}
             onClick={(e) => {
               e.stopPropagation();
-              onStart(item.id);
+              onStart(item);
             }}
           >
             {t('chores.startTask')}
@@ -162,11 +168,11 @@ export const OccurrenceCarousel = ({
   highlightExpiring = false,
 }: {
   ariaLabel: string;
-  rows: ChoreOccurrenceResponseDto[];
+  rows: TaggedChoreOccurrence[];
   showStart: boolean;
   isStarting: boolean;
-  onStart: (id: string) => void;
-  onOpen: (item: ChoreOccurrenceResponseDto) => void;
+  onStart: (item: TaggedChoreOccurrence) => void;
+  onOpen: (item: TaggedChoreOccurrence) => void;
   highlightExpiring?: boolean;
 }) => {
   const { getColor } = useVisualTheme();

@@ -17,14 +17,24 @@ import { api } from '../../services';
 type CreateGroupFormProps = {
   onGroupCreated: () => void;
   defaultGroupName?: string;
+  /** Quando já existe grupo: textos de "criar outro". */
+  mode?: 'empty' | 'additional';
 };
 
-export const CreateGroupForm = ({ onGroupCreated, defaultGroupName = '' }: CreateGroupFormProps) => {
+export const CreateGroupForm = ({
+  onGroupCreated,
+  defaultGroupName = '',
+  mode = 'empty',
+}: CreateGroupFormProps) => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
   const toast = useToast();
-  const [groupName, setGroupName] = useState(defaultGroupName);
+  const [groupName, setGroupName] = useState(
+    mode === 'empty' ? defaultGroupName : '',
+  );
   const [isCreating, setIsCreating] = useState(false);
+
+  const isAdditional = mode === 'additional';
 
   const handleCreate = async () => {
     if (!groupName.trim()) return;
@@ -57,26 +67,30 @@ export const CreateGroupForm = ({ onGroupCreated, defaultGroupName = '' }: Creat
   };
 
   return (
-    <VStack spacing={6} py={8} px={4} align="center">
-      <Flex
-        w="80px"
-        h="80px"
-        borderRadius="full"
-        bg={getColor('background.familyGroup.memberCard')}
-        align="center"
-        justify="center"
-      >
-        <Icon as={FaUsers} boxSize={10} color={getColor('text.familyGroup.secondary')} />
-      </Flex>
+    <VStack spacing={isAdditional ? 4 : 6} py={isAdditional ? 2 : 8} px={4} align="center">
+      {!isAdditional && (
+        <Flex
+          w="80px"
+          h="80px"
+          borderRadius="full"
+          bg={getColor('background.familyGroup.memberCard')}
+          align="center"
+          justify="center"
+        >
+          <Icon as={FaUsers} boxSize={10} color={getColor('text.familyGroup.secondary')} />
+        </Flex>
+      )}
 
       <Text
-        fontSize="lg"
+        fontSize={isAdditional ? 'md' : 'lg'}
         fontWeight="bold"
         color={getColor('text.familyGroup.title')}
         fontFamily={getFont('heading')}
         textAlign="center"
       >
-        {t('familyGroup.noGroup')}
+        {isAdditional
+          ? t('familyGroup.createAnotherGroup')
+          : t('familyGroup.noGroup')}
       </Text>
 
       <Text
@@ -86,7 +100,9 @@ export const CreateGroupForm = ({ onGroupCreated, defaultGroupName = '' }: Creat
         textAlign="center"
         maxW="300px"
       >
-        {t('familyGroup.noGroupDescription')}
+        {isAdditional
+          ? t('familyGroup.createAnotherGroupDescription')
+          : t('familyGroup.noGroupDescription')}
       </Text>
 
       <VStack spacing={3} w="full" maxW="320px">
@@ -113,7 +129,9 @@ export const CreateGroupForm = ({ onGroupCreated, defaultGroupName = '' }: Creat
           onClick={handleCreate}
           fontFamily={getFont('body')}
         >
-          {t('familyGroup.createGroup')}
+          {isAdditional
+            ? t('familyGroup.createAnotherGroup')
+            : t('familyGroup.createGroup')}
         </Button>
       </VStack>
     </VStack>

@@ -1,12 +1,28 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services';
 import type {
   FamilyGroupSummaryDto,
   MemberDataDto,
   MemberSummary,
 } from '../types/familyGroup';
+import { LOCAL_STORAGE_KEYS } from '../utils/constants';
+import {
+  pickPrimaryFamilyGroup,
+  sortFamilyGroupDtos,
+  toFamilyGroupPriorityInput,
+} from '../utils/familyGroupPriority';
+import { isAdmin, isOwner } from '../utils/familyGroupPermissions';
 import { familyGroupQueryKeys } from './familyGroupQueryKeys';
+
+export type FamilyStoryGroup = {
+  id: string;
+  name: string;
+  isOwner: boolean;
+  isAdmin: boolean;
+  ownerCoatOfArms?: string | null;
+};
 
 export type UseFamilyGroupOptions = {
   /** Busca resumo mensal (Home, grupo familiar). Padrão: true */
@@ -15,12 +31,37 @@ export type UseFamilyGroupOptions = {
   fetchInvitations?: boolean;
 };
 
+function readStoredFamilyGroupId(): string | null {
+  try {
+    return localStorage.getItem(LOCAL_STORAGE_KEYS.ACTIVE_FAMILY_GROUP_ID);
+  } catch {
+    return null;
+  }
+}
+
+function persistFamilyGroupId(id: string | null) {
+  try {
+    if (id) {
+      localStorage.setItem(LOCAL_STORAGE_KEYS.ACTIVE_FAMILY_GROUP_ID, id);
+    } else {
+      localStorage.removeItem(LOCAL_STORAGE_KEYS.ACTIVE_FAMILY_GROUP_ID);
+    }
+  } catch {
+    // ignore quota / private mode
+  }
+}
+
 export const useFamilyGroup = (options: UseFamilyGroupOptions = {}) => {
   const fetchSummary = options.fetchSummary !== false;
   const fetchInvitations = options.fetchInvitations !== false;
   const queryClient = useQueryClient();
+  const { profile } = useAuth();
+  const currentUserId = profile?.user.id ?? '';
 
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  const [selectedFamilyGroupId, setSelectedFamilyGroupIdState] = useState<
+    string | null
+  >(readStoredFamilyGroupId);
   const [month, setMonth] = useState(() => new Date().getMonth() + 1);
   const [year, setYear] = useState(() => new Date().getFullYear());
 
@@ -30,9 +71,78 @@ export const useFamilyGroup = (options: UseFamilyGroupOptions = {}) => {
     staleTime: 60_000,
   });
 
-  const familyGroup = listQuery.data?.[0] ?? null;
+  const familyGroups = useMemo(() => {
+    const list = listQuery.data ?? [];
+    if (!currentUserId) return list;
+    return sortFamilyGroupDtos(list, currentUserId);
+  }, [listQuery.data, currentUserId]);
+
+  const activeFamilyGroupId = useMemo(() => {
+    if (!currentUserId || familyGroups.length === 0) return null;
+    const primary = pickPrimaryFamilyGroup(
+      familyGroups.map((g) => toFamilyGroupPriorityInput(g, currentUserId)),
+      currentUserId,
+    );
+    return primary?.id ?? familyGroups[0]?.id ?? null;
+  }, [familyGroups, currentUserId]);
+
+  const resolvedSelectedFamilyGroupId = useMemo(() => {
+    if (familyGroups.length === 0) return null;
+    if (
+      selectedFamilyGroupId &&
+      familyGroups.some((g) => g.id === selectedFamilyGroupId)
+    ) {
+      return selectedFamilyGroupId;
+    }
+    return activeFamilyGroupId;
+  }, [familyGroups, selectedFamilyGroupId, activeFamilyGroupId]);
+
+  useEffect(() => {
+    if (!listQuery.isSuccess) return;
+    if (familyGroups.length === 0) {
+      if (selectedFamilyGroupId !== null) {
+        setSelectedFamilyGroupIdState(null);
+        persistFamilyGroupId(null);
+      }
+      return;
+    }
+    if (
+      selectedFamilyGroupId &&
+      !familyGroups.some((g) => g.id === selectedFamilyGroupId)
+    ) {
+      setSelectedFamilyGroupIdState(activeFamilyGroupId);
+      persistFamilyGroupId(activeFamilyGroupId);
+    }
+  }, [
+    listQuery.isSuccess,
+    familyGroups,
+    selectedFamilyGroupId,
+    activeFamilyGroupId,
+  ]);
+
+  const setSelectedFamilyGroupId = useCallback((id: string | null) => {
+    setSelectedFamilyGroupIdState(id);
+    persistFamilyGroupId(id);
+    setSelectedMemberId(null);
+  }, []);
+
+  const familyGroup =
+    familyGroups.find((g) => g.id === resolvedSelectedFamilyGroupId) ?? null;
   const groupId = familyGroup?.id;
-  const hasGroup = familyGroup !== null;
+  const hasGroup = familyGroups.length > 0;
+
+  const familyStoryGroups: FamilyStoryGroup[] = useMemo(() => {
+    if (!currentUserId) return [];
+    return familyGroups.map((group) => ({
+      id: group.id,
+      name: group.name,
+      isOwner: isOwner(group, currentUserId),
+      isAdmin: isAdmin(group, currentUserId),
+      ownerCoatOfArms: isOwner(group, currentUserId)
+        ? profile?.user.coatOfArms
+        : undefined,
+    }));
+  }, [familyGroups, currentUserId, profile?.user.coatOfArms]);
 
   const invitationsQuery = useQuery({
     queryKey: familyGroupQueryKeys.invitations(),
@@ -93,7 +203,12 @@ export const useFamilyGroup = (options: UseFamilyGroupOptions = {}) => {
   }, [queryClient]);
 
   return {
+    familyGroups,
     familyGroup,
+    familyStoryGroups,
+    selectedFamilyGroupId: resolvedSelectedFamilyGroupId,
+    setSelectedFamilyGroupId,
+    activeFamilyGroupId,
     summary,
     memberData,
     selectedMemberId,

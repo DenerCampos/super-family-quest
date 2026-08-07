@@ -30,6 +30,8 @@ type LastRegistrationsListProps = {
   setNewRegistrationAdded: React.Dispatch<React.SetStateAction<boolean>>;
   onDelete: (id: string, type: 'expense' | 'revenue') => Promise<void>;
   onView?: (id: string, type: 'expense' | 'revenue') => void;
+  /** Família selecionada — sem isso a API só retorna registros do próprio usuário (SP-127). */
+  familyGroupId?: string | null;
 };
 
 export const LastRegistrationsList = ({
@@ -37,6 +39,7 @@ export const LastRegistrationsList = ({
   setNewRegistrationAdded,
   onDelete,
   onView,
+  familyGroupId,
 }: LastRegistrationsListProps) => {
   const { showValues, profile } = useAuth();
   const { t } = useThemedTranslation();
@@ -51,7 +54,7 @@ export const LastRegistrationsList = ({
     hasNextPage,
     isFetchingNextPage,
     refetchLastRegistration,
-  } = useGetLastRegistration();
+  } = useGetLastRegistration(familyGroupId);
 
   const handleEdit = (id: string, type: 'expense' | 'revenue') => {
     navigate(type === 'expense' ? `/expense/${id}` : `/revenue/${id}`);

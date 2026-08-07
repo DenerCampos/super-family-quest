@@ -24,9 +24,7 @@ import { FixedAppShell } from '../../components/FixedAppShell';
 import { PageTitleBar } from '../../components/PageTitleBar';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
-import { useAuth } from '../../contexts/AuthContext';
-import { useFamilyGroup } from '../../hooks/useFamilyGroup';
-import { isAdmin } from '../../utils/familyGroupPermissions';
+import { useAdminFamilyMembers } from '../../hooks/useAdminFamilyMembers';
 import { useUploadHealthFiles } from '../../hooks/useHealthExams';
 import { useHealthExamRegisterForm } from '../../hooks/useHealthExamRegisterForm';
 import {
@@ -39,9 +37,8 @@ export const HealthRegisterView = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const navigate = useNavigate();
-  const { profile } = useAuth();
-  const { familyGroup } = useFamilyGroup({ fetchSummary: false, fetchInvitations: false });
-  const userIsAdmin = familyGroup ? isAdmin(familyGroup, profile?.user.id ?? '') : false;
+  const { members: adminMembers, isAdminAnywhere: userIsAdmin } =
+    useAdminFamilyMembers();
 
   const {
     formMethods,
@@ -119,7 +116,7 @@ export const HealthRegisterView = () => {
 
       <Flex flex={1} minH={0} direction="column" align="center" overflow="auto" pt={4} px={4} pb={20}>
         <Box width="100%" maxW="600px">
-          {userIsAdmin && familyGroup && (
+          {userIsAdmin && adminMembers.length > 0 && (
             <Box bg={cardBg} borderRadius="lg" borderWidth="1px" borderColor={borderColor} p={4} mb={4}>
               <FormControl>
                 <FormLabel color={textPrimary} fontSize="sm">
@@ -132,9 +129,9 @@ export const HealthRegisterView = () => {
                   size="sm"
                   color={textPrimary}
                 >
-                  {familyGroup.members.map((m) => (
-                    <option key={m.user?.id} value={m.user?.id ?? ''}>
-                      {m.user?.name}
+                  {adminMembers.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}
                     </option>
                   ))}
                 </Select>

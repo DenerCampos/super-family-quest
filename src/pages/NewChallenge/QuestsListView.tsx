@@ -13,15 +13,17 @@ export const QuestsListView = () => {
   const { theme, getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
   const {
-    familyGroup,
+    hasGroup,
     isLoadingGroup,
-    openQuery,
-    mineQuery,
+    openRows,
+    mineRows,
+    isLoadingOpen,
+    isLoadingMine,
     startMutation,
     handleOpen,
+    handleStart,
   } = useChoreQuestLists();
 
-  const mineRows = useMemo(() => mineQuery.data?.data ?? [], [mineQuery.data?.data]);
   const inProgressRows = useMemo(() => {
     const rows = mineRows.filter((r) => r.status === 'IN_PROGRESS');
     return [...rows].sort((a, b) => {
@@ -31,6 +33,11 @@ export const QuestsListView = () => {
       return ea ? -1 : 1;
     });
   }, [mineRows]);
+
+  const waitingRows = useMemo(
+    () => mineRows.filter((r) => r.status === 'WAITING_APPROVAL'),
+    [mineRows],
+  );
 
   const sectionShadow = resolveChakraColor(
     theme.colors.background.familyGroup.elevatedShadow,
@@ -46,7 +53,7 @@ export const QuestsListView = () => {
     );
   }
 
-  if (!familyGroup) {
+  if (!hasGroup) {
     return (
       <ChallengePageScaffold
         title={t('newChallenge.tiles.quests.title')}
@@ -56,9 +63,6 @@ export const QuestsListView = () => {
       </ChallengePageScaffold>
     );
   }
-
-  const openRows = openQuery.data?.data ?? [];
-  const waitingRows = mineRows.filter((r) => r.status === 'WAITING_APPROVAL');
 
   return (
     <ChallengePageScaffold
@@ -84,7 +88,7 @@ export const QuestsListView = () => {
           >
             {t('chores.sectionOpen')}
           </Text>
-          {openQuery.isLoading ? (
+          {isLoadingOpen ? (
             <Text color={getColor('text.familyGroup.primary')}>
               {t('common.loading')}
             </Text>
@@ -98,7 +102,7 @@ export const QuestsListView = () => {
               rows={openRows}
               showStart
               isStarting={startMutation.isPending}
-              onStart={(id) => startMutation.mutate(id)}
+              onStart={handleStart}
               onOpen={handleOpen}
             />
           )}
@@ -121,7 +125,7 @@ export const QuestsListView = () => {
           >
             {t('chores.sectionInProgress')}
           </Text>
-          {mineQuery.isLoading ? (
+          {isLoadingMine ? (
             <Text color={getColor('text.familyGroup.primary')}>
               {t('common.loading')}
             </Text>
@@ -159,7 +163,7 @@ export const QuestsListView = () => {
           >
             {t('chores.sectionWaitingApproval')}
           </Text>
-          {mineQuery.isLoading ? (
+          {isLoadingMine ? (
             <Text color={getColor('text.familyGroup.primary')}>
               {t('common.loading')}
             </Text>

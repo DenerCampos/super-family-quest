@@ -7,18 +7,19 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import { FamilyGroupedList } from '../../components/family/FamilyGroupedList';
 import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { PageScaffold } from '../../components/PageScaffold';
 import { PillTabBar } from '../../components/PillTabBar';
 import { ShoppingListCard } from '../../components/shoppingList/ShoppingListCard';
 import { CreateShoppingListModal } from '../../components/modals/CreateShoppingListModal';
+import { useFamilyGroup } from '../../hooks/useFamilyGroup';
 import { useShoppingLists } from '../../hooks/useShoppingLists';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
-import { api } from '../../services';
 import type {
   CreateShoppingListPayload,
   ShoppingListStatus,
@@ -32,21 +33,21 @@ export const ShoppingListsView = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [familyGroups, setFamilyGroups] = useState<{ id: string; name: string }[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { familyGroups } = useFamilyGroup({
+    fetchSummary: false,
+    fetchInvitations: false,
+  });
 
   const { lists, isLoading, status, changeStatus, createList, deleteList } =
     useShoppingLists();
 
-  useEffect(() => {
-    api.familyGroupList()
-      .then((groups) => {
-        if (groups.length > 0) {
-          setFamilyGroups(groups.map((g) => ({ id: g.id, name: g.name })));
-        }
-      })
-      .catch(() => setFamilyGroups([]));
-  }, []);
+  const familyOrder = useMemo(
+    () => familyGroups.map((g) => ({ id: g.id, name: g.name })),
+    [familyGroups],
+  );
+
+  const modalFamilyGroups = familyOrder;
 
   const handleCreate = async (payload: CreateShoppingListPayload) => {
     try {
@@ -164,18 +165,21 @@ export const ShoppingListsView = () => {
               </Button>
             </VStack>
           ) : (
-            <VStack spacing={3} align="stretch">
-              {lists.map((list) => (
+            <FamilyGroupedList
+              items={lists}
+              familyOrder={familyOrder}
+              getFamily={(list) => list.familyGroup}
+              getItemKey={(list) => list.id}
+              renderItem={(list) => (
                 <ShoppingListCard
-                  key={list.id}
                   list={list}
                   onClick={() =>
                     navigate(`/new-resources/shopping/${list.id}`)
                   }
                   onDelete={handleDelete}
                 />
-              ))}
-            </VStack>
+              )}
+            />
           )}
         </Box>
       </PageScaffold>
@@ -184,7 +188,7 @@ export const ShoppingListsView = () => {
         isOpen={isOpen}
         onClose={onClose}
         onSuccess={handleCreate}
-        familyGroups={familyGroups}
+        familyGroups={modalFamilyGroups}
       />
     </>
   );

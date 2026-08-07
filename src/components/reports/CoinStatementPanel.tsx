@@ -16,6 +16,7 @@ type CoinStatementPanelProps = {
   startDate: string;
   endDate: string;
   userId?: string;
+  familyGroupId?: string;
   showMemberName: boolean;
   page: number;
   onPageChange: (page: number) => void;
@@ -46,6 +47,7 @@ export function CoinStatementPanel({
   startDate,
   endDate,
   userId,
+  familyGroupId,
   showMemberName,
   page,
   onPageChange,
@@ -56,6 +58,7 @@ export function CoinStatementPanel({
     startDate,
     endDate,
     userId,
+    familyGroupId,
     page,
   });
 
