@@ -78,7 +78,7 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | `/dashboard/health-report/:overviewId` | Detalhe de relatório de saúde (card "Relatórios de Saúde", SP-123) |
 | `/new-resources` | Hub recursos |
 | `/new-resources/resources` | Grupos, lojas, pagamentos |
-| `/new-resources/family` | Grupo familiar |
+| `/new-resources/family` | Grupo familiar (`?tab=invitations\|group\|management`, SP-101) |
 | `/new-resources/shopping`, `.../shopping/:id` | Listas de compras |
 | `/new-resources/recipes`, `.../recipes/:id`, `.../new`, `.../edit` | Receitas |
 | `/new-resources/quests` | Hub chores/quests |
@@ -122,6 +122,7 @@ Arquivos em `src/services/` — atualizar ao integrar novo domínio da API:
 | `missions.ts` | Missões dinâmicas |
 | `health.ts` | Saúde — exames, upload, processamento, evolução laboratorial, visão geral, receituário (SP-123/SP-124) |
 | `chatAgent.ts` | Assistente Familiar — sessões/mensagens (SP-117); hook `useChatAgent` |
+| `notification.ts` | Notificações internas — list/unread-count/mark-read (SP-101); hook `useNotifications` |
 | `integrations.ts` | Integrações (Alexa, etc.) |
 
 Padrão de chamada:
@@ -214,6 +215,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, evolução laboratorial, visão geral, receituário; padronização de nomes (SP-123/SP-124/SP-125) |
 | `assistente-familiar.md` | Assistente Familiar — FAB flutuante, chat, screenContext, erros IA (SP-117) |
 | `grupo-familiar.md` | Multi-família: prioridade, stories, gerenciamento, invite search, filtros, collapse listas/receitas, badge quests, união membros saúde (SP-127) |
+| `notificacoes.md` | Sino no Header, painel Popover, mark-read das visíveis, deep link família (SP-101) |
 
 Widget global: `ChatAssistantWidget` (`ChatFab` + `ChatPanel` + hooks `useChatAgent` / etc.) montado em `RequireAuth` (ausente em rotas públicas).
 

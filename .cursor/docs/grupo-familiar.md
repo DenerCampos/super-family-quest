@@ -30,7 +30,7 @@ Permitir que o usuário participe de **0..N** grupos familiares na UI, com famí
 3. Stories: 1º círculo = família selecionada (label “Família”/tema só se owner); depois outras onde é admin; depois membros da selecionada.
 4. Trocar família limpa seleção de membro e recarrega summary/members.
 5. Gerenciamento: accordion por grupo + formulário “criar outro grupo”.
-6. Convite: digitar ≥3 chars dispara busca de usuários e preenche o e-mail.
+6. Convite: digitar ≥3 chars dispara busca de usuários e preenche o e-mail. Convite a usuário existente gera notificação in-app (sino); deep link `/new-resources/family?tab=invitations` (ver [notificacoes.md](./notificacoes.md)).
 7. Listas/receitas: `FamilyGroupedList` agrupa por `familyGroup` (ordem = prioridade das memberships + pessoal).
 8. Quests: `useQueries` por grupo; cards exibem `FamilyGroupBadge`; mutações usam o `familyGroupId` do item.
 9. Saúde (admin): `collectAdminFamilyMembers` une membros de todos os grupos admin/owner.

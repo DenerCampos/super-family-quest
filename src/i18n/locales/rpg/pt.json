@@ -1046,6 +1046,16 @@
       "ONCE": "Feito Épico"
     }
   },
+  "notifications": {
+    "title": "Avisos do Reino",
+    "open": "Abrir avisos",
+    "empty": "Nenhum aviso por enquanto.",
+    "loadError": "Não foi possível carregar os avisos do reino.",
+    "retry": "Tentar de novo",
+    "unreadSection": "Novos",
+    "readSection": "Anteriores",
+    "openLink": "Abrir missão"
+  },
   "financialSteps": {
     "nav": {
       "prev": "Recuar",

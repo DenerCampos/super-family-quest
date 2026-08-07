@@ -9,6 +9,7 @@ Padronizar telas autenticadas com **Header** e **NavigationBar** sempre visívei
 | Arquivo | Uso |
 |---------|-----|
 | `components/FixedAppShell.tsx` | Header + filhos flex + NavigationBar (`h="100vh"`, `overflow="hidden"`) |
+| `components/notifications/NotificationBell.tsx` | Sino + badge no Header (SP-101); ver `notificacoes.md` |
 | `components/PageScaffold.tsx` | Shell + barra de título (voltar + título) + área scroll |
 | `components/ResourceCrudScaffold.tsx` | CRUD em recursos: `singleCard` + `contentPt={4}` (Nova tarefa) |
 | `components/PageTitleBar.tsx` | Barra fixa com `BackButton` e título |

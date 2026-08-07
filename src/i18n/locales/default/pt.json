@@ -1111,6 +1111,16 @@
       "ONCE": "Conquista"
     }
   },
+  "notifications": {
+    "title": "Notificações",
+    "open": "Abrir notificações",
+    "empty": "Nenhuma notificação por enquanto.",
+    "loadError": "Não foi possível carregar as notificações.",
+    "retry": "Tentar novamente",
+    "unreadSection": "Não lidas",
+    "readSection": "Anteriores",
+    "openLink": "Ver detalhes"
+  },
   "demoLogin": {
     "loading": "Entrando como demo..."
   },
