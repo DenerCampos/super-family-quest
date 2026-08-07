@@ -2,15 +2,16 @@ import { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Flex, Spinner, Text } from '@chakra-ui/react';
 import { api } from '../../services';
+import { useAuth } from '../../contexts/AuthContext';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useLoginTheme } from '../../hooks/useLoginTheme';
 import { LoginThemeProvider } from '../../components/LoginThemeProvider';
-import { LOCAL_STORAGE_KEYS } from '../../utils/constants';
 
 const DemoLoginContent = () => {
   const { key } = useParams<{ key: string }>();
   const navigate = useNavigate();
+  const { establishSession } = useAuth();
   const loginTheme = useLoginTheme();
   const { getColor, getAsset } = useVisualTheme(loginTheme);
   const { t } = useThemedTranslation();
@@ -29,14 +30,14 @@ const DemoLoginContent = () => {
 
     api
       .demoLogin(key)
-      .then(({ accessToken }) => {
-        localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+      .then(({ accessToken }) => establishSession(accessToken))
+      .then(() => {
         navigate('/home', { replace: true });
       })
       .catch(() => {
         navigate('/login', { replace: true });
       });
-  }, [key, navigate]);
+  }, [key, navigate, establishSession]);
 
   return (
     <Flex

@@ -575,6 +575,7 @@
     "repeatMonthlyTooltip": "Se você repetir mensalmente, a receita será adicionada automaticamente todos os meses",
     "date": "Data",
     "editProfile": "Editar Perfil",
+    "demoReadOnly": "Conta de demonstração: o perfil não pode ser alterado.",
     "minimum6Characters": "Mínimo 6 caracteres",
     "repeatNewPassword": "Repita a nova senha",
     "saving": "Salvando...",

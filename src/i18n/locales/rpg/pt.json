@@ -566,6 +566,7 @@
     "repeatMonthlyTooltip": "Se você repetir mensalmente, a recompensa será adicionada automaticamente todos os meses",
     "date": "Data",
     "editProfile": "Editar Grimório",
+    "demoReadOnly": "Conta de demonstração: o grimório não pode ser alterado.",
     "minimum6Characters": "Mínimo 6 runas antigas",
     "repeatNewPassword": "Repita a palavra secreta",
     "saving": "Forjando alterações...",
