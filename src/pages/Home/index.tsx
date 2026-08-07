@@ -22,6 +22,7 @@ import { useInvalidateFinancialSummary } from "../../hooks/useInvalidateFinancia
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
 import { api } from "../../services";
+import { isOwner } from "../../utils/familyGroupPermissions";
 import {
   isRecurringModalSnoozed,
   snoozeRecurringModal,
@@ -87,12 +88,18 @@ const Home = () => {
 
   const {
     hasGroup,
+    familyGroup,
+    familyStoryGroups,
     familyMembers,
+    selectedFamilyGroupId,
+    setSelectedFamilyGroupId,
     selectedMember,
     selectedMemberId,
     setSelectedMemberId,
     summary,
   } = useFamilyGroup();
+
+  const currentUserId = profile?.user.id ?? '';
 
   const displayIncome = useMemo(() => {
     if (!hasGroup) return profile?.income ?? 0;
@@ -119,8 +126,18 @@ const Home = () => {
     if (selectedMember) {
       return selectedMember.name;
     }
-    return t('home.familyStories.familyLabel');
-  }, [hasGroup, selectedMember, profile?.user.name, t]);
+    if (familyGroup && isOwner(familyGroup, currentUserId)) {
+      return t('home.familyStories.familyLabel');
+    }
+    return familyGroup?.name ?? t('home.familyStories.familyLabel');
+  }, [
+    hasGroup,
+    selectedMember,
+    familyGroup,
+    currentUserId,
+    profile?.user.name,
+    t,
+  ]);
 
   const balanceLabel = useMemo(
     () =>
@@ -178,9 +195,12 @@ const Home = () => {
     <FixedAppShell bg={getColor("background.home")}>
       {hasGroup && (
         <FamilyStories
+          familyGroups={familyStoryGroups}
+          selectedFamilyGroupId={selectedFamilyGroupId}
+          onSelectFamily={setSelectedFamilyGroupId}
           members={familyMembers}
-          selectedId={selectedMemberId}
-          onSelect={setSelectedMemberId}
+          selectedMemberId={selectedMemberId}
+          onSelectMember={setSelectedMemberId}
         />
       )}
 
@@ -208,6 +228,7 @@ const Home = () => {
           setNewRegistrationAdded={setNewRegistrationAdded}
           onDelete={handleDeleteRegistration}
           onView={(id, type) => openReceipt(type, id)}
+          familyGroupId={selectedFamilyGroupId}
         />
       </Flex>
 

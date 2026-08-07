@@ -8,6 +8,7 @@ import {
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useAuth } from '../../contexts/AuthContext';
+import type { FamilyStoryGroup } from '../../hooks/useFamilyGroup';
 import { formatCurrencyBRL } from '../../utils/formatCurrency';
 import { FamilyStories } from '../FamilyStories';
 import type { FamilyGroupSummaryDto } from '../../types/familyGroup';
@@ -15,6 +16,9 @@ import type { FamilyGroupSummaryDto } from '../../types/familyGroup';
 type FamilyGroupSummaryProps = {
   summary: FamilyGroupSummaryDto | null;
   isLoading: boolean;
+  familyStoryGroups: FamilyStoryGroup[];
+  selectedFamilyGroupId: string | null;
+  onSelectFamily: (familyGroupId: string) => void;
   selectedMemberId: string | null;
   onSelectMember: (userId: string | null) => void;
 };
@@ -22,6 +26,9 @@ type FamilyGroupSummaryProps = {
 export const FamilyGroupSummary = ({
   summary,
   isLoading,
+  familyStoryGroups,
+  selectedFamilyGroupId,
+  onSelectFamily,
   selectedMemberId,
   onSelectMember,
 }: FamilyGroupSummaryProps) => {
@@ -40,9 +47,12 @@ export const FamilyGroupSummary = ({
   return (
     <VStack spacing={4} align="stretch">
       <FamilyStories
+        familyGroups={familyStoryGroups}
+        selectedFamilyGroupId={selectedFamilyGroupId}
+        onSelectFamily={onSelectFamily}
         members={summary.members}
-        selectedId={selectedMemberId}
-        onSelect={onSelectMember}
+        selectedMemberId={selectedMemberId}
+        onSelectMember={onSelectMember}
       />
 
       <Flex gap={3} direction={{ base: 'column', sm: 'row' }}>

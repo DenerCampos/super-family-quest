@@ -1,37 +1,111 @@
-import { Avatar, Box, Flex, Text, VStack } from '@chakra-ui/react';
+import { Avatar, Box, Flex, Image, Text, VStack } from '@chakra-ui/react';
 import { FaUsers } from 'react-icons/fa';
 import { useThemedTranslation } from '../hooks/useThemedTranslation';
+import type { FamilyStoryGroup } from '../hooks/useFamilyGroup';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 import { toDisplayableImageUrl } from '../utils/formatString';
 import type { MemberSummary } from '../types/familyGroup';
 
 type FamilyStoriesProps = {
+  familyGroups: FamilyStoryGroup[];
+  selectedFamilyGroupId: string | null;
+  onSelectFamily: (familyGroupId: string) => void;
   members: MemberSummary[];
-  selectedId: string | null;
-  onSelect: (memberId: string | null) => void;
+  selectedMemberId: string | null;
+  onSelectMember: (memberId: string | null) => void;
 };
 
-const AVATAR_SIZE = 44;
-const SELECTED_AVATAR_EXTRA = 12;
-const AVATAR_SLOT_HEIGHT = AVATAR_SIZE + SELECTED_AVATAR_EXTRA + 8;
+const PRIMARY_SIZE = 56;
+const SECONDARY_SIZE = 44;
+const MEMBER_SIZE = 40;
+const SELECTED_MEMBER_EXTRA = 8;
+const AVATAR_SLOT_HEIGHT = PRIMARY_SIZE + 8;
 
-function getAvatarSize(isSelected: boolean) {
-  return isSelected ? AVATAR_SIZE + SELECTED_AVATAR_EXTRA : AVATAR_SIZE;
+function getMemberSize(isSelected: boolean) {
+  return isSelected ? MEMBER_SIZE + SELECTED_MEMBER_EXTRA : MEMBER_SIZE;
 }
 
-function getRingBorderColor(isSelected: boolean, getColor: (token: string) => string) {
+function getRingBorderColor(
+  isSelected: boolean,
+  getColor: (token: string) => string,
+) {
   return isSelected ? getColor('border.familyStories.default') : 'transparent';
 }
 
+function FamilyCircleIcon({
+  size,
+  coatOfArms,
+  getColor,
+}: {
+  size: number;
+  coatOfArms?: string | null;
+  getColor: (token: string) => string;
+}) {
+  const src = toDisplayableImageUrl(coatOfArms) || undefined;
+
+  if (src) {
+    return (
+      <Image
+        src={src}
+        alt=""
+        boxSize={`${size}px`}
+        borderRadius="full"
+        objectFit="cover"
+        border="2px solid"
+        borderColor={getColor('background.familyStories.container')}
+      />
+    );
+  }
+
+  return (
+    <Flex
+      w={`${size}px`}
+      h={`${size}px`}
+      borderRadius="full"
+      bg={getColor('background.familyStories.avatar')}
+      border="2px solid"
+      borderColor={getColor('background.familyStories.container')}
+      align="center"
+      justify="center"
+      transition="width 0.2s ease, height 0.2s ease"
+    >
+      <FaUsers
+        size={size >= PRIMARY_SIZE ? 22 : 18}
+        color={getColor('text.familyStories.name')}
+      />
+    </Flex>
+  );
+}
+
 export const FamilyStories = ({
+  familyGroups,
+  selectedFamilyGroupId,
+  onSelectFamily,
   members,
-  selectedId,
-  onSelect,
+  selectedMemberId,
+  onSelectMember,
 }: FamilyStoriesProps) => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
 
-  const isFamilySelected = selectedId === null;
+  const selectedFamily =
+    familyGroups.find((g) => g.id === selectedFamilyGroupId) ??
+    familyGroups[0] ??
+    null;
+
+  const otherAdminFamilies = familyGroups.filter(
+    (g) => g.isAdmin && g.id !== selectedFamily?.id,
+  );
+
+  const isFamilyView = selectedMemberId === null;
+
+  if (!selectedFamily) {
+    return null;
+  }
+
+  const primaryLabel = selectedFamily.isOwner
+    ? t('home.familyStories.familyLabel')
+    : selectedFamily.name;
 
   return (
     <Flex
@@ -48,59 +122,84 @@ export const FamilyStories = ({
     >
       <VStack
         spacing={0.5}
-        minW="52px"
+        minW="56px"
         cursor="pointer"
-        onClick={() => onSelect(null)}
+        onClick={() => {
+          onSelectFamily(selectedFamily.id);
+          onSelectMember(null);
+        }}
       >
-        <Flex
-          h={`${AVATAR_SLOT_HEIGHT}px`}
-          align="center"
-          justify="center"
-        >
+        <Flex h={`${AVATAR_SLOT_HEIGHT}px`} align="center" justify="center">
           <Box
             p="2px"
             borderRadius="full"
             border="2px solid"
-            borderColor={getRingBorderColor(isFamilySelected, getColor)}
+            borderColor={getRingBorderColor(isFamilyView, getColor)}
             transition="all 0.2s ease"
           >
-            <Flex
-              w={`${getAvatarSize(isFamilySelected)}px`}
-              h={`${getAvatarSize(isFamilySelected)}px`}
-              borderRadius="full"
-              bg={getColor('background.familyStories.avatar')}
-              border="2px solid"
-              borderColor={getColor('background.familyStories.container')}
-              align="center"
-              justify="center"
-              transition="width 0.2s ease, height 0.2s ease"
-            >
-              <FaUsers
-                size={isFamilySelected ? 22 : 18}
-                color={getColor('text.familyStories.name')}
-              />
-            </Flex>
+            <FamilyCircleIcon
+              size={PRIMARY_SIZE}
+              coatOfArms={selectedFamily.ownerCoatOfArms}
+              getColor={getColor}
+            />
           </Box>
         </Flex>
         <Text
           fontSize="2xs"
           fontFamily={getFont('body')}
-          fontWeight={isFamilySelected ? 'bold' : 'normal'}
+          fontWeight={isFamilyView ? 'bold' : 'normal'}
           color={
-            isFamilySelected
+            isFamilyView
               ? getColor('text.familyStories.selectedName')
               : getColor('text.familyStories.name')
           }
           textAlign="center"
           noOfLines={1}
-          maxW="52px"
+          maxW="56px"
         >
-          {t('home.familyStories.familyLabel')}
+          {primaryLabel}
         </Text>
       </VStack>
 
+      {otherAdminFamilies.map((group) => (
+        <VStack
+          key={group.id}
+          spacing={0.5}
+          minW="52px"
+          cursor="pointer"
+          onClick={() => onSelectFamily(group.id)}
+        >
+          <Flex h={`${AVATAR_SLOT_HEIGHT}px`} align="center" justify="center">
+            <Box
+              p="2px"
+              borderRadius="full"
+              border="2px solid"
+              borderColor="transparent"
+              transition="all 0.2s ease"
+            >
+              <FamilyCircleIcon
+                size={SECONDARY_SIZE}
+                coatOfArms={group.ownerCoatOfArms}
+                getColor={getColor}
+              />
+            </Box>
+          </Flex>
+          <Text
+            fontSize="2xs"
+            fontFamily={getFont('body')}
+            fontWeight="normal"
+            color={getColor('text.familyStories.name')}
+            textAlign="center"
+            noOfLines={1}
+            maxW="52px"
+          >
+            {group.name}
+          </Text>
+        </VStack>
+      ))}
+
       {members.map((member) => {
-        const isSelected = selectedId === member.userId;
+        const isSelected = selectedMemberId === member.userId;
 
         return (
           <VStack
@@ -108,13 +207,9 @@ export const FamilyStories = ({
             spacing={0.5}
             minW="52px"
             cursor="pointer"
-            onClick={() => onSelect(member.userId)}
+            onClick={() => onSelectMember(member.userId)}
           >
-            <Flex
-              h={`${AVATAR_SLOT_HEIGHT}px`}
-              align="center"
-              justify="center"
-            >
+            <Flex h={`${AVATAR_SLOT_HEIGHT}px`} align="center" justify="center">
               <Box
                 p="2px"
                 borderRadius="full"
@@ -123,7 +218,7 @@ export const FamilyStories = ({
                 transition="all 0.2s ease"
               >
                 <Avatar
-                  boxSize={`${getAvatarSize(isSelected)}px`}
+                  boxSize={`${getMemberSize(isSelected)}px`}
                   name={member.name}
                   src={toDisplayableImageUrl(member.profileImage) || undefined}
                   referrerPolicy="no-referrer"

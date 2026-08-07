@@ -9,6 +9,12 @@ export type UserUpdate = {
   coatOfArms?: string;
 };
 
+export type UserSearchItem = {
+  id: string;
+  name: string;
+  email: string;
+};
+
 export const UserService = {
   register: async ({
     name,
@@ -52,6 +58,14 @@ export const UserService = {
       coatOfArms,
     });
 
+    return response.data;
+  },
+
+  /** Autocomplete de convite (SP-127). Mín. 3 caracteres. */
+  searchByEmail: async (email: string): Promise<UserSearchItem[]> => {
+    const response = await api.get<UserSearchItem[]>('/user/search', {
+      params: { email },
+    });
     return response.data;
   },
 };

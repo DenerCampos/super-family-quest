@@ -68,18 +68,31 @@ export const ProfileService = {
     });
   },
 
-  getLatestRegistrations: async (limit = 5): Promise<Registration[]> => {
-    const response = await api.get(`/profile/latest-registrations?limit=${limit}`);
+  getLatestRegistrations: async (
+    limit = 5,
+    familyGroupId?: string | null,
+  ): Promise<Registration[]> => {
+    const response = await api.get(`/profile/latest-registrations`, {
+      params: {
+        limit,
+        ...(familyGroupId ? { familyGroupId } : {}),
+      },
+    });
     return response.data.data;
   },
 
   getLatestRegistrationsPaginated: async (
     page = 1,
     limit = 5,
+    familyGroupId?: string | null,
   ): Promise<PaginatedRegistrations> => {
-    const response = await api.get(
-      `/profile/latest-registrations?page=${page}&limit=${limit}`,
-    );
+    const response = await api.get(`/profile/latest-registrations`, {
+      params: {
+        page,
+        limit,
+        ...(familyGroupId ? { familyGroupId } : {}),
+      },
+    });
     return response.data;
   },
 

@@ -4,6 +4,8 @@ export const LOCAL_STORAGE_KEYS = {
   USER_THEME: '@SuperFamilyQuest:userTheme',
   RECURRING_EXPENSE_SNOOZE_UNTIL: '@SuperFamilyQuest:recurringExpenseSnoozeUntil',
   RECURRING_INCOME_SNOOZE_UNTIL: '@SuperFamilyQuest:recurringIncomeSnoozeUntil',
+  /** Família selecionada nos stories / resumo (SP-127). */
+  ACTIVE_FAMILY_GROUP_ID: 'sfq.activeFamilyGroupId',
 } as const;
 
 // Namespace para outras constantes que possam ser adicionadas no futuro

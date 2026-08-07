@@ -23,17 +23,23 @@ import { resolveChakraColor } from '../../utils/resolveColor';
 interface BarChartExpensesIncomeProps {
   year: string;
   userId?: string;
+  familyGroupId?: string;
   onDataUpdate?: (data: ExpensesIncomeComparison[]) => void;
 }
 
 export const BarChartExpensesIncome = ({
   year,
   userId,
+  familyGroupId,
   onDataUpdate,
 }: BarChartExpensesIncomeProps) => {
   const { t } = useThemedTranslation();
   const { getColor, getFont } = useVisualTheme();
-  const { data = [], isLoading, isError } = useExpensesIncomeComparison({ year, userId });
+  const { data = [], isLoading, isError } = useExpensesIncomeComparison({
+    year,
+    userId,
+    familyGroupId,
+  });
 
   // Estabiliza o callback com ref para não re-disparar o effect a cada render do pai
   const onDataUpdateRef = useRef(onDataUpdate);

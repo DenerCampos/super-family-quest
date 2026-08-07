@@ -20,6 +20,7 @@ import { WarrantyItemRow } from './WarrantyItemRow';
 type Props = {
   year: number;
   userId?: string;
+  familyGroupId?: string;
   showMemberName: boolean;
   page: number;
   onPageChange: (page: number) => void;
@@ -28,6 +29,7 @@ type Props = {
 export function WarrantyItemsPanel({
   year,
   userId,
+  familyGroupId,
   showMemberName,
   page,
   onPageChange,
@@ -47,11 +49,12 @@ export function WarrantyItemsPanel({
 
   useEffect(() => {
     onPageChange(1);
-  }, [debouncedSearch, includeExpired, year, userId, onPageChange]);
+  }, [debouncedSearch, includeExpired, year, userId, familyGroupId, onPageChange]);
 
   const { data, isLoading, isError } = useWarrantyItems({
     year,
     userId,
+    familyGroupId,
     search: debouncedSearch,
     includeExpired,
     page,

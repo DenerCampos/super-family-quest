@@ -22,6 +22,7 @@ export const CoinService = {
     startDate: string;
     endDate: string;
     userId?: string;
+    familyGroupId?: string;
     page?: number;
     limit?: number;
   }): Promise<PaginatedCoinStatement> {

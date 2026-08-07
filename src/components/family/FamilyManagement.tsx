@@ -178,6 +178,7 @@ export const FamilyManagement = ({ group, onRefresh }: FamilyManagementProps) =>
           variant="outline"
           color={getColor('status.warning')}
           borderColor={getColor('status.warning')}
+          bg={getColor('background.familyGroup.badge.pending')}
           _hover={{ bg: getColor('background.familyGroup.badge.pending') }}
           size="sm"
           onClick={handleLeaveGroup}
@@ -193,6 +194,7 @@ export const FamilyManagement = ({ group, onRefresh }: FamilyManagementProps) =>
           variant="outline"
           color={getColor('status.error')}
           borderColor={getColor('status.error')}
+          bg={getColor('background.lastRegistrations.expense')}
           _hover={{ bg: getColor('background.lastRegistrations.expense') }}
           size="sm"
           onClick={handleDeleteGroup}

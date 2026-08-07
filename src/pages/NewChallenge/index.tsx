@@ -16,7 +16,7 @@ import { useChoreCoinCelebration } from '../../hooks/useChoreCoinCelebration';
 import { useFamilyGroup } from '../../hooks/useFamilyGroup';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
-import { isAdmin } from '../../utils/familyGroupPermissions';
+import { isAdminOfAnyFamilyGroup } from '../../utils/adminFamilyMembers';
 import { NoFamilyGroupHint } from './NoFamilyGroupHint';
 
 type Tile = {
@@ -82,15 +82,13 @@ const NewChallengeHub = () => {
   const { t } = useThemedTranslation();
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const { familyGroup, isLoadingGroup } = useFamilyGroup({
+  const { familyGroups, hasGroup, isLoadingGroup } = useFamilyGroup({
     fetchSummary: false,
     fetchInvitations: false,
   });
 
   const userId = profile?.user.id ?? '';
-  const userIsAdmin = familyGroup
-    ? isAdmin(familyGroup, userId)
-    : false;
+  const userIsAdmin = isAdminOfAnyFamilyGroup(familyGroups, userId);
 
   useChoreCoinCelebration();
 
@@ -106,7 +104,7 @@ const NewChallengeHub = () => {
     );
   }
 
-  if (!familyGroup) {
+  if (!hasGroup) {
     return (
       <FixedAppShell bg={getColor('background.resources')}>
         <Flex

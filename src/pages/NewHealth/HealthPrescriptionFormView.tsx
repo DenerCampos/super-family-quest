@@ -22,9 +22,7 @@ import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { PageTitleBar } from '../../components/PageTitleBar';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
-import { useAuth } from '../../contexts/AuthContext';
-import { useFamilyGroup } from '../../hooks/useFamilyGroup';
-import { isAdmin } from '../../utils/familyGroupPermissions';
+import { useAdminFamilyMembers } from '../../hooks/useAdminFamilyMembers';
 import { useHealthPrescriptionForm } from '../../hooks/useHealthPrescriptionForm';
 import { compressImage } from '../../utils/compressImage';
 import {
@@ -37,9 +35,8 @@ export const HealthPrescriptionFormView = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const toast = useToast();
-  const { profile } = useAuth();
-  const { familyGroup } = useFamilyGroup({ fetchSummary: false, fetchInvitations: false });
-  const userIsAdmin = familyGroup ? isAdmin(familyGroup, profile?.user.id ?? '') : false;
+  const { members: adminMembers, isAdminAnywhere: userIsAdmin } =
+    useAdminFamilyMembers();
   const dayOptions = getHealthDayOptions(t);
 
   const cameraRef = useRef<HTMLInputElement>(null);
@@ -259,13 +256,13 @@ export const HealthPrescriptionFormView = () => {
 
             <Box bg={cardBg} borderRadius="lg" borderWidth="1px" borderColor={borderColor} p={4} mb={4}>
             <Stack spacing={3}>
-              {!isEditing && userIsAdmin && familyGroup && (
+              {!isEditing && userIsAdmin && adminMembers.length > 0 && (
                 <FormControl>
                   <FormLabel color={textPrimary} fontSize="sm">{t('health.register.targetMember')}</FormLabel>
                   <Select bg={inputBg} size="sm" {...register('targetUserId')} color={textPrimary}>
                     <option value="">{t('health.register.targetMemberPlaceholder')}</option>
-                    {familyGroup.members.map((m) => (
-                      <option key={m.user?.id} value={m.user?.id ?? ''}>{m.user?.name}</option>
+                    {adminMembers.map((m) => (
+                      <option key={m.id} value={m.id}>{m.name}</option>
                     ))}
                   </Select>
                 </FormControl>

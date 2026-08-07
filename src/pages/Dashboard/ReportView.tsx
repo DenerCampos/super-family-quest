@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Box } from '@chakra-ui/react';
 import { Navigate, useParams } from 'react-router-dom';
 import { ExpensesByCategoryPanel } from '../../components/reports/ExpensesByCategoryPanel';
@@ -14,10 +14,10 @@ import { PageScaffold } from '../../components/PageScaffold';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useAuth } from '../../contexts/AuthContext';
-import { api } from '../../services';
-import type { FamilyGroupResponseDto } from '../../types/familyGroup';
+import { useFamilyGroupsList } from '../../hooks/useFamilyGroupsList';
 import type { ReportKey } from '../../types/reports';
 import { isAdmin } from '../../utils/familyGroupPermissions';
+import { sortFamilyGroupDtos } from '../../utils/familyGroupPriority';
 
 const VALID_KEYS = new Set<ReportKey>([
   'expensesByCategory',
@@ -55,8 +55,18 @@ export const ReportView = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const { profile } = useAuth();
+  const { data: groupsData } = useFamilyGroupsList();
 
-  const [familyGroup, setFamilyGroup] = useState<FamilyGroupResponseDto | null>(null);
+  const currentUserId = profile?.user.id ?? '';
+
+  const familyGroups = useMemo(
+    () => sortFamilyGroupDtos(groupsData ?? [], currentUserId),
+    [groupsData, currentUserId],
+  );
+
+  const [selectedFamilyGroupId, setSelectedFamilyGroupId] = useState<
+    string | null
+  >(null);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const now = new Date();
@@ -70,6 +80,31 @@ export const ReportView = () => {
   const [warrantyPage, setWarrantyPage] = useState(1);
 
   useEffect(() => {
+    if (familyGroups.length === 0) {
+      setSelectedFamilyGroupId(null);
+      return;
+    }
+    if (
+      !selectedFamilyGroupId ||
+      !familyGroups.some((g) => g.id === selectedFamilyGroupId)
+    ) {
+      setSelectedFamilyGroupId(familyGroups[0].id);
+    }
+  }, [familyGroups, selectedFamilyGroupId]);
+
+  const selectedFamilyGroup =
+    familyGroups.find((g) => g.id === selectedFamilyGroupId) ?? null;
+
+  // Membro (não-admin): garante userId=eu para não pedir “família inteira” sem permissão.
+  useEffect(() => {
+    if (!selectedFamilyGroup || !currentUserId) return;
+    if (isAdmin(selectedFamilyGroup, currentUserId)) return;
+    if (selectedUserId == null) {
+      setSelectedUserId(currentUserId);
+    }
+  }, [selectedFamilyGroup, selectedUserId, currentUserId]);
+
+  useEffect(() => {
     const { startDate: s, endDate: e } = getMonthDateRange(month, year);
     setStartDate(s);
     setEndDate(e);
@@ -79,23 +114,11 @@ export const ReportView = () => {
   useEffect(() => {
     setStatementPage(1);
     setWarrantyPage(1);
-  }, [startDate, endDate, selectedUserId]);
+  }, [startDate, endDate, selectedUserId, selectedFamilyGroupId]);
 
   useEffect(() => {
     setWarrantyPage(1);
   }, [year]);
-
-  useEffect(() => {
-    const loadFamilyGroup = async () => {
-      try {
-        const groups = await api.familyGroupList();
-        setFamilyGroup(groups.length > 0 ? groups[0] : null);
-      } catch {
-        setFamilyGroup(null);
-      }
-    };
-    loadFamilyGroup();
-  }, []);
 
   const key = VALID_KEYS.has(reportKey as ReportKey)
     ? (reportKey as ReportKey)
@@ -104,17 +127,21 @@ export const ReportView = () => {
   if (!key) {
     return <Navigate to="/dashboard" replace />;
   }
-
   const isYearOnly = key === 'expensesVsIncome' || key === 'warrantyItems';
   const userId = selectedUserId ?? undefined;
-  const currentUserId = profile?.user.id ?? '';
-  const userIsAdmin = familyGroup
-    ? isAdmin(familyGroup, currentUserId)
+  const familyGroupId = selectedFamilyGroupId ?? undefined;
+  const userIsAdmin = selectedFamilyGroup
+    ? isAdmin(selectedFamilyGroup, currentUserId)
     : false;
   const showMemberName =
     (key === 'coinStatement' || key === 'warrantyItems') &&
     userIsAdmin &&
     !selectedUserId;
+
+  const handleFamilyChange = (familyGroupIdValue: string | null) => {
+    setSelectedFamilyGroupId(familyGroupIdValue);
+    setSelectedUserId(null);
+  };
 
   const renderChart = () => {
     switch (key) {
@@ -124,6 +151,7 @@ export const ReportView = () => {
             startDate={startDate}
             endDate={endDate}
             userId={userId}
+            familyGroupId={familyGroupId}
           />
         );
       case 'expensesByDate':
@@ -132,16 +160,24 @@ export const ReportView = () => {
             startDate={startDate}
             endDate={endDate}
             userId={userId}
+            familyGroupId={familyGroupId}
           />
         );
       case 'expensesVsIncome':
-        return <BarChartExpensesIncome year={year.toString()} userId={userId} />;
+        return (
+          <BarChartExpensesIncome
+            year={year.toString()}
+            userId={userId}
+            familyGroupId={familyGroupId}
+          />
+        );
       case 'expensesByStore':
         return (
           <ExpensesByStorePanel
             startDate={startDate}
             endDate={endDate}
             userId={userId}
+            familyGroupId={familyGroupId}
           />
         );
       case 'topProducts':
@@ -150,6 +186,7 @@ export const ReportView = () => {
             startDate={startDate}
             endDate={endDate}
             userId={userId}
+            familyGroupId={familyGroupId}
           />
         );
       case 'coinStatement':
@@ -158,6 +195,7 @@ export const ReportView = () => {
             startDate={startDate}
             endDate={endDate}
             userId={userId}
+            familyGroupId={familyGroupId}
             showMemberName={showMemberName}
             page={statementPage}
             onPageChange={setStatementPage}
@@ -168,6 +206,7 @@ export const ReportView = () => {
           <WarrantyItemsPanel
             year={year}
             userId={userId}
+            familyGroupId={familyGroupId}
             showMemberName={showMemberName}
             page={warrantyPage}
             onPageChange={setWarrantyPage}
@@ -197,14 +236,16 @@ export const ReportView = () => {
         startDate={startDate}
         endDate={endDate}
         selectedUserId={selectedUserId}
-        familyGroup={familyGroup}
-        currentUserId={profile?.user.id ?? ''}
+        selectedFamilyGroupId={selectedFamilyGroupId}
+        familyGroups={familyGroups}
+        currentUserId={currentUserId}
         yearOnly={isYearOnly}
         onMonthChange={setMonth}
         onYearChange={setYear}
         onStartDateChange={setStartDate}
         onEndDateChange={setEndDate}
         onUserChange={setSelectedUserId}
+        onFamilyChange={handleFamilyChange}
       />
 
       <Box mt={4}>

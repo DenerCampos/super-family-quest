@@ -45,12 +45,14 @@ export const ReportsService = {
     startDate,
     endDate,
     userId,
+    familyGroupId,
   }: {
     startDate: string;
     endDate: string;
     userId?: string;
+    familyGroupId?: string;
   }): Promise<ExpensesByGroup[]> => {
-    const qs = buildQuery({ startDate, endDate, userId });
+    const qs = buildQuery({ startDate, endDate, userId, familyGroupId });
     const response = await api.get(`/reports/expense-by-group?${qs}`);
     return response.data;
   },
@@ -59,12 +61,14 @@ export const ReportsService = {
     startDate,
     endDate,
     userId,
+    familyGroupId,
   }: {
     startDate: string;
     endDate: string;
     userId?: string;
+    familyGroupId?: string;
   }): Promise<ExpensesByStore[]> => {
-    const qs = buildQuery({ startDate, endDate, userId });
+    const qs = buildQuery({ startDate, endDate, userId, familyGroupId });
     const response = await api.get(`/reports/expense-by-store?${qs}`);
     return response.data;
   },
@@ -73,12 +77,14 @@ export const ReportsService = {
     startDate,
     endDate,
     userId,
+    familyGroupId,
   }: {
     startDate: string;
     endDate: string;
     userId?: string;
+    familyGroupId?: string;
   }): Promise<ExpensesByDate[]> => {
-    const qs = buildQuery({ startDate, endDate, userId });
+    const qs = buildQuery({ startDate, endDate, userId, familyGroupId });
     const response = await api.get(`/reports/expense-by-date?${qs}`);
     return response.data;
   },
@@ -87,12 +93,14 @@ export const ReportsService = {
     startDate,
     endDate,
     userId,
+    familyGroupId,
   }: {
     startDate: string;
     endDate: string;
     userId?: string;
+    familyGroupId?: string;
   }): Promise<PurchasedItems[]> => {
-    const qs = buildQuery({ startDate, endDate, userId });
+    const qs = buildQuery({ startDate, endDate, userId, familyGroupId });
     const response = await api.get(`/reports/most-purchased-items?${qs}`);
     return response.data;
   },
@@ -100,11 +108,13 @@ export const ReportsService = {
   getExpensesIncomeComparison: async ({
     year,
     userId,
+    familyGroupId,
   }: {
     year: string;
     userId?: string;
+    familyGroupId?: string;
   }): Promise<ExpensesIncomeComparison[]> => {
-    const qs = buildQuery({ year, userId });
+    const qs = buildQuery({ year, userId, familyGroupId });
     const response = await api.get(`/reports/expenses-income-comparison?${qs}`);
     return response.data;
   },
@@ -112,6 +122,7 @@ export const ReportsService = {
   getWarrantyItems: async ({
     year,
     userId,
+    familyGroupId,
     search,
     includeExpired,
     page,
@@ -119,6 +130,7 @@ export const ReportsService = {
   }: {
     year: string;
     userId?: string;
+    familyGroupId?: string;
     search?: string;
     includeExpired?: boolean;
     page?: number;
@@ -127,6 +139,7 @@ export const ReportsService = {
     const qs = buildQuery({
       year,
       userId,
+      familyGroupId,
       search,
       includeExpired,
       page,

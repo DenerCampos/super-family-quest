@@ -28,6 +28,7 @@ interface LineChartExpensesProps {
   startDate: string;
   endDate: string;
   userId?: string;
+  familyGroupId?: string;
   onDataUpdate?: (data: ExpensesByDate[]) => void;
 }
 
@@ -43,11 +44,17 @@ export const LineChartExpensesByDate = ({
   startDate,
   endDate,
   userId,
+  familyGroupId,
   onDataUpdate,
 }: LineChartExpensesProps) => {
   const { t } = useThemedTranslation();
   const { getColor, getFont } = useVisualTheme();
-  const { data = [], isLoading, isError } = useExpensesByDate({ startDate, endDate, userId });
+  const { data = [], isLoading, isError } = useExpensesByDate({
+    startDate,
+    endDate,
+    userId,
+    familyGroupId,
+  });
 
   // Estabiliza o callback com ref para não re-disparar o effect a cada render do pai
   const onDataUpdateRef = useRef(onDataUpdate);

@@ -14,7 +14,8 @@ interface ReportFiltersProps {
   startDate: string;
   endDate: string;
   selectedUserId: string | null;
-  familyGroup: FamilyGroupResponseDto | null;
+  selectedFamilyGroupId: string | null;
+  familyGroups: FamilyGroupResponseDto[];
   currentUserId: string;
   yearOnly?: boolean;
   onMonthChange: (month: number) => void;
@@ -22,6 +23,7 @@ interface ReportFiltersProps {
   onStartDateChange: (date: string) => void;
   onEndDateChange: (date: string) => void;
   onUserChange: (userId: string | null) => void;
+  onFamilyChange: (familyGroupId: string | null) => void;
 }
 
 export const ReportFilters = ({
@@ -30,7 +32,8 @@ export const ReportFilters = ({
   startDate,
   endDate,
   selectedUserId,
-  familyGroup,
+  selectedFamilyGroupId,
+  familyGroups,
   currentUserId,
   yearOnly = false,
   onMonthChange,
@@ -38,6 +41,7 @@ export const ReportFilters = ({
   onStartDateChange,
   onEndDateChange,
   onUserChange,
+  onFamilyChange,
 }: ReportFiltersProps) => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
@@ -55,11 +59,13 @@ export const ReportFilters = ({
         borderColor={getColor('border.dashboard.tile')}
         boxShadow="sm"
       >
-        {familyGroup && (
+        {familyGroups.length > 0 && (
           <UserFamilyFilter
-            familyGroup={familyGroup}
+            familyGroups={familyGroups}
             currentUserId={currentUserId}
+            selectedFamilyGroupId={selectedFamilyGroupId}
             selectedUserId={selectedUserId}
+            onFamilyChange={onFamilyChange}
             onUserChange={onUserChange}
           />
         )}

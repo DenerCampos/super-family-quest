@@ -21,7 +21,7 @@ import { PageTitleBar } from '../../components/PageTitleBar';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useHealthExams } from '../../hooks/useHealthExams';
-import { useFamilyGroup } from '../../hooks/useFamilyGroup';
+import { useAdminFamilyMembers } from '../../hooks/useAdminFamilyMembers';
 import type { HealthExamFilterParams, HealthExamType } from '../../types/health';
 import {
   getHealthExamTypeFilterOptions,
@@ -33,7 +33,7 @@ export const HealthSearchView = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const navigate = useNavigate();
-  const { familyGroup } = useFamilyGroup({ fetchSummary: false, fetchInvitations: false });
+  const { members: adminMembers, isAdminAnywhere } = useAdminFamilyMembers();
 
   const [examName, setExamName] = useState('');
   const [doctorName, setDoctorName] = useState('');
@@ -81,11 +81,11 @@ export const HealthSearchView = () => {
         <Box width="100%" maxW="600px">
           <Box bg={cardBg} borderRadius="lg" borderWidth="1px" borderColor={borderColor} p={4} mb={4}>
             <Stack spacing={2}>
-              {familyGroup && (
+              {isAdminAnywhere && adminMembers.length > 0 && (
                 <Select bg={inputBg} size="sm" value={userId} onChange={(e) => setUserId(e.target.value)} color={textPrimary}>
                   <option value="">{t('health.search.allMembers')}</option>
-                  {familyGroup.members.map((m) => (
-                    <option key={m.user?.id} value={m.user?.id ?? ''}>{m.user?.name}</option>
+                  {adminMembers.map((m) => (
+                    <option key={m.id} value={m.id}>{m.name}</option>
                   ))}
                 </Select>
               )}

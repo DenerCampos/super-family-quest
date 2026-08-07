@@ -66,7 +66,7 @@ export const FamilyInvitations = ({ onInvitationHandled }: FamilyInvitationsProp
     } catch (error) {
       const description =
         isAxiosError(error) && error.response?.status === 409
-          ? t('familyGroup.conflictError')
+          ? t('familyGroup.alreadyMemberOfThisGroup')
           : t('familyGroup.acceptError');
       toast({
         title: t('common.error'),

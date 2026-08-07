@@ -96,7 +96,9 @@
     },
     "filters": {
       "allFamily": "Toda a Guilda",
+      "allFamilyNamed": "Toda a Guilda — {{name}}",
       "onlyMe": "Somente Eu",
+      "onlyMeNamed": "Somente Eu — {{name}}",
       "selectUser": "Filtrar por membro",
       "customDateRange": "Ciclo personalizado"
     }
@@ -808,7 +810,13 @@
     "year": "Era",
     "filter": "Consultar",
     "loadError": "Falha ao consultar registros da guilda",
-    "conflictError": "Você já faz parte de uma guilda familiar"
+    "conflictError": "Não foi possível concluir a ação (conflito na guilda familiar)",
+    "createAnotherGroup": "Fundar outra guilda",
+    "createAnotherGroupDescription": "Você pode servir a várias guildas. Informe o nome da nova guilda.",
+    "inviteSearchHint": "Digite ao menos 3 caracteres do pergaminho (e-mail) para buscar aventureiros cadastrados.",
+    "alreadyMemberOfThisGroup": "Você já é membro desta guilda familiar",
+    "personalSection": "Pergaminho pessoal",
+    "sectionItemCount": "{{count}} item(ns)"
   },
   "newResources": {
     "deleteSuccess": "Item destruído com sucesso",

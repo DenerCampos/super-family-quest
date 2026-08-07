@@ -3,22 +3,44 @@ import { ReportsService } from '../services/reports';
 
 export const expensesByStoreQueryKey = {
   root: ['expensesByStore'] as const,
-  list: (startDate: string, endDate: string, userId: string | undefined) =>
-    [...expensesByStoreQueryKey.root, startDate, endDate, userId ?? 'default'] as const,
+  list: (
+    startDate: string,
+    endDate: string,
+    userId: string | undefined,
+    familyGroupId: string | undefined,
+  ) =>
+    [
+      ...expensesByStoreQueryKey.root,
+      startDate,
+      endDate,
+      userId ?? 'default',
+      familyGroupId ?? 'none',
+    ] as const,
 };
 
 export function useExpensesByStore(params: {
   startDate: string;
   endDate: string;
   userId?: string;
+  familyGroupId?: string;
   enabled?: boolean;
 }) {
-  const { startDate, endDate, userId, enabled = true } = params;
+  const { startDate, endDate, userId, familyGroupId, enabled = true } = params;
 
   return useQuery({
-    queryKey: expensesByStoreQueryKey.list(startDate, endDate, userId),
+    queryKey: expensesByStoreQueryKey.list(
+      startDate,
+      endDate,
+      userId,
+      familyGroupId,
+    ),
     queryFn: () =>
-      ReportsService.getExpenseByStore({ startDate, endDate, userId }),
+      ReportsService.getExpenseByStore({
+        startDate,
+        endDate,
+        userId,
+        familyGroupId,
+      }),
     enabled,
   });
 }

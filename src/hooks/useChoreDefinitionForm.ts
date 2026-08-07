@@ -7,7 +7,7 @@ import {
   type SubmitHandler,
 } from 'react-hook-form';
 import { useEffect, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../services';
 import { useAuth } from '../contexts/AuthContext';
 import {
@@ -19,6 +19,7 @@ import { choreQueryKeys } from './choreQueryKeys';
 import { useFamilyGroup } from './useFamilyGroup';
 import { useThemedTranslation } from './useThemedTranslation';
 import { useVisualTheme } from './useVisualTheme';
+import { pickAdminFamilyGroupId } from '../utils/adminFamilyMembers';
 import { isAdmin } from '../utils/familyGroupPermissions';
 import { parseBRLCurrency, numberToBRLCurrencyInputValue } from '../utils/formatCurrency';
 
@@ -26,18 +27,29 @@ export const useChoreDefinitionForm = () => {
   const { definitionId } = useParams<{ definitionId: string }>();
   const isNew = definitionId === 'new' || !definitionId;
   const navigate = useNavigate();
+  const location = useLocation();
   const toast = useToast();
   const queryClient = useQueryClient();
   const { theme } = useVisualTheme();
-  const { familyGroup, isLoadingGroup } = useFamilyGroup({
+  const { familyGroup, familyGroups, isLoadingGroup } = useFamilyGroup({
     fetchSummary: false,
     fetchInvitations: false,
   });
   const { profile } = useAuth();
   const { t } = useThemedTranslation();
-  const groupId = familyGroup?.id;
   const userId = profile?.user.id ?? '';
-  const userIsAdmin = familyGroup ? isAdmin(familyGroup, userId) : false;
+  const stateFamilyGroupId = (
+    location.state as { familyGroupId?: string } | undefined
+  )?.familyGroupId;
+  const groupId =
+    stateFamilyGroupId ??
+    pickAdminFamilyGroupId(familyGroups, userId, familyGroup?.id) ??
+    familyGroup?.id;
+  const resolvedFamilyGroup =
+    familyGroups.find((g) => g.id === groupId) ?? familyGroup;
+  const userIsAdmin = resolvedFamilyGroup
+    ? isAdmin(resolvedFamilyGroup, userId)
+    : false;
 
   const schema = useMemo(() => buildChoreDefinitionSchema(t), [t]);
 
@@ -83,11 +95,18 @@ export const useChoreDefinitionForm = () => {
   }, [existingQuery.data, reset]);
 
   useEffect(() => {
-    if (!isLoadingGroup && familyGroup && !userIsAdmin) {
+    if (!isLoadingGroup && resolvedFamilyGroup && !userIsAdmin) {
       toast({ title: t('chores.adminOnlyDefinitions'), status: 'warning' });
       navigate('/new-resources/quests/definitions', { replace: true });
     }
-  }, [isLoadingGroup, familyGroup, userIsAdmin, navigate, toast, t]);
+  }, [
+    isLoadingGroup,
+    resolvedFamilyGroup,
+    userIsAdmin,
+    navigate,
+    toast,
+    t,
+  ]);
 
   const createMutation = useMutation({
     mutationFn: (body: Parameters<typeof api.choreCreateDefinition>[1]) =>
@@ -151,7 +170,7 @@ export const useChoreDefinitionForm = () => {
 
   return {
     isNew,
-    familyGroup,
+    familyGroup: resolvedFamilyGroup,
     isLoadingGroup,
     existingQuery,
     userIsAdmin,
