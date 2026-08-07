@@ -5,6 +5,7 @@ import { api } from '../services';
 import { registerUnauthorizedHandler, unregisterUnauthorizedHandler } from '../services/authSession';
 import { LOCAL_STORAGE_KEYS } from '../utils/constants';
 import { normalizeCoinDelta } from '../utils/coinsNumber';
+import { isDemoSession } from '../utils/demoSession';
 
 export type User = {
   id: string;
@@ -26,7 +27,11 @@ export type UserProfile = {
 
 type AuthContextType = {
   profile: UserProfile | null;
+  /** Sessão via `/demo/:key` — perfil somente leitura no front; API bloqueia writes. */
+  isDemo: boolean;
   login: (email: string, password: string) => Promise<void>;
+  /** Persiste JWT, deriva `isDemo` e carrega o perfil (usado por DemoLogin e login). */
+  establishSession: (accessToken: string) => Promise<void>;
   logout: () => void;
   loadProfile: () => Promise<void>;
   /** Ajuste otimista do saldo (ex.: após animação de moeda voadora). Reconcilie com loadProfile quando fizer sentido. */
@@ -39,6 +44,7 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [isDemo, setIsDemo] = useState(() => isDemoSession());
   const [showValues, setShowValues] = useState(() => {
     const savedShowValues = localStorage.getItem(LOCAL_STORAGE_KEYS.SHOW_VALUES);
     return savedShowValues ? JSON.parse(savedShowValues) : true;
@@ -49,8 +55,10 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   useEffect(() => {
     const token = localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
     if (token && !profile) {
+      setIsDemo(isDemoSession());
       loadProfile().catch(() => {
         localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
+        setIsDemo(false);
         navigate('/login');
       });
     }
@@ -60,6 +68,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
   const loadProfile = useCallback(async () => {   
     try {
       const profile = await api.profile();
+      setIsDemo(isDemoSession());
       
       setProfile({
         ...profile,
@@ -92,12 +101,23 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
     });
   }, []);
 
+  const establishSession = useCallback(async (accessToken: string) => {
+    localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+    setIsDemo(isDemoSession());
+    try {
+      await loadProfile();
+    } catch (error) {
+      localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
+      setProfile(null);
+      setIsDemo(false);
+      throw error;
+    }
+  }, [loadProfile]);
+
   const login = useCallback(async (email: string, password: string) => {
     try {
       const { accessToken } = await api.login({ email, password });
-      localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-      
-      await loadProfile();
+      await establishSession(accessToken);
       await waitForThemeLoad(); // Aguarda o tema ser carregado
 
       // Garante que o state foi atualizado antes de navegar
@@ -106,11 +126,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
       console.error('Login failed:', error);
       throw error;
     }
-  }, [loadProfile, navigate, waitForThemeLoad]);
+  }, [establishSession, navigate, waitForThemeLoad]);
 
   const logout = useCallback(() => {
     localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
     setProfile(null);
+    setIsDemo(false);
     queryClient.clear();
     navigate('/login');
   }, [navigate, queryClient]);
@@ -140,13 +161,15 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 
   const contextValue = useMemo(() => ({
     profile,
+    isDemo,
     login,
+    establishSession,
     logout,
     loadProfile,
     applyCoinsDelta,
     showValues,
     toggleShowValues
-  }), [profile, login, logout, loadProfile, applyCoinsDelta, showValues, toggleShowValues]);
+  }), [profile, isDemo, login, establishSession, logout, loadProfile, applyCoinsDelta, showValues, toggleShowValues]);
 
   return (
     <AuthContext.Provider value={contextValue}>

@@ -29,7 +29,7 @@ import {
 } from "../../utils/recurringModalSnooze";
 
 const Home = () => {
-  const { profile, loadProfile, showValues, toggleShowValues } = useAuth();
+  const { profile, loadProfile, showValues, toggleShowValues, isDemo } = useAuth();
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const toast = useToast();
@@ -154,7 +154,7 @@ const Home = () => {
   }, [location.state]);
 
   useEffect(() => {
-    if (profile && profile.isFirstAccess) {
+    if (profile && profile.isFirstAccess && !isDemo) {
       setShowCompleteProfile(true);
     }
 
@@ -165,7 +165,7 @@ const Home = () => {
     if (profile && profile.hasRecurringExpenses && !isRecurringModalSnoozed('expense')) {
       setShowRecurringExpensesModal(true);
     }
-  }, [profile]);
+  }, [profile, isDemo]);
 
   const handleDismissRecurringExpensesModal = (rememberLater: boolean) => {
     if (rememberLater) {
