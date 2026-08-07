@@ -16,6 +16,7 @@ import { RecipeService } from "./recipe";
 import { MissionsService } from "./missions";
 import { HealthService } from "./health";
 import { ChatAgentService } from "./chatAgent";
+import { NotificationService } from "./notification";
 
 export const api = {
   getAvailableThemes: themeService.getAvailableThemes,
@@ -27,15 +28,19 @@ export const api = {
 
   profile: ProfileService.profile,
   completeProfile: ProfileService.completeProfile,
-  getLatestRegistrations: (limit?: number) =>
-    ProfileService.getLatestRegistrations(limit),
-  getLatestRegistrationsPaginated: (page?: number, limit?: number) =>
-    ProfileService.getLatestRegistrationsPaginated(page, limit),
+  getLatestRegistrations: (limit?: number, familyGroupId?: string | null) =>
+    ProfileService.getLatestRegistrations(limit, familyGroupId),
+  getLatestRegistrationsPaginated: (
+    page?: number,
+    limit?: number,
+    familyGroupId?: string | null,
+  ) => ProfileService.getLatestRegistrationsPaginated(page, limit, familyGroupId),
 
   login: AuthService.login,
   demoLogin: AuthService.demoLogin,
   register: UserService.register,
   updateUser: UserService.update,
+  searchUsersByEmail: (email: string) => UserService.searchByEmail(email),
 
   couponReader: CouponReaderService.read,
   expenseAnalyzeImage: ExpenseService.analyzeImage,
@@ -123,45 +128,84 @@ export const api = {
     startDate,
     endDate,
     userId,
+    familyGroupId,
   }: {
     startDate: string;
     endDate: string;
     userId?: string;
-  }) => ReportsService.getExpenseByGroup({ startDate, endDate, userId }),
+    familyGroupId?: string;
+  }) =>
+    ReportsService.getExpenseByGroup({
+      startDate,
+      endDate,
+      userId,
+      familyGroupId,
+    }),
   getExpenseByStore: ({
     startDate,
     endDate,
     userId,
+    familyGroupId,
   }: {
     startDate: string;
     endDate: string;
     userId?: string;
-  }) => ReportsService.getExpenseByStore({ startDate, endDate, userId }),
+    familyGroupId?: string;
+  }) =>
+    ReportsService.getExpenseByStore({
+      startDate,
+      endDate,
+      userId,
+      familyGroupId,
+    }),
   getExpenseByDate: ({
     startDate,
     endDate,
     userId,
+    familyGroupId,
   }: {
     startDate: string;
     endDate: string;
     userId?: string;
-  }) => ReportsService.getExpenseByDate({ startDate, endDate, userId }),
+    familyGroupId?: string;
+  }) =>
+    ReportsService.getExpenseByDate({
+      startDate,
+      endDate,
+      userId,
+      familyGroupId,
+    }),
   getMostPurchasedItems: ({
     startDate,
     endDate,
     userId,
+    familyGroupId,
   }: {
     startDate: string;
     endDate: string;
     userId?: string;
-  }) => ReportsService.getMostPurchasedItems({ startDate, endDate, userId }),
+    familyGroupId?: string;
+  }) =>
+    ReportsService.getMostPurchasedItems({
+      startDate,
+      endDate,
+      userId,
+      familyGroupId,
+    }),
   getExpensesIncomeComparison: ({
     year,
     userId,
+    familyGroupId,
   }: {
     year: string;
     userId?: string;
-  }) => ReportsService.getExpensesIncomeComparison({ year, userId }),
+    familyGroupId?: string;
+  }) =>
+    ReportsService.getExpensesIncomeComparison({
+      year,
+      userId,
+      familyGroupId,
+    }),
   recurringExpenseConfirm: (expenses: ExpenseRecurring) =>
     ExpenseService.postRecurringConfirm(expenses),
   getExpenseRecurring: ExpenseService.getRecurring,
@@ -264,6 +308,10 @@ export const api = {
 
   missionGetAll: MissionsService.getMissions,
   missionClaimReward: MissionsService.claimReward,
+
+  notificationList: (limit?: number) => NotificationService.list(limit),
+  notificationUnreadCount: NotificationService.unreadCount,
+  notificationMarkAsRead: (ids: string[]) => NotificationService.markAsRead(ids),
 
   healthCreateExam: HealthService.createExam,
   healthListExams: HealthService.listExams,

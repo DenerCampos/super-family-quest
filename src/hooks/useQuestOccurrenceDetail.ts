@@ -21,19 +21,29 @@ const isChorePhotoType = (mime: string): boolean =>
 export const useQuestOccurrenceDetail = () => {
   const { occurrenceId } = useParams<{ occurrenceId: string }>();
   const location = useLocation();
-  const initialOccurrence = (
-    location.state as { occurrence?: ChoreOccurrenceResponseDto } | undefined
-  )?.occurrence;
+  const locationState = location.state as
+    | {
+        occurrence?: ChoreOccurrenceResponseDto;
+        familyGroupId?: string;
+      }
+    | undefined;
+  const initialOccurrence = locationState?.occurrence;
   const navigate = useNavigate();
   const toast = useToast();
   const queryClient = useQueryClient();
-  const { familyGroup, isLoadingGroup } = useFamilyGroup({
+  const { familyGroup, familyGroups, isLoadingGroup } = useFamilyGroup({
     fetchSummary: false,
     fetchInvitations: false,
   });
   const { profile } = useAuth();
   const { t } = useThemedTranslation();
-  const groupId = familyGroup?.id;
+  const groupId =
+    locationState?.familyGroupId ??
+    (initialOccurrence as { familyGroupId?: string } | undefined)
+      ?.familyGroupId ??
+    familyGroup?.id;
+  const resolvedFamilyGroup =
+    familyGroups.find((g) => g.id === groupId) ?? familyGroup;
   const userId = profile?.user.id;
 
   const beforeCameraRef = useRef<HTMLInputElement>(null);
@@ -212,7 +222,7 @@ export const useQuestOccurrenceDetail = () => {
     navigate,
     detailQuery,
     occ,
-    familyGroup,
+    familyGroup: resolvedFamilyGroup,
     isLoadingGroup,
     beforeCameraRef,
     beforeGalleryRef,

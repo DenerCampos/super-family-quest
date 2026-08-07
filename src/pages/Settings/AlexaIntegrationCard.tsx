@@ -8,6 +8,7 @@ interface AlexaIntegrationCardProps {
   loading: boolean;
   loadingDisconnect: boolean;
   onDisconnect: () => void;
+  disconnectDisabled?: boolean;
 }
 
 export const AlexaIntegrationCard = ({
@@ -15,6 +16,7 @@ export const AlexaIntegrationCard = ({
   loading,
   loadingDisconnect,
   onDisconnect,
+  disconnectDisabled = false,
 }: AlexaIntegrationCardProps) => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
@@ -140,6 +142,7 @@ export const AlexaIntegrationCard = ({
                 isLoading={loadingDisconnect}
                 loadingText={t('settings.integrations.alexa.loadingDisconnect')}
                 onClick={onDisconnect}
+                isDisabled={disconnectDisabled}
                 flexShrink={0}
                 _hover={{
                   bg: getColor('background.integrations.statusDisconnected'),

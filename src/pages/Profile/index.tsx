@@ -55,7 +55,7 @@ const predefinedCoatOfArms = [
 ];
 
 const Profile = () => {
-  const { profile, loadProfile } = useAuth();
+  const { profile, loadProfile, isDemo } = useAuth();
   const toast = useToast();
   const { t } = useThemedTranslation();
   const { currentTheme, changeTheme, reloadThemes } = useTheme();
@@ -67,6 +67,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isCoatChanged, setIsCoatChanged] = useState(false);
+  const canEditProfile = !isDemo && isEditing;
   const [errors, setErrors] = useState({
     email: '',
     password: '',
@@ -91,7 +92,7 @@ const Profile = () => {
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file || isDemo) return;
 
     setIsUploadingPhoto(true);
     try {
@@ -280,6 +281,8 @@ const Profile = () => {
   };
 
   const handleSave = async () => {
+    if (isDemo) return;
+
     // Validações finais antes de salvar
     if (email && !validateEmail(email)) {
       toast({
@@ -412,48 +415,64 @@ const Profile = () => {
                       border="3px solid"
                       borderColor={getColor('border.primary')}
                     />
-                    <IconButton
-                      aria-label={t('profile.uploadPhoto')}
-                      icon={<FiCamera />}
-                      position="absolute"
-                      bottom={2}
-                      left={2}
-                      colorScheme={getColor('button.primary')}
-                      rounded="full"
-                      size="sm"
-                      isLoading={isUploadingPhoto}
-                      onClick={() => fileInputRef.current?.click()}
-                    />
-                    <Input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/jpeg,image/png,image/gif,image/webp"
-                      display="none"
-                      onChange={handlePhotoUpload}
-                    />
-                    <IconButton
-                      aria-label={t('profile.changeCoatOfArms')}
-                      icon={<FiEdit2 />}
-                      position="absolute"
-                      bottom={2}
-                      right={2}
-                      colorScheme={getColor('button.primary')}
-                      rounded="full"
-                      size="sm"
-                      onClick={openCoatModal}
-                    />
+                    {!isDemo && (
+                      <>
+                        <IconButton
+                          aria-label={t('profile.uploadPhoto')}
+                          icon={<FiCamera />}
+                          position="absolute"
+                          bottom={2}
+                          left={2}
+                          colorScheme={getColor('button.primary')}
+                          rounded="full"
+                          size="sm"
+                          isLoading={isUploadingPhoto}
+                          onClick={() => fileInputRef.current?.click()}
+                        />
+                        <Input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/jpeg,image/png,image/gif,image/webp"
+                          display="none"
+                          onChange={handlePhotoUpload}
+                        />
+                        <IconButton
+                          aria-label={t('profile.changeCoatOfArms')}
+                          icon={<FiEdit2 />}
+                          position="absolute"
+                          bottom={2}
+                          right={2}
+                          colorScheme={getColor('button.primary')}
+                          rounded="full"
+                          size="sm"
+                          onClick={openCoatModal}
+                        />
+                      </>
+                    )}
                   </Box>
 
-                  <Button
-                    onClick={() => setIsEditing(!isEditing)}
-                    colorScheme={getColor('button.primary')}
-                    leftIcon={isEditing ? <FiCheck /> : <FiEdit2 />}
-                    mb={4}
-                  >
-                    {isEditing
-                      ? t('profile.saveChanges')
-                      : t('profile.editProfile')}
-                  </Button>
+                  {isDemo ? (
+                    <Text
+                      color={getColor('text.profile.secondary')}
+                      fontSize="sm"
+                      textAlign="center"
+                      mb={4}
+                      px={2}
+                    >
+                      {t('profile.demoReadOnly')}
+                    </Text>
+                  ) : (
+                    <Button
+                      onClick={() => setIsEditing(!isEditing)}
+                      colorScheme={getColor('button.primary')}
+                      leftIcon={isEditing ? <FiCheck /> : <FiEdit2 />}
+                      mb={4}
+                    >
+                      {isEditing
+                        ? t('profile.saveChanges')
+                        : t('profile.editProfile')}
+                    </Button>
+                  )}
                 </Flex>
 
                 <FormControl>
@@ -463,14 +482,14 @@ const Profile = () => {
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    isDisabled={!isEditing}
+                    isDisabled={!canEditProfile}
                     bg={
-                      isEditing
+                      canEditProfile
                         ? getColor('input.primary')
                         : getColor('input.secondary')
                     }
                     color={
-                      isEditing
+                      canEditProfile
                         ? getColor('text.profile.primary')
                         : getColor('text.profile.secondary')
                     }
@@ -489,14 +508,14 @@ const Profile = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    isDisabled={!isEditing}
+                    isDisabled={!canEditProfile}
                     bg={
-                      isEditing
+                      canEditProfile
                         ? getColor('input.primary')
                         : getColor('input.secondary')
                     }
                     color={
-                      isEditing
+                      canEditProfile
                         ? getColor('text.profile.primary')
                         : getColor('text.profile.secondary')
                     }
@@ -517,14 +536,14 @@ const Profile = () => {
                   <Input
                     value={family}
                     onChange={(e) => setFamily(e.target.value)}
-                    isDisabled={!isEditing}
+                    isDisabled={!canEditProfile}
                     bg={
-                      isEditing
+                      canEditProfile
                         ? getColor('input.primary')
                         : getColor('input.secondary')
                     }
                     color={
-                      isEditing
+                      canEditProfile
                         ? getColor('text.profile.primary')
                         : getColor('text.profile.secondary')
                     }
@@ -535,7 +554,7 @@ const Profile = () => {
                   />
                 </FormControl>
 
-                {isEditing && (
+                {canEditProfile && (
                   <>
                     <FormControl isInvalid={!!errors.password}>
                       <FormLabel color={getColor('text.profile.primary')}>
@@ -548,12 +567,12 @@ const Profile = () => {
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder={t('profile.minimum6Characters')}
                           bg={
-                            isEditing
+                            canEditProfile
                               ? getColor('input.primary')
                               : getColor('input.secondary')
                           }
                           color={
-                            isEditing
+                            canEditProfile
                               ? getColor('text.profile.primary')
                               : getColor('text.profile.secondary')
                           }
@@ -594,12 +613,12 @@ const Profile = () => {
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           placeholder={t('profile.repeatNewPassword')}
                           bg={
-                            isEditing
+                            canEditProfile
                               ? getColor('input.primary')
                               : getColor('input.secondary')
                           }
                           color={
-                            isEditing
+                            canEditProfile
                               ? getColor('text.profile.primary')
                               : getColor('text.profile.primary')
                           }
@@ -637,7 +656,7 @@ const Profile = () => {
                   </>
                 )}
 
-                {(isEditing || isCoatChanged) && (
+                {(canEditProfile || isCoatChanged) && (
                   <Button
                     colorScheme={getColor('button.primary')}
                     onClick={handleSave}

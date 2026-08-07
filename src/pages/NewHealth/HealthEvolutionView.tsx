@@ -23,7 +23,7 @@ import {
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useAuth } from '../../contexts/AuthContext';
-import { useFamilyGroup } from '../../hooks/useFamilyGroup';
+import { useAdminFamilyMembers } from '../../hooks/useAdminFamilyMembers';
 import {
   useHealthLabItemEvolution,
   useHealthLabItemNames,
@@ -41,10 +41,7 @@ export const HealthEvolutionView = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const { profile } = useAuth();
-  const { familyGroup } = useFamilyGroup({
-    fetchSummary: false,
-    fetchInvitations: false,
-  });
+  const { members: adminMembers, isAdminAnywhere } = useAdminFamilyMembers();
 
   const currentUserId = profile?.user.id ?? '';
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -219,7 +216,7 @@ export const HealthEvolutionView = () => {
             mb={4}
           >
             <Stack spacing={2}>
-              {familyGroup && familyGroup.members.length > 1 && (
+              {isAdminAnywhere && adminMembers.length > 1 && (
                 <Select
                   bg={inputBg}
                   size="sm"
@@ -228,10 +225,10 @@ export const HealthEvolutionView = () => {
                   color={textPrimary}
                   borderColor={borderColor}
                 >
-                  {familyGroup.members.map((m) => (
-                    <option key={m.user?.id} value={m.user?.id ?? ''}>
-                      {m.user?.name}
-                      {m.user?.id === currentUserId
+                  {adminMembers.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}
+                      {m.id === currentUserId
                         ? ` (${t('health.evolution.me')})`
                         : ''}
                     </option>

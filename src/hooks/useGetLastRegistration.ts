@@ -6,7 +6,7 @@ export const GET_LAST_REGISTRATION_QUERY_KEY = "get-last-registration";
 
 const ITEMS_PER_PAGE = 5;
 
-export const useGetLastRegistration = () => {
+export const useGetLastRegistration = (familyGroupId?: string | null) => {
   const queryClient = useQueryClient();
 
   const {
@@ -19,9 +19,13 @@ export const useGetLastRegistration = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery<PaginatedRegistrations>({
-    queryKey: [GET_LAST_REGISTRATION_QUERY_KEY],
+    queryKey: [GET_LAST_REGISTRATION_QUERY_KEY, familyGroupId ?? null],
     queryFn: ({ pageParam }) =>
-      api.getLatestRegistrationsPaginated(pageParam as number, ITEMS_PER_PAGE),
+      api.getLatestRegistrationsPaginated(
+        pageParam as number,
+        ITEMS_PER_PAGE,
+        familyGroupId,
+      ),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const { currentPage, totalPages } = lastPage.meta;

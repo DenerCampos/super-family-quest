@@ -17,7 +17,7 @@ import { PageTitleBar } from '../../components/PageTitleBar';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useAuth } from '../../contexts/AuthContext';
-import { useFamilyGroup } from '../../hooks/useFamilyGroup';
+import { useAdminFamilyMembers } from '../../hooks/useAdminFamilyMembers';
 import {
   useCreatePatientContext,
   useLatestPatientContext,
@@ -28,10 +28,7 @@ export const HealthFeelingNowView = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const { profile } = useAuth();
-  const { familyGroup } = useFamilyGroup({
-    fetchSummary: false,
-    fetchInvitations: false,
-  });
+  const { members: adminMembers, isAdminAnywhere } = useAdminFamilyMembers();
 
   const [targetUserId, setTargetUserId] = useState(profile?.user.id ?? '');
   const [content, setContent] = useState('');
@@ -85,7 +82,7 @@ export const HealthFeelingNowView = () => {
         pb={20}
       >
         <Box width="100%" maxW="600px">
-          {familyGroup && familyGroup.members.length > 1 && (
+          {isAdminAnywhere && adminMembers.length > 1 && (
             <Box
               bg={cardBg}
               borderRadius="lg"
@@ -110,10 +107,10 @@ export const HealthFeelingNowView = () => {
                 color={textPrimary}
                 borderColor={borderColor}
               >
-                {familyGroup.members.map((m) => (
-                  <option key={m.user?.id} value={m.user?.id ?? ''}>
-                    {m.user?.name}
-                    {m.user?.id === profile?.user.id
+                {adminMembers.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name}
+                    {m.id === profile?.user.id
                       ? ` (${t('health.feelingNow.me')})`
                       : ''}
                   </option>

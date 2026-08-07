@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useThemedTranslation } from '../hooks/useThemedTranslation';
 import { toDisplayableImageUrl } from '../utils/formatString';
 import { CoinDisplay } from './CoinDisplay';
+import { NotificationBell } from './notifications/NotificationBell';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 
 export const Header = () => {
@@ -23,7 +24,7 @@ export const Header = () => {
       align="center"
       boxShadow="lg"
     >
-      <Flex align="center" gap={3}>
+      <Flex align="center" gap={3} minW={0} flex="1" overflow="hidden" mr={2}>
         <Avatar
           size="sm"
           name={profile?.user.name}
@@ -31,18 +32,26 @@ export const Header = () => {
           referrerPolicy="no-referrer"
           borderWidth="2px"
           borderColor={getColor('border.header')}
+          flexShrink={0}
         />
         <Heading
           size="md"
           color={getColor('text.header')}
           fontFamily={getFont('heading')}
+          noOfLines={1}
+          minW={0}
+          overflow="hidden"
+          textOverflow="ellipsis"
+          whiteSpace="nowrap"
+          title={profile?.user.family}
         >
           {profile?.user.family}
         </Heading>
       </Flex>
 
-      {/* Lado Direito - Moedas e Logout */}
-      <Flex align="center" gap={4}>
+      {/* Lado Direito - Notificações, Moedas e Logout */}
+      <Flex align="center" gap={4} flexShrink={0}>
+        <NotificationBell />
         <CoinDisplay coins={profile?.coins || 0} />
         <IconButton
           icon={<FiLogOut />}

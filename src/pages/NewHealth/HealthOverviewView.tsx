@@ -22,7 +22,7 @@ import { HealthMarkdownContent } from '../../components/health/HealthMarkdownCon
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useAuth } from '../../contexts/AuthContext';
-import { useFamilyGroup } from '../../hooks/useFamilyGroup';
+import { useAdminFamilyMembers } from '../../hooks/useAdminFamilyMembers';
 import {
   useGenerateHealthOverview,
   useHealthOverview,
@@ -34,7 +34,7 @@ export const HealthOverviewView = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
   const { profile } = useAuth();
-  const { familyGroup } = useFamilyGroup({ fetchSummary: false, fetchInvitations: false });
+  const { members: adminMembers, isAdminAnywhere } = useAdminFamilyMembers();
 
   const [targetUserId, setTargetUserId] = useState(profile?.user.id ?? '');
   const [patientContext, setPatientContext] = useState('');
@@ -84,7 +84,7 @@ export const HealthOverviewView = () => {
 
       <Flex flex={1} minH={0} direction="column" align="center" overflow="auto" pt={4} px={4} pb={20}>
         <Box width="100%" maxW="600px">
-          {familyGroup && familyGroup.members.length > 1 && (
+          {isAdminAnywhere && adminMembers.length > 1 && (
             <Box bg={cardBg} borderRadius="lg" borderWidth="1px" borderColor={borderColor} p={4} mb={4}>
               <Text color={textPrimary} fontSize="sm" fontWeight="semibold" mb={2}>
                 {t('health.overview.selectMember')}
@@ -97,10 +97,10 @@ export const HealthOverviewView = () => {
                 color={textPrimary}
                 borderColor={borderColor}
               >
-                {familyGroup.members.map((m) => (
-                  <option key={m.user?.id} value={m.user?.id ?? ''}>
-                    {m.user?.name}
-                    {m.user?.id === profile?.user.id ? ` (${t('health.overview.me')})` : ''}
+                {adminMembers.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name}
+                    {m.id === profile?.user.id ? ` (${t('health.overview.me')})` : ''}
                   </option>
                 ))}
               </Select>

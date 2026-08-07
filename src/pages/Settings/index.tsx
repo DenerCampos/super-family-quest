@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { PageScaffold } from '../../components/PageScaffold';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
 import type { IntegrationsStatus } from '../../services/integrations';
 import { AlexaIntegrationCard } from './AlexaIntegrationCard';
@@ -12,6 +13,7 @@ import { HowToConnectCard } from './HowToConnectCard';
 const Settings = () => {
   const { getColor } = useVisualTheme();
   const { t } = useThemedTranslation();
+  const { isDemo } = useAuth();
   const toast = useToast();
   const location = useLocation();
 
@@ -49,6 +51,15 @@ const Settings = () => {
   }, [location.search, loadStatus]);
 
   const handleDisconnect = async () => {
+    if (isDemo) {
+      toast({
+        title: t('profile.demoReadOnly'),
+        status: 'info',
+        duration: 4000,
+        isClosable: true,
+      });
+      return;
+    }
     try {
       setLoadingDisconnect(true);
       await api.unlinkAlexa();
@@ -89,14 +100,26 @@ const Settings = () => {
         {t('settings.subtitle')}
       </Text>
 
+      {isDemo && (
+        <Text
+          color={getColor('text.dashboard.tileSubtitle')}
+          fontSize="sm"
+          textAlign="center"
+          mb={4}
+        >
+          {t('profile.demoReadOnly')}
+        </Text>
+      )}
+
       <AlexaIntegrationCard
         connected={alexaConnected}
         loading={loadingStatus}
         loadingDisconnect={loadingDisconnect}
         onDisconnect={handleDisconnect}
+        disconnectDisabled={isDemo}
       />
 
-      {!loadingStatus && !alexaConnected && <HowToConnectCard />}
+      {!loadingStatus && !alexaConnected && !isDemo && <HowToConnectCard />}
     </PageScaffold>
   );
 };

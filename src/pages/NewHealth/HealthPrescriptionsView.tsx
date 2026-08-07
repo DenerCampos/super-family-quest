@@ -16,7 +16,7 @@ import { PageTitleBar } from '../../components/PageTitleBar';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useAuth } from '../../contexts/AuthContext';
-import { useFamilyGroup } from '../../hooks/useFamilyGroup';
+import { useAdminFamilyMembers } from '../../hooks/useAdminFamilyMembers';
 import { useHealthPrescriptions } from '../../hooks/useHealthPrescriptions';
 import { formatAppDate } from '../../utils/formatDate';
 import { useState } from 'react';
@@ -26,7 +26,7 @@ export const HealthPrescriptionsView = () => {
   const { t } = useThemedTranslation();
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const { familyGroup } = useFamilyGroup({ fetchSummary: false, fetchInvitations: false });
+  const { members: adminMembers, isAdminAnywhere } = useAdminFamilyMembers();
 
   const [userId, setUserId] = useState('');
   const { data, isLoading } = useHealthPrescriptions({ userId: userId || undefined });
@@ -65,7 +65,7 @@ export const HealthPrescriptionsView = () => {
 
       <Flex flex={1} minH={0} direction="column" align="center" overflow="auto" pt={4} px={4} pb={20}>
         <Box width="100%" maxW="600px">
-          {familyGroup && familyGroup.members.length > 1 && (
+          {isAdminAnywhere && adminMembers.length > 1 && (
             <Box bg={cardBg} borderRadius="lg" borderWidth="1px" borderColor={borderColor} p={3} mb={4}>
               <Select
                 bg={inputBg}
@@ -75,10 +75,10 @@ export const HealthPrescriptionsView = () => {
                 color={textPrimary}
               >
                 <option value="">{t('health.search.allMembers')}</option>
-                {familyGroup.members.map((m) => (
-                  <option key={m.user?.id} value={m.user?.id ?? ''}>
-                    {m.user?.name}
-                    {m.user?.id === profile?.user.id ? ` (${t('health.overview.me')})` : ''}
+                {adminMembers.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name}
+                    {m.id === profile?.user.id ? ` (${t('health.overview.me')})` : ''}
                   </option>
                 ))}
               </Select>

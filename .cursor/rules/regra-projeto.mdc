@@ -78,7 +78,7 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | `/dashboard/health-report/:overviewId` | Detalhe de relatório de saúde (card "Relatórios de Saúde", SP-123) |
 | `/new-resources` | Hub recursos |
 | `/new-resources/resources` | Grupos, lojas, pagamentos |
-| `/new-resources/family` | Grupo familiar |
+| `/new-resources/family` | Grupo familiar (`?tab=invitations\|group\|management`, SP-101) |
 | `/new-resources/shopping`, `.../shopping/:id` | Listas de compras |
 | `/new-resources/recipes`, `.../recipes/:id`, `.../new`, `.../edit` | Receitas |
 | `/new-resources/quests` | Hub chores/quests |
@@ -111,17 +111,18 @@ Arquivos em `src/services/` — atualizar ao integrar novo domínio da API:
 | Arquivo | Domínio |
 |---------|---------|
 | `api.ts` | Instância Axios, interceptors |
-| `auth.ts`, `user.ts` | Autenticação / usuário |
+| `auth.ts`, `user.ts` | Autenticação / usuário (+ `searchByEmail` SP-127) |
 | `expense.ts`, `revenue.ts`, `resources.ts` | Financeiro |
 | `coin.ts`, `theme.ts`, `profile.ts` | Gamificação / perfil |
 | `reports.ts`, `couponReader.ts` | Relatórios / cupom |
-| `familyGroup.ts` | Grupo familiar |
+| `familyGroup.ts` | Grupo familiar (multi-família SP-127) |
 | `shoppingList.ts` | Listas de compras |
 | `recipe.ts` | Receitas |
 | `chore.ts` | Tarefas / quests |
 | `missions.ts` | Missões dinâmicas |
 | `health.ts` | Saúde — exames, upload, processamento, evolução laboratorial, visão geral, receituário (SP-123/SP-124) |
 | `chatAgent.ts` | Assistente Familiar — sessões/mensagens (SP-117); hook `useChatAgent` |
+| `notification.ts` | Notificações internas — list/unread-count/mark-read (SP-101); hook `useNotifications` |
 | `integrations.ts` | Integrações (Alexa, etc.) |
 
 Padrão de chamada:
@@ -139,7 +140,9 @@ export async function getExample(id: string) {
 
 ## Hooks e React Query
 
-- Mutations/listagens: hooks em `src/hooks/` (ex.: `useMissions.ts`, `useShoppingLists.ts`, `useFamilyGroup.ts`).
+- Mutations/listagens: hooks em `src/hooks/` (ex.: `useMissions.ts`, `useShoppingLists.ts`, `useFamilyGroup.ts` — multi-família / seleção persistida SP-127).
+- Multi-família auxiliar: `useUserEmailSearch`, `usePendingApprovals`, `useAdminFamilyMembers`; `pickAdminFamilyGroupId` em `utils/adminFamilyMembers.ts`.
+- Prioridade de grupos: `utils/familyGroupPriority.ts` (espelha API).
 - **queryKeys** centralizados por domínio (`missionQueryKeys.ts`, `familyGroupQueryKeys.ts`) para invalidação consistente.
 - Tema: `useVisualTheme`, `useThemedTranslation`, `useThemeColor`.
 - Formulários: `useExpenseForm`, `useRecipeForm`, `useChoreDefinitionForm`, etc.
@@ -207,10 +210,12 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `mesada.md` | Mesada, liquidação e histórico admin (SP-113) |
 | `formulario-financeiro-stepper.md` | Stepper despesa/receita, parcelamento, cupom drawer (SP-86) |
 | `relatorio-garantias.md` | Relatório de garantias no Painel (SP-86) |
-| `demo-login.md` | Login demo via link para portfólio (SP-118) |
+| `demo-login.md` | Login demo via link para portfólio (SP-118); perfil somente leitura em sessão demo (SP-130) |
 | `balanco-mensal-atualizacao-real-time.md` | Atualização do card Balanço Mensal após mutações financeiras (SP-119) |
 | `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, evolução laboratorial, visão geral, receituário; padronização de nomes (SP-123/SP-124/SP-125) |
 | `assistente-familiar.md` | Assistente Familiar — FAB flutuante, chat, screenContext, erros IA (SP-117) |
+| `grupo-familiar.md` | Multi-família: prioridade, stories, gerenciamento, invite search, filtros, collapse listas/receitas, badge quests, união membros saúde (SP-127) |
+| `notificacoes.md` | Sino no Header, painel Popover, mark-read das visíveis, deep link família (SP-101) |
 
 Widget global: `ChatAssistantWidget` (`ChatFab` + `ChatPanel` + hooks `useChatAgent` / etc.) montado em `RequireAuth` (ausente em rotas públicas).
 

@@ -20,6 +20,7 @@ type Props = {
   startDate: string;
   endDate: string;
   userId?: string;
+  familyGroupId?: string;
 };
 
 type CategoryItem = {
@@ -73,6 +74,7 @@ export function ExpensesByCategoryPanel({
   startDate,
   endDate,
   userId,
+  familyGroupId,
 }: Props) {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
@@ -80,6 +82,7 @@ export function ExpensesByCategoryPanel({
     startDate,
     endDate,
     userId,
+    familyGroupId,
   });
 
   const othersLabel = t('reports.expensesByGroup.others');

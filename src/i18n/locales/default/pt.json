@@ -100,7 +100,9 @@
     },
     "filters": {
       "allFamily": "Família Inteira",
+      "allFamilyNamed": "Família Inteira — {{name}}",
       "onlyMe": "Somente Eu",
+      "onlyMeNamed": "Somente Eu — {{name}}",
       "selectUser": "Filtrar por membro",
       "customDateRange": "Período personalizado"
     }
@@ -573,6 +575,7 @@
     "repeatMonthlyTooltip": "Se você repetir mensalmente, a receita será adicionada automaticamente todos os meses",
     "date": "Data",
     "editProfile": "Editar Perfil",
+    "demoReadOnly": "Conta de demonstração: o perfil não pode ser alterado.",
     "minimum6Characters": "Mínimo 6 caracteres",
     "repeatNewPassword": "Repita a nova senha",
     "saving": "Salvando...",
@@ -818,7 +821,13 @@
     "year": "Ano",
     "filter": "Filtrar",
     "loadError": "Erro ao carregar dados do grupo",
-    "conflictError": "Você já faz parte de um grupo familiar"
+    "conflictError": "Não foi possível concluir a ação (conflito no grupo familiar)",
+    "createAnotherGroup": "Criar outro grupo",
+    "createAnotherGroupDescription": "Você pode participar de várias famílias. Informe o nome do novo grupo.",
+    "inviteSearchHint": "Digite ao menos 3 caracteres do e-mail para buscar usuários cadastrados.",
+    "alreadyMemberOfThisGroup": "Você já é membro deste grupo familiar",
+    "personalSection": "Pessoal",
+    "sectionItemCount": "{{count}} item(ns)"
   },
   "newResources": {
     "deleteSuccess": "Item excluído com sucesso",
@@ -1102,6 +1111,16 @@
       "MONTHLY": "Mensal",
       "ONCE": "Conquista"
     }
+  },
+  "notifications": {
+    "title": "Notificações",
+    "open": "Abrir notificações",
+    "empty": "Nenhuma notificação por enquanto.",
+    "loadError": "Não foi possível carregar as notificações.",
+    "retry": "Tentar novamente",
+    "unreadSection": "Não lidas",
+    "readSection": "Anteriores",
+    "openLink": "Ver detalhes"
   },
   "demoLogin": {
     "loading": "Entrando como demo..."

@@ -10,9 +10,12 @@ import {
 } from '@chakra-ui/react';
 import { DriveImage } from '../../components/DriveImage';
 import { FiPlus, FiTrash } from 'react-icons/fi';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FamilyGroupedList } from '../../components/family/FamilyGroupedList';
 import { PageScaffold } from '../../components/PageScaffold';
 import { useAuth } from '../../contexts/AuthContext';
+import { useFamilyGroup } from '../../hooks/useFamilyGroup';
 import { useRecipes } from '../../hooks/useRecipes';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
@@ -25,8 +28,17 @@ export const RecipesView = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { profile } = useAuth();
+  const { familyGroups } = useFamilyGroup({
+    fetchSummary: false,
+    fetchInvitations: false,
+  });
 
   const { recipes, isLoading, deleteRecipe } = useRecipes();
+
+  const familyOrder = useMemo(
+    () => familyGroups.map((g) => ({ id: g.id, name: g.name })),
+    [familyGroups],
+  );
 
   const handleDelete = async (
     e: { stopPropagation: () => void },
@@ -47,6 +59,117 @@ export const RecipesView = () => {
   };
 
   const currentUserId = profile?.user?.id;
+
+  const renderRecipe = (recipe: RecipeResponse) => {
+    const cover = recipe.photos?.[0];
+    const canDelete =
+      currentUserId && recipe.createdBy?.id === currentUserId;
+
+    return (
+      <Flex
+        cursor="pointer"
+        borderRadius="lg"
+        overflow="hidden"
+        bg={getColor('background.shoppingList.card')}
+        borderWidth="1px"
+        borderColor={getColor('border.shoppingList.card')}
+        onClick={() => navigate(`/new-resources/recipes/${recipe.id}`)}
+        _hover={{
+          bg: getColor('background.shoppingList.cardHover'),
+        }}
+        align="stretch"
+        minH="96px"
+        shadow="sm"
+      >
+        <Box
+          w="96px"
+          flexShrink={0}
+          bg={getColor('background.profile.primary')}
+        >
+          {cover ? (
+            <DriveImage
+              src={toDisplayableImageUrl(cover)}
+              alt=""
+              objectFit="cover"
+              w="100%"
+              h="100%"
+              minH="96px"
+              fallback={
+                <Flex align="center" justify="center" h="100%" minH="96px">
+                  <Text
+                    fontSize="xs"
+                    color={getColor('text.profile.secondary')}
+                    textAlign="center"
+                    px={1}
+                  >
+                    {t('recipes.noPhotos')}
+                  </Text>
+                </Flex>
+              }
+            />
+          ) : (
+            <Flex align="center" justify="center" h="100%" minH="96px">
+              <Text
+                fontSize="xs"
+                color={getColor('text.profile.secondary')}
+                textAlign="center"
+                px={1}
+              >
+                {t('recipes.noPhotos')}
+              </Text>
+            </Flex>
+          )}
+        </Box>
+        <Flex direction="column" flex={1} p={3} position="relative">
+          <Text
+            fontWeight="bold"
+            fontFamily={getFont('heading')}
+            color={getColor('text.profile.primary')}
+            noOfLines={2}
+            pr={canDelete ? 8 : 0}
+          >
+            {recipe.title}
+          </Text>
+          {recipe.description ? (
+            <Text
+              fontSize="sm"
+              color={getColor('text.profile.primary')}
+              noOfLines={2}
+              mt={1}
+              fontFamily={getFont('body')}
+            >
+              {recipe.description}
+            </Text>
+          ) : null}
+          <Text
+            fontSize="xs"
+            color={getColor('text.profile.secondary')}
+            mt="auto"
+            pt={2}
+          >
+            {recipe.createdBy?.name
+              ? t('shoppingList.createdBy', {
+                  name: recipe.createdBy.name,
+                })
+              : t('shoppingList.createdByUnknown')}
+          </Text>
+          {canDelete ? (
+            <IconButton
+              aria-label={t('recipes.deleteRecipe')}
+              icon={<FiTrash />}
+              size="xs"
+              variant="ghost"
+              position="absolute"
+              top={2}
+              right={2}
+              color={getColor('status.error')}
+              onClick={(e) => void handleDelete(e, recipe)}
+            />
+          ) : null}
+        </Flex>
+      </Flex>
+    );
+  };
 
   return (
     <PageScaffold
@@ -105,125 +228,13 @@ export const RecipesView = () => {
             </Button>
           </VStack>
         ) : (
-          <VStack spacing={3} align="stretch">
-            {recipes.map((recipe) => {
-              const cover = recipe.photos?.[0];
-              const canDelete =
-                currentUserId && recipe.createdBy?.id === currentUserId;
-
-              return (
-                <Flex
-                  key={recipe.id}
-                  cursor="pointer"
-                  borderRadius="lg"
-                  overflow="hidden"
-                  bg={getColor('background.shoppingList.card')}
-                  borderWidth="1px"
-                  borderColor={getColor('border.shoppingList.card')}
-                  onClick={() =>
-                    navigate(`/new-resources/recipes/${recipe.id}`)
-                  }
-                  _hover={{
-                    bg: getColor('background.shoppingList.cardHover'),
-                  }}
-                  align="stretch"
-                  minH="96px"
-                  shadow="sm"
-                >
-                  <Box
-                    w="96px"
-                    flexShrink={0}
-                    bg={getColor('background.profile.primary')}
-                  >
-                    {cover ? (
-                      <DriveImage
-                        src={toDisplayableImageUrl(cover)}
-                        alt=""
-                        objectFit="cover"
-                        w="100%"
-                        h="100%"
-                        minH="96px"
-                        fallback={
-                          <Flex align="center" justify="center" h="100%" minH="96px">
-                            <Text
-                              fontSize="xs"
-                              color={getColor('text.profile.secondary')}
-                              textAlign="center"
-                              px={1}
-                            >
-                              {t('recipes.noPhotos')}
-                            </Text>
-                          </Flex>
-                        }
-                      />
-                    ) : (
-                      <Flex
-                        align="center"
-                        justify="center"
-                        h="100%"
-                        minH="96px"
-                      >
-                        <Text
-                          fontSize="xs"
-                          color={getColor('text.profile.secondary')}
-                          textAlign="center"
-                          px={1}
-                        >
-                          {t('recipes.noPhotos')}
-                        </Text>
-                      </Flex>
-                    )}
-                  </Box>
-                  <Flex direction="column" flex={1} p={3} position="relative">
-                    <Text
-                      fontWeight="bold"
-                      fontFamily={getFont('heading')}
-                      color={getColor('text.profile.primary')}
-                      noOfLines={2}
-                    >
-                      {recipe.title}
-                    </Text>
-                    {recipe.description ? (
-                      <Text
-                        fontSize="sm"
-                        color={getColor('text.profile.primary')}
-                        noOfLines={2}
-                        mt={1}
-                        fontFamily={getFont('body')}
-                      >
-                        {recipe.description}
-                      </Text>
-                    ) : null}
-                    <Text
-                      fontSize="xs"
-                      color={getColor('text.profile.secondary')}
-                      mt="auto"
-                      pt={2}
-                    >
-                      {recipe.createdBy?.name
-                        ? t('shoppingList.createdBy', {
-                            name: recipe.createdBy.name,
-                          })
-                        : t('shoppingList.createdByUnknown')}
-                    </Text>
-                    {canDelete ? (
-                      <IconButton
-                        aria-label={t('recipes.deleteRecipe')}
-                        icon={<FiTrash />}
-                        size="xs"
-                        variant="ghost"
-                        position="absolute"
-                        top={2}
-                        right={2}
-                        color={getColor('status.error')}
-                        onClick={(e) => void handleDelete(e, recipe)}
-                      />
-                    ) : null}
-                  </Flex>
-                </Flex>
-              );
-            })}
-          </VStack>
+          <FamilyGroupedList
+            items={recipes}
+            familyOrder={familyOrder}
+            getFamily={(recipe) => recipe.familyGroup}
+            getItemKey={(recipe) => recipe.id}
+            renderItem={renderRecipe}
+          />
         )}
       </Box>
     </PageScaffold>

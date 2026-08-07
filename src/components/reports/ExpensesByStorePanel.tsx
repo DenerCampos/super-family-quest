@@ -10,15 +10,22 @@ type Props = {
   startDate: string;
   endDate: string;
   userId?: string;
+  familyGroupId?: string;
 };
 
-export function ExpensesByStorePanel({ startDate, endDate, userId }: Props) {
+export function ExpensesByStorePanel({
+  startDate,
+  endDate,
+  userId,
+  familyGroupId,
+}: Props) {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
   const { data, isLoading, isError } = useExpensesByStore({
     startDate,
     endDate,
     userId,
+    familyGroupId,
   });
 
   const items = useMemo(() => data ?? [], [data]);
