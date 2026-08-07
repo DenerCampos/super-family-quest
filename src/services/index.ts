@@ -16,6 +16,7 @@ import { RecipeService } from "./recipe";
 import { MissionsService } from "./missions";
 import { HealthService } from "./health";
 import { ChatAgentService } from "./chatAgent";
+import { NotificationService } from "./notification";
 
 export const api = {
   getAvailableThemes: themeService.getAvailableThemes,
@@ -307,6 +308,10 @@ export const api = {
 
   missionGetAll: MissionsService.getMissions,
   missionClaimReward: MissionsService.claimReward,
+
+  notificationList: (limit?: number) => NotificationService.list(limit),
+  notificationUnreadCount: NotificationService.unreadCount,
+  notificationMarkAsRead: (ids: string[]) => NotificationService.markAsRead(ids),
 
   healthCreateExam: HealthService.createExam,
   healthListExams: HealthService.listExams,

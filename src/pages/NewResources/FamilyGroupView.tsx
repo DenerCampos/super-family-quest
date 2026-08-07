@@ -13,8 +13,9 @@ import {
   useDisclosure,
   Collapse,
 } from '@chakra-ui/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
+import { useSearchParams } from 'react-router-dom';
 import { FixedAppShell } from '../../components/FixedAppShell';
 import { PageTitleBar } from '../../components/PageTitleBar';
 import { PillTabBar, type PillTabItem } from '../../components/PillTabBar';
@@ -32,11 +33,28 @@ import { isOwner } from '../../utils/familyGroupPermissions';
 
 type FamilyTab = 'group' | 'invitations' | 'management';
 
+const FAMILY_TABS: FamilyTab[] = ['group', 'invitations', 'management'];
+
+function resolveFamilyTab(tabParam: string | null): FamilyTab {
+  if (tabParam && FAMILY_TABS.includes(tabParam as FamilyTab)) {
+    return tabParam as FamilyTab;
+  }
+  return 'group';
+}
+
 export const FamilyGroupView = () => {
   const { getColor, getFont } = useVisualTheme();
   const { t } = useThemedTranslation();
   const { profile } = useAuth();
-  const [activeTab, setActiveTab] = useState<FamilyTab>('group');
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<FamilyTab>(() =>
+    resolveFamilyTab(searchParams.get('tab')),
+  );
+
+  useEffect(() => {
+    setActiveTab(resolveFamilyTab(searchParams.get('tab')));
+  }, [searchParams]);
+
   const {
     isOpen: isCreateOpen,
     onToggle: onToggleCreate,
