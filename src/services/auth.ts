@@ -20,4 +20,18 @@ export const AuthService = {
     const response = await api.post('/auth/demo', { key });
     return response.data;
   },
+
+  reactivateAccount: async ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }): Promise<{ accessToken: string }> => {
+    const response = await api.post('/auth/reactivate', {
+      email,
+      password,
+    });
+    return response.data;
+  },
 };

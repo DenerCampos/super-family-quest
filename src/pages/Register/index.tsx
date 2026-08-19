@@ -1,80 +1,69 @@
-// src/pages/Cadastro/index.tsx
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Flex,
   Input,
   Button,
   Text,
   useToast,
-  // defineStyle,
+  FormControl,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
-import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useAuth } from '../../contexts/AuthContext';
-
-// const floatingStyles = defineStyle({
-//   pos: 'absolute',
-//   bg: 'bg',
-//   px: '0.5',
-//   top: '-3',
-//   insetStart: '2',
-//   fontWeight: 'normal',
-//   pointerEvents: 'none',
-//   transition: 'position',
-//   _peerPlaceholderShown: {
-//     color: 'fg.muted',
-//     top: '2.5',
-//     insetStart: '3',
-//   },
-//   _peerFocusVisible: {
-//     color: 'fg',
-//     top: '-3',
-//     insetStart: '2',
-//   },
-// });
-
+import { PasswordInput } from '../../components/PasswordInput';
+import { ReactivateAccountModal } from '../../components/modals/ReactivateAccountModal';
+import { buildRegisterSchema, type RegisterFormValues } from './schema';
+import { getApiErrorCode } from '../../utils/apiError';
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const { t } = useThemedTranslation();
   const { getAsset, getColor, getFont } = useVisualTheme();
   const { login } = useAuth();
-  const handleRegister = async () => {
-    if (password !== confirmPassword) {
-      toast({
-        title: t('register.error'),
-        description: t('register.passwordsDoNotMatch'),
-        status: 'error',
-        duration: 3000,
-      });
-      return;
-    }
+  const [reactivateEmail, setReactivateEmail] = useState<string | null>(null);
 
-    if (!email || email.length < 3) {
-      toast({
-        title: 'Erro',
-        description: t('register.familyNameMustBeAtLeast3Characters'),
-        status: 'error',
-        duration: 3000,
-      });
-      return;
-    }
+  const schema = useMemo(() => buildRegisterSchema(t), [t]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterFormValues>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+  });
 
-    setIsLoading(true);
+  const inputStyles = {
+    color: getColor('text.primary'),
+    _hover: {
+      bg: getColor('input.hover'),
+      borderColor: getColor('input.focusBorder'),
+    },
+    _focus: {
+      bg: getColor('input.focus'),
+      borderColor: getColor('input.focusBorder'),
+    },
+    borderColor: getColor('input.border'),
+    bg: getColor('input.background'),
+  };
+
+  const onSubmit = async (values: RegisterFormValues) => {
+    const email = values.email.trim().toLowerCase();
 
     try {
       const userData = await api.register({
-        name,
+        name: values.name.trim(),
         email,
-        password,
+        password: values.password,
       });
 
       if (!userData) {
@@ -88,33 +77,31 @@ const Register = () => {
         duration: 3000,
       });
 
-      // Aguarda 3 segundos antes de fazer o login automático
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      // Faz o login automaticamente após o registro
-      await login(email, password);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await login(email, values.password);
     } catch (error: unknown) {
-      let errorMessage = t('register.errorCreatingRealm');
+      const code = getApiErrorCode(error);
 
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 409) {
-          toast({
-            title: t('common.success'),
-            description: t('register.errorCreatingRealmUserLimitUsers'),
-            status: 'info',
-            duration: 12000,
-            isClosable: true,
-          });
-          return;
-        }
-        if (error.response?.status === 400) {
-          errorMessage = t('register.errorCreatingRealmUserAlreadyExists');
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
-      } else if (error instanceof Error && error.message) {
-        errorMessage = error.message;
+      if (code === 'ACCOUNT_DELETED_REACTIVATION_REQUIRED') {
+        setReactivateEmail(email);
+        return;
       }
+
+      if (code === 'USER_LIMIT_REACHED') {
+        toast({
+          title: t('common.information'),
+          description: t('register.errorCreatingRealmUserLimitUsers'),
+          status: 'info',
+          duration: 12000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      const errorMessage =
+        code === 'EMAIL_ALREADY_EXISTS'
+          ? t('register.errorCreatingRealmUserAlreadyExists')
+          : t('register.errorCreatingRealm');
 
       toast({
         title: t('register.error'),
@@ -122,141 +109,120 @@ const Register = () => {
         status: 'error',
         duration: 4000,
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <Flex
-      minH="100vh"
-      bgImage={`url(${getAsset('images.background.register')})`}
-      bgSize="cover"
-      align="center"
-      justify="center"
-    >
+    <>
       <Flex
-        direction="column"
-        bg={getColor('background.login')}
-        p={8}
-        borderRadius="lg"
-        gap={4}
-        w="100%"
-        maxW="400px"
-        backdropFilter="blur(4px)"
+        minH="100vh"
+        bgImage={`url(${getAsset('images.background.register')})`}
+        bgSize="cover"
+        align="center"
+        justify="center"
+        as="form"
+        onSubmit={handleSubmit(onSubmit)}
       >
-        <Text
-          fontSize="2xl"
-          color={getColor('text.primary')}
-          textAlign="center"
-          mb={4}
-          fontFamily={getFont('theme')}
+        <Flex
+          direction="column"
+          bg={getColor('background.login')}
+          p={8}
+          borderRadius="lg"
+          gap={4}
+          w="100%"
+          maxW="400px"
+          backdropFilter="blur(4px)"
         >
-          {t('register.createNewRealm')}
-        </Text>
+          <Text
+            fontSize="2xl"
+            color={getColor('text.primary')}
+            textAlign="center"
+            mb={4}
+            fontFamily={getFont('theme')}
+          >
+            {t('register.createNewRealm')}
+          </Text>
 
-        <Input
-          placeholder={t('register.fullName')}
-          variant="filled"
-          focusBorderColor={getColor('border.primary')}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          color={getColor('text.primary')}
-          isDisabled={isLoading}
-          _hover={{
-            bg: getColor('input.hover'),
-            borderColor: getColor('input.focusBorder'),
-          }}
-          _focus={{
-            bg: getColor('input.focus'),
-            borderColor: getColor('input.focusBorder'),
-          }}
-          borderColor={getColor('input.border')}
-          bg={getColor('input.background')}
-        />
-        <Input
-          placeholder={t('register.email')}
-          type="email"
-          variant="filled"
-          focusBorderColor={getColor('border.primary')}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          color={getColor('text.primary')}
-          isDisabled={isLoading}
-          _hover={{
-            bg: getColor('input.hover'),
-            borderColor: getColor('input.focusBorder'),
-          }}
-          _focus={{
-            bg: getColor('input.focus'),
-            borderColor: getColor('input.focusBorder'),
-          }}
-          borderColor={getColor('input.border')}
-          bg={getColor('input.background')}
-        />
-        <Input
-          placeholder={t('register.password')}
-          type="password"
-          variant="filled"
-          focusBorderColor={getColor('border.primary')}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          color={getColor('text.primary')}
-          isDisabled={isLoading}
-          _hover={{
-            bg: getColor('input.hover'),
-          }}
-          _focus={{
-            bg: getColor('input.focus'),
-          }}
-          borderColor={getColor('input.border')}
-          bg={getColor('input.background')}
-        />
-        <Input
-          placeholder={t('register.confirmPassword')}
-          type="password"
-          variant="filled"
-          focusBorderColor={getColor('border.primary')}
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          color={getColor('text.primary')}
-          isDisabled={isLoading}
-          _hover={{
-            bg: getColor('input.hover'),
-            borderColor: getColor('input.focusBorder'),
-          }}
-          _focus={{
-            bg: getColor('input.focus'),
-            borderColor: getColor('input.focusBorder'),
-          }}
-          borderColor={getColor('input.border')}
-          bg={getColor('input.background')}
-        />
+          <FormControl isInvalid={!!errors.name}>
+            <Input
+              placeholder={t('register.fullName')}
+              variant="filled"
+              autoComplete="name"
+              isDisabled={isSubmitting}
+              {...register('name')}
+              {...inputStyles}
+            />
+            <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+          </FormControl>
 
-        <Button
-          colorScheme={getColor('button.primary')}
-          mt={4}
-          onClick={handleRegister}
-          isLoading={isLoading}
-          loadingText={t('register.funding')}
-          isDisabled={isLoading}
-        >
-          {t('register.createRealm')}
-        </Button>
+          <FormControl isInvalid={!!errors.email}>
+            <Input
+              placeholder={t('register.email')}
+              type="email"
+              variant="filled"
+              autoComplete="email"
+              isDisabled={isSubmitting}
+              {...register('email')}
+              {...inputStyles}
+            />
+            <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+          </FormControl>
 
-        <Button
-          as={RouterLink}
-          to="/login"
-          variant="link"
-          color={getColor('link.primary')}
-          mt={2}
-          fontSize="sm"
-          isDisabled={isLoading}
-        >
-          {t('register.alreadyHaveRealm')}
-        </Button>
+          <FormControl isInvalid={!!errors.password}>
+            <PasswordInput
+              placeholder={t('register.password')}
+              variant="filled"
+              autoComplete="new-password"
+              isDisabled={isSubmitting}
+              {...register('password')}
+              {...inputStyles}
+            />
+            <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.confirmPassword}>
+            <PasswordInput
+              placeholder={t('register.confirmPassword')}
+              variant="filled"
+              autoComplete="new-password"
+              isDisabled={isSubmitting}
+              {...register('confirmPassword')}
+              {...inputStyles}
+            />
+            <FormErrorMessage>{errors.confirmPassword?.message}</FormErrorMessage>
+          </FormControl>
+
+          <Button
+            type="submit"
+            colorScheme={getColor('button.primary')}
+            mt={4}
+            isLoading={isSubmitting}
+            loadingText={t('register.funding')}
+            isDisabled={isSubmitting}
+          >
+            {t('register.createRealm')}
+          </Button>
+
+          <Button
+            as={RouterLink}
+            to="/login"
+            variant="link"
+            color={getColor('link.primary')}
+            mt={2}
+            fontSize="sm"
+            isDisabled={isSubmitting}
+          >
+            {t('register.alreadyHaveRealm')}
+          </Button>
+        </Flex>
       </Flex>
-    </Flex>
+
+      <ReactivateAccountModal
+        isOpen={!!reactivateEmail}
+        email={reactivateEmail ?? ''}
+        onClose={() => setReactivateEmail(null)}
+      />
+    </>
   );
 };
 

@@ -211,6 +211,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `formulario-financeiro-stepper.md` | Stepper despesa/receita, parcelamento, cupom drawer (SP-86) |
 | `relatorio-garantias.md` | Relatório de garantias no Painel (SP-86) |
 | `demo-login.md` | Login demo via link para portfólio (SP-118); perfil somente leitura em sessão demo (SP-130) |
+| `autenticacao.md` | Validação login/cadastro (RHF+Yup), PasswordInput, reativação de conta, senha 8–64 no perfil (SP-39) |
 | `balanco-mensal-atualizacao-real-time.md` | Atualização do card Balanço Mensal após mutações financeiras (SP-119) |
 | `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, evolução laboratorial, visão geral, receituário; padronização de nomes (SP-123/SP-124/SP-125) |
 | `assistente-familiar.md` | Assistente Familiar — FAB flutuante, chat, screenContext, erros IA (SP-117) |

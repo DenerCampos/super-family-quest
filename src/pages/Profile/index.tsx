@@ -17,8 +17,6 @@ import {
   useDisclosure,
   Text,
   FormErrorMessage,
-  InputGroup,
-  InputRightElement,
   Icon,
   Tabs,
   TabList,
@@ -26,7 +24,7 @@ import {
   Tab,
   TabPanel,
 } from '@chakra-ui/react';
-import { FiEdit2, FiCheck, FiEye, FiEyeOff, FiUser, FiSettings, FiCamera } from 'react-icons/fi';
+import { FiEdit2, FiCheck, FiUser, FiSettings, FiCamera } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -37,6 +35,7 @@ import { toDisplayableImageUrl } from '../../utils/formatString';
 import { compressImage, IMAGE_COMPRESS_MAX_BYTES } from '../../utils/compressImage';
 import { DEFAULT_COAT_OF_ARMS } from '../../utils/coatOfArms';
 import { SelectCoatOfArmsModal } from '../../components/modals/SelectCoatOfArmsModal';
+import { PasswordInput } from '../../components/PasswordInput';
 import type { BalanceCoin } from '../../services/coin';
 
 const Profile = () => {
@@ -60,8 +59,6 @@ const Profile = () => {
   });
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -278,10 +275,18 @@ const Profile = () => {
       return;
     }
 
-    if (password && password.length < 6) {
+    if (password && password.length < 8) {
       setErrors((prev) => ({
         ...prev,
-        password: t('profile.passwordMustBeAtLeast6Characters'),
+        password: t('profile.passwordMustBeAtLeast8Characters'),
+      }));
+      return;
+    }
+
+    if (password && password.length > 64) {
+      setErrors((prev) => ({
+        ...prev,
+        password: t('profile.passwordMaxLength'),
       }));
       return;
     }
@@ -542,45 +547,29 @@ const Profile = () => {
                   <>
                     <FormControl isInvalid={!!errors.password}>
                       <FormLabel color={getColor('text.profile.primary')}>
-                        {t('profile.newPassword')} (opcional)
+                        {t('profile.newPasswordOptional')}
                       </FormLabel>
-                      <InputGroup>
-                        <Input
-                          type={showPassword ? 'text' : 'password'}
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          placeholder={t('profile.minimum6Characters')}
-                          bg={
-                            canEditProfile
-                              ? getColor('input.primary')
-                              : getColor('input.secondary')
-                          }
-                          color={
-                            canEditProfile
-                              ? getColor('text.profile.primary')
-                              : getColor('text.profile.secondary')
-                          }
-                          _focus={{
-                            borderColor: getColor('border.tertiary'),
-                            boxShadow: `0 0 0 1px ${getColor(
-                              'border.tertiary',
-                            )}`,
-                          }}
-                        />
-                        <InputRightElement>
-                          <IconButton
-                            aria-label={
-                              showPassword
-                                ? t('profile.hidePassword')
-                                : t('profile.showPassword')
-                            }
-                            icon={showPassword ? <FiEyeOff /> : <FiEye />}
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setShowPassword(!showPassword)}
-                          />
-                        </InputRightElement>
-                      </InputGroup>
+                      <PasswordInput
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder={t('profile.minimum8Characters')}
+                        bg={
+                          canEditProfile
+                            ? getColor('input.primary')
+                            : getColor('input.secondary')
+                        }
+                        color={
+                          canEditProfile
+                            ? getColor('text.profile.primary')
+                            : getColor('text.profile.secondary')
+                        }
+                        _focus={{
+                          borderColor: getColor('border.tertiary'),
+                          boxShadow: `0 0 0 1px ${getColor(
+                            'border.tertiary',
+                          )}`,
+                        }}
+                      />
                       {errors.password && (
                         <FormErrorMessage>{errors.password}</FormErrorMessage>
                       )}
@@ -590,47 +579,27 @@ const Profile = () => {
                       <FormLabel color={getColor('text.profile.primary')}>
                         {t('profile.confirmNewPassword')}
                       </FormLabel>
-                      <InputGroup>
-                        <Input
-                          type={showConfirmPassword ? 'text' : 'password'}
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          placeholder={t('profile.repeatNewPassword')}
-                          bg={
-                            canEditProfile
-                              ? getColor('input.primary')
-                              : getColor('input.secondary')
-                          }
-                          color={
-                            canEditProfile
-                              ? getColor('text.profile.primary')
-                              : getColor('text.profile.primary')
-                          }
-                          _focus={{
-                            borderColor: getColor('border.tertiary'),
-                            boxShadow: `0 0 0 1px ${getColor(
-                              'border.tertiary',
-                            )}`,
-                          }}
-                        />
-                        <InputRightElement>
-                          <IconButton
-                            aria-label={
-                              showConfirmPassword
-                                ? t('profile.hidePassword')
-                                : t('profile.showPassword')
-                            }
-                            icon={
-                              showConfirmPassword ? <FiEyeOff /> : <FiEye />
-                            }
-                            variant="ghost"
-                            size="sm"
-                            onClick={() =>
-                              setShowConfirmPassword(!showConfirmPassword)
-                            }
-                          />
-                        </InputRightElement>
-                      </InputGroup>
+                      <PasswordInput
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder={t('profile.repeatNewPassword')}
+                        bg={
+                          canEditProfile
+                            ? getColor('input.primary')
+                            : getColor('input.secondary')
+                        }
+                        color={
+                          canEditProfile
+                            ? getColor('text.profile.primary')
+                            : getColor('text.profile.primary')
+                        }
+                        _focus={{
+                          borderColor: getColor('border.tertiary'),
+                          boxShadow: `0 0 0 1px ${getColor(
+                            'border.tertiary',
+                          )}`,
+                        }}
+                      />
                       {errors.confirmPassword && (
                         <FormErrorMessage>
                           {errors.confirmPassword}
