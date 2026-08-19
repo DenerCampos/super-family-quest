@@ -10,14 +10,7 @@ import {
   Button,
   useToast,
   Avatar,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
   SimpleGrid,
-  Image,
   Box,
   IconButton,
   Center,
@@ -42,17 +35,9 @@ import type { ThemeConfig } from '../../services/theme';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { toDisplayableImageUrl } from '../../utils/formatString';
 import { compressImage, IMAGE_COMPRESS_MAX_BYTES } from '../../utils/compressImage';
+import { DEFAULT_COAT_OF_ARMS } from '../../utils/coatOfArms';
+import { SelectCoatOfArmsModal } from '../../components/modals/SelectCoatOfArmsModal';
 import type { BalanceCoin } from '../../services/coin';
-
-// Lista de brasões pré-definidos
-const predefinedCoatOfArms = [
-  '/assets/images/brasao/brasao-1.png',
-  '/assets/images/brasao/brasao-2.png',
-  '/assets/images/brasao/brasao-3.png',
-  '/assets/images/brasao/brasao-4.png',
-  '/assets/images/brasao/brasao-5.png',
-  '/assets/images/brasao/brasao-6.png',
-];
 
 const Profile = () => {
   const { profile, loadProfile, isDemo } = useAuth();
@@ -87,7 +72,7 @@ const Profile = () => {
   } = useDisclosure();
 
   const [selectedCoat, setSelectedCoat] = useState(
-    profile?.user.coatOfArms || predefinedCoatOfArms[0],
+    profile?.user.coatOfArms || DEFAULT_COAT_OF_ARMS,
   );
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -238,7 +223,6 @@ const Profile = () => {
   const handleCoatChange = (image: string) => {
     setSelectedCoat(image);
     setIsCoatChanged(true);
-    closeCoatModal();
   };
 
   // Função para mudar o tema
@@ -801,57 +785,12 @@ const Profile = () => {
         </TabPanels>
       </Tabs>
 
-      <Modal
+      <SelectCoatOfArmsModal
         isOpen={isCoatModalOpen}
         onClose={closeCoatModal}
-        size="xl"
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent
-          bg={getColor('background.primary')}
-          color={getColor('text.primary')}
-        >
-          <ModalHeader>{t('profile.selectCoatOfArms')}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <SimpleGrid columns={3} spacing={4}>
-              {predefinedCoatOfArms.map((image) => (
-                <Image
-                  key={image}
-                  src={image}
-                  boxSize="100px"
-                  objectFit="contain"
-                  cursor="pointer"
-                  borderRadius="md"
-                  border={selectedCoat === image ? '3px solid' : '1px solid'}
-                  borderColor={
-                    selectedCoat === image
-                      ? getColor('border.selected')
-                      : getColor('border.noSelect')
-                  }
-                  _hover={{
-                    transform: 'scale(1.05)',
-                    borderColor: getColor('border.primary'),
-                  }}
-                  transition="all 0.2s"
-                  onClick={() => handleCoatChange(image)}
-                />
-              ))}
-            </SimpleGrid>
-
-            <Center mt={6}>
-              <Text
-                fontSize="sm"
-                color={getColor('text.primary')}
-                textAlign="center"
-              >
-                {t('profile.chooseCoatOfArms')}
-              </Text>
-            </Center>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+        selectedCoatOfArms={selectedCoat}
+        onSelect={handleCoatChange}
+      />
 
       {selectedThemeToBuy && (
         <BuyThemeModal

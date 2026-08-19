@@ -8,8 +8,14 @@ import type {
 import api from './api';
 
 export const FamilyGroupService = {
-  create: async (name: string): Promise<FamilyGroupResponseDto> => {
-    const response = await api.post('/family-group', { name });
+  create: async (
+    name: string,
+    coatOfArms?: string,
+  ): Promise<FamilyGroupResponseDto> => {
+    const response = await api.post('/family-group', {
+      name,
+      ...(coatOfArms ? { coatOfArms } : {}),
+    });
     return response.data;
   },
 
@@ -23,8 +29,28 @@ export const FamilyGroupService = {
     return response.data;
   },
 
-  update: async (id: string, name: string): Promise<FamilyGroupResponseDto> => {
-    const response = await api.put(`/family-group/${id}`, { name });
+  update: async (
+    id: string,
+    name: string,
+    coatOfArms?: string,
+  ): Promise<FamilyGroupResponseDto> => {
+    const response = await api.put(`/family-group/${id}`, {
+      name,
+      ...(coatOfArms ? { coatOfArms } : {}),
+    });
+    return response.data;
+  },
+
+  uploadImage: async (
+    id: string,
+    file: File,
+  ): Promise<FamilyGroupResponseDto> => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await api.post(`/family-group/${id}/upload-image`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return response.data;
   },
 

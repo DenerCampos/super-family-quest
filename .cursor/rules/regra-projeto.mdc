@@ -115,7 +115,7 @@ Arquivos em `src/services/` — atualizar ao integrar novo domínio da API:
 | `expense.ts`, `revenue.ts`, `resources.ts` | Financeiro |
 | `coin.ts`, `theme.ts`, `profile.ts` | Gamificação / perfil |
 | `reports.ts`, `couponReader.ts` | Relatórios / cupom |
-| `familyGroup.ts` | Grupo familiar (multi-família SP-127) |
+| `familyGroup.ts` | Grupo familiar (multi-família SP-127; brasão/foto do grupo SP-131) |
 | `shoppingList.ts` | Listas de compras |
 | `recipe.ts` | Receitas |
 | `chore.ts` | Tarefas / quests |
@@ -214,7 +214,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `balanco-mensal-atualizacao-real-time.md` | Atualização do card Balanço Mensal após mutações financeiras (SP-119) |
 | `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, evolução laboratorial, visão geral, receituário; padronização de nomes (SP-123/SP-124/SP-125) |
 | `assistente-familiar.md` | Assistente Familiar — FAB flutuante, chat, screenContext, erros IA (SP-117) |
-| `grupo-familiar.md` | Multi-família: prioridade, stories, gerenciamento, invite search, filtros, collapse listas/receitas, badge quests, união membros saúde (SP-127) |
+| `grupo-familiar.md` | Multi-família: prioridade, stories, gerenciamento, invite search, filtros, collapse listas/receitas, badge quests, união membros saúde (SP-127); brasão/foto por família na criação e alteração (SP-131) |
 | `notificacoes.md` | Sino no Header, painel Popover, mark-read das visíveis, deep link família (SP-101) |
 
 Widget global: `ChatAssistantWidget` (`ChatFab` + `ChatPanel` + hooks `useChatAgent` / etc.) montado em `RequireAuth` (ausente em rotas públicas).

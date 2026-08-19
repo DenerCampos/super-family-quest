@@ -816,6 +816,13 @@
     "createAnotherGroupDescription": "Você pode servir a várias guildas. Informe o nome da nova guilda.",
     "inviteSearchHint": "Digite ao menos 3 caracteres do pergaminho (e-mail) para buscar aventureiros cadastrados.",
     "alreadyMemberOfThisGroup": "Você já é membro desta guilda familiar",
+    "editGroup": "Alterar guilda",
+    "groupUpdated": "Guilda atualizada com sucesso!",
+    "updateGroupError": "Falha ao atualizar guilda",
+    "saving": "Forjando alterações...",
+    "changeCoatOfArms": "Escolher brasão da guilda",
+    "uploadImage": "Enviar estandarte da guilda",
+    "imageError": "Falha ao preparar a imagem",
     "personalSection": "Pergaminho pessoal",
     "sectionItemCount": "{{count}} item(ns)"
   },

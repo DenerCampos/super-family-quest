@@ -826,6 +826,13 @@
     "createAnotherGroupDescription": "Você pode participar de várias famílias. Informe o nome do novo grupo.",
     "inviteSearchHint": "Digite ao menos 3 caracteres do e-mail para buscar usuários cadastrados.",
     "alreadyMemberOfThisGroup": "Você já é membro deste grupo familiar",
+    "editGroup": "Alterar grupo",
+    "groupUpdated": "Grupo atualizado com sucesso",
+    "updateGroupError": "Erro ao atualizar grupo",
+    "saving": "Salvando...",
+    "changeCoatOfArms": "Escolher logo do grupo",
+    "uploadImage": "Enviar foto do grupo",
+    "imageError": "Erro ao processar a imagem",
     "personalSection": "Pessoal",
     "sectionItemCount": "{{count}} item(ns)"
   },
