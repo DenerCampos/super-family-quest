@@ -228,10 +228,14 @@ export const api = {
 
   uploadProfileImage: (file: File) => ProfileService.uploadImage(file),
 
-  familyGroupCreate: (name: string) => FamilyGroupService.create(name),
+  familyGroupCreate: (name: string, coatOfArms?: string) =>
+    FamilyGroupService.create(name, coatOfArms),
   familyGroupList: () => FamilyGroupService.list(),
   familyGroupGetById: (id: string) => FamilyGroupService.getById(id),
-  familyGroupUpdate: (id: string, name: string) => FamilyGroupService.update(id, name),
+  familyGroupUpdate: (id: string, name: string, coatOfArms?: string) =>
+    FamilyGroupService.update(id, name, coatOfArms),
+  familyGroupUploadImage: (id: string, file: File) =>
+    FamilyGroupService.uploadImage(id, file),
   familyGroupDelete: (id: string) => FamilyGroupService.delete(id),
   familyGroupInvite: (groupId: string, email: string) =>
     FamilyGroupService.invite(groupId, email),

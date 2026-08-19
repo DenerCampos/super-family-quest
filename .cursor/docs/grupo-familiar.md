@@ -18,6 +18,7 @@ Permitir que o usuário participe de **0..N** grupos familiares na UI, com famí
 - Criar definição: disponível se admin em **qualquer** grupo; `familyGroupId` vai no `location.state` (preferência = família selecionada se admin nela)
 - Saúde: seletor de membro com união dos membros accepted de grupos onde o usuário é admin/owner
 - Convite: autocomplete via hook `useUserEmailSearch` (`GET /user/search?email=`)
+- Identidade visual por grupo (SP-131): escolher brasão ou foto ao criar a família e alterar nome/imagem na aba de gerenciamento
 
 **Fora**
 
@@ -29,7 +30,7 @@ Permitir que o usuário participe de **0..N** grupos familiares na UI, com famí
 2. Família selecionada: valor persistido se ainda for membership; senão prioridade primária (`activeFamilyGroupId`).
 3. Stories: 1º círculo = família selecionada (label “Família”/tema só se owner); depois outras onde é admin; depois membros da selecionada.
 4. Trocar família limpa seleção de membro e recarrega summary/members.
-5. Gerenciamento: accordion por grupo + formulário “criar outro grupo”.
+5. Gerenciamento: accordion por grupo (avatar do grupo no cabeçalho) + formulário “criar outro grupo” + botão “Alterar grupo/guilda” dentro do painel (admins).
 6. Convite: digitar ≥3 chars dispara busca de usuários e preenche o e-mail. Convite a usuário existente gera notificação in-app (sino); deep link `/new-resources/family?tab=invitations` (ver [notificacoes.md](./notificacoes.md)).
 7. Listas/receitas: `FamilyGroupedList` agrupa por `familyGroup` (ordem = prioridade das memberships + pessoal).
 8. Quests: `useQueries` por grupo; cards exibem `FamilyGroupBadge`; mutações usam o `familyGroupId` do item.
@@ -43,7 +44,10 @@ Permitir que o usuário participe de **0..N** grupos familiares na UI, com famí
 | Listar grupos | `GET /family-group` |
 | Resumo | `GET /family-group/:id/summary` |
 | Dados do membro | `GET /family-group/:id/members/:memberId/data` |
-| Criar / convidar / roles | endpoints existentes de family-group |
+| Criar grupo | `POST /family-group` `{ name, coatOfArms? }` |
+| Alterar nome/brasão | `PUT /family-group/:id` `{ name, coatOfArms? }` (admin) |
+| Enviar foto do grupo | `POST /family-group/:id/upload-image` (multipart, campo `image`) |
+| Convidar / roles | endpoints existentes de family-group |
 | Autocomplete convite | `GET /user/search?email=` (mín. 3) |
 | Relatórios | query `familyGroupId` (+ `userId` opcional) |
 | Listas / receitas | já retornam `familyGroup` (null = pessoal) |
@@ -61,6 +65,15 @@ Permitir que o usuário participe de **0..N** grupos familiares na UI, com famí
 - Criar definição / aprovações: escopo por grupo do item; criar usa `pickAdminFamilyGroupId`.
 - Relatórios (membro multi-família): opções `me:{groupId}` para trocar família; estado força `userId` = eu quando não-admin.
 
+### Imagem da família (SP-131)
+
+- A imagem exibida nos stories e no accordion vem do **grupo** (`groupImage || coatOfArms`), não mais do `coatOfArms` do owner logado. Por isso ela aparece também em grupos onde o usuário é apenas membro.
+- Criar família: brasão já vem pré-selecionado (`brasao-1`), então escolher é opcional. Se o usuário escolher uma foto, o app cria o grupo e só depois envia a imagem (`POST /family-group/:id/upload-image`), porque o upload precisa do id.
+- Foto passa por `compressImage` (máx. 1 MB após compressão, mesmas validações do perfil) antes do envio.
+- Escolher brasão limpa a foto pendente no formulário; ao salvar, a API descarta a foto anterior do grupo.
+- Alterar (nome + imagem): botão “Alterar grupo/guilda” no painel do accordion, visível para admin/owner (`canEditGroup`). `coatOfArms` só é enviado quando o usuário realmente trocou o brasão, para não apagar a foto sem intenção.
+- Perfil (`/profile`) segue com o brasão **do usuário** (`PATCH /user/:id`); o seletor foi extraído para `SelectCoatOfArmsModal` e a lista de brasões para `utils/coatOfArms.ts`, compartilhados entre perfil e família.
+
 ## Arquivos-chave
 
 - `src/utils/familyGroupPriority.ts`
@@ -73,7 +86,8 @@ Permitir que o usuário participe de **0..N** grupos familiares na UI, com famí
 - `src/pages/NewResources/FamilyGroupView.tsx` / `ShoppingListsView.tsx` / `RecipesView.tsx`
 - `src/pages/NewChallenge/*` (listagens agregadas + badge; `PendingApprovalCard`, `RejectOccurrenceModal`)
 - `src/pages/NewHealth/*` (seletores de membro)
-- `src/components/family/*` (Create, Invite, Management, Summary)
+- `src/components/family/*` (Create, Invite, Management, Summary, `EditGroupModal`, `FamilyImagePicker`)
+- `src/components/modals/SelectCoatOfArmsModal.tsx` + `src/utils/coatOfArms.ts` (brasões compartilhados com o perfil)
 - `src/components/reports/UserFamilyFilter.tsx` + `ReportView`
 - `src/services/user.ts` (`searchByEmail`)
 

@@ -27,6 +27,10 @@ export type FamilyGroupMemberResponseDto = {
 export type FamilyGroupResponseDto = {
   id: string;
   name: string;
+  /** Brasão do grupo (asset estático). */
+  coatOfArms: string;
+  /** Foto enviada para o grupo; quando presente, tem prioridade sobre o brasão. */
+  groupImage: string | null;
   owner: UserRef;
   members: FamilyGroupMemberResponseDto[];
   createdAt: string;

@@ -6,16 +6,22 @@ import {
   useToast,
   Divider,
 } from '@chakra-ui/react';
-import { FiUserPlus, FiTrash2, FiLogOut } from 'react-icons/fi';
+import { FiUserPlus, FiTrash2, FiLogOut, FiEdit2 } from 'react-icons/fi';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../services';
 import type { FamilyGroupResponseDto } from '../../types/familyGroup';
-import { canInvite, canDeleteGroup, canLeaveGroup } from '../../utils/familyGroupPermissions';
+import {
+  canInvite,
+  canDeleteGroup,
+  canEditGroup,
+  canLeaveGroup,
+} from '../../utils/familyGroupPermissions';
 import { InviteMemberModal } from './InviteMemberModal';
 import { MembersList } from './MembersList';
 import { ConfirmActionDialog } from './ConfirmActionDialog';
+import { EditGroupModal } from './EditGroupModal';
 
 type FamilyManagementProps = {
   group: FamilyGroupResponseDto;
@@ -28,6 +34,11 @@ export const FamilyManagement = ({ group, onRefresh }: FamilyManagementProps) =>
   const { profile } = useAuth();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onClose: onEditClose,
+  } = useDisclosure();
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [confirmDialog, setConfirmDialog] = useState<{
     message: string;
@@ -148,6 +159,21 @@ export const FamilyManagement = ({ group, onRefresh }: FamilyManagementProps) =>
 
   return (
     <VStack spacing={4} align="stretch" p={4}>
+      {canEditGroup(group, currentUserId) && (
+        <Button
+          leftIcon={<FiEdit2 />}
+          variant="outline"
+          borderColor={getColor('border.familyGroup.card')}
+          color={getColor('text.familyGroup.primary')}
+          _hover={{ opacity: 0.8 }}
+          onClick={onEditOpen}
+          fontFamily={getFont('body')}
+          size="sm"
+        >
+          {t('familyGroup.editGroup')}
+        </Button>
+      )}
+
       {userIsAdmin && (
         <Button
           leftIcon={<FiUserPlus />}
@@ -209,6 +235,13 @@ export const FamilyManagement = ({ group, onRefresh }: FamilyManagementProps) =>
         onClose={onClose}
         groupId={group.id}
         onInviteSent={onRefresh}
+      />
+
+      <EditGroupModal
+        isOpen={isEditOpen}
+        onClose={onEditClose}
+        group={group}
+        onGroupUpdated={onRefresh}
       />
 
       <ConfirmActionDialog

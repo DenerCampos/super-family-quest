@@ -21,7 +21,8 @@ export type FamilyStoryGroup = {
   name: string;
   isOwner: boolean;
   isAdmin: boolean;
-  ownerCoatOfArms?: string | null;
+  /** Foto do grupo quando existir, senão o brasão escolhido. */
+  image?: string | null;
 };
 
 export type UseFamilyGroupOptions = {
@@ -138,11 +139,9 @@ export const useFamilyGroup = (options: UseFamilyGroupOptions = {}) => {
       name: group.name,
       isOwner: isOwner(group, currentUserId),
       isAdmin: isAdmin(group, currentUserId),
-      ownerCoatOfArms: isOwner(group, currentUserId)
-        ? profile?.user.coatOfArms
-        : undefined,
+      image: group.groupImage || group.coatOfArms,
     }));
-  }, [familyGroups, currentUserId, profile?.user.coatOfArms]);
+  }, [familyGroups, currentUserId]);
 
   const invitationsQuery = useQuery({
     queryKey: familyGroupQueryKeys.invitations(),
