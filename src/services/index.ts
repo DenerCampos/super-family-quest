@@ -38,6 +38,7 @@ export const api = {
 
   login: AuthService.login,
   demoLogin: AuthService.demoLogin,
+  reactivateAccount: AuthService.reactivateAccount,
   register: UserService.register,
   updateUser: UserService.update,
   searchUsersByEmail: (email: string) => UserService.searchByEmail(email),
