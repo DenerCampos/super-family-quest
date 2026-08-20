@@ -18,6 +18,7 @@ import { NewRecurringIncomeModal } from "../../components/modals/NewRecurringInc
 import { useAuth } from "../../contexts/AuthContext";
 import { useFamilyGroup } from "../../hooks/useFamilyGroup";
 import { useFinancialReceiptDrawer } from "../../hooks/useFinancialReceiptDrawer";
+import { GET_LAST_REGISTRATION_QUERY_KEY } from "../../hooks/useGetLastRegistration";
 import { useInvalidateFinancialSummary } from "../../hooks/useInvalidateFinancialSummary";
 import { useThemedTranslation } from "../../hooks/useThemedTranslation";
 import { useVisualTheme } from "../../hooks/useVisualTheme";
@@ -181,14 +182,23 @@ const Home = () => {
     setShowRecurringRevenuesModal(false);
   };
 
+  const refreshHomeAfterRecurringConfirm = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: [GET_LAST_REGISTRATION_QUERY_KEY],
+      }),
+      invalidateFinancialSummary(),
+    ]);
+  };
+
   const handleCloseRecurringExpensesModal = async () => {
     setShowRecurringExpensesModal(false);
-    await loadProfile();
+    await refreshHomeAfterRecurringConfirm();
   };
 
   const handleCloseRecurringRevenuesModal = async () => {
     setShowRecurringRevenuesModal(false);
-    await loadProfile();
+    await refreshHomeAfterRecurringConfirm();
   };
 
   return (

@@ -12,6 +12,7 @@ Garantir que o card **Balanço Mensal** na página Home sempre exiba os valores 
 - Atualização do card após criar receita
 - Atualização do card após editar receita
 - Atualização do card após excluir despesa/receita pela lista na Home
+- Atualização do card e da lista de últimos registros após confirmar os modais de recorrência na Home (SP-137)
 
 **Fica de fora:**
 - Atualização em tempo real via WebSocket (não implementado)
@@ -47,6 +48,7 @@ O hook é invocado com `void invalidateFinancialSummary()` no `onSuccess` de:
 | `useCreateRevenue` | Criação de receita |
 | `useUpdateRevenue` | Edição de receita |
 | `handleDeleteRegistration` (Home) | Exclusão de despesa/receita pela lista |
+| `handleCloseRecurringExpensesModal` / `handleCloseRecurringRevenuesModal` (Home) | Confirmação dos modais de recorrência (SP-137) — também invalida `GET_LAST_REGISTRATION_QUERY_KEY` |
 
 ## Fluxo após a correção
 
@@ -63,6 +65,18 @@ Usuário salva/exclui transação
         ↓
   MonthlyBalanceCard renderiza valores atualizados
 ```
+
+### Modais de recorrência (SP-137)
+
+Antes da correção, confirmar despesa/receita recorrente na Home só chamava `loadProfile()`. Isso atualizava as flags `hasRecurringExpenses` / `hasRecurringRevenues` (para o modal não reabrir), mas **não** invalidava:
+
+- o summary do grupo familiar (`staleTime: 30s`) — card de balanço desatualizado para quem tem família
+- a query `get-last-registration` — lista de últimos registros sem os novos lançamentos
+
+Após confirmar, `refreshHomeAfterRecurringConfirm()` na Home executa em paralelo:
+
+1. invalida `GET_LAST_REGISTRATION_QUERY_KEY`
+2. chama `invalidateFinancialSummary()` (já inclui `loadProfile()`)
 
 ## UI do card (SP-120)
 
@@ -98,7 +112,8 @@ Tokens novos em `themes.ts` (default + rpg): `border.summaryCard.balance`.
 2. Criar uma receita → voltar à Home → verificar que "Receitas" no card aumentou
 3. Editar valor de despesa existente → voltar à Home → verificar que o card reflete o novo valor
 4. Excluir uma despesa/receita pela lista na Home → verificar que o card atualiza imediatamente
-5. Repetir cenários 1-4 com usuário membro de grupo familiar
+5. Confirmar o modal de recorrência de despesa/receita na Home → verificar que o card e a lista de últimos registros atualizam imediatamente
+6. Repetir cenários 1-5 com usuário membro de grupo familiar
 
 ### Build / Lint
 ```bash
