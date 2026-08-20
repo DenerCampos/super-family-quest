@@ -9,7 +9,7 @@ import { familyGroupQueryKeys } from './familyGroupQueryKeys';
  * - summary do grupo familiar no React Query (usuários com grupo)
  *
  * Deve ser chamado após qualquer mutação que altere totais financeiros
- * (criar, editar ou excluir despesa/receita).
+ * (criar, editar ou excluir despesa/receita, inclusive confirmar recorrência na Home).
  */
 export const useInvalidateFinancialSummary = () => {
   const queryClient = useQueryClient();

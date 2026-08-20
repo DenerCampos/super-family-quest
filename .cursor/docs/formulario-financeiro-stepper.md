@@ -31,7 +31,7 @@ Serviços: `api.getExpenseReceipt`, `api.getRevenueReceipt`, `api.uploadExpenseP
 - Temas via `useVisualTheme()`
 - Badge `InstallmentBadge` quando `installmentLabel` presente
 - Parcelamento finito: todas as parcelas visíveis nos cadastros; últimos lançamentos só mês atual
-- Parcelamento infinito: modal mensal na Home confirma próxima parcela
+- Parcelamento infinito: modal mensal na Home confirma próxima parcela; após confirmar, a Home invalida o resumo financeiro e a lista de últimos registros (SP-137)
 
 ## Arquivos-chave
 

@@ -213,7 +213,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `relatorio-garantias.md` | Relatório de garantias no Painel (SP-86) |
 | `demo-login.md` | Login demo via link para portfólio (SP-118); perfil somente leitura em sessão demo (SP-130) |
 | `autenticacao.md` | Validação login/cadastro (RHF+Yup), PasswordInput, reativação de conta, senha 8–64 no perfil (SP-39); recuperação de senha e `/register?email=` de convite (SP-91) |
-| `balanco-mensal-atualizacao-real-time.md` | Atualização do card Balanço Mensal após mutações financeiras (SP-119) |
+| `balanco-mensal-atualizacao-real-time.md` | Atualização do card Balanço Mensal após mutações financeiras (SP-119); inclui confirmação dos modais de recorrência na Home (SP-137) |
 | `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, evolução laboratorial, visão geral, receituário; padronização de nomes (SP-123/SP-124/SP-125) |
 | `assistente-familiar.md` | Assistente Familiar — FAB flutuante, chat, screenContext, erros IA (SP-117) |
 | `grupo-familiar.md` | Multi-família: prioridade, stories, gerenciamento, invite search, filtros, collapse listas/receitas, badge quests, união membros saúde (SP-127); brasão/foto por família na criação e alteração (SP-131) |
