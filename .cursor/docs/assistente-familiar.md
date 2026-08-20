@@ -19,7 +19,7 @@ Widget flutuante autenticado para perguntas em linguagem natural (somente leitur
 - Atalho de teclado
 - Seletor de membro
 - Escrita / ações
-- Rotas públicas (`/login`, `/register`, `/alexa-login`, `/demo/:key`)
+- Rotas públicas (`/login`, `/register`, `/forgot-password`, `/reset-password`, `/alexa-login`, `/demo/:key`)
 
 ## Fluxo
 

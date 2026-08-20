@@ -130,10 +130,20 @@ const LoginContent = () => {
 
         <Button
           as={RouterLink}
-          to="/register"
+          to="/forgot-password"
           color={getColor('link.primary')}
           variant="link"
           mt={2}
+          fontSize="sm"
+        >
+          {t('login.forgotPassword')}
+        </Button>
+
+        <Button
+          as={RouterLink}
+          to="/register"
+          color={getColor('link.primary')}
+          variant="link"
           fontSize="sm"
         >
           {t('login.create')}
