@@ -39,6 +39,8 @@ export const api = {
   login: AuthService.login,
   demoLogin: AuthService.demoLogin,
   reactivateAccount: AuthService.reactivateAccount,
+  forgotPassword: (email: string) => AuthService.forgotPassword(email),
+  resetPassword: AuthService.resetPassword,
   register: UserService.register,
   updateUser: UserService.update,
   searchUsersByEmail: (email: string) => UserService.searchByEmail(email),

@@ -13,6 +13,8 @@ import { ReportView } from "./pages/Dashboard/ReportView";
 import { HealthReportDetailView } from "./pages/Dashboard/HealthReportDetailView";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import NewChallenge from "./pages/NewChallenge";
 import { MissionsView } from "./pages/Missions/MissionsView";
 import { QuestsListView } from "./pages/NewChallenge/QuestsListView";
@@ -79,6 +81,8 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/alexa-login" element={<AlexaLogin />} />
           <Route path="/demo/:key" element={<DemoLogin />} />
           <Route path="*" element={<NotFoundPage />} />

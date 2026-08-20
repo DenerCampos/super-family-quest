@@ -8,7 +8,7 @@ import {
   FormControl,
   FormErrorMessage,
 } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { api } from '../../services';
@@ -26,6 +26,10 @@ const Register = () => {
   const { getAsset, getColor, getFont } = useVisualTheme();
   const { login } = useAuth();
   const [reactivateEmail, setReactivateEmail] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+
+  // O convite para quem ainda não tem conta chega como /register?email=...
+  const invitedEmail = searchParams.get('email')?.trim().toLowerCase() ?? '';
 
   const schema = useMemo(() => buildRegisterSchema(t), [t]);
   const {
@@ -36,7 +40,7 @@ const Register = () => {
     resolver: yupResolver(schema),
     defaultValues: {
       name: '',
-      email: '',
+      email: invitedEmail,
       password: '',
       confirmPassword: '',
     },

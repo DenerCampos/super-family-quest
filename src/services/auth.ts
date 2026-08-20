@@ -34,4 +34,24 @@ export const AuthService = {
     });
     return response.data;
   },
+
+  // A API responde igual exista ou não a conta, para não revelar e-mails cadastrados.
+  forgotPassword: async (email: string): Promise<{ message: string }> => {
+    const response = await api.post('/auth/forgot-password', { email });
+    return response.data;
+  },
+
+  resetPassword: async ({
+    token,
+    password,
+  }: {
+    token: string;
+    password: string;
+  }): Promise<{ message: string }> => {
+    const response = await api.post('/auth/reset-password', {
+      token,
+      password,
+    });
+    return response.data;
+  },
 };
