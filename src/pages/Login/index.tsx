@@ -9,7 +9,7 @@ import {
   FormControl,
   FormErrorMessage,
 } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -18,10 +18,12 @@ import { useLoginTheme } from '../../hooks/useLoginTheme';
 import { LoginThemeProvider } from '../../components/LoginThemeProvider';
 import { PasswordInput } from '../../components/PasswordInput';
 import { buildLoginSchema, type LoginFormValues } from './schema';
+import { getApiErrorCode } from '../../utils/apiError';
 
 const LoginContent = () => {
   const { login } = useAuth();
   const toast = useToast();
+  const navigate = useNavigate();
   const { t } = useThemedTranslation();
   const loginTheme = useLoginTheme();
   const { getColor, getFont, getAsset } = useVisualTheme(loginTheme);
@@ -54,7 +56,14 @@ const LoginContent = () => {
     try {
       const email = values.email.trim().toLowerCase();
       await login(email, values.password);
-    } catch {
+    } catch (error: unknown) {
+      if (getApiErrorCode(error) === 'ACCOUNT_DELETED_REACTIVATION_REQUIRED') {
+        navigate('/recover-account', {
+          state: { email: values.email.trim().toLowerCase() },
+        });
+        return;
+      }
+
       toast({
         title: t('login.error'),
         description: t('login.invalidCredentials'),

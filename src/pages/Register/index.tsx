@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import {
   Flex,
   Input,
@@ -8,7 +8,7 @@ import {
   FormControl,
   FormErrorMessage,
 } from '@chakra-ui/react';
-import { Link as RouterLink, useSearchParams } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { api } from '../../services';
@@ -16,7 +16,6 @@ import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useAuth } from '../../contexts/AuthContext';
 import { PasswordInput } from '../../components/PasswordInput';
-import { ReactivateAccountModal } from '../../components/modals/ReactivateAccountModal';
 import { buildRegisterSchema, type RegisterFormValues } from './schema';
 import { getApiErrorCode } from '../../utils/apiError';
 
@@ -25,8 +24,8 @@ const Register = () => {
   const { t } = useThemedTranslation();
   const { getAsset, getColor, getFont } = useVisualTheme();
   const { login } = useAuth();
-  const [reactivateEmail, setReactivateEmail] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // O convite para quem ainda não tem conta chega como /register?email=...
   const invitedEmail = searchParams.get('email')?.trim().toLowerCase() ?? '';
@@ -87,7 +86,7 @@ const Register = () => {
       const code = getApiErrorCode(error);
 
       if (code === 'ACCOUNT_DELETED_REACTIVATION_REQUIRED') {
-        setReactivateEmail(email);
+        navigate('/recover-account', { state: { email } });
         return;
       }
 
@@ -117,8 +116,7 @@ const Register = () => {
   };
 
   return (
-    <>
-      <Flex
+    <Flex
         minH="100vh"
         bgImage={`url(${getAsset('images.background.register')})`}
         bgSize="cover"
@@ -220,13 +218,6 @@ const Register = () => {
           </Button>
         </Flex>
       </Flex>
-
-      <ReactivateAccountModal
-        isOpen={!!reactivateEmail}
-        email={reactivateEmail ?? ''}
-        onClose={() => setReactivateEmail(null)}
-      />
-    </>
   );
 };
 

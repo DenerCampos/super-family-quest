@@ -72,7 +72,7 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | Rota | Página / uso |
 |------|----------------|
 | `/login`, `/register` | Auth pública — `/register?email=` pré-preenche convite sem conta (SP-91) |
-| `/forgot-password`, `/reset-password` | Recuperação de senha (SP-91); reset lê `token` e remove da URL |
+| `/forgot-password`, `/recover-account`, `/reset-password` | Recuperação de senha (SP-91); recuperação de conta deletada (SP-136); reset lê `token`, remove da URL e autentica |
 | `/alexa-login` | Login Alexa |
 | `/`, `/home` | Home |
 | `/dashboard`, `/dashboard/:reportKey` | Relatórios — incl. `coinStatement` (SP-97), `healthReports` (SP-123) |
@@ -98,7 +98,7 @@ Atualizar ao adicionar página (ordem simplificada — ver `App.tsx` para fonte 
 | `/new-resources/health/prescriptions/:id` | Detalhe receituário |
 | `/new-challenge` | Missões dinâmicas (SP-78) |
 | `/settings` | Configurações / Alexa |
-| `/profile` | Perfil |
+| `/profile` | Perfil — exclusão de conta com senha (SP-136) |
 | `/scan` | QR cupom |
 | `/image-recognition`, `/audio-recognition` | IA |
 | `/expense/:id?`, `/revenue/:id?` | Lançamentos |
@@ -112,7 +112,7 @@ Arquivos em `src/services/` — atualizar ao integrar novo domínio da API:
 | Arquivo | Domínio |
 |---------|---------|
 | `api.ts` | Instância Axios, interceptors |
-| `auth.ts`, `user.ts` | Autenticação / usuário (+ `searchByEmail` SP-127; forgot/reset SP-91) |
+| `auth.ts`, `user.ts` | Autenticação / usuário (+ `searchByEmail` SP-127; forgot/reset SP-91; recover-account e `deleteAccount` SP-136) |
 | `expense.ts`, `revenue.ts`, `resources.ts` | Financeiro |
 | `coin.ts`, `theme.ts`, `profile.ts` | Gamificação / perfil |
 | `reports.ts`, `couponReader.ts` | Relatórios / cupom |
@@ -212,7 +212,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `formulario-financeiro-stepper.md` | Stepper despesa/receita, parcelamento, cupom drawer (SP-86) |
 | `relatorio-garantias.md` | Relatório de garantias no Painel (SP-86) |
 | `demo-login.md` | Login demo via link para portfólio (SP-118); perfil somente leitura em sessão demo (SP-130) |
-| `autenticacao.md` | Validação login/cadastro (RHF+Yup), PasswordInput, reativação de conta, senha 8–64 no perfil (SP-39); recuperação de senha e `/register?email=` de convite (SP-91) |
+| `autenticacao.md` | Validação login/cadastro (RHF+Yup), PasswordInput, senha 8–64 no perfil (SP-39); recuperação de senha e `/register?email=` de convite (SP-91); exclusão e recuperação de conta (SP-136) |
 | `balanco-mensal-atualizacao-real-time.md` | Atualização do card Balanço Mensal após mutações financeiras (SP-119); inclui confirmação dos modais de recorrência na Home (SP-137) |
 | `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, evolução laboratorial, visão geral, receituário; padronização de nomes (SP-123/SP-124/SP-125) |
 | `assistente-familiar.md` | Assistente Familiar — FAB flutuante, chat, screenContext, erros IA (SP-117) |
