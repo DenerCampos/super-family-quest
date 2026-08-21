@@ -21,17 +21,9 @@ export const AuthService = {
     return response.data;
   },
 
-  reactivateAccount: async ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }): Promise<{ accessToken: string }> => {
-    const response = await api.post('/auth/reactivate', {
-      email,
-      password,
-    });
+  recoverAccount: async (email: string): Promise<{ message: string }> => {
+    // A API responde igual exista ou não a conta, para não revelar e-mails cadastrados.
+    const response = await api.post('/auth/recover-account', { email });
     return response.data;
   },
 
@@ -47,7 +39,7 @@ export const AuthService = {
   }: {
     token: string;
     password: string;
-  }): Promise<{ message: string }> => {
+  }): Promise<{ accessToken: string }> => {
     const response = await api.post('/auth/reset-password', {
       token,
       password,

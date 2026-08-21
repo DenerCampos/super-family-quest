@@ -1,53 +1,61 @@
 import { useMemo } from 'react';
 import {
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
   ModalBody,
   ModalCloseButton,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  Button,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Text,
   useToast,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import * as yup from 'yup';
 import { api } from '../../services';
 import { useAuth } from '../../contexts/AuthContext';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { getApiErrorCode } from '../../utils/apiError';
 import { PasswordInput } from '../PasswordInput';
-import {
-  buildReactivateSchema,
-  type ReactivateFormValues,
-} from './reactivateAccountSchema';
+
+type DeleteAccountFormValues = {
+  password: string;
+};
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  email: string;
+  userId: string;
 };
 
-export const ReactivateAccountModal = ({ isOpen, onClose, email }: Props) => {
+export const DeleteAccountModal = ({ isOpen, onClose, userId }: Props) => {
   const toast = useToast();
-  const navigate = useNavigate();
-  const { establishSession } = useAuth();
+  const { logout } = useAuth();
   const { t } = useThemedTranslation();
   const { getColor } = useVisualTheme();
 
-  const schema = useMemo(() => buildReactivateSchema(t), [t]);
+  const schema = useMemo(
+    () =>
+      yup.object({
+        password: yup
+          .string()
+          .required(t('profile.deleteAccount.passwordRequired'))
+          .max(64, t('profile.deleteAccount.passwordMaxLength')),
+      }),
+    [t],
+  );
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<ReactivateFormValues>({
+  } = useForm<DeleteAccountFormValues>({
     resolver: yupResolver(schema),
     defaultValues: { password: '' },
   });
@@ -57,35 +65,33 @@ export const ReactivateAccountModal = ({ isOpen, onClose, email }: Props) => {
     onClose();
   };
 
-  const onSubmit = async (values: ReactivateFormValues) => {
+  const onSubmit = async (values: DeleteAccountFormValues) => {
     try {
-      const { accessToken } = await api.reactivateAccount({
-        email,
-        password: values.password,
-      });
-      await establishSession(accessToken);
+      await api.deleteAccount({ id: userId, password: values.password });
       toast({
-        title: t('common.success'),
-        description: t('reactivateAccount.success'),
+        title: t('profile.deleteAccount.successTitle'),
+        description: t('profile.deleteAccount.successDescription'),
         status: 'success',
-        duration: 3000,
+        duration: 4000,
       });
       handleClose();
-      navigate('/home', { replace: true });
-    } catch (error) {
+      logout();
+    } catch (error: unknown) {
       const code = getApiErrorCode(error);
-      let description = t('reactivateAccount.error');
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        description = t('reactivateAccount.invalidPassword');
-      } else if (code === 'USER_LIMIT_REACHED') {
-        description = t('register.errorCreatingRealmUserLimitUsers');
+      let description = t('profile.deleteAccount.error');
+
+      if (code === 'INVALID_PASSWORD') {
+        description = t('profile.deleteAccount.invalidPassword');
+      } else if (code === 'LAST_FAMILY_GROUP_ADMIN') {
+        description = t('profile.deleteAccount.lastAdmin');
       }
 
       toast({
-        title: t('reactivateAccount.error'),
+        title: t('profile.deleteAccount.errorTitle'),
         description,
         status: 'error',
-        duration: 4000,
+        duration: 8000,
+        isClosable: true,
       });
     }
   };
@@ -95,22 +101,19 @@ export const ReactivateAccountModal = ({ isOpen, onClose, email }: Props) => {
       <ModalOverlay />
       <ModalContent bg={getColor('background.login')}>
         <ModalHeader color={getColor('text.primary')}>
-          {t('reactivateAccount.title')}
+          {t('profile.deleteAccount.title')}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6} as="form" onSubmit={handleSubmit(onSubmit)}>
           <Text color={getColor('text.primary')} mb={4} fontSize="sm">
-            {t('reactivateAccount.description')}
-          </Text>
-          <Text color={getColor('text.primary')} mb={2} fontSize="sm" fontWeight="medium">
-            {email}
+            {t('profile.deleteAccount.description')}
           </Text>
           <FormControl isInvalid={!!errors.password} mb={4}>
             <FormLabel color={getColor('text.primary')}>
-              {t('reactivateAccount.password')}
+              {t('profile.deleteAccount.password')}
             </FormLabel>
             <PasswordInput
-              placeholder={t('reactivateAccount.passwordPlaceholder')}
+              placeholder={t('profile.deleteAccount.passwordPlaceholder')}
               autoComplete="current-password"
               {...register('password')}
               color={getColor('text.primary')}
@@ -122,11 +125,11 @@ export const ReactivateAccountModal = ({ isOpen, onClose, email }: Props) => {
           <Button
             type="submit"
             w="100%"
-            colorScheme={getColor('button.primary')}
+            colorScheme={getColor('button.danger')}
             isLoading={isSubmitting}
-            loadingText={t('reactivateAccount.loading')}
+            loadingText={t('profile.deleteAccount.deleting')}
           >
-            {t('reactivateAccount.submit')}
+            {t('profile.deleteAccount.confirm')}
           </Button>
         </ModalBody>
       </ModalContent>

@@ -35,6 +35,7 @@ import { toDisplayableImageUrl } from '../../utils/formatString';
 import { compressImage, IMAGE_COMPRESS_MAX_BYTES } from '../../utils/compressImage';
 import { DEFAULT_COAT_OF_ARMS } from '../../utils/coatOfArms';
 import { SelectCoatOfArmsModal } from '../../components/modals/SelectCoatOfArmsModal';
+import { DeleteAccountSection } from '../../components/profile/DeleteAccountSection';
 import { PasswordInput } from '../../components/PasswordInput';
 import type { BalanceCoin } from '../../services/coin';
 
@@ -621,6 +622,8 @@ const Profile = () => {
                     {t('profile.saveChanges')}
                   </Button>
                 )}
+
+                <DeleteAccountSection />
               </VStack>
             </Flex>
           </TabPanel>

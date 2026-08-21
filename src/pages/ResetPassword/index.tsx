@@ -18,8 +18,9 @@ import { LoginThemeProvider } from '../../components/LoginThemeProvider';
 import { PasswordInput } from '../../components/PasswordInput';
 import { getApiErrorCode } from '../../utils/apiError';
 import { buildResetPasswordSchema, type ResetPasswordFormValues } from './schema';
+import { useAuth } from '../../contexts/AuthContext';
 
-type ResetStatus = 'form' | 'success' | 'invalid';
+type ResetStatus = 'form' | 'invalid';
 
 function readResetTokenFromState(state: unknown): string {
   if (typeof state !== 'object' || state === null) {
@@ -36,6 +37,7 @@ const ResetPasswordContent = () => {
   const loginTheme = useLoginTheme();
   const { getColor, getFont, getAsset } = useVisualTheme(loginTheme);
   const navigate = useNavigate();
+  const { establishSession } = useAuth();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const queryToken = searchParams.get('token')?.trim() ?? '';
@@ -79,18 +81,48 @@ const ResetPasswordContent = () => {
 
   const onSubmit = async (values: ResetPasswordFormValues) => {
     try {
-      await api.resetPassword({ token, password: values.password });
-      setStatus('success');
+      const { accessToken } = await api.resetPassword({
+        token,
+        password: values.password,
+      });
+
+      try {
+        if (!accessToken) {
+          throw new Error('missing_access_token');
+        }
+        await establishSession(accessToken);
+      } catch {
+        toast({
+          title: t('passwordReset.successTitle'),
+          description: t('passwordReset.successDescription'),
+          status: 'warning',
+          duration: 4000,
+        });
+        navigate('/login', { replace: true });
+        return;
+      }
+
+      toast({
+        title: t('passwordReset.successTitle'),
+        description: t('passwordReset.successLoggedIn'),
+        status: 'success',
+        duration: 3000,
+      });
+      navigate('/home', { replace: true });
     } catch (error: unknown) {
-      if (getApiErrorCode(error) === 'INVALID_OR_EXPIRED_RESET_TOKEN') {
+      const code = getApiErrorCode(error);
+      if (code === 'INVALID_OR_EXPIRED_RESET_TOKEN') {
         setStatus('invalid');
         return;
       }
 
       toast({
         title: t('common.error'),
-        description: t('passwordReset.genericError'),
-        status: 'error',
+        description:
+          code === 'USER_LIMIT_REACHED'
+            ? t('register.errorCreatingRealmUserLimitUsers')
+            : t('passwordReset.genericError'),
+        status: code === 'USER_LIMIT_REACHED' ? 'info' : 'error',
         duration: 4000,
       });
     }
@@ -98,13 +130,11 @@ const ResetPasswordContent = () => {
 
   const heading = {
     form: t('passwordReset.resetTitle'),
-    success: t('passwordReset.successTitle'),
     invalid: t('passwordReset.invalidTokenTitle'),
   }[status];
 
   const description = {
     form: t('passwordReset.resetDescription'),
-    success: t('passwordReset.successDescription'),
     invalid: t('passwordReset.invalidTokenDescription'),
   }[status];
 
@@ -201,9 +231,7 @@ const ResetPasswordContent = () => {
           mt={2}
           fontSize="sm"
         >
-          {status === 'success'
-            ? t('passwordReset.goToLogin')
-            : t('passwordReset.backToLogin')}
+          {t('passwordReset.backToLogin')}
         </Button>
       </Flex>
     </Flex>
