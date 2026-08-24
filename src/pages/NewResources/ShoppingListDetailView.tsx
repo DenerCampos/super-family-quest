@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { PageScaffold } from '../../components/PageScaffold';
+import { ShareTextButton } from '../../components/ShareTextButton';
 import { AddItemInput } from '../../components/shoppingList/AddItemInput';
 import {
   ShoppingListDetailCategoriesPanel,
@@ -14,6 +15,7 @@ import { EditShoppingListItemModal } from '../../components/modals/EditShoppingL
 import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { useShoppingListDetailPage } from '../../hooks/useShoppingListDetailPage';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { formatShoppingListShare } from '../../utils/formatShoppingListShare';
 
 export const ShoppingListDetailView = () => {
   const { getColor, getFont } = useVisualTheme();
@@ -64,6 +66,7 @@ export const ShoppingListDetailView = () => {
   }
 
   const categories = Object.entries(detail.itemsByCategory);
+  const sharePayload = formatShoppingListShare(detail, t);
 
   return (
     <>
@@ -78,6 +81,7 @@ export const ShoppingListDetailView = () => {
         contentLayout="none"
         contentPx={0}
         contentPt={0}
+        titleRight={<ShareTextButton payload={sharePayload} />}
         headerExtra={
           <>
             <Box px={4} pb={2} flexShrink={0}>

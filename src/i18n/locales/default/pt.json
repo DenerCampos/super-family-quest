@@ -1164,6 +1164,34 @@
     "installmentValue": "Valor da parcela",
     "totalValue": "Valor total"
   },
+  "share": {
+    "button": "Compartilhar",
+    "copied": "Texto copiado",
+    "failed": "Não foi possível compartilhar",
+    "shoppingList": {
+      "title": "{{name}}",
+      "empty": "(Nenhum item)",
+      "itemPending": "[ ] {{quantity}} {{unit}} {{name}}",
+      "itemInCart": "[x] {{quantity}} {{unit}} {{name}}"
+    },
+    "receipt": {
+      "expenseTitle": "Comprovante — Despesa",
+      "revenueTitle": "Comprovante — Receita",
+      "payment": "Pagamento: {{name}}",
+      "itemsHeader": "Itens",
+      "item": "• {{name}} — {{quantity}} {{unit}} — {{value}}",
+      "warranty": "  {{label}}",
+      "total": "Total: {{value}}",
+      "installmentValue": "Valor da parcela: {{value}}",
+      "totalValue": "Valor total: {{value}}",
+      "emptyItems": "(Sem itens)"
+    },
+    "recipe": {
+      "ingredient": "• {{quantity}} {{unit}} {{name}}",
+      "emptyIngredients": "(Nenhum ingrediente)",
+      "emptyInstructions": "(Sem modo de preparo)"
+    }
+  },
   "pwa": {
     "installTitle": "Instalar App",
     "installDescription": "Adicione à sua tela inicial para acesso rápido",

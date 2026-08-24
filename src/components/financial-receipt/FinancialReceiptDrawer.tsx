@@ -4,6 +4,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
+  Flex,
   IconButton,
   Spinner,
   Text,
@@ -15,6 +16,8 @@ import { financialQueryKeys } from '../../hooks/financialQueryKeys';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import type { ExpenseReceipt, ReceiptTarget, RevenueReceipt } from '../../types/financial';
+import { formatFinancialReceiptShare } from '../../utils/formatFinancialReceiptShare';
+import { ShareTextButton } from '../ShareTextButton';
 import { FinancialReceiptView } from './FinancialReceiptView';
 
 type Props = {
@@ -51,14 +54,22 @@ export const FinancialReceiptDrawer = ({ target, onClose }: Props) => {
           <Text color={getColor('text.primary')}>
             {t('financialReceipt.title')}
           </Text>
-          <IconButton
-            aria-label={t('common.close')}
-            icon={<FiX />}
-            variant="ghost"
-            color={getColor('text.primary')}
-            _hover={{ bg: getColor('background.secondary') }}
-            onClick={onClose}
-          />
+          <Flex align="center" gap={1}>
+            {data && (
+              <ShareTextButton
+                payload={formatFinancialReceiptShare(data, t)}
+                color={getColor('text.primary')}
+              />
+            )}
+            <IconButton
+              aria-label={t('common.close')}
+              icon={<FiX />}
+              variant="ghost"
+              color={getColor('text.primary')}
+              _hover={{ bg: getColor('background.secondary') }}
+              onClick={onClose}
+            />
+          </Flex>
         </DrawerHeader>
         <DrawerBody py={6}>
           {isLoading && <Spinner color={getColor('text.primary')} />}

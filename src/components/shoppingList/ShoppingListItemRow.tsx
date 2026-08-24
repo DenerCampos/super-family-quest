@@ -2,7 +2,8 @@ import { Flex, Text, Checkbox, IconButton } from '@chakra-ui/react';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
-import type { ShoppingListItemResponse, ShoppingListItemUnit } from '../../types/shoppingList';
+import type { ShoppingListItemResponse } from '../../types/shoppingList';
+import { formatShoppingListUnit } from '../../utils/formatShoppingListUnit';
 
 interface ShoppingListItemRowProps {
   item: ShoppingListItemResponse;
@@ -11,19 +12,6 @@ interface ShoppingListItemRowProps {
   onDelete: (itemId: string) => void;
   isToggling?: boolean;
   isDisabled?: boolean;
-}
-
-function formatUnit(unit: ShoppingListItemUnit): string {
-  const labels: Record<ShoppingListItemUnit, string> = {
-    un: 'un',
-    kg: 'kg',
-    g: 'g',
-    l: 'L',
-    ml: 'ml',
-    pack: 'pct',
-    dz: 'dz',
-  };
-  return labels[unit] || unit;
 }
 
 export const ShoppingListItemRow = ({
@@ -87,7 +75,7 @@ export const ShoppingListItemRow = ({
             fontFamily={getFont('body')}
             flexShrink={0}
           >
-            {item.quantity} {formatUnit(item.unit)}
+            {item.quantity} {formatShoppingListUnit(item.unit)}
           </Text>
         </Flex>
 

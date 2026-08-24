@@ -114,6 +114,7 @@ Base URL: `VITE_API_URL` (configurado em `.env`)
 
 ### Constantes
 - `UNIT_OPTIONS` - Array de opcoes de unidade para selects/dropdowns
+- `formatShoppingListUnit` (`src/utils/formatShoppingListUnit.ts`) - abreviacoes curtas (un, kg, L, pct…) na linha do item e no texto compartilhado (SP-138)
 
 ---
 
@@ -172,6 +173,7 @@ Gerenciamento do detalhe de uma lista:
 | `ShoppingListItemRow` | Linha de item com checkbox, nome (riscado se in_cart), quantidade, unidade, addedBy/checkedBy, botoes edit/delete |
 | `AddItemInput` | Input com autocomplete (debounced, min 2 chars). Suporta formato "2x Leite". Botao de adicionar |
 | `OnlineUsersIndicator` | Bolinha verde + nomes dos usuarios online na lista |
+| `ShareTextButton` (raiz de `components/`) | Icone de compartilhar; sheet nativo ou copiar + toast (SP-138) |
 
 ### `src/components/modals/`
 
@@ -211,6 +213,7 @@ Pagina da "Lista Viva":
 - Botao "Finalizar e criar nova com itens pendentes" (visivel quando ha itens comprados e pendentes)
 - Botao "Criar lista novamente" em listas finalizadas (copia nome e itens para nova lista ativa)
 - Atualizacao em tempo real via WebSocket
+- Botao de compartilhar (SP-138): sheet nativo com texto da lista (itens com quantidade, `[x]`/`[ ]`, sem categoria). Ver `compartilhar.md`.
 
 ---
 
