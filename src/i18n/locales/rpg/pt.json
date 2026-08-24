@@ -1189,6 +1189,34 @@
     "installmentValue": "Valor da Parcela",
     "totalValue": "Valor Total da Jornada"
   },
+  "share": {
+    "button": "Enviar pergaminho",
+    "copied": "Texto copiado para o grimório",
+    "failed": "Não foi possível enviar o pergaminho",
+    "shoppingList": {
+      "title": "{{name}}",
+      "empty": "(Nenhuma provisão)",
+      "itemPending": "[ ] {{quantity}} {{unit}} {{name}}",
+      "itemInCart": "[x] {{quantity}} {{unit}} {{name}}"
+    },
+    "receipt": {
+      "expenseTitle": "Pergaminho Fiscal — Tributo",
+      "revenueTitle": "Pergaminho Fiscal — Tesouro",
+      "payment": "Moeda de troca: {{name}}",
+      "itemsHeader": "Provisões",
+      "item": "• {{name}} — {{quantity}} {{unit}} — {{value}}",
+      "warranty": "  {{label}}",
+      "total": "Total do Saque: {{value}}",
+      "installmentValue": "Valor da Parcela: {{value}}",
+      "totalValue": "Valor Total da Jornada: {{value}}",
+      "emptyItems": "(Sem provisões)"
+    },
+    "recipe": {
+      "ingredient": "• {{quantity}} {{unit}} {{name}}",
+      "emptyIngredients": "(Nenhum componente)",
+      "emptyInstructions": "(Sem ritual de preparo)"
+    }
+  },
   "demoLogin": {
     "loading": "Adentrando o reino como viajante..."
   },

@@ -9,6 +9,7 @@ Cadastro de despesa e receita em passos (stepper), com recorrência/parcelamento
 - **Despesa:** 4 passos — Despesa, Recorrência, Garantia, Fotos
 - **Receita:** 3 passos — Receita, Recorrência, Fotos (sem garantia)
 - Drawer de comprovante (`FinancialReceiptDrawer`) nas listagens e últimos lançamentos
+- Compartilhar o cupom em texto (SP-138): ícone no header do drawer; sem fotos. Ver `compartilhar.md`
 - Modais mensais de recorrência exibem badge de parcela infinita
 - Item com valor R$ 0,00 permitido
 
@@ -17,7 +18,7 @@ Cadastro de despesa e receita em passos (stepper), com recorrência/parcelamento
 1. Usuário preenche passo 1 (dados obrigatórios)
 2. Passos opcionais podem ser pulados (Recorrência, Garantia, Fotos)
 3. Submit envia `recurrence` e garantia nos campos de cada item (`warrantyDuration` / `warrantyUnit`); fotos pendentes sobem após create
-4. Em listagens, ação **Exibir** / ícone olho abre drawer com `GET /expense|revenue/:id/receipt`
+4. Em listagens, ação **Exibir** / ícone olho abre drawer com `GET /expense|revenue/:id/receipt` (dono ou admin da família; SP-138)
 5. Fotos no cupom: clique abre lightbox com zoom e download
 
 ## Contratos (front → API)
@@ -40,7 +41,7 @@ Serviços: `api.getExpenseReceipt`, `api.getRevenueReceipt`, `api.uploadExpenseP
 | Stepper | `components/form-stepper/ResourceFormStepper.tsx`, `useFormStepper.ts` |
 | Passos | `components/financial-steps/RecurrenceStep.tsx`, `WarrantyStep.tsx`, `PhotosStep.tsx` |
 | Formulários | `components/ExpensesForm.tsx`, `components/RevenueForm.tsx` |
-| Cupom | `components/financial-receipt/FinancialReceiptDrawer.tsx`, `FinancialReceiptView.tsx`, `ImageLightboxModal.tsx` |
+| Cupom | `components/financial-receipt/FinancialReceiptDrawer.tsx` (share SP-138), `FinancialReceiptView.tsx`, `ImageLightboxModal.tsx` |
 | Hooks | `hooks/useExpenseFormSubmit.ts`, `hooks/useRevenueFormSubmit.ts`, `hooks/useFinancialReceiptDrawer.ts` |
 | Integração | `pages/NewResources/ResourcesView.tsx`, `pages/Home/index.tsx`, `components/LastRegistrationsList.tsx` |
 | Modais | `components/modals/NewRecurringExpenseModal.tsx`, `NewRecurringIncomeModal.tsx` |

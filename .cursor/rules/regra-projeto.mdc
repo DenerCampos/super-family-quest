@@ -146,6 +146,7 @@ export async function getExample(id: string) {
 - Prioridade de grupos: `utils/familyGroupPriority.ts` (espelha API).
 - **queryKeys** centralizados por domínio (`missionQueryKeys.ts`, `familyGroupQueryKeys.ts`) para invalidação consistente.
 - Tema: `useVisualTheme`, `useThemedTranslation`, `useThemeColor`.
+- Share nativo: `useShareText` + `ShareTextButton` (lista de compras, cupom e receita culinária, SP-138).
 - Formulários: `useExpenseForm`, `useRecipeForm`, `useChoreDefinitionForm`, etc.
 
 Exemplo mínimo de query:
@@ -218,6 +219,7 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `assistente-familiar.md` | Assistente Familiar — FAB flutuante, chat, screenContext, erros IA (SP-117) |
 | `grupo-familiar.md` | Multi-família: prioridade, stories, gerenciamento, invite search, filtros, collapse listas/receitas, badge quests, união membros saúde (SP-127); brasão/foto por família na criação e alteração (SP-131) |
 | `notificacoes.md` | Sino no Header, painel Popover, mark-read das visíveis, deep link família (SP-101) |
+| `compartilhar.md` | Share nativo (texto) da lista de compras, cupom e receita culinária; fallback copiar + toast (SP-138) |
 
 Widget global: `ChatAssistantWidget` (`ChatFab` + `ChatPanel` + hooks `useChatAgent` / etc.) montado em `RequireAuth` (ausente em rotas públicas).
 

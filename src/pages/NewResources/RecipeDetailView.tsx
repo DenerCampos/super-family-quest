@@ -14,10 +14,12 @@ import {
 } from 'react-icons/fi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ResourceCrudScaffold } from '../../components/ResourceCrudScaffold';
+import { ShareTextButton } from '../../components/ShareTextButton';
 import { useAuth } from '../../contexts/AuthContext';
 import { useRecipeDetail } from '../../hooks/useRecipeDetail';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
+import { formatRecipeShare } from '../../utils/formatRecipeShare';
 import { toDisplayableImageUrl } from '../../utils/formatString';
 
 export const RecipeDetailView = () => {
@@ -83,6 +85,7 @@ export const RecipeDetailView = () => {
 
   const titleActions = recipe ? (
     <Flex gap={1} flexShrink={0}>
+      <ShareTextButton payload={formatRecipeShare(recipe, t)} />
       <IconButton
         aria-label={t('recipes.editRecipe')}
         icon={<FiEdit2 />}
