@@ -19,7 +19,7 @@ Widget flutuante autenticado para perguntas em linguagem natural (somente leitur
 - Atalho de teclado
 - Seletor de membro
 - Escrita / ações
-- Rotas públicas (`/login`, `/register`, `/alexa-login`, `/demo/:key`)
+- Rotas públicas (`/login`, `/register`, `/forgot-password`, `/reset-password`, `/alexa-login`, `/demo/:key`)
 
 ## Fluxo
 
@@ -33,6 +33,16 @@ Widget flutuante autenticado para perguntas em linguagem natural (somente leitur
 ## Contratos
 
 Ver API: `api/shop-smart/.cursor/docs/assistente-familiar.md`.
+
+### Recorte de período (SP-139 — comportamento da API)
+
+O front **não** envia intervalo de datas; o backend resolve:
+
+- Sem data na pergunta → tools usam **últimos 12 meses** (padrão).
+- “Últimos N” → `lastN` em toda a base (não limitado ao mês da tela / Balanço Mensal).
+- Toda resposta de tool inclui `period.label`; a IA deve citar esse recorte na bolha (ex.: “busquei só agosto/2026”).
+
+A tela Início / `screenContext` é só dica de assunto — **não** restringe o período das buscas.
 
 Service: `src/services/chatAgent.ts`  
 Query keys: `src/hooks/chatAgentQueryKeys.ts`  

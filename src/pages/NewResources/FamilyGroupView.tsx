@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Flex,
   Spinner,
@@ -30,6 +31,7 @@ import { useFamilyGroup } from '../../hooks/useFamilyGroup';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { isOwner } from '../../utils/familyGroupPermissions';
+import { toDisplayableImageUrl } from '../../utils/formatString';
 
 type FamilyTab = 'group' | 'invitations' | 'management';
 
@@ -246,6 +248,17 @@ export const FamilyGroupView = () => {
                       py={3}
                       _expanded={{ bg: getColor('background.familyGroup.memberCard') }}
                     >
+                      <Avatar
+                        size="sm"
+                        mr={3}
+                        name={group.name}
+                        src={
+                          toDisplayableImageUrl(group.groupImage) ||
+                          group.coatOfArms
+                        }
+                        referrerPolicy="no-referrer"
+                        bg={getColor('background.familyGroup.memberCard')}
+                      />
                       <Box flex="1" textAlign="left">
                         <Text
                           fontWeight="bold"

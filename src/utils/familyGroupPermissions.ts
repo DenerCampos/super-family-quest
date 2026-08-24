@@ -18,6 +18,10 @@ export function canManageRoles(group: FamilyGroupResponseDto, userId: string): b
   return isAdmin(group, userId);
 }
 
+export function canEditGroup(group: FamilyGroupResponseDto, userId: string): boolean {
+  return isAdmin(group, userId);
+}
+
 export function canDeleteGroup(group: FamilyGroupResponseDto, userId: string): boolean {
   return isOwner(group, userId);
 }

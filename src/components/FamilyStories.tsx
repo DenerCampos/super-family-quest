@@ -34,14 +34,14 @@ function getRingBorderColor(
 
 function FamilyCircleIcon({
   size,
-  coatOfArms,
+  image,
   getColor,
 }: {
   size: number;
-  coatOfArms?: string | null;
+  image?: string | null;
   getColor: (token: string) => string;
 }) {
-  const src = toDisplayableImageUrl(coatOfArms) || undefined;
+  const src = toDisplayableImageUrl(image) || undefined;
 
   if (src) {
     return (
@@ -139,7 +139,7 @@ export const FamilyStories = ({
           >
             <FamilyCircleIcon
               size={PRIMARY_SIZE}
-              coatOfArms={selectedFamily.ownerCoatOfArms}
+              image={selectedFamily.image}
               getColor={getColor}
             />
           </Box>
@@ -179,7 +179,7 @@ export const FamilyStories = ({
             >
               <FamilyCircleIcon
                 size={SECONDARY_SIZE}
-                coatOfArms={group.ownerCoatOfArms}
+                image={group.image}
                 getColor={getColor}
               />
             </Box>

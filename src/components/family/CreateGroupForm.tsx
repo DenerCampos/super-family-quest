@@ -1,18 +1,11 @@
 import { useState } from 'react';
-import {
-  VStack,
-  Text,
-  Input,
-  Button,
-  useToast,
-  Icon,
-  Flex,
-} from '@chakra-ui/react';
-import { FaUsers } from 'react-icons/fa';
+import { VStack, Text, Input, Button, useToast } from '@chakra-ui/react';
 import { isAxiosError } from 'axios';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { api } from '../../services';
+import { DEFAULT_COAT_OF_ARMS } from '../../utils/coatOfArms';
+import { FamilyImagePicker } from './FamilyImagePicker';
 
 type CreateGroupFormProps = {
   onGroupCreated: () => void;
@@ -32,6 +25,8 @@ export const CreateGroupForm = ({
   const [groupName, setGroupName] = useState(
     mode === 'empty' ? defaultGroupName : '',
   );
+  const [coatOfArms, setCoatOfArms] = useState(DEFAULT_COAT_OF_ARMS);
+  const [photo, setPhoto] = useState<File | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
   const isAdditional = mode === 'additional';
@@ -41,7 +36,12 @@ export const CreateGroupForm = ({
 
     setIsCreating(true);
     try {
-      await api.familyGroupCreate(groupName.trim());
+      const group = await api.familyGroupCreate(groupName.trim(), coatOfArms);
+
+      if (photo) {
+        await api.familyGroupUploadImage(group.id, photo);
+      }
+
       toast({
         title: t('common.success'),
         description: t('familyGroup.created'),
@@ -49,6 +49,8 @@ export const CreateGroupForm = ({
         duration: 3000,
       });
       setGroupName('');
+      setCoatOfArms(DEFAULT_COAT_OF_ARMS);
+      setPhoto(null);
       onGroupCreated();
     } catch (error) {
       const description =
@@ -67,19 +69,20 @@ export const CreateGroupForm = ({
   };
 
   return (
-    <VStack spacing={isAdditional ? 4 : 6} py={isAdditional ? 2 : 8} px={4} align="center">
-      {!isAdditional && (
-        <Flex
-          w="80px"
-          h="80px"
-          borderRadius="full"
-          bg={getColor('background.familyGroup.memberCard')}
-          align="center"
-          justify="center"
-        >
-          <Icon as={FaUsers} boxSize={10} color={getColor('text.familyGroup.secondary')} />
-        </Flex>
-      )}
+    <VStack
+      spacing={isAdditional ? 4 : 6}
+      py={isAdditional ? 2 : 8}
+      px={4}
+      align="center"
+    >
+      <FamilyImagePicker
+        coatOfArms={coatOfArms}
+        pendingPhoto={photo}
+        onCoatOfArmsChange={setCoatOfArms}
+        onPhotoChange={setPhoto}
+        isDisabled={isCreating}
+        size={isAdditional ? 'lg' : 'xl'}
+      />
 
       <Text
         fontSize={isAdditional ? 'md' : 'lg'}
