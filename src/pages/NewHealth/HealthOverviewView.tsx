@@ -18,6 +18,7 @@ import { FiChevronDown, FiChevronUp, FiRefreshCw } from 'react-icons/fi';
 import { FixedAppShell } from '../../components/FixedAppShell';
 import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { PageTitleBar } from '../../components/PageTitleBar';
+import { ShareTextButton } from '../../components/ShareTextButton';
 import { HealthMarkdownContent } from '../../components/health/HealthMarkdownContent';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
@@ -29,6 +30,7 @@ import {
   useHealthPatientContext,
 } from '../../hooks/useHealthOverview';
 import { formatAppDateTime } from '../../utils/formatDate';
+import { formatHealthOverviewShare } from '../../utils/formatHealthOverviewShare';
 
 export const HealthOverviewView = () => {
   const { getColor } = useVisualTheme();
@@ -184,27 +186,31 @@ export const HealthOverviewView = () => {
 
           {!isLoading && overview && (
             <Box bg={cardBg} borderRadius="lg" borderWidth="1px" borderColor={borderColor} p={4} mb={4}>
-              <Flex
-                as="button"
-                type="button"
-                width="100%"
-                align="center"
-                justify="space-between"
-                onClick={onToggleReport}
-                aria-expanded={isReportOpen}
-              >
-                <Flex direction="column" align="flex-start">
-                  <Text color={textPrimary} fontSize="sm" fontWeight="semibold">
-                    {t('health.overview.lastGenerated')}
-                  </Text>
-                  <Text color={textSub} fontSize="xs">
-                    {formatAppDateTime(overview.generatedAt)}
-                  </Text>
+              <Flex align="center" gap={1}>
+                <Flex
+                  as="button"
+                  type="button"
+                  flex={1}
+                  minW={0}
+                  align="center"
+                  justify="space-between"
+                  onClick={onToggleReport}
+                  aria-expanded={isReportOpen}
+                >
+                  <Flex direction="column" align="flex-start">
+                    <Text color={textPrimary} fontSize="sm" fontWeight="semibold">
+                      {t('health.overview.lastGenerated')}
+                    </Text>
+                    <Text color={textSub} fontSize="xs">
+                      {formatAppDateTime(overview.generatedAt)}
+                    </Text>
+                  </Flex>
+                  <Icon
+                    as={isReportOpen ? FiChevronUp : FiChevronDown}
+                    color={textSub}
+                  />
                 </Flex>
-                <Icon
-                  as={isReportOpen ? FiChevronUp : FiChevronDown}
-                  color={textSub}
-                />
+                <ShareTextButton payload={formatHealthOverviewShare(overview, t)} />
               </Flex>
 
               <Collapse in={isReportOpen} animateOpacity>

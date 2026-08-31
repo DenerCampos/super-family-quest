@@ -73,12 +73,13 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 7. Gemini gera relatório em Markdown (incl. seção de medicamentos)
 8. Resultado salvo em `health_ai_overview`
 9. Próximas visitas carregam do cache via GET `/health/ai-overview/latest`. Na tela, o **"Histórico de informações"** e o **"Último relatório gerado"** ficam **colapsados** por padrão (expansíveis); o relatório aparece **logo após** o histórico, antes do botão de gerar/regenerar.
+10. Compartilhar em texto (SP-141): ícone no card da última consulta; sheet nativo com paciente, data, markdown e disclaimer. Ver `compartilhar.md`.
 
 ### Relatórios de Saúde (dashboard)
 1. Tile **"Relatórios de Saúde"** no dashboard → `/dashboard/healthReports`
 2. Filtros iguais aos demais cards: membro (`UserFamilyFilter`: "Família Inteira"/membro), mês, ano e período personalizado
 3. Lista os relatórios de `health_ai_overview` do período via GET `/health/ai-overview` (por membro ou família toda), ordenados do mais recente
-4. Tocar um item abre `/dashboard/health-report/:overviewId` (tela de detalhe) → GET `/health/ai-overview/:id` → conteúdo em Markdown (`HealthMarkdownContent`)
+4. Tocar um item abre `/dashboard/health-report/:overviewId` (tela de detalhe) → GET `/health/ai-overview/:id` → conteúdo em Markdown (`HealthMarkdownContent`); ícone de compartilhar no header (SP-141)
 
 ### Receituário
 - Listagem: GET `/health/prescriptions` com filtro por membro
@@ -197,9 +198,10 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 | `src/components/health/HealthEvolutionChart.tsx` | Gráfico Recharts da evolução |
 | `src/utils/healthValue.ts` | Parse de valor/referência laboratorial |
 | `src/hooks/useHealthEvolution.ts` | Hooks de nomes + série temporal |
-| `src/pages/NewHealth/HealthOverviewView.tsx` | Relatório IA (histórico + último relatório colapsados) |
+| `src/pages/NewHealth/HealthOverviewView.tsx` | Relatório IA (histórico + último relatório colapsados; share no card, SP-141) |
+| `src/utils/formatHealthOverviewShare.ts` | Texto do share do relatório de saúde (paciente, data, markdown, disclaimer) |
 | `src/components/reports/HealthReportsPanel.tsx` | Card "Relatórios de Saúde" do dashboard (lista por membro/período) |
-| `src/pages/Dashboard/HealthReportDetailView.tsx` | Tela de detalhe de um relatório (rota `/dashboard/health-report/:overviewId`) |
+| `src/pages/Dashboard/HealthReportDetailView.tsx` | Tela de detalhe de um relatório (rota `/dashboard/health-report/:overviewId`; share no header, SP-141) |
 | `src/pages/NewHealth/HealthPrescriptionsView.tsx` | Lista receituários |
 | `src/pages/NewHealth/HealthPrescriptionFormView.tsx` | Formulário receituário |
 | `src/pages/NewHealth/HealthPrescriptionDetailView.tsx` | Detalhe receituário |
@@ -239,4 +241,5 @@ npm run test:e2e:low-mem -- --testPathPattern=health
 ### Frontend
 - HealthRegisterView: preencher form + submit → mutation chamada
 - HealthPendingView: lista items com status badges
-- HealthOverviewView: exibe relatório em cache; "Regenerar" chama mutation
+- HealthOverviewView: exibe relatório em cache; "Regenerar" chama mutation; ícone de compartilhar no card da última consulta
+- HealthReportDetailView: ícone de compartilhar no header com o mesmo texto (markdown + disclaimer)
