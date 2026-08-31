@@ -1215,6 +1215,12 @@
       "ingredient": "• {{quantity}} {{unit}} {{name}}",
       "emptyIngredients": "(Nenhum componente)",
       "emptyInstructions": "(Sem ritual de preparo)"
+    },
+    "healthOverview": {
+      "title": "Consulta oracular",
+      "member": "Herói: {{name}}",
+      "generatedAt": "Consultado em: {{date}}",
+      "empty": "(O oráculo não revelou nada)"
     }
   },
   "demoLogin": {

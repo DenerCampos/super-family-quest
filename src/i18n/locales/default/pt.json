@@ -1190,6 +1190,12 @@
       "ingredient": "• {{quantity}} {{unit}} {{name}}",
       "emptyIngredients": "(Nenhum ingrediente)",
       "emptyInstructions": "(Sem modo de preparo)"
+    },
+    "healthOverview": {
+      "title": "Relatório de Saúde",
+      "member": "Paciente: {{name}}",
+      "generatedAt": "Gerado em: {{date}}",
+      "empty": "(Sem conteúdo)"
     }
   },
   "pwa": {

@@ -1,11 +1,13 @@
 import { Box, Flex, Spinner, Text } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import { PageScaffold } from '../../components/PageScaffold';
+import { ShareTextButton } from '../../components/ShareTextButton';
 import { HealthMarkdownContent } from '../../components/health/HealthMarkdownContent';
 import { useVisualTheme } from '../../hooks/useVisualTheme';
 import { useThemedTranslation } from '../../hooks/useThemedTranslation';
 import { useHealthOverviewById } from '../../hooks/useHealthOverview';
 import { formatAppDateTime } from '../../utils/formatDate';
+import { formatHealthOverviewShare } from '../../utils/formatHealthOverviewShare';
 
 export const HealthReportDetailView = () => {
   const { overviewId } = useParams<{ overviewId: string }>();
@@ -23,6 +25,11 @@ export const HealthReportDetailView = () => {
       backTo="/dashboard/healthReports"
       bg={getColor('background.dashboard.primary')}
       contentLayout="plain"
+      titleRight={
+        data ? (
+          <ShareTextButton payload={formatHealthOverviewShare(data, t)} />
+        ) : undefined
+      }
     >
       {isLoading && (
         <Flex justify="center" py={8}>
