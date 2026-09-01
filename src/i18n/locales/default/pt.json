@@ -22,6 +22,8 @@
     "showPassword": "Mostrar senha",
     "confirm": "Confirmar",
     "error": "Erro",
+    "aiProviderError": "Falha no modelo de IA, tente mais tarde",
+    "aiQuotaError": "Limite diário de IA atingido. Tente amanhã.",
     "success": "Sucesso",
     "updated": "Atualizado com sucesso",
     "created": "Criado com sucesso",
@@ -1533,7 +1535,7 @@
     "empty": "Faça uma pergunta ou escolha um exemplo abaixo.",
     "thinking": "Consultando seus dados...",
     "errorQuota": "Limite diário de IA atingido. Tente amanhã.",
-    "errorProvider": "Não foi possível usar a IA agora. Tente novamente.",
+    "errorProvider": "Falha no modelo de IA, tente mais tarde",
     "errorNetwork": "Falha de conexão. Verifique a internet e tente de novo.",
     "contextLabel": "Tela: {{context}}",
     "contexts": {

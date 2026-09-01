@@ -8,6 +8,7 @@ import { HealthService } from '../services/health';
 import { healthQueryKeys } from './healthQueryKeys';
 import { useHealthViewerId } from './useHealthViewerId';
 import { useThemedTranslation } from './useThemedTranslation';
+import { isAiProviderError, isAiQuotaError } from '../utils/aiProviderError';
 import type {
   CreatePrescriptionPayload,
   HealthPrescriptionFilterParams,
@@ -141,7 +142,8 @@ export const useAnalyzePrescription = () => {
         duration: 3000,
       });
     },
-    onError: () => {
+    onError: (error) => {
+      if (isAiProviderError(error) || isAiQuotaError(error)) return;
       toast({
         title: t('health.toast.prescriptionAnalyzeError'),
         status: 'error',

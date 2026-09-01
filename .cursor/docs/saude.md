@@ -147,7 +147,8 @@ Permitir que membros de um grupo familiar cadastrem, organizem e visualizem exam
 - PDF sem texto / imagem → envio do base64 ao Gemini com prompt de laudo de imagem
 - **Nomes de itens (SP-125, API):** a IA deve devolver `itemName` em Title Case; hemograma com sufixo ` (Hemograma)`; urina com ` (Urina)`. Na revisão pendente, conferir/ajustar se algum nome sair fora do padrão (exames antigos no banco não são renomeados sozinhos).
 - Máx. 3 arquivos por execução do cron (a cada 2 min)
-- Falhas registradas com `errorMessage`, `failedAt` e `retryCount`; status `FAILED` visível na fila de pendentes
+- Falhas registradas com `errorMessage`, `failedAt` e `retryCount`; status `FAILED` visível na fila de pendentes; `emitAiProviderError` na transição para `FAILED` (toast via `AiErrorToastListener`, SP-142)
+- Rotas síncronas de IA (visão geral, receituário) mostram toast `common.aiProviderError` em 502 — ver `erros-ia.md`
 - **Retry automático:** após **2 horas** (`HEALTH_PROCESSING_AUTO_RETRY_AFTER_MS` na API; espelhada em `src/utils/healthProcessingConstants.ts` no app)
 - **Retry manual:** botão **Tentar novamente** em cards `FAILED` → `POST /health/processing/:id/retry`
 - Mensagem dinâmica no card: countdown até o próximo retry automático (`formatAutoRetryRemaining` em `healthProcessingRetry.ts`)

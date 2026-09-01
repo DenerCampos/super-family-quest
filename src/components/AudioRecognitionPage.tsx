@@ -7,6 +7,7 @@ import { api } from '../services';
 import { convertQRData } from '../utils/qrCode';
 import { useThemeTranslation } from '../hooks/useThemeTranslation';
 import { useVisualTheme } from '../hooks/useVisualTheme';
+import { resolveAiErrorMessage } from '../utils/aiProviderError';
 
 export const AudioRecognitionPage = () => {
   const { getColor, getFont } = useVisualTheme();
@@ -139,7 +140,13 @@ export const AudioRecognitionPage = () => {
     } catch (err) {
       console.error('Erro:', err);
       if (isMountedRef.current) {
-        setError(t('audioRecognitionPage.processingError'));
+        setError(
+          resolveAiErrorMessage(
+            err,
+            t,
+            'audioRecognitionPage.processingError',
+          ),
+        );
       }
     } finally {
       if (isMountedRef.current) {

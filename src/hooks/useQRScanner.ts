@@ -4,6 +4,7 @@ import { BrowserQRCodeReader, type IScannerControls } from '@zxing/browser';
 import { api } from '../services';
 import { convertQRData } from '../utils/qrCode';
 import { useThemedTranslation } from './useThemedTranslation';
+import { resolveAiErrorMessage } from '../utils/aiProviderError';
 
 export const useQRScanner = () => {
   const { t } = useThemedTranslation();
@@ -75,7 +76,13 @@ export const useQRScanner = () => {
       } catch (err) {
         console.error('Erro ao processar QR Code:', err);
         if (isMountedRef.current) {
-          setError(t('qrScannerPage.errors.processingFailed'));
+          setError(
+            resolveAiErrorMessage(
+              err,
+              t,
+              'qrScannerPage.errors.processingFailed',
+            ),
+          );
         }
       } finally {
         if (isMountedRef.current) {

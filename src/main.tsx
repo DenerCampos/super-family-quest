@@ -5,6 +5,7 @@ import ReactDOM from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import { AiErrorToastListener } from "./components/AiErrorToastListener";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import i18n from "./i18n/config";
@@ -30,6 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                   },
                 }}
               >
+                <AiErrorToastListener />
                 <App />
               </ChakraProvider>
             </ThemeProvider>
