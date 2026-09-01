@@ -146,7 +146,8 @@ export async function getExample(id: string) {
 - Prioridade de grupos: `utils/familyGroupPriority.ts` (espelha API).
 - **queryKeys** centralizados por domínio (`missionQueryKeys.ts`, `familyGroupQueryKeys.ts`) para invalidação consistente.
 - Tema: `useVisualTheme`, `useThemedTranslation`, `useThemeColor`.
-- Share nativo: `useShareText` + `ShareTextButton` (lista de compras, cupom e receita culinária, SP-138).
+- Share nativo: `useShareText` + `ShareTextButton` (lista de compras, cupom, receita culinária e relatório de saúde, SP-138 / SP-141).
+- Falha de IA: interceptor Axios + `emitAiProviderError` + `AiErrorToastListener` (`common.aiProviderError`, SP-142).
 - Formulários: `useExpenseForm`, `useRecipeForm`, `useChoreDefinitionForm`, etc.
 
 Exemplo mínimo de query:
@@ -216,10 +217,11 @@ Pasta: `app/super-family-quest/.cursor/docs/` — **criar arquivo novo em toda f
 | `autenticacao.md` | Validação login/cadastro (RHF+Yup), PasswordInput, senha 8–64 no perfil (SP-39); recuperação de senha e `/register?email=` de convite (SP-91); exclusão e recuperação de conta (SP-136) |
 | `balanco-mensal-atualizacao-real-time.md` | Atualização do card Balanço Mensal após mutações financeiras (SP-119); inclui confirmação dos modais de recorrência na Home (SP-137) |
 | `saude.md` | Módulo de Saúde: exames, upload/processamento IA, busca, evolução laboratorial, visão geral, receituário; padronização de nomes (SP-123/SP-124/SP-125) |
+| `erros-ia.md` | Toast global de falha do modelo de IA (SP-142) |
 | `assistente-familiar.md` | Assistente Familiar — FAB flutuante, chat, screenContext, erros IA (SP-117) |
 | `grupo-familiar.md` | Multi-família: prioridade, stories, gerenciamento, invite search, filtros, collapse listas/receitas, badge quests, união membros saúde (SP-127); brasão/foto por família na criação e alteração (SP-131) |
 | `notificacoes.md` | Sino no Header, painel Popover, mark-read das visíveis, deep link família (SP-101) |
-| `compartilhar.md` | Share nativo (texto) da lista de compras, cupom e receita culinária; fallback copiar + toast (SP-138) |
+| `compartilhar.md` | Share nativo (texto) da lista de compras, cupom, receita culinária e relatório de saúde; fallback copiar + toast (SP-138 / SP-141) |
 
 Widget global: `ChatAssistantWidget` (`ChatFab` + `ChatPanel` + hooks `useChatAgent` / etc.) montado em `RequireAuth` (ausente em rotas públicas).
 

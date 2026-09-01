@@ -10,6 +10,7 @@ import type {
   UpdateShoppingListItemPayload,
 } from '../types/shoppingList';
 import { LOCAL_STORAGE_KEYS } from '../utils/constants';
+import { isAiProviderError, isAiQuotaError } from '../utils/aiProviderError';
 
 export type ShoppingListPendingAction =
   | 'finish'
@@ -61,7 +62,8 @@ export function useShoppingListDetailPage(listId: string) {
     async (payload: CreateShoppingListItemPayload) => {
       try {
         await addItem(payload);
-      } catch {
+      } catch (err) {
+        if (isAiProviderError(err) || isAiQuotaError(err)) return;
         toast({
           title: t('shoppingList.item.addError'),
           status: 'error',
@@ -76,7 +78,8 @@ export function useShoppingListDetailPage(listId: string) {
     async (text: string) => {
       try {
         await addBulkItems(text);
-      } catch {
+      } catch (err) {
+        if (isAiProviderError(err) || isAiQuotaError(err)) return;
         toast({
           title: t('shoppingList.item.bulkAddError'),
           status: 'error',

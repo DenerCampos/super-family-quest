@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import {
   Badge,
   Box,
@@ -20,6 +21,7 @@ import {
 import type { HealthProcessingStatus } from '../../types/health';
 import { getProcessingStatusColor } from '../../utils/healthConstants';
 import { formatAutoRetryRemaining } from '../../utils/healthProcessingRetry';
+import { emitAiProviderError } from '../../utils/aiProviderError';
 
 const statusIcon: Record<HealthProcessingStatus, typeof FiClock> = {
   QUEUED: FiClock,
@@ -35,6 +37,18 @@ export const HealthProcessingList = () => {
   const { data: items, isLoading } = useHealthProcessing();
   const discardMutation = useDiscardProcessing();
   const retryMutation = useRetryProcessing();
+  const seenStatuses = useRef(new Map<string, HealthProcessingStatus>());
+
+  useEffect(() => {
+    if (!items) return;
+    for (const item of items) {
+      const previous = seenStatuses.current.get(item.id);
+      seenStatuses.current.set(item.id, item.status);
+      if (previous && previous !== 'FAILED' && item.status === 'FAILED') {
+        emitAiProviderError();
+      }
+    }
+  }, [items]);
 
   const cardBg = getColor('background.familyGroup.card');
   const borderColor = getColor('border.familyGroup.card');

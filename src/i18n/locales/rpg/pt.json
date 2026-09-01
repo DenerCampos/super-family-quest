@@ -21,6 +21,8 @@
     "hidePassword": "Ocultar palavra secreta",
     "showPassword": "Revelar palavra secreta",
     "error": "Maldição!",
+    "aiProviderError": "Falha no oráculo de IA, tente mais tarde",
+    "aiQuotaError": "O oráculo atingiu o limite diário. Tente amanhã.",
     "success": "Vitória!",
     "updated": "Encantamento Aprimorado!",
     "created": "Item Forjado!",
@@ -1215,6 +1217,12 @@
       "ingredient": "• {{quantity}} {{unit}} {{name}}",
       "emptyIngredients": "(Nenhum componente)",
       "emptyInstructions": "(Sem ritual de preparo)"
+    },
+    "healthOverview": {
+      "title": "Consulta oracular",
+      "member": "Herói: {{name}}",
+      "generatedAt": "Consultado em: {{date}}",
+      "empty": "(O oráculo não revelou nada)"
     }
   },
   "demoLogin": {
@@ -1517,7 +1525,7 @@
     "empty": "Faça uma pergunta ou escolha um exemplo abaixo.",
     "thinking": "Consultando os pergaminhos...",
     "errorQuota": "As consultas mágicas do dia acabaram. Volte amanhã.",
-    "errorProvider": "O oráculo falhou. Tente novamente.",
+    "errorProvider": "Falha no oráculo de IA, tente mais tarde",
     "errorNetwork": "A conexão com o reino falhou. Verifique a internet.",
     "contextLabel": "Local: {{context}}",
     "contexts": {
