@@ -13,7 +13,7 @@ Widget flutuante autenticado para perguntas em linguagem natural (somente leitur
 - `screenContext` derivado do `pathname` (texto descritivo PT para o prompt da API)
 - Rótulo de tela e chips de exemplos via i18n (`chatAssistant.contexts.*` / `examples.*`)
 - Mensagem do usuário otimista enquanto a IA responde
-- Estados de erro de IA (quota 429, `CHAT_AI_PROVIDER_ERROR` 502) e rede
+- Estados de erro de IA (quota 429, `CHAT_AI_PROVIDER_ERROR` / `AI_PROVIDER_ERROR` 502) e rede; toast global SP-142
 
 **Fora**
 - Atalho de teclado
@@ -91,6 +91,6 @@ Chaves em `chatAssistant.*` nos locales `default` e `rpg` (inclui `subtitle`, `c
 4. Enviar pergunta → bolha do usuário aparece na hora; spinner até a resposta
 5. Fechar, reload, reabrir → histórico da última sessão
 6. Simular 429 → erro de quota, mensagem do usuário **não** fica no histórico
-7. Simular 502 → erro de provedor, mensagem do usuário permanece no histórico após o erro
+7. Simular 502 → erro de provedor no painel **e toast** global; mensagem do usuário permanece no histórico após o erro
 8. Rolar para cima com >20 msgs → sem warning de key duplicada no console
 9. Logout / rota pública → FAB ausente

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { LOCAL_STORAGE_KEYS } from '../utils/constants';
 import { handleUnauthorizedResponse } from './authSession';
+import { emitAiErrorEvents } from '../utils/aiProviderError';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -30,6 +31,7 @@ api.interceptors.response.use(
     if (error.code === 'ERR_NGROK_6024') {
       console.error('Erro do ngrok detectado:', error);
     }
+    emitAiErrorEvents(error);
     return Promise.reject(error);
   },
 );

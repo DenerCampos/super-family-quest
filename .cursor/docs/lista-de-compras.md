@@ -206,6 +206,7 @@ Dashboard de listas de compras:
 Pagina da "Lista Viva":
 - Indicador de usuarios online
 - Input de adicao rapida com autocomplete
+- Itens interpretados por IA (`useTextRecognition`); falha do modelo → toast `common.aiProviderError` (SP-142; ver `erros-ia.md`)
 - Itens agrupados por categoria
 - Checkbox para toggle de status (pending <-> in_cart)
 - Botoes de editar e excluir por item

@@ -7,6 +7,7 @@ import { api } from '../services';
 import { convertQRData } from '../utils/qrCode';
 import { useThemeTranslation } from '../hooks/useThemeTranslation';
 import { useVisualTheme } from '../hooks/useVisualTheme';
+import { resolveAiErrorMessage } from '../utils/aiProviderError';
 
 export const ImageRecognitionPage = () => {
   const { getColor, getFont } = useVisualTheme();
@@ -90,7 +91,13 @@ export const ImageRecognitionPage = () => {
     } catch (err) {
       console.error('Erro:', err);
       if (isMountedRef.current) {
-        setError(t('imageRecognitionPage.processingError'));
+        setError(
+          resolveAiErrorMessage(
+            err,
+            t,
+            'imageRecognitionPage.processingError',
+          ),
+        );
         setCapturedImage(null);
         // Reiniciar câmera após erro
         setTimeout(() => {

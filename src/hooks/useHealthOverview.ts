@@ -5,6 +5,7 @@ import { HealthService } from '../services/health';
 import { healthQueryKeys } from './healthQueryKeys';
 import { useHealthViewerId } from './useHealthViewerId';
 import { useThemedTranslation } from './useThemedTranslation';
+import { isAiProviderError, isAiQuotaError } from '../utils/aiProviderError';
 import type {
   CreatePatientContextPayload,
   GenerateOverviewPayload,
@@ -127,6 +128,8 @@ export const useGenerateHealthOverview = () => {
       });
     },
     onError: (error) => {
+      if (isAiProviderError(error) || isAiQuotaError(error)) return;
+
       const message =
         isAxiosError(error) &&
         typeof error.response?.data?.message === 'string'

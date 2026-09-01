@@ -12,6 +12,7 @@ Cadastro de despesa e receita em passos (stepper), com recorrência/parcelamento
 - Compartilhar o cupom em texto (SP-138): ícone no header do drawer; sem fotos. Ver `compartilhar.md`
 - Modais mensais de recorrência exibem badge de parcela infinita
 - Item com valor R$ 0,00 permitido
+- Captura por imagem/áudio/QR: falha do Gemini → toast `common.aiProviderError` (SP-142; ver `erros-ia.md`)
 
 ## Fluxo
 
