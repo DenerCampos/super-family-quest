@@ -5,9 +5,10 @@ import { LoadingOverlay } from '../components/LoadingOverlay';
 import { FiArrowLeft, FiRotateCw, FiCamera } from 'react-icons/fi';
 import { api } from '../services';
 import { convertQRData } from '../utils/qrCode';
-import { useThemeTranslation } from '../hooks/useThemeTranslation';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
 import { useVisualTheme } from '../hooks/useVisualTheme';
 import { resolveAiErrorMessage } from '../utils/aiProviderError';
+import { useCyclingLoadingText } from '../hooks/useCyclingLoadingText';
 
 export const ImageRecognitionPage = () => {
   const { getColor, getFont } = useVisualTheme();
@@ -21,7 +22,12 @@ export const ImageRecognitionPage = () => {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useThemeTranslation();
+  const { t } = useThemedTranslation();
+  const analyzingText = useCyclingLoadingText(loadingRead, [
+    t('imageRecognitionPage.analyzingImage'),
+    t('imageRecognitionPage.analyzingImageRetry'),
+    t('imageRecognitionPage.analyzingImageFallback'),
+  ]);
 
   // Determinar se é para expense ou revenue baseado na navegação
   const isRevenue = location.state?.from === 'revenue';
@@ -326,7 +332,7 @@ export const ImageRecognitionPage = () => {
       )}
 
       {loadingRead && (
-        <LoadingOverlay text={t('imageRecognitionPage.analyzingImage')} typeLoading="read" />
+        <LoadingOverlay text={analyzingText} typeLoading="read" />
       )}
 
       {/* Canvas escondido para captura */}

@@ -453,6 +453,8 @@
     "capture": "Tirar Foto",
     "loadingCamera": "Carregando câmera",
     "analyzingImage": "Analisando comprovante",
+    "analyzingImageRetry": "Modelo ocupado, tentando outra IA",
+    "analyzingImageFallback": "Última tentativa com outra IA",
     "processingError": "Falha ao processar imagem",
     "captureError": "Falha ao capturar imagem",
     "cameraNotFound": "Elemento de câmera não encontrado",
