@@ -444,6 +444,8 @@
     "capture": "Capturar Essência",
     "loadingCamera": "Preparando lente mágica",
     "analyzingImage": "Decifrando runas antigas",
+    "analyzingImageRetry": "O oráculo está ocupado, invocando outro",
+    "analyzingImageFallback": "Última invocação ao oráculo",
     "processingError": "Falha ao decifrar pergaminho",
     "captureError": "Falha ao capturar essência",
     "cameraNotFound": "Lente mágica não encontrada",
