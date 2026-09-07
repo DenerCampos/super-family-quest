@@ -23,6 +23,8 @@ Em qualquer fluxo que chama IA (texto, imagem, áudio, chat), se a API responder
 4. Handlers locais (`onError` / `catch`) **não** repetem toast genérico quando o erro já é de IA
 5. Telas de captura (imagem/áudio/QR) usam `resolveAiErrorMessage` no `setError`: mensagem de IA/quota inline **e** toast
 
+Na captura por **foto** (SP-144), o overlay de loading troca o texto a cada ~4 s enquanto a API tenta outro modelo Gemini: `analyzingImage` → `analyzingImageRetry` → `analyzingImageFallback` (fica no último). O POST continua único; o avanço é por tempo, alinhado à cadeia de fallback.
+
 Chat: o painel continua com a mensagem inline; o toast também aparece.
 
 ## Contratos
@@ -44,7 +46,8 @@ Códigos tratados no front:
 | `src/utils/aiProviderError.ts` | Detecção, `emitAiProviderError` / `emitAiErrorEvents`, `resolveAiErrorMessage` |
 | `src/services/api.ts` | Interceptor |
 | `src/components/AiErrorToastListener.tsx` | Toast global |
-| `src/i18n/locales/*/pt.json` | `common.aiProviderError` / `common.aiQuotaError` |
+| `src/hooks/useCyclingLoadingText.ts` | Texto do overlay na foto (retry/fallback SP-144) |
+| `src/i18n/locales/*/pt.json` | `common.aiProviderError` / `common.aiQuotaError`; `imageRecognitionPage.analyzingImage*` |
 | `src/pages/NewHealth/HealthProcessingList.tsx` | `emitAiProviderError` na transição para `FAILED` |
 
 ## Testes
